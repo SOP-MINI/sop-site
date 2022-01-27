@@ -6,11 +6,6 @@ layout: single
 usemenu: "sop2"
 ---
 
-- [Syllabus]({{< ref syllabus >}})
-- [Grading rules]({{< ref zasady >}})
-- [Schedule]({{< ref harmonogram >}})
-- [Reference material]({{< ref materialy >}})
-
 ## Staff
 
 ### Lecture
