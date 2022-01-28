@@ -13,7 +13,6 @@ Summer semester 2020/2021
 | ---         | -----                                                                                                    |
 | 24.02       | [Lec 1 	Introduction to interprocess communication (IPC). IPC with pipes/FIFOs]({{< ref "wyk/w1" >}}) |
 | 03.03       | [Lec 2 	POSIX IPC: shared memory and queues]({{< ref "wyk/w2" >}})                                    |
-|             |                                                                                                       |
 | 10.03       | Lec 3 	Synchronization. Deadlocks.                                                                    |
 | 17.03       | Lec 4 	POSIX synchronization.                                                                         |
 | 24.03       | Lec 5 	Introduction to networking.                                                                    |

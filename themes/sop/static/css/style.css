@@ -28,3 +28,17 @@ pre {
     padding-left: 0.5em;
     border-left: solid thick ;
 }
+
+table {
+    border-collapse: collapse;
+}
+
+table th {
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+}
+
+table td {
+    border: solid thin;
+    padding: 0.2em;
+}
