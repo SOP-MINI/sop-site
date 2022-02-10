@@ -17,6 +17,8 @@ enableGitInfo = true
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+    [markup.goldmark.extensions]
+      linkify = false
 
 [minify]
 minifyOutput = true
