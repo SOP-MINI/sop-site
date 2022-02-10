@@ -1,0 +1,14 @@
+* Rzeczy do zrobienia
+ - [ ] Makefile do budowania i rscyncowania wersji na serwer
+   - [ ] do tego potrzeba uzyskać serwer
+   - [ ] trzeba skasować index.html w głównym katalogu (studenci powinni wchodzić na konkretną wersję językową)
+ - [ ] Zastanowić się jeszcze raz, czy nie pokazywać menu SOP1 i SOP2 na raz
+
+* Rzeczy, które można by zrobić, jeśli ktoś ma czas się w tym dłubać (czyli potencjalnie nigdy)
+
+ - [ ] W tutorialach zrobić sensowne nagłówki h2, h3, h4. Teraz są nieco przypadkowe
+ - [ ] Zrobić h3/h4 w sekcjach z pytaniami, opisami (żółte i niebieskie ramki)
+ - [ ] Być może warto rozważyć zmigrowanie pytań do elementu <details>. Wtedy pokazywanie odpowiedzi będzie zgrabniejsze.
+ - [ ] Napisać w L0 o makefile (przynajmniej wspomnieć, że będzie wymagany)
+ - [ ] Oprócz regulaminu zrobić sekcję z często zadawanymi pytaniami organizacyjnymi
+ - [ ] 
