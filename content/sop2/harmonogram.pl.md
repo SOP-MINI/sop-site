@@ -7,7 +7,7 @@ menu: "sop2"
 
 Semestr letni 2020/2021
 
-## Wykłady: środy, g. 14:15 - 16:00,
+## Wykłady: środy, g. 10:15 - 12:00,
 
 | Data | Tytuł |
 | ---- | ----- |
@@ -29,6 +29,8 @@ Semestr letni 2020/2021
 
 
 ## Laboratorium: poniedziałki, g. 14:15 - 17:00
+
+Laboratorium odbywa się zgodnie z podziałem na grupy w usosie.
 
 | Data | Tytuł | Grupy USOS |
 | ---- | ----- | ----- | 

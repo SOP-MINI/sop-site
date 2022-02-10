@@ -70,8 +70,8 @@ Zamiast nowakj należy wstawić swój login wydziałowy.
 
 *wgranie pracy ze sprawdzeniem:*
 
-    $ cp nowakj.tar.bz2 /home2/samba/karwowskij/unix/
-    $ ls -l /home2/samba/karwowskij/unix/nowakj.tar.bz2
+    $ cp nowakj.tar.bz2 {{< teacherdir >}}
+    $ ls -l {{< teacherdir >}}nowakj.tar.bz2
 
 Zamiast nowakj należy wstawić swój login wydziałowy.
 

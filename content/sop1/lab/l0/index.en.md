@@ -70,8 +70,8 @@ Substitute nowakj with your MiNI account name.
 
 *work upload (with check):*
 
-    $ cp nowakj.tar.bz2 /home2/samba/karwowskij/unix/
-    $ ls -l /home2/samba/karwowskij/unix/nowakj.tar.bz2
+    $ cp nowakj.tar.bz2 {{< teacherdir >}}
+    $ ls -l {{< teacherdir >}}nowakj.tar.bz2
 
 Substitute nowakj with your MiNI account name.
 
