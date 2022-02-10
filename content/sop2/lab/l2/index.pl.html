@@ -6,10 +6,11 @@ layout: single
 ---
 
 <h1>Tutorial 6 - kolejki POSIX</h1>
+
+{{< codegrading >}}
+
 <hr/>
 <div class="dlaN">
-<p>UWAGA, to laboratorium jest trochę inaczej oceniane od poprzedniego, będziemy brali pod uwagę jakość i poprawność kodowania, Państwa kody zostaną dokładnie sprawdzone po zajęciach, szczegóły poniżej.</p>
-
 <p>Temat kolejek jest wyraźnie mniej obszerny od tematu łączy pipe/fifo i ten tutorial jest też krótszy. Kolejki posix nie mają problemu z współdzieleniem zapisu i odczytu, z atomowością zapisu nawet dużych wiadomości, mają wyznaczone granice rekordów oraz priorytety. Wszystko to czyni ten temat względnie łatwym, trudności jakie  mogą powstać ograniczają się do notyfikacji o zdarzeniach w kolejce, ale API tych notyfikacji jest identyczne do tego co już znamy z AIO. </p>
 <p>Proszę zwrócić uwagę na aspekt bardziej samodzielnego przygotowania się do zajęć na podstawie stron dokumentacji man i wykładu.</p>
 <hr/>
@@ -33,19 +34,6 @@ Podane zostały całe polecenia man do wydania z konsoli:</p><ul>
 <li>Kolejki POSIX wymagają librt podczas linkowania !!!</li>
 <li>Jeśli otwieramy istniejącą kolejkę to mogą się w niej znajdować jakieś dane! Nie wolno zakładać, że taka kolejka jest pusta. Jeśli chcemy aby była pusta to można ją usunąć przed ponownym utworzeniem.</li>
 </ul>
-
-<p><b>Rozkład punktów z tego laboratorium to 8 za wejściówkę, 17 za postępy wykonania zadania i do -10 punktów za poprawność i styl kodowania.</b> <br/ >W szczególności będzie ujemnie punktowane:</p><ul>
-<li>nie sprawdzanie błędów funkcji systemowych i bibliotecznych</li>
-<li>nie zwalnianie zasobów systemowych</li>
-<li>funkcje dłuższe niż 40 linii</li>
-<li>nieuzasadnione zmienne globalne</li>
-<li>użycie niebezpiecznych funkcji takich jak np.: sprintf i gets (przepełnienie bufora)</li>
-<li>tam gdzie wystąpi obsługa sygnału dodatkowo:<ul>
-  <li>brak restartowania funkcji przerwanych przed wykonaniem (błąd EINTR)</li>
-  <li>brak wznawiania funkcji przerwanych w trakcie (sleep, nanosleep, read. write)</li>
-  <li>umieszczanie logiki programu w funkcji obsługi sygnału, w szczególności jeśli ta logika na dłużej blokuje główny program</li>
-</ul></li>
-</ul><
 </div>
 <h2>Przykład: Bingo!</h2>
 <p>Napisz program, który symuluje prosty wariant gry w BINGO. Losującym liczby jest proces rodzic, graczami jego procesy potomne. Cała komunikacja pomiędzy nimi odbywa się przez kolejki komunikatów POSIX. Proces rodzic tworzy n procesów potomnych (0&lt;n&lt;100, gdzie <em>n</em> to parametr programu) oraz dwie kolejki komunikatów. Pierwsza kolejka <em>pout</em> służy do przekazywania co 1sek.  liczb losowanych z przedziału [0,9] do procesów potomnych, druga <em>pin</em> do odbierania  od procesów potomnych informacji o wygranej lub zakończeniu gry.</p>

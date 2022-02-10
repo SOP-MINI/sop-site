@@ -7,8 +7,9 @@ draft: false
 <a href="{{< ref "../l3-test" >}}">A list of requirements for the introductory test</a>
 <hr/ >
 
+{{< codegrading >}}
+  
 <div class="dlaN">
-<p>ATTENTION, this laboratory is graded in a different way, coding clarity and correctness is taken into account. Your codes will be checked after the class, see details below.</p>
 
 Introduction notes:
 <ol>
@@ -25,19 +26,6 @@ Introduction notes:
 <li>So called  "magic numbers" are left in code - those numerical constants should be replaced with "C" preprocesor macro</li>
 
 </ol>
-
-<p><b>Points distribution: 8 for entry test, 17 for the graded task and up to  10 negative points for coding correctness and style flaws.</b> <br/ >What results in negative points:<ul>
-<li>not checking for system and library functions errors</li>
-<li>not released resources</li>
-<li>functions longer than 40 lines</li>
-<li>unjustified global variables</li>
-<li>use of unsafe or obsolete functions like sprintf and gets (buffer overflow)</li>
-<li>additionally if the program handles signals:<ul>
-  <li>lack of functions interrupted before they start restarting (EINTR)</li>
-  <li>lack of function interrupted in the middle of processing restarting (sleep, nanosleep, read. write)</li>
-  <li>program logic placed inside of signal handler, especially if this logic blocks the main code of the process for longer than necessary</li>
-</ul></li>
-</ul></p>
 </div>
 
 

@@ -5,8 +5,9 @@ draft: false
 layout: single
 ---
 
+{{< codegrading >}}
+
 <div class="dlaN">
-<p>ATTENTION, this laboratory is graded in a different way, coding clarity and correctness is taken into account. Your codes will be checked after the class, see details below.</p>
 <p>POSIX queues topic is significantly easier that links topic, so  this tutorial is shorter. Queues have message boundaries, can share access on read and write ends, can transfer large amounts of data in atomic way and add priorities to the  messages.  All that makes them easier to use. They have one useful feature that requires some understanding - notifications. Fortunately the API of the notification is identical to AIO notifications.</p>
 <p>We expect more self studding from you,  please read lecture materials and man pages in addition to this page.</p>
 <hr/ >
@@ -28,20 +29,6 @@ layout: single
 <li>man 7  sigevent - asynchronous notification on queue messages is identical as for AIO</li>
 <li><b>POSIX queues require linking with librt!!!</b></li>
 <li>If you open existing queue you can expect some data in it. Do not assume it will be empty! If you need to make it empty you can remove the queue before you create it again.</li>
-</ul></p>
-
-<p>This lab timing: entry test 20 minutes, graded task 90 minutes , last 5 minutes for solution uploading.</li>
-<p><b>Points distribution: 8 for entry test, 17 for the graded task and up to  10 negative points for coding correctness and style flaws.</b> <br/ >What results in negative points:<ul>
-<li>not checking for system and library functions errors</li>
-<li>not released resources</li>
-<li>functions longer than 40 lines</li>
-<li>unjustified global variables</li>
-<li>use of unsafe or obsolete functions like sprintf and gets (buffer overflow)</li>
-<li>additionally if the program handles signals:<ul>
-  <li>lack of functions interrupted before they start restarting (EINTR)</li>
-  <li>lack of function interrupted in the middle of processing restarting (e.g: sleep, nanosleep, read, write)</li>
-  <li>program logic placed inside of signal handler, especially if this logic blocks the main code of the process for longer than necessary</li>
-</ul></li>
 </ul></p>
 </div>
 <hr/ >
