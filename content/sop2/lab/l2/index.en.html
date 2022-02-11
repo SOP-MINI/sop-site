@@ -35,7 +35,7 @@ layout: single
 
 <p>
 <em>Solution: <b>mq_example.c</b></em>
-<pre>{{% include "mq_example.c" %}}</pre>
+{{% includecode "mq_example.c" %}}
 <p>
 <div class="dlaN"><ol>
 <li>Please notice that sending a pointer along with the signal requires slightly different signal handling function prototype (it has additional siginfo_t* parameter) and during the installation  SA_SIGINFO flag was set. In this program we do not send this pointer directly (notification does it for us), function <em>kill</em> does not allow for any extra data, to send signal with a pointer (or a integer) you need to use <em>sigqueue</em> function.</li>

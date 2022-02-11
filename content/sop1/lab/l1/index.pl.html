@@ -66,7 +66,7 @@ Agenda:<ol>
 </p>
 <p>
 <em>rozwiązanie <b>prog1.c</b>:</em>
-<pre>{{< include "prog1.c">}}</pre>
+{{< includecode "prog1.c">}}
 
 <div class="dlaN">
 <ol>
@@ -130,12 +130,12 @@ clean:
 </p>
 <p>
 <em>Dla ułatwienia pisania dodajmy makro:</em>
-<pre>
+{{< highlight c >}}
 #define ERR(source) (perror(source),\
 		     fprintf(stderr, "%s:%d\n", __FILE__, __LINE__),\
 		     exit(EXIT_FAILURE))
 
-</pre>
+{{< / highlight >}}
 <div class="dlaN">
 <ol>
 <li>Zwróć uwagę na makra __FILE__ i __LINE__ , pokazują lokalizację wywołania w pliku źródłowy, to cecha preprocesora C </li>
@@ -145,12 +145,12 @@ clean:
 </ol>
 </div>
 <em>dodatkowy kod do <b>prog2.c</b></em>
-<pre>
+{{< highlight c >}}
 	char name[22];
 	scanf("%21s", name);
 	if (strlen(name) > 20) ERR("Name too long");
 	printf("Hello %s\n", name);
-</pre>
+{{< / highlight >}}
 <div class="cwiczenie">
 <ol>
 <li>Przerób Makefile z poprzedniego przykłady tak, aby można było skompilować ten program. </li>
@@ -200,7 +200,7 @@ clean:
 </p>
 <p>
 <em>kod do <b>prog3.c</b></em>
-<pre>{{< include "prog3.c" >}}</pre>
+{{< includecode "prog3.c" >}}
 <em>Nowy <b>Makefile</b> do kompilacji wielu programów (celów):</em>
 <pre>
 all: prog1 prog2 prog3
@@ -257,7 +257,7 @@ Tom
 </p>
 <p>
 <em>kod do <b>prog4.c</b></em>
-<pre>{{< include "prog4.c" >}}</pre>
+{{< includecode "prog4.c" >}}
 
 <em>Pełny kod <b>Makefile</b></em>
 <pre>
@@ -294,13 +294,13 @@ LDFLAGS=-fsanitize=address,undefined
 </p>
 <p>
 <em>Funkcja pomocnicza w pliku <b>prog5.c</b></em>
-<pre>
+{{< highlight c >}}
 void usage(char *pname)
 {
 	fprintf(stderr, "USAGE:%s name times>0\n", pname);
 	exit(EXIT_FAILURE);
 }
-</pre>
+{{< / highlight >}}
 <div class="dlaN"><ol>
 <li>Zwróć uwagę,  że funkcji exit możesz podawać takie same statusu jak zwracasz w main.</li>
 <li>Dobrą praktyką jest wypisywanie tzw. usage przy braku wymaganych argumentów</li>
@@ -308,7 +308,7 @@ void usage(char *pname)
 </div>
 
 <em>Kod do pliku <b>prog5.c</b>:</em>
-<pre>{{< include "prog5.c" >}}</pre>
+{{< includecode "prog5.c" >}}
 <div class="cwiczenie"><ol>
 <li>Skompiluj ten program używając uniwersalnego Makefile z poprzedniego zadania.</li>
 <li>Jak działa program dla wartości powtórzeń niepoprawnie podanych, czemu tak?<br/>
@@ -345,11 +345,11 @@ Hello Danny<br/ >
 
 <p>
 <em>poprawmy funkcję usage w <b>prog6.c</b></em>
-<pre>
+{{< highlight c >}}
 	fprintf(stderr, "USAGE:%s ([-t x] -n Name) ... \n", pname);
-</pre>
+{{< / highlight >}}
 <em>kod do pliku <b>prog6.c</b></em>
-<pre>{{< include "prog6.c" >}}</pre>
+{{< includecode "prog6.c" >}}
 <div class="cwiczenie"><ol>
 <li>Sprawdź jak działa program dla niepoprawnych argumentów, lub gdy podamy argumenty pozycyjne (nie poprzedzone oznaczeniem opcji) oraz gdy nie podamy argumentów lub parametrów.</li>
 </ol></div>
@@ -376,7 +376,7 @@ Hello Danny<br/ >
 </p>
 <p>
 <em>zawartość do pliku <b>prog7.c</b></em>
-<pre>{{< include "prog7.c" >}}</pre>
+{{< includecode "prog7.c" >}}
 <div class="dlaN"><ol>
 <li>Własną zmienna mogę dodać np. tak: "$ TVAR2="122345" ./prog7" , pojawi się na wypisie ale nie zostanie zapamiętana w powłoce, tzn. kolejne wywołania programu  "$./prog7" już jej nie pokażą.</li>
 <li>Mogę też dodać zmienną trwale do  środowiska powłoki "$ export TVAR1='qwert' " i teraz ilekroć wywołam program "$./prog7" ta zmienna wciąż tam będzie.</li>
@@ -403,7 +403,7 @@ Hello Danny<br/ >
 </p>
 <p>
 <em>kod do pliku <b>prog8.c</b></em>
-<pre>{{< include "prog8.c" >}}</pre>
+{{< includecode "prog8.c" >}}
 <div class="dlaN"><ol>
 <li>Zwróć uwagę na możliwy błąd braku zmiennej  środowiska i jego obsługę na początku kodu. Dobry programista nigdy nie pomija sprawdzania błędów, jeśli się śpieszysz i pomijasz to Twój kod jest gorszy - musisz być tego  świadomy/a. Najgorzej gdy programista pomija sprawdzanie błędów z niewiedzy lub ignorancji.</li>
 <li>Drugi przykład sprawdzenia błędu jest po wywołaniu putenv, skoro tak często mamy to robić to przydałoby się makro, coś na wzór ERR którego to już raz użyliśmy.</li>
@@ -438,7 +438,7 @@ Hello Danny<br/ >
 
 <p>
 <em>funkcja do pliku <b>prog9.c</b></em>
-<pre>
+{{< highlight c >}}
 void scan_dir()
 {
 	DIR *dirp;
@@ -469,7 +469,7 @@ void scan_dir()
 		ERR("closedir");
 	printf("Files: %d, Dirs: %d, Links: %d, Other: %d\n", files, dirs, links, other);
 }
-</pre>
+{{< / highlight >}}
 <div class="cwiczenie"><ol>
 <li>Uruchom ten program w katalogu w którym masz jakieś pliki, może być ten w którym wykonujesz ten tutorial, ważne aby nie było w nim katalogów, czy wyniki zgadzają się z tym czego oczekujemy tj. zero katalogów, trochę plików?<br/>
 {{< answer >}} Nie, są dwa katalogi, program policzył katalog "." i  "..", każdy katalog ma hard link na samego siebie "." i katalog rodzic ".."  {{< /answer >}}</li>
@@ -510,7 +510,7 @@ void scan_dir()
 
 <p>
 <em>kod do pliku <b>prog10.c</b></em>
-<pre>{{< include "prog10.c" >}}</pre>
+{{< includecode "prog10.c" >}}
 <div class="cwiczenie"><ol>
 <li>Sprawdź jak program zachowa się w przypadku nieistniejących katalogów, katalogów co do których nie masz prawa dostępu , czy poprawnie poradzi sobie ze ścieżkami względnymi podawanymi jako parametr a jak z bezwzględnymi.</li>
 <li>Czemu program pobiera i zapamiętuje aktualny katalog roboczy?<br/>
@@ -538,7 +538,7 @@ void scan_dir()
 
 <p>
 <em>kod w pliku <b>prog11.c</b></em>
-<pre>{{< include "prog11.c" >}}</pre>
+{{< includecode "prog11.c" >}}
 
 <div class="cwiczenie"><ol>
 <li>Powtórz sobie jak działają wskazania na funkcje w C.</li>
@@ -570,7 +570,7 @@ void scan_dir()
 </ul>
 
 <em>kod do pliku <b>prog12.c</b></em>
-<pre>{{< include "prog12.c" >}}</pre>
+{{< includecode "prog12.c" >}}
 <div class="cwiczenie"><ol>
 <li>Jaką maskę bitową tworzy wyrażenie ~perms&amp;0777 ? <br/>
 {{< answer >}}  odwrotność wymaganych parametrem -p uprawnień przycięta do 9 bitów, jeśli nie rozumiesz jak to działa koniecznie powtórz sobie operacje bitowe w C.  {{< /answer >}}</li>

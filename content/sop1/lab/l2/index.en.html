@@ -45,7 +45,7 @@ Program creates 'n' sub-processes (n is 1st program parameter), each of those pr
 
 <p>
 <em>solution, 1st stage <b>prog13a.c</b>:</em>
-<pre>{{% include "prog13a.c" %}}</pre>
+{{% includecode "prog13a.c" %}}
 
 <div class="dlaN"><ol>
 <li>Use the general makefile (the last one) from the first tutorial,  execute "make prog13a"</li>
@@ -76,7 +76,7 @@ Program creates 'n' sub-processes (n is 1st program parameter), each of those pr
 </ol></div>
 
 <em>solution 2nd stage <b>prog13b.c</b>:</em>
-<pre>{{% include "prog13b.c" %}}</pre>
+{{% includecode "prog13b.c" %}}
 <div class="dlaN"><ol>
 <li>It is worth knowing that waitpid can tell us about temporary lack of terminated children (returns zero) and about permanent lack of them (error ECHILD). The second case is not a critical error, your code should expect it.</li>
 </div>
@@ -109,7 +109,7 @@ Program takes 4 positional parameters (n,k,p i r) and creates n sub-processes. P
 </ul>
 </p><p>
 <em>solution <b>prog14.c</b>:</em>
-<pre>
+{{< highlight c >}}
 volatile sig_atomic_t last_signal = 0;
 
 void sethandler( void (*f)(int), int sigNo) {
@@ -134,7 +134,8 @@ void sigchld_handler(int sig) {
                         ERR("waitpid");
                 }
         }
-}</pre>
+}
+{{< / highlight >}}
 <div class="dlaN"><ol>
 <li>To exchange the data between signal handling routine and the main code we must use global variables, please remember that it is an exceptional situation as in general we do not use global variables. Also please remember that global variables are not shared between related processes. It should be obvious but sometimes students get confused.  
 <li>The type of global variable used for this communication is fixed to be volatile sig_atomic_t, it is the only CORRECT and SAFE type you can use here. The reason for this originates from asynchronous nature of the interruption. Primo "volatile" means that compiler optimization is off, it is critical to not let the compiler eradicate the variable that is not changing in the loop from the loop condition. With the optimization on while(work) may become while(1) as the compiler in unable to determine the asynchronous change of "work" variable. Secundo  sig_atomic_t is the biggest integer variable that can be calculated and compared in single CPU cycle.  If you try bigger integer simple comparison a==0 can get interrupted and already compared bits may be altered during the comparison! 
@@ -151,7 +152,7 @@ void sigchld_handler(int sig) {
 </div>
 
 <em>solution <b>prog14.c</b>:</em>
-<pre>{{% include "prog14.c" %}}</pre>
+{{% includecode "prog14.c" %}}
 <div class="dlaN"><ol>
 <li>Please notice that sleep and alarm function can conflict, according to POSIX sleep can be implemented on SIGALRM and there is no way to nest signals. Never nest them or use nanosleep instead of sleep as in the code above.</li>
 <li> Kill function is invoked with zero pid, means it is sending signal to whole group of processes, we do not need to keep track of pids but do notice that the signal will be delivered to the sender as well!</li>
@@ -194,7 +195,7 @@ Program starts one child process, which sends every "m" (parameter) microseconds
 </p>
 <p>
 <em>solution part <b>prog15.c</b>:</em>
-<pre>{{% include "prog15.c" %}}</pre>
+{{% includecode "prog15.c" %}}
 <div class="dlaN"><ol>
 <li>The program terminates on SIGINT (C-c)</li>
 <li>Try it with various parameters. The shorter microsecond brake and more frequent SIGUSER2 the faster growing  gap between counters should be observable. In a moment the difference in numbers will be explained. If you do not observe the shift between counters let the program run a bit longer - 1 minute should do.</li>
@@ -237,7 +238,7 @@ This task has two stages.
 </div></p>
 <p>
 <em>solution 1st stage, parts of <b>prog16a.c</b>:</em>
-<pre>{{% include "prog16a.c" %}}</pre>
+{{% includecode "prog16a.c" %}}
 
 <div class="dlaN"><ol>
 <li>Do remember that you can read good quality really random bytes from  /dev/random file but the amount is limited or read unlimited amount of data from /dev/urandom but these are pseudo random bytes.</li>
@@ -273,7 +274,7 @@ This task has two stages.
 {{< answer >}} umask will reduce the permissions, if no set  permissions are required it is a good idea to allow the umask to regulate the effective rights {{< /answer >}}</li>
 </ol></div>
 <em>solution 2nd stage, parts of <b>prog16b.c</b>:</em>
-<pre>{{% include "prog16b.c" %}}</pre>
+{{% includecode "prog16b.c" %}}
 
 <div class="dlaN"><ol>
 <li>Run it with the same parameters as before - flaws are gone now.</li>

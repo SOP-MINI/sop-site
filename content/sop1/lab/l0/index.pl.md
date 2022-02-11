@@ -27,15 +27,16 @@ W ramach przygotowania do kolejnych zajęć zrobimy proste ćwiczenie symulując
   - umieć kopiować pliki poleceniem cp
 
 *rozwiązanie **prog1.c**:*
+```c
+#include <stdio.h>
+#include <stdlib.h>
 
-    #include <stdio.h>
-    #include <stdlib.h>
-    
-    int main(int argc, char **argv)
-    {
-        printf("Hello world\n");
-        return EXIT_SUCCESS;
-    }
+int main(int argc, char **argv)
+{
+    printf("Hello world\n");
+    return EXIT_SUCCESS;
+}
+```
 
 *kompilacja:*
 

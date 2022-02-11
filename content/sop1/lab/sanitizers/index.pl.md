@@ -11,16 +11,17 @@ Na Systemach operacyjnych będziemy korzystać przede wszystkim z opcji -fsaniti
 Ogromnym zyskiem z używania *uzdrowicieli* jest to, że możemy wykrywać problemy, których wykrycie z użyciem analizy w trakcie kompilacji byłoby albo niemożliwe (konkretnie nieobliczalne, o definicji takich problemów będzie Teorii automatów i języków formalnych) albo bardzo kosztowne. Z drugiej strony sprawdzenia te zależą od tego jak wykonuje się program (konkretne dane wejściowe wpływają na przebieg programu).
 
 Przykładowy program z niebezpiecznym czytaniem z stdin:
+```c
+#include <stdio.h>
 
-    #include <stdio.h>
-    
-    int main(int argc, char** argv) {
-      int x=5;
-      char name[10];
-      scanf("%s", name); // Reading stirng of unknown (probably exceeding 9) length
-      printf("You typed: %s\nThe number is %d\n", name, x);
-      return 0;
-    }
+int main(int argc, char** argv) {
+  int x=5;
+  char name[10];
+  scanf("%s", name); // Reading stirng of unknown (probably exceeding 9) length
+  printf("You typed: %s\nThe number is %d\n", name, x);
+  return 0;
+}
+```
 
 Jeśli skompilujemy ten program bez opcji -fsanitize, to podanie napisu dłuższego niż 9 znaków spowoduje nadpisanie pamięci, gdzie znajduje się liczba x. Oczywiście w tym programie łatwo znaleźć problem, ale w ogólności nadpisywanie pomięci poza zakresem bufora powoduje mnóstwo problemów. Teraz skompilujmy nasz program z takimi opcjami:  
 `  gcc -Wall -fsanitize=address,undefined array-problem.c -o array-problem `  

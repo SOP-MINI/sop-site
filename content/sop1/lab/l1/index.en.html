@@ -64,7 +64,7 @@ Agenda:<ol>
 </p>
 <p>
 <em>solution <b>prog1.c</b>:</em>
-<pre>{{% include "prog1.c" %}} </pre>
+{{% includecode "prog1.c" %}}
 
 <div class="dlaN">
 <ol>
@@ -127,12 +127,12 @@ clean:
 </p>
 <p>
 <em>for convenience lets add macro :</em>
-<pre>
+{{< highlight c >}}
 #define ERR(source) (perror(source),\
 		     fprintf(stderr, "%s:%d\n", __FILE__, __LINE__),\
 		     exit(EXIT_FAILURE))
 
-</pre>
+{{< / highlight >}}
 <div class="dlaN">
 <ol>
 <li>Check on __FILE__ and  __LINE__ macros, they indicate the source code location in error message, it is C preprocessor feature.</li>
@@ -142,12 +142,12 @@ clean:
 </ol>
 </div>
 <em>code extension for <b>prog2.c</b></em>
-<pre>
+{{< highlight c >}}
 	char name[22];
 	scanf("%21s", name);
 	if (strlen(name) > 20) ERR("Name too long");
 	printf("Hello %s\n", name);
-</pre>
+{{< / highlight >}}
 <div class="cwiczenie">
 <ol>
 <li>Modify the Makefile from the previous task to compile this code.</li>
@@ -196,7 +196,7 @@ clean:
 </p>
 <p>
 <em>code for <b>prog3.c</b></em>
-<pre>{{% include "prog3.c" %}}</pre>
+{{% includecode "prog3.c" %}}
 <em>New makefile <b>Makefile</b> compiles multiple targetrs:</em>
 <pre>
 all: prog1 prog2 prog3
@@ -251,7 +251,7 @@ Tom
 </p>
 <p>
 <em>code for <b>prog4.c</b></em>
-<pre>{{% include "prog4.c" %}}</pre>
+{{% includecode "prog4.c" %}}
 
 <em>Full <b>Makefile</b></em>
 <pre>
@@ -289,20 +289,20 @@ Write a program that accepts 2 arguments: name and counter n &gt; 0, more than t
 </p>
 <p>
 <em>Additional function in file <b>prog5.c</b></em>
-<pre>
+{{< highlight c >}}
 void usage(char *pname)
 {
 	fprintf(stderr, "USAGE:%s name times>0\n", pname);
 	exit(EXIT_FAILURE);
 }
-</pre>
+{{< / highlight >}}
 <div class="dlaN"><ol>
 <li>Please notice that exit function accepts the same statuses as you return from main.</li>
 <li>Printing usage syntax in case of missing or wrong arguments is a good programming practice.</li>
 </ol>
 </div>
 <em>Code for <b>prog5.c</b> file:</em>
-<pre>{{% include "prog5.c" %}}</pre>
+{{% includecode "prog5.c" %}}
 <div class="cwiczenie"><ol>
 <li>Compile this program using universal Makefile from previous task.</li>
 <li>How this program works if you supply incorrect value as the parameter, explain why??<br/>
@@ -341,11 +341,11 @@ Hello Danny<br/ >
 
 <p>
 <em>lets correct usage in <b>prog6.c</b>:</em>
-<pre>
+{{< highlight c >}}
 	fprintf(stderr, "USAGE:%s ([-t x] -n Name) ... \n", pname);
-</pre>
+{{< / highlight >}}
 <em>code for <b>prog6.c</b> file:</em>
-<pre>{{% include "prog6.c" %}}</pre>
+{{% includecode "prog6.c" %}}
 <div class="cwiczenie"><ol>
 <li>Test how this program deals with invalid options, spare positional (not preceded with option letter) parameters, missing arguments and missing options.</li>
 </ol></div>
@@ -372,8 +372,7 @@ Hello Danny<br/ >
 </p>
 <p>
 <em>code for <b>prog7.c</b> file:</em>
-<pre>{{% include "prog7.c" %}}</pre>
-</pre>
+{{% includecode "prog7.c" %}}
 <div class="dlaN"><ol>
 <li>You can add your own variable in the following way: "$ TVAR2="122345" ./prog7" , it will show up on the list but it will not be stored in the parent environment i.e. next run "$./prog7" will not list it.</li>
 <li>You can also store it in the shell environment: "$ export TVAR1='qwert' " and invoke "$./prog7" multiple times, it will keep showing TVAR1 on the list.</li>
@@ -401,7 +400,7 @@ Enhance prog3.c to multiply each welcome line of text as many times as environme
 </p>
 <p>
 <em>code for <b>prog8.c</b> file:</em>
-<pre>{{% include "prog8.c" %}}</pre>
+{{% includecode "prog8.c" %}}
 <div class="dlaN"><ol>
 <li>Please notice that environmental variable may be absent and that this code is prepared for this situation. Good programmer always checks for errors. If you are in a harry and skip those checks your must be aware that your code is more vulnerable. It is really bad If you skip error checks due to laziness or ignorance.</li>
 <li>The second check is at putenv, last one at system. As there are so many checks in the code it is reasonable to have  macro to deal with it (like ERR you have already seen).</li>
@@ -437,7 +436,7 @@ Write a program counting objects (files, links, folders and others) in current w
 
 <p>
 <em>function in <b>prog9.c</b> file:</em>
-<pre>
+{{< highlight c >}}
 void scan_dir()
 {
 	DIR *dirp;
@@ -468,7 +467,7 @@ void scan_dir()
 		ERR("closedir");
 	printf("Files: %d, Dirs: %d, Links: %d, Other: %d\n", files, dirs, links, other);
 }
-</pre>
+{{< / highlight >}}
 <div class="cwiczenie"><ol>
 <li>Run this program in the folder with some files but without sub-folders, it may be the folder you are working on this tutorial in. Is the folder count zero? Explain it.<br/>
 {{< answer >}} No, each folder has two special hard linked folders - "." link to the folder itself and ".." the link to the parent folder, thus program counted 2 folders.  {{< /answer >}}</li>
@@ -511,7 +510,7 @@ Use function form prog9.c to write a program that will count objects in all the 
 
 <p>
 <em>code for <b>prog10.c</b> file:</em>
-<pre>{{% include "prog10.c" %}}</pre>
+{{% includecode "prog10.c" %}}
 <div class="cwiczenie"><ol>
 <li>How this program deals with non existing folders, no access folders, relative paths and absolute paths as parameters?</li>
 <li>Why this program stores the initial working folder?<br/>
@@ -540,7 +539,7 @@ Write a program that counts all occurrences of the files, folders, symbolic link
 
 <p>
 <em>code for <b>prog11.c</b> file:</em>
-<pre>{{% include "prog11.c" %}}</pre>
+{{% includecode "prog11.c" %}}
 <div class="cwiczenie"><ol>
 <li>Make sure you know how to declare and use pointers to functions in C</li>
 <li>Test how this program reacts on not available or not existing folders.</li>
@@ -572,7 +571,7 @@ Create a new file with name, permissions and size specified by parameters (-n NA
 </ul>
 
 <em>code for <b>prog12.c</b> file:</em>
-<pre>{{% include "prog12.c" %}}</pre>
+{{% includecode "prog12.c" %}}
 <div class="cwiczenie"><ol>
 <li>What bitmap is created with:  ~perms&amp;0777 ? <br/>
 {{< answer >}}  reverted permission bits cut to 9 least significant bits. If you do not know how it works then learn C bit operations. {{< /answer >}}</li>

@@ -43,7 +43,7 @@ Agenda:<ol>
 
 <p>
 <em>rozwiązanie 1 etap <b>prog13a.c</b>:</em>
-<pre>{{< include "prog13a.c" >}}</pre>
+{{< includecode "prog13a.c" >}}
 
 <div class="dlaN"><ol>
 <li>Do kompilacji używamy "make prog13a" ostatni plik Makefile z tutoriala nr 1</li>
@@ -74,7 +74,7 @@ Agenda:<ol>
 </ol></div>
 
 <em>rozwiązanie 2 etap <b>prog13b.c</b>:</em>
-<pre>{{< include "prog13b.c" >}}</pre>
+{{< includecode "prog13b.c" >}}
 <div class="dlaN"><ol>
 <li>Koniecznie trzeba rozróżnić kiedy waitpid informuje nas o chwilowym braku zakończonych potomków (wartość zwracana zero) od permanentnego braku potomków (błąd ECHILD). Ten ostatni przypadek nie jest w zasadzie błędem, tę sytuację trzeba normalnie obsłużyć. </li>
 </div>
@@ -107,7 +107,7 @@ Agenda:<ol>
 </p>
 <p>
 <em>plik <b>prog14.c</b>:</em>
-<pre>{{< include "prog14.c" >}}</pre>
+{{< includecode "prog14.c" >}}
 <div class="dlaN"><ol>
 <li>Do komunikacji pomiędzy funkcją obsługi sygnału a resztą programu musimy użyć zmiennych globalnych, proszę pamiętać, że jest to sytuacja wyjątkowa, zmienne globalne są jako takie niepożądane oraz, co powinno być oczywiste, ale czasem się studentom myli - nie są współdzielone pomiędzy procesami pokrewnymi.</li>
 <li>Typ zmiennej globalnej nie jest przypadkowy, co więcej jest to jedyny BEZPIECZNY i POPRAWNY typ. Wynika to z asynchronicznej natury wywołania f. obsługi sygnału a dokładniej: Primo "volatile" oznacza wyłączenie optymizacji kompilatora, ważne żeby kompilator nie uznał wartości zmiennej za stałą bo jej zmiany nie wynikają z kodu i tak mogłoby się okazać, że czytelna dla nas pęta while(work) gdzie work jest zmienną globalną zmienia się na while(1) po optymizacji. Secundo sig_atomic_t oznacza największy typ numeryczny, który jest przetwarzany w pojedynczej instrukcji CPU. Jeśli weźmiemy większy typ numeryczny przerwanie obsługą sygnału może zakłócić wartość wynikową nawet prostego porównania a==0 o ile przerwanie wypadnie w trakcie porównania i zmieni już porównane bajty.</li>
@@ -125,7 +125,7 @@ Agenda:<ol>
 
 
 <em>plik <b>prog14.c</b>:</em>
-<pre>{{< include "prog14.c" >}}</pre>
+{{< includecode "prog14.c" >}}
 <div class="dlaN"><ol>
 <li>Pamiętaj o możliwym  KONFLIKCIE sleep i alarm - wg. POSIX sleep może używać w implementacji SIGALRM a nie ma jak zagnieżdżać sygnałów, nigdy zatem w kodzie oczekującym na alarm nie używamy sleep, można za to użyć nanosleep tak jak w kodzie powyżej.</li>
 <li>W wysyłaniu sygnałów (kill) pojawia się jako PID zero, dzięki temu nie musimy znać pidów procesów potomnych ale też wysyłamy sygnał sami do siebie!</li>
@@ -167,7 +167,7 @@ Agenda:<ol>
 </p>
 <p>
 <em>rozwiązanie, plik <b>prog15.c</b>:</em>
-<pre>{{< include "prog15.c" >}}</pre>
+{{< includecode "prog15.c" >}}
 <div class="dlaN"><ol>
 <li>Program działa aż do SIGINT (C-c) </li>
 <li>Uruchom z różnymi parametrami, z małą przerwą w mikrosekundach i częstymi SIGUSR2 różnica w licznikach powinna wzrastać szybciej niż gdy te parametry są większe. Za chwilę wyjaśni się skąd te błędy. Jeśli nie obserwujesz błędów spróbuj dać programowi trochę więcej czasu na działanie, około minuty powinno dać już różne wyniki.</li>
@@ -207,7 +207,7 @@ Agenda:<ol>
 Tym razem rozwiązanie jest podzielone na 2 możliwe do uruchomienia etapy
 </div>
 <em>rozwiązanie 1 etap, plik <b>prog16a.c</b>:</em>
-<pre>{{< include "prog16a.c" >}}</pre>
+{{< includecode "prog16a.c" >}}
 
 <div class="dlaN"><ol>
 <li>Pamiętaj, z pliku  /dev/random  możesz pobrać na prawdę losowe bajty ale w małych ilościach, z   /dev/urandom odwrotnie, pseudo losowe liczby za to w dowolnych ilościach.</li>
@@ -243,7 +243,7 @@ Tym razem rozwiązanie jest podzielone na 2 możliwe do uruchomienia etapy
 {{< answer >}} umask zredukuje uprawnienia, jeśli nie chcemy mieć konkretnych ustawień to jest to dobra strategia {{< /answer >}}</li>
 </ol></div>
 <em>rozwiązanie drugi etap, plik <b>prog16b.c</b>:</em>
-<pre>{{< include "prog16b.c" >}}</pre>
+{{< includecode "prog16b.c" >}}
 
 <div class="dlaN"><ol>
 <li>Uruchamiamy jak poprzednio -  błędy znikają</li>
