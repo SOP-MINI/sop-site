@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Log in"
+AuthUserFile /home2/samba/sop/htpasswd
+require user sop
