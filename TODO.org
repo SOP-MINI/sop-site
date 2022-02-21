@@ -1,9 +1,9 @@
 * Rzeczy do zrobienia
- - [ ] Makefile do budowania i rscyncowania wersji na serwer
-   - [ ] do tego potrzeba uzyskać serwer
-   - [ ] trzeba skasować index.html w głównym katalogu (studenci powinni wchodzić na konkretną wersję językową)
+ - [X] Makefile do budowania i rscyncowania wersji na serwer
+   - [X] do tego potrzeba uzyskać serwer
+   - [X] trzeba skasować index.html w głównym katalogu (studenci powinni wchodzić na konkretną wersję językową)
  - [ ] Zastanowić się jeszcze raz, czy nie pokazywać menu SOP1 i SOP2 na raz
- - [ ] Dodać htaccess z jakimś hasłem.
+ - [X] Dodać htaccess z jakimś hasłem.
 
 * Rzeczy, które można by zrobić, jeśli ktoś ma czas się w tym dłubać (czyli potencjalnie nigdy)
 
