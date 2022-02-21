@@ -8,52 +8,55 @@ menu: sop2
 
 ## Ocena
 
-**Ocena z przedmiotu** wynika z sumy punktów uzyskanych przez studenta z laboratorium i części wykładowej (maksymalnie 128p). Można otrzymać 68p z części laboratoryjnej i 60p z części wykładowej. Do zaliczenia wymagane jest co najmniej 64p. Obie części trzeba przepołowić, tzn. wymagane jest co najmniej 30p z części wykładowej i 34p z części laboratoryjnej.
+**Ocena z przedmiotu** punkty z wszystkich ocenianych elementów sumują się do 200. Do zaliczenia wymagane jest co najmniej 100p, oceny wyższe są wyznaczane co 20p metodą proporcjonalną. Dodatkowo aby zaliczyć przedmiot konieczne jest zdobycie co najmniej 50p z części laboratoryjnej i 50p z części wykładowej. Zaliczenie przedmiotu (z oceną 3.0) jest również możliwe przy uzyskaniu 50-x punktów z części laboratoryjnej (bądź wykładowej), gdzie 0 \< x \<= 5. Wówczas jednak konieczne jest uzyskanie w sumie 100+x punktów z części laboratoryjnej i wykładowej.
 
-| Suma punktów   | Ocena
-| -------------- | -------
-| 115 ≤ s ≤ 128  | 5
-| 102 ≤ s \< 115 | 4.5
-| 90 ≤ s \< 102  | 4
-| 77 ≤ s \< 90   | 3.5
-| 64 ≤ s \< 77   | 3
-| s \< 64        | 2
+| Suma punktów   | Ocena   |
+| -------------- | ------- |
+| 180 ≤ s ≤ 200  |         |
+| 161 ≤ s \< 180 | 4.5     |
+| 141 ≤ s \< 160 |         |
+| 121 ≤ s \< 140 | 3.5     |
+| 100 ≤ s \< 120 |         |
+| s \< 100       |         |
 
 ### Wykład
 
 -   W semestrze odbędą się 2 sprawdziany wykładowe w terminach określonych w harmonogramie.
 -   Każdy student ma prawo do jednej poprawy każdego ze sprawdzianów w dodatkowym terminie (terminie sprawdzianu poprawkowego). Obowiązuje ten sam zakres materiału co w pierwotnym terminie. Student musi zgłosić wykładowcy zamiar przystąpienia do tego sprawdzianu najpóźniej jedną dobę przed tym terminem. Ocena zdobyta na sprawdzianie poprawkowym zastępuje poprzednią - jeśli jest lepsza.
--   Suma punktów do zdobycia za sprawdziany wykładowe wynosi 60.
--   Do zaliczenia części wykładowej wymaganych jest minimum 30 punktów.
+-   Suma punktów do zdobycia za sprawdziany wykładowe wynosi 100.
 
 ### Laboratorium
 
 -   *UWAGA*, zajęcia laboratoryjne służą głownie ocenie samodzielnego przygotowania studenta z tematyki wskazanej na wykładzie i w materiałach przygotowawczych.
--   Laboratorium składa się z ośmiu zajęć (L1, L1K, L2, L2K, L3, L3K, L4, L4K) w tym czterech zajęć ocenianych (L1, L2, L3, L4) oraz czterech, nieobowiązkowych zajęć konsultacyjnych (L1K, L2K, L3K, L4K). Dodatkowo dla osób nieobecnych poczas jednych z zajęć oceniancyh dostępne są terminy terminy L5 i L5K.
--   Wszystkie zajęcia odbywają się z wykorzystaniem komunikatora MS Teams.
--   Każde zajęcia oceniane (L1/L2/L3/L4) składają się z wejściówki i zadania programistycznego.
--   Wejściówka sprawdza wiedzę techniczną wymaganą na zajęciach - wykład, man, tutoriale i inne materiały.
--   W trakcie rozwiązywania wejściówki **nie można** korzystać z żadnych materiałów pomocniczych. Niedozwolona jest komunikacja z innymi.
--   Po wejściówce publikowana jest treść zadania programistycznego. Zadanie programistyczne jest podzielone na etapy. Pierwszych kilka etapów (**część laboratoryjna**) rozwiązywanych jest podczas zajęć. Pozostałe stanowią **część domową**.
+-   W semestrze przeprowadzane są ćwiczenia oceniane (L1, L2, L3, L4) oraz zajęcia (L5) poświęcone poprawie oceny z laboratorium.
+-   Ćwiczenia oceniane mają układ: sesja pytań i konsultacja z prowadzącym na temat materiałów przygotowawczych (do 35 minut), wejściówka (8 minut), zadanie programistyczne (90 minut). **Maksymalna liczba punktów za każde z ćwiczeń: 25, 17 punktów za zadanie programistyczne i 8 punktów za wejściówkę.**
+-   W zadaniu programistycznym sprawdzana jest poprawność działania opracowanego programu na podstawie osiągania przez studentów z góry wyznaczonych etapów zadania. Student okazuje efekt działania programu na ekranie monitora, prowadzący może zażądać pokazania również kodu. 
+-   Wejściówka sprawdza wiedzę techniczna wymaganą na zajęciach - z wykładu, man'a, tutoriali i innych podanych materiałów. Wejściówka rozwiązywana jest na platformie moodle, z użyciem komputerów w sali laboratoryjnej.
+-   W trakcie wejściówki zabronione jest korzystanie z jakichkolwiek materiałów (notatek, książek, Internetu, itp.). W trakcie wejściówki można mieć otwarte tylko pojedyncze okno przeglądarki do korzystania z platformy moodle. Nie można mieć dodatkowych kart, okien i innym programów w tle. Nie można komunikować się z innymi osobami.
+-   Warunkiem koniecznym uzyskania punktów za wejściówkę jest oddanie podpisanej kartki z zadaniem programistycznym, rozdawanej po wejściówce.
+-   Zakres nowych tematów na poszczególne zajęcia jest różny, różna jest też ilość materiałów przygotowawczych do nich, w szczególności długie są tutoriale do L1 i L3 a krótki do L2. L4 jest ćwiczeniem integrującym wiedzę z semestru więc tutorial do niego jest bardzo krótki.
+-   Po wejściówce rozdawana jest treść zadania programistycznego. Zadanie programistyczne jest podzielone na etapy.
 -   W czasie rozwiązywania zadania **można** korzystać z tutoriala, własnych materiałów, rozwiązań zadań przykładowych, dokumentacji systemowej oraz Internetu jednak tak, by oceniana praca była dziełem samodzielnym.
--   Podczas zajęć można konsultować się z prowadzącym swojej grupy za pomocą komunikatora MS Teams - zarówno prywatnie jak i na ogólnym kanale. Pytania zawierające kod źródłowy rozwiązania należy kierować do prowadzącego prywatnie.
+-   Podczas rozwiązywania zadania można konsultować się z prowadzącym zajęcia.
 -   Etapy muszą być wykonywane w wyznaczonej kolejności. Nie wolno przechodzić do następnego etapu bez wykonania poprzedników. Etapy bez rozwiązanego poprzednika nie będą oceniane.
--   Zadania laboratoryjne rozwiązywane są z użyciem własnych stacji roboczych. Wymagane jest skonfigurowane środowisko programistyczne POSIX. Zalecana jest instalacja wybranej dystrybucji systemu Linux w maszynie wirtualnej lub fizycznym komputerze przed pierwszymi zajęciami.
--   Tydzień po każdych zajęciach ocenianych Lx do dyspozycji jest termin konsultacyjny LxK na którym można zaprezentować i omówić ze swoim prowadzącym część domową przed oddaniem.
--   Część domową należy przesłać najpóźniej następnego dnia po konsultacjach (23:59).
--   Rozwiązania części domowej muszą zostać przekazane w takiej samej formie jak rozwiązania części laboratoryjnej (*Forma oddawania zadania*)
--   **Za każde z zajęć ocenianych można zdobyć łącznie 17 punktów w tym 3 punkty za wejściówkę i 7 punktów za część laboratoryjną zadania i 7 punktów za część domową.**
--   Do zaliczenia części laboratoryjnej wymagane są minimum 34 punkty.
--   W przypadku przesłania części domowej dzień po terminie można z niej otrzymać maksymalnie 4p. Prace przesłane z większym opóźnieniem nie będą sprawdzane.
+-   Punkty za etapy przyznawane są w całości: zrobiony etap wszystkie punkty, etap niezrobiony lub niedokończony: brak punktów. Wyjątkiem jest ostatni rozpoczęty przez studenta i niedokończony etap, za który prowadzący może przyznać punkty częściowe.
+-   Zadanie programistyczne musi być prezentowane na stacji roboczej w laboratorium. Nie można prezentować rozwiązań na własnym sprzęcie.
 -   Oceniana jest umiejętność korzystania z właściwych narzędzi, prawidłowa implementacja wymaganej funkcjonalności oraz estetyka kodu.
--   Stwierdzenie przez prowadzącego niesamodzielności rozwiązania zadania skutkuje niezaliczeniem przedmiotu.
--   Zajęcia L5 przeznaczone są dla osób, które z uzasadnionych przyczyn nie mogły uczestniczyć w *jednych* z zajęć ocenianych L1/L2/L3/L4. Zajęcia L5 nie są terminem poprawkowym. Uczestniczyć w nich mogą wyłącznie osoby, które były nieobecne i nie posiadają oceny z pojedynczych zajęć.
+-   Warunkami koniecznymi otrzymania punktów za program są: oddane podpisanej kartki z zadaniem, na której są zapisany punkty oraz skopiowanie rozwiązania do katalogu w sposób opisany poniżej.
+-   Zajęcia L5 poświęcone są na poprawianie oceny. 
+	- Student może wybrać jeden temat, który chciałby poprawić lub nadrobić. Forma zadania będzie zgodna z tematem, który poprawia student. 
+    - Można poprawiać albo całość (wejściówka+program) albo tylko wybrana część.
+	- Nie ma możliwości poprawiania ani nadrabiania więcej niż jednego tematu w semestrze. Nie ma też możliwości poprawy wejściówki z innego tematu niż program.
+	- Poprawy odbywają się w dwóch turach (dwa terminy L5 w harmonogramie), w każdej z tur poprawiane są dwa tematy. Przypisanie terminów do tematów zostanie podane po zapisach na poprawy.
+	- Wynik z poprawy **zastępuje** wynik z pierwotnego laboratorium, nawet jeśli jest gorszy od tego wyniku.
+    - Nieprzystąpienie do dowolnej części poprawy powoduje pozostawienie poprzedniego wyniku za tę część.
+    - Zapisy na termin poprawkowy L5 będą realizowane na platformie moodle. Zapisy będą otwarte po zakończeniu zadania L4 przez wszystkie grupy i będą otwarte tylko przez 26 godzin. Osoby, które nie zapiszą się w wyznaczonym przedziale czasu nie będą dopuszczone do poprawy.
 
 ## Forma oddawania zadania
 
 -   Zadanie musi być wykonane w języku *C* (nie C++)
--   Rozwiązanie każdego etapu zadania musi być przesłane w formie osobnego archiwum w formacie .tar.gz, .tar.xz lub .tar.bz2 tak aby po rozpakowaniu archiwum z flagami -xjf, -xJf lub -xzf utworzył się podkatalog o nazwie \$USER\_etapX zawierający wszystkie wymagane pliki. \$USER jest loginem wydziałowym, a X numerem etapu.
--   Archiwum musi zawierać wyłącznie pliki źródłowe (.c,.h) oraz plik Makefile
--   Plik Makefile ma pozwalać na kompilację całego rozwiązania pojedynczą komendą *make*
--   Podczas kompilacji gcc *obowiązkowo* ma być użyta flaga *-Wall*
+-   Rozwiązanie każdego etapu zadania musi być przesłane w formie osobnego archiwum o nazwie `$USER` w formacie .tar.gz, .tar.xz lub .tar.bz2 tak aby po rozpakowaniu archiwum z flagami -xjf, -xJf lub -xzf utworzył się podkatalog o nazwie `$USER` zawierający wszystkie wymagane pliki. `$USER` jest loginem wydziałowym.
+-   Archiwum musi zawierać wyłącznie pliki źródłowe (.c,.h) oraz plik **Makefile**
+-   Plik Makefile ma pozwalać na kompilację całego rozwiązania pojedynczą komendą `make`
+-   Podczas kompilacji gcc *obowiązkowo* ma być użyta flaga `-Wall` oraz wszystkie flagi wymienione w treści zadania
 -   Gotowe archiwum należy wgrać do katalogu na udziale sieciowym wskazanego w treści zadania.
