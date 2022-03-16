@@ -34,11 +34,11 @@ Summer semester 2021/2022
 | 10.03 | [Lab1 FIFO/pipe]({{< ref "lab/l1">}})                                        | LAB1, LAB3 |
 | 17.03 | [Lab1 FIFO/pipe]({{< ref "lab/l1">}})                                        | LAB2, LAB4, LAB5   |
 | 24.03 | [Lab2 POSIX queues]({{< ref "lab/l2">}})                                     | LAB1, LAB3 |
-| 31.03 | [Lab2 POSIX queues]({{< ref "lab/l2">}})                                     | LAB2, LAB4, LAB5?   |
+| 31.03 | [Lab2 POSIX queues]({{< ref "lab/l2">}})                                     | LAB2, LAB4, LAB5   |
 | 21.04 | [Lab3 Network sockets, pselect]({{< ref "lab/l3">}})                         | LAB1, LAB3 |
-| 28.04 | [Lab3 Network sockets, pselect]({{< ref "lab/l3">}})                         | LAB2, LAB4, LAB5?   |
+| 28.04 | [Lab3 Network sockets, pselect]({{< ref "lab/l3">}})                         | LAB2, LAB4, LAB5   |
 | 19.05 | [Lab4 Sockets, threads, shared memory, synchronization]({{< ref "lab/l4">}}) | LAB1, LAB3 |
-| 26.05 | [Lab4 Sockets, threads, shared memory, synchronization]({{< ref "lab/l4">}}) | LAB2, LAB4, LAB5?   |
+| 26.05 | [Lab4 Sockets, threads, shared memory, synchronization]({{< ref "lab/l4">}}) | LAB2, LAB4, LAB5   |
 | 27.05 | 8:00pm: retake signup closes (in moodle)                                     | Everyone         |
 | 02.06 | Lab5: Retakes                                                              | Everyone         |
 | 09.06 | Lab5: Retakes                                                              | Everyone         |

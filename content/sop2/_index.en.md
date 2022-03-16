@@ -24,3 +24,4 @@ usemenu: "sop2"
   - note: usually I don't read messages on teams
 - Gr 1, gr 2: Mateusz Majewski
 - Gr 3, gr 4: Weronika Głuszczak
+- Gr 5: Tomasz Karwowski
