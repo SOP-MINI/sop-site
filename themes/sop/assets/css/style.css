@@ -1,12 +1,23 @@
+body {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 10px;
+    font: 18px/1.75 Liberation Sans, Arimo, Helvetica, Arial;
+    color: #444;
+    background-color: #efefef;
+}
+
 .dlaN, .uwagi, .wstepne {
-    border: solid 0.5em yellow;
-    padding: .2em;
+    border-radius: 15px;
+    background-color: #edc;
+    padding: 15px;
     margin-top: 1em;
 }
 
 .cwiczenie {
-    border: double 0.5em blue;
-    padding: .2em;
+    border-radius: 15px;
+    background-color: #cde;
+    padding: 15px;
     margin-top: 1em;
 }
 
@@ -22,7 +33,9 @@
 pre {
     margin-left: 1.5em;
     padding-left: 0.5em;
-    border-left: solid thick ;
+    border-left: solid thick;
+    font: 18px/1.35 monospace;
+    white-space: pre-wrap;
 }
 
 table {
@@ -37,4 +50,12 @@ table th {
 table td {
     border: solid thin;
     padding: 0.2em;
+}
+
+a {
+    color: #246;
+}
+
+a:hover {
+    color: #468;
 }
