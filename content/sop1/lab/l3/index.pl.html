@@ -10,7 +10,7 @@ draft: false
 Uwagi wstępne:
 <ol>
 <li>Szybkie przejrzenie tutoriala prawdopodobnie nic nie pomoże, należy samodzielnie uruchomić programy, sprawdzić jak działają, poczytać materiały dodatkowe takie jak strony man. W trakcie czytania sugeruję wykonywać ćwiczenia a na koniec przykładowe zadanie.</li>
-<li>Na żółtych polach podaję dodatkowe informacje, niebieskie zawierają pytania i ćwiczenia. Pod pytaniami znajdują się odpowiedzi, które staną się widoczne dopiero po zaznaczeniu ich myszką. Proszę najpierw spróbować sobie odpowiedzieć na pytanie samemu a dopiero potem sprawdzać odpowiedź.</p>
+<li>Na żółtych polach podaję dodatkowe informacje, niebieskie zawierają pytania i ćwiczenia. Pod pytaniami znajdują się odpowiedzi, które staną się widoczne dopiero po kliknięciu. Proszę najpierw spróbować sobie odpowiedzieć na pytanie samemu a dopiero potem sprawdzać odpowiedź.</p>
 <li>Pełne kody do zajęć znajdują się w załącznikach na dole strony. W tekście są tylko te linie kodu, które są konieczne do zrozumienia problemu.</li>
 <li>Materiały i ćwiczenia są ułożone w pewną logiczną całość, czasem do wykonania ćwiczenia konieczny jest stan osiągnięty poprzednim ćwiczeniem dlatego zalecam wykonywanie ćwiczeń w miarę przyswajania materiału.</li>
 <li>Większość ćwiczeń wymaga użycia konsoli poleceń, zazwyczaj zakładam, ze pracujemy w jednym i tym samym katalogu roboczym więc wszystkie potrzebne pliki są "pod ręką" tzn. nie ma potrzeby podawania ścieżek dostępu.</li>
@@ -81,25 +81,25 @@ LDLIBS=-lpthread -lm
 </ol></div>
 <div class="cwiczenie"><ol>
 <li>Makro ERR nie wysyła sygnału jak w programie wieloprocesowym, czemu?<br/>
-Odp:<span class="odpowiedz">Funkcja exit zamyka cały proces tzn. wszystkie wątki w jego obrębie.</span></li>
+{{< answer >}} Funkcja exit zamyka cały proces tzn. wszystkie wątki w jego obrębie. {{< /answer >}}</li>
 <li>Jak dane są przekazywane do nowo tworzonych wątków?<br/>
-Odp:<span class="odpowiedz">Wyłącznie przez strukturę argsEstimation_t do której wskaźnik jest argumentem funkcji wątku, nie ma żadnego powodu aby użyć zmiennych globalnych.</span></li>
+{{< answer >}} Wyłącznie przez strukturę argsEstimation_t do której wskaźnik jest argumentem funkcji wątku, nie ma żadnego powodu aby użyć zmiennych globalnych. {{< /answer >}}</li>
 <li>Czy dane na których pracują wątki są współdzielone pomiędzy nimi?<br/>
-Odp:<span class="odpowiedz">W tym programie nie, zatem nie ma też konieczności niczego synchronizować, każdy wątek dostaje tylko swoje dane.</span></li>
+{{< answer >}} W tym programie nie, zatem nie ma też konieczności niczego synchronizować, każdy wątek dostaje tylko swoje dane. {{< /answer >}}</li>
 <li>Skąd wątki biorą "ziarno" do swoich wywołań rand_r?<br/>
-Odp:<span class="odpowiedz">Dostają to ziarno jako jedno z pól struktury z danymi wątku.</span></li>
+{{< answer >}} Dostają to ziarno jako jedno z pól struktury z danymi wątku. {{< /answer >}}</li>
 <li>Czemu w kodzie używamy srand/rand czy to nie przeczy uwadze podanej kilka punktów powyżej? <br/>
-Odp:<span class="odpowiedz">Tylko jeden wątek używa srand/rand do tego czyni to zanim wystartują inne wątki zatem na etapie gdy program jest jeszcze jednowątkowy. Problem z srand/rand polega na pojedynczej zmiennej globalnej przechowującej aktualne ziarno (zmienna ta jest ukryta w bibliotece). </span></li>
+{{< answer >}} Tylko jeden wątek używa srand/rand do tego czyni to zanim wystartują inne wątki zatem na etapie gdy program jest jeszcze jednowątkowy. Problem z srand/rand polega na pojedynczej zmiennej globalnej przechowującej aktualne ziarno (zmienna ta jest ukryta w bibliotece).  {{< /answer >}}</li>
 <li>Czy moglibyśmy mieć jedną strukturę z parametrami startowymi programu? Czemu?<br/>
-Odp:<span class="odpowiedz">Nie, ze względu na pole z ziarnem losowości, to musi być inne dla wszystkich wątków</span></li>
+{{< answer >}} Nie, ze względu na pole z ziarnem losowości, to musi być inne dla wszystkich wątków {{< /answer >}}</li>
 <li>Czy tablica z strukturami startowymi mogłaby być zmienna automatyczną a nie dynamiczną ? <br/>
-Odp:<span class="odpowiedz">Tyko jeśli dodalibyśmy istotne ograniczenie na ilość wątków (np.: do tysiąca), w przeciwnym wypadku tablica ta może zająć cały stos. </span></li>
+{{< answer >}} Tyko jeśli dodalibyśmy istotne ograniczenie na ilość wątków (np.: do tysiąca), w przeciwnym wypadku tablica ta może zająć cały stos.  {{< /answer >}}</li>
 <li>Czemu służy zwalnianie pamięci danych zwróconych przez wątek?<br/>
-Odp:<span class="odpowiedz">Pamięć na te dane te została przydzielona dynamicznie, sterta jest wspólna dla wątków więc musimy zwolnić tą pamięć, zakończenie się wątku nie zrobi tego za nas.</span></li>
+{{< answer >}} Pamięć na te dane te została przydzielona dynamicznie, sterta jest wspólna dla wątków więc musimy zwolnić tą pamięć, zakończenie się wątku nie zrobi tego za nas. {{< /answer >}}</li>
 <li>Czy można zwrócić z wątku adres lokalnej (dla wątku) zmiennej automatycznej z wynikiem? <br/>
-Odp:<span class="odpowiedz">Nie, w momencie końca wątku jego stos jest zwalniany, więc jakikolwiek wskaźnik na tą pamięć przestaje być wiarygodny. Co gorsza, w wielu przypadkach to będzie wyglądać jakby działało, bo do "zepsucia" potrzeba aby program napisał sobie tą pamięć. Należy być wyjątkowo wyczulonym na tego rodzaju błędy bo są one potem bardzo trudne do wyszukania!</span></li>
+{{< answer >}} Nie, w momencie końca wątku jego stos jest zwalniany, więc jakikolwiek wskaźnik na tą pamięć przestaje być wiarygodny. Co gorsza, w wielu przypadkach to będzie wyglądać jakby działało, bo do "zepsucia" potrzeba aby program napisał sobie tą pamięć. Należy być wyjątkowo wyczulonym na tego rodzaju błędy bo są one potem bardzo trudne do wyszukania! {{< /answer >}}</li>
 <li>Czy można jakoś uniknąć dodatkowej alokacji w funkcji wątku?<br/>
-Odp:<span class="odpowiedz">Można dodać pole przeznaczone na wynik w strukturze przekazywanej podczas startu wątku. </span></li>
+{{< answer >}} Można dodać pole przeznaczone na wynik w strukturze przekazywanej podczas startu wątku.  {{< /answer >}}</li>
 </ol></div>
 </p>
                                 <hr />
@@ -141,19 +141,19 @@ Odp:<span class="odpowiedz">Można dodać pole przeznaczone na wynik w strukturz
 
 <div class="cwiczenie"><ol>
 <li> Czy dane przekazane przez argsThrower_t są współdzielone pomiędzy wątki?<br/>
-Odp:<span class="odpowiedz">Częściowo tak, wspólne dane muszą być chronione przy wielodostępie, stąd muteksy dla liczników i koszy.</span></li>
+{{< answer >}} Częściowo tak, wspólne dane muszą być chronione przy wielodostępie, stąd muteksy dla liczników i koszy. {{< /answer >}}</li>
 <li>Czy struktura argsThrower_t  jest optymalna?<br/>
-Odp:<span class="odpowiedz">Nie - wiele pól kopiujemy dla każdego wątku, chociaż te wskaźniki są takie same. Wspólne elementy można przenieść do drugiej struktury i tylko podawać jeden wskaźnik każdemu wątkowi zamiast 6 jak w kodzie. Dodatkowo przechowujmy w tej strukturze tid'y wątków, ale z tego nigdzie nie korzystamy.  </span></li>
+{{< answer >}} Nie - wiele pól kopiujemy dla każdego wątku, chociaż te wskaźniki są takie same. Wspólne elementy można przenieść do drugiej struktury i tylko podawać jeden wskaźnik każdemu wątkowi zamiast 6 jak w kodzie. Dodatkowo przechowujmy w tej strukturze tid'y wątków, ale z tego nigdzie nie korzystamy.   {{< /answer >}}</li>
 <li>Czemu używamy głównie wskaźników do przekazania danych do wątków?<br/>
-Odp:<span class="odpowiedz"> Współdzielimy te dane, nie chcemy mieć lokalnych kopi zupełnie niezależnych od innych wątków, chcemy mieć jedną kopię tych danych dla wszystkich wątków.</span></li>
+{{< answer >}}  Współdzielimy te dane, nie chcemy mieć lokalnych kopi zupełnie niezależnych od innych wątków, chcemy mieć jedną kopię tych danych dla wszystkich wątków. {{< /answer >}}</li>
 <li>Czy mutex'y można przekazać nie przez wskaźnik?<br/>
-Odp:<span class="odpowiedz"> NIE, TO ZABRONIONE PRZEZ POSIX, kopia muteksu nie musi być muteksem, a już zupełnie oczywiste, że nie byłaby tym samym muteksem</li></span>
+{{< answer >}}  NIE, TO ZABRONIONE PRZEZ POSIX, kopia muteksu nie musi być muteksem, a już zupełnie oczywiste, że nie byłaby tym samym muteksem</li> {{< /answer >}}
 <li>Ten program używa  dużo muteksów, czy może być ich mniej?<br/>
-Odp:<span class="odpowiedz"> Tak, w skrajnym wypadku wystarczyłby 1 ale kosztem równoległości, możliwe są też rozwiązania pośrednie np. po jednym na liczniki i jeden wspólny na kosze. To ostatnie rozwiązanie, pomimo zmniejszenia równoległości, może okazać się szybsze bo liczne operacje na muteksach są dodatkowych obciążeniem dla systemu. </li>
+{{< answer >}}  Tak, w skrajnym wypadku wystarczyłby 1 ale kosztem równoległości, możliwe są też rozwiązania pośrednie np. po jednym na liczniki i jeden wspólny na kosze. To ostatnie rozwiązanie, pomimo zmniejszenia równoległości, może okazać się szybsze bo liczne operacje na muteksach są dodatkowych obciążeniem dla systemu. {{< /answer >}}</li>
 <li>Metoda czekania na zakończenie się  wątków liczących polega na okresowym sprawdzaniu czy licznik kul zrzuconych jest równy sumie kul w programie, czy jest to optymalne rozwiązanie?<br/>
-Odp:<span class="odpowiedz"> Nie jest. To jest tzw. soft busy waiting, ale bez użycia zmiennych warunkowych nie możemy tego zrobić lepiej.</span></li>
+{{< answer >}}  Nie jest. To jest tzw. soft busy waiting, ale bez użycia zmiennych warunkowych nie możemy tego zrobić lepiej. {{< /answer >}}</li>
 <li>Czy wszystkie wątki w tym programie na prawdę pracują?<br/>
-Odp:<span class="odpowiedz">  Nie, zwłaszcza gdy będzie ich dużo. Możliwe jest tzw. zagłodzenie wątku, czyli nie danie mu szansy na pracę. W tym programie działania wątku są na prawdę szybkie a tworzenie nowych wątków dość czasochłonne, może się tak stać, że wątki utworzone jako ostatnie nie będą miały co robić bo te wcześniejsze przerzucą wszystkie kulki wcześniej. Jako sprawdzenie dodaj do wątków liczniki ile kulek przerzucił dany wątek i wypisz je na koniec na ekran. Można zapobiec temu zjawisku synchronizując moment rozpoczęcia pracy przez wątki, ale tu znowu nie wystarczy muteks, najlepiej taką synchronizację zrobić na barierze lub zmiennej warunkowej, a te mechanizmy poznacie w przyszłym semestrze.</span></li>
+{{< answer >}}   Nie, zwłaszcza gdy będzie ich dużo. Możliwe jest tzw. zagłodzenie wątku, czyli nie danie mu szansy na pracę. W tym programie działania wątku są na prawdę szybkie a tworzenie nowych wątków dość czasochłonne, może się tak stać, że wątki utworzone jako ostatnie nie będą miały co robić bo te wcześniejsze przerzucą wszystkie kulki wcześniej. Jako sprawdzenie dodaj do wątków liczniki ile kulek przerzucił dany wątek i wypisz je na koniec na ekran. Można zapobiec temu zjawisku synchronizując moment rozpoczęcia pracy przez wątki, ale tu znowu nie wystarczy muteks, najlepiej taką synchronizację zrobić na barierze lub zmiennej warunkowej, a te mechanizmy poznacie w przyszłym semestrze. {{< /answer >}}</li>
 </ol></div>
 
 </p>
@@ -189,20 +189,20 @@ Odp:<span class="odpowiedz">  Nie, zwłaszcza gdy będzie ich dużo. Możliwe je
 </ol></div>
 <div class="cwiczenie"><ol>
 <li>Ile wątków jest w tym programie?<br/>
-Odp:<span class="odpowiedz">Dwa, wątek główny utworzony przez system (każdy proces ma ten jeden wątek) oraz watek utworzony przez nas w kodzie. </span></li>
-<li>Wypunktuj różnicę i podobieństwa pomiędzy sigwait i sigsuspend: <span class="odpowiedz"><ul>
+{{< answer >}} Dwa, wątek główny utworzony przez system (każdy proces ma ten jeden wątek) oraz watek utworzony przez nas w kodzie.  {{< /answer >}}</li>
+<li>Wypunktuj różnicę i podobieństwa pomiędzy sigwait i sigsuspend: {{< answer >}}<ul>
   <li>sigwait nie wymaga funkcji obsługi sygnału tak jak sigsuspend</li>
   <li>obie metody wymagają blokowania sygnałów oczekiwanych</li>
   <li>sigwait nie jest przerywany przez funkcję obsługi sygnałów -  nie może to wynika z POSIX</li>
   <li>sigwait nie zmienia maski blokowanych sygnałów więc nie ma mowy o uruchomieniu obsługi sygnału blokowanego (jeśli by takowa była, w przykładzie nie ma) jak przy sigsuspend</li>
-</ul></span></li>
+</ul>{{< /answer >}}</li>
 <li>Po wywołaniu sigwait tylko jeden typ sygnału jest zdejmowany z wektora sygnałów oczekujących wiec problem jaki mieliśmy z obsługa wielu sygnałów w trakcie pojedynczego sigsuspend w przykładzie z L2  nie wystąpiłby jeśli zamienić użycie sigsuspend na sigwait (ćwiczenie do zrobienia) </li>
 <li>Czy metoda czekania na potomka jest w tym programie równie słaba jak w poprzednim?<br/>
-Odp:<span class="odpowiedz">  Nie,  tutaj sprawdzanie co sekundę jest częścią zadania, gdyby jednak nie było to i tak unikniemy busy waitingu bo możemy się synchronizować na pthread_join.</span></li>
+{{< answer >}}   Nie,  tutaj sprawdzanie co sekundę jest częścią zadania, gdyby jednak nie było to i tak unikniemy busy waitingu bo możemy się synchronizować na pthread_join. {{< /answer >}}</li>
 <li>Czy w tym programie można użyć sigprocmask zamiast pthread_sigmask?<br/>
-Odp:<span class="odpowiedz">Tak, wywołanie blokujące sygnały pojawia się zanim powstaną dodatkowe wątki.</span></li>
+{{< answer >}} Tak, wywołanie blokujące sygnały pojawia się zanim powstaną dodatkowe wątki. {{< /answer >}}</li>
 <li>Czemu nie sprawdzamy błędów wywołań funkcji systemowych związanych pozyskaniem i zwolnieniem muteksów<br/>
-Odp:<span class="odpowiedz">Podstawowy typ muteksu (a taki używamy w programie) nie sprawdza i nie raportuje błędów. Dodanie sprawdzania nie byłoby wcale złe, łatwiej można potem zmienić muteks na typ raportujący błędy. </span></li>
+{{< answer >}} Podstawowy typ muteksu (a taki używamy w programie) nie sprawdza i nie raportuje błędów. Dodanie sprawdzania nie byłoby wcale złe, łatwiej można potem zmienić muteks na typ raportujący błędy.  {{< /answer >}}</li>
 
 </ol></div>
 </p>
@@ -245,21 +245,21 @@ Odp:<span class="odpowiedz">Podstawowy typ muteksu (a taki używamy w programie)
 <div class="cwiczenie"><ol>
 
 <li>Ile w programie występuje mutexów i co chronią?<br/>
-Odp:<span class="odpowiedz">Dokładnie 4, każdy chroni inny współdzielony licznik.</span></li>
+{{< answer >}} Dokładnie 4, każdy chroni inny współdzielony licznik. {{< /answer >}}</li>
 <li>Czy aktualny rok studenta musi być częścią struktury argsModify_t?<br/>
-Odp:<span class="odpowiedz">Nie, równie dobrze mógłby być automatyczną zmienną utworzoną w wątku, nie byłaby wtedy potrzebna struktura argsModify_t , wątkom przekazywalibyśmy wskaźnik na strukturę yearCounters. </span></li>
+{{< answer >}} Nie, równie dobrze mógłby być automatyczną zmienną utworzoną w wątku, nie byłaby wtedy potrzebna struktura argsModify_t , wątkom przekazywalibyśmy wskaźnik na strukturę yearCounters.  {{< /answer >}}</li>
 <li>Co to znaczy, że wątek ma stan anulowania PTHREAD_CANCEL_DEFERRED ?<br/>
-Odp:<span class="odpowiedz">Anulowanie nastąpi dopiero podczas wywołania funkcji z listy funkcji "cancelation points"</span></li>
+{{< answer >}} Anulowanie nastąpi dopiero podczas wywołania funkcji z listy funkcji "cancelation points" {{< /answer >}}</li>
 <li>Które z funkcji użytych w funkcji wątku są punktami anulowania wątku?<br/>
-Odp:<span class="odpowiedz">W tym kodzie  tylko nanosleep (wywołany z msleep).</span></li>
+{{< answer >}} W tym kodzie  tylko nanosleep (wywołany z msleep). {{< /answer >}}</li>
 <li>Skąd wiemy, które funkcje są takimi punktami?<br/>
-Odp:<span class="odpowiedz">$man 7 pthreads</span></li>
+{{< answer >}} $man 7 pthreads {{< /answer >}}</li>
 <li>Co oznacza jedynka w wywołaniu: pthread_cleanup_pop(1); ?<br/>
-Odp:<span class="odpowiedz">Oznacza, że poza zdjęciem handlera ze stosu jest on też wykonywany.</span></li>
+{{< answer >}} Oznacza, że poza zdjęciem handlera ze stosu jest on też wykonywany. {{< /answer >}}</li>
 <li>Kiedy jest zmniejszany liczniku roku?<br/>
-Odp:<span class="odpowiedz">W dwu przypadkach, podczas anulowania (rzadki przypadek) oraz  podczas zdjęcia handlera decrement_counter ze stosu cleanup handlerów.</span></li>
+{{< answer >}} W dwu przypadkach, podczas anulowania (rzadki przypadek) oraz  podczas zdjęcia handlera decrement_counter ze stosu cleanup handlerów. {{< /answer >}}</li>
 <li>W algorytmie losowania wątku do anulowania jest spory błąd logiczny, gdzie i jakie niesie zagrożenie?<br/>
-Odp:<span class="odpowiedz">Losowy  wybór wątku do anulowania  może trwać bardzo długo gdy na dużej liście wątków zostanie np. tylko 1 nie anulowany.  Można to zaobserwować, jeśli wywołać program z parametrem 10.</span></li>
+{{< answer >}} Losowy  wybór wątku do anulowania  może trwać bardzo długo gdy na dużej liście wątków zostanie np. tylko 1 nie anulowany.  Można to zaobserwować, jeśli wywołać program z parametrem 10. {{< /answer >}}</li>
 <li>Jako ćwiczenie popraw sposób losowania "żyjącego" wątku do anulowania.</li>
 <li>Zwróć uwagę na sposób odliczenia 4 sekund w losowych interwałach za pomocą clock_gettime i nanosleep,  to można zmienić, dodając wywołanie f.alarm i oddając obsługę sygnału SIGALRM. Rozwiązanie takie można wykonać jako ćwiczenie. </li>
 

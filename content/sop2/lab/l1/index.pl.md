@@ -10,7 +10,7 @@ Uwagi wstępne:
 
 1.  Obowiązują wszystkie materiały z SOP1, szczególnie tutoriale L1,L2 i L3!
 2.  Szybkie przejrzenie tutoriala prawdopodobnie nic nie pomoże, należy samodzielnie uruchomić programy, sprawdzić jak działają, poczytać materiały dodatkowe takie jak strony man. W trakcie czytania sugeruję wykonywać ćwiczenia a na koniec przykładowe zadanie.
-3.  Na żółtych polach podaję dodatkowe informacje, niebieskie zawierają pytania i ćwiczenia. Pod pytaniami znajdują się odpowiedzi, które staną się widoczne dopiero po zaznaczeniu ich myszką. Proszę najpierw spróbować sobie odpowiedzieć na pytanie samemu a dopiero potem sprawdzać odpowiedź.
+3.  Na żółtych polach podaję dodatkowe informacje, niebieskie zawierają pytania i ćwiczenia. Pod pytaniami znajdują się odpowiedzi, które staną się widoczne dopiero po kliknięciu. Proszę najpierw spróbować sobie odpowiedzieć na pytanie samemu a dopiero potem sprawdzać odpowiedź.
 4.  Pełne kody do zajęć znajdują się w załącznikach na dole strony. W tekście są tylko te linie kodu, które są konieczne do zrozumienia problemu.
 5.  Materiały i ćwiczenia są ułożone w pewną logiczną całość, czasem do wykonania ćwiczenia konieczny jest stan osiągnięty poprzednim ćwiczeniem dlatego zalecam wykonywanie ćwiczeń w miarę przyswajania materiału.
 6.  Większość ćwiczeń wymaga użycia konsoli poleceń, zazwyczaj zakładam, ze pracujemy w jednym i tym samym katalogu roboczym więc wszystkie potrzebne pliki są \"pod ręką\" tzn. nie ma potrzeby podawania ścieżek dostępu.
@@ -32,31 +32,29 @@ Uwagi wstępne:
 <div class="cwiczenie">
 
 1. Czy w sytuacji połączenia jednego procesu piszącego z jednym czytającym też trzeba przesyłać dane w paczkach nie przekraczających `PIPE_BUF`?  
-Odp: <span class="odpowiedz">Nie ma takiej konieczności, nie występuje w tym, wariancie problem konkurowania o możliwość zapisu.</span>
+{{< answer >}} Nie ma takiej konieczności, nie występuje w tym, wariancie problem konkurowania o możliwość zapisu. {{< /answer >}}
 2. Czy można otworzyć łącze pipe lub FIFO w obrębie jednego procesu/wątku?  
-Odp: <span class="odpowiedz">Można, choć to bardzo rzadki przypadek.]
+{{< answer >}}Można, choć to bardzo rzadki przypadek. {{ /answer }}
 3. O jakim zagrożeniu związanym z powyższym typem połączenia trzeba szczególnie pamiętać?  
-Odp: <span class="odpowiedz">O zakleszczeniu, łącze ma wewnętrzny bufor o wymiarze `PIPE_BUF`, próba wpisania tam większej ilości danych skończy się zablokowaniem procesu/wątku, który nie może w tym samym czasie czytać tych danych i zwalniać bufora. Można sobie znacząco ułatwić zadanie używając deskryptorów w trybie `O_NONBLOCK`.</span>
+{{< answer >}} O zakleszczeniu, łącze ma wewnętrzny bufor o wymiarze `PIPE_BUF`, próba wpisania tam większej ilości danych skończy się zablokowaniem procesu/wątku, który nie może w tym samym czasie czytać tych danych i zwalniać bufora. Można sobie znacząco ułatwić zadanie używając deskryptorów w trybie `O_NONBLOCK`. {{< /answer >}}
 4. Czy wysyłając kilka porcji danych bezpośrednio po sobie (kilka wywołań write) o sumarycznej wielkości poniżej PIPE\_BUF nadal mamy gwarancję ciągłości zapisu?  
-Odp: <span class="odpowiedz">NIE! ciągłość jest gwarantowana tylko dla POJEDYNCZEGO zapisu.</span>
+{{< answer >}} NIE! ciągłość jest gwarantowana tylko dla POJEDYNCZEGO zapisu. {{< /answer >}}
 5. Jeśli procesy piszące (wiele) wysyłają dane w porcjach mniejszych od `PIPE_BUF` ale o różnych rozmiarach to czy atomowość zapisu wystarczy aby te dane prawidłowo odebrać?  
-Odp: <span class="odpowiedz">NIE, proces czytający musi wiedzieć ile danych ma czytać. Jeśli dane będą wysyłane w tym samym czasie to nie ma możliwości aby proces czytający wiedział gdzie kończy się jedna porcja a gdzie zaczyna druga. Można na początku danych podać ilość aktualnie przesyłaną aby proces czytający wiedział ile jeszcze doczytać z łącza lub można zawsze przesyłać pakiety o wymiarze `PIPE_BUF` a brakujące dane uzupełniać np. zerami.</span>
+{{< answer >}} NIE, proces czytający musi wiedzieć ile danych ma czytać. Jeśli dane będą wysyłane w tym samym czasie to nie ma możliwości aby proces czytający wiedział gdzie kończy się jedna porcja a gdzie zaczyna druga. Można na początku danych podać ilość aktualnie przesyłaną aby proces czytający wiedział ile jeszcze doczytać z łącza lub można zawsze przesyłać pakiety o wymiarze `PIPE_BUF` a brakujące dane uzupełniać np. zerami. {{< /answer >}}
 6. Kiedy może zostać przerwany zapis `2*PIPE_BUF` danych do łącza? Skąd wiadomo o przerwaniu? Chodzi o dowolną metodę przerwania ciągłości zapisu, zarówno przez obsługę sygnału jak i przerwanie procesu zapisu przez scheduler CPU oraz przez potencjalne zerwanie łącza.  
-Odp: <span class="odpowiedz">Przed wysłaniem jakichkolwiek danych, wtedy wywołanie write zwraca błąd EINTR lub po przesłaniu PIPE\_BUF, wtedy write zwraca ilość przesłanych danych \< `2*PIPE_BUF`.</span>
+{{< answer >}} Przed wysłaniem jakichkolwiek danych, wtedy wywołanie write zwraca błąd EINTR lub po przesłaniu PIPE\_BUF, wtedy write zwraca ilość przesłanych danych \< `2*PIPE_BUF`. {{< /answer >}}
 7. Zakładając intensywną obsługę sygnałów w programie, ile razy może zostać przerwane powyżej omawiane wywołanie?  
-Odp: <span class="odpowiedz">Dowolnie dużo razy zanim zacznie się wykonywać i dowolnie dużo razy po zapisaniu `PIPE_BUF` bajtów zanim zacznie się zapis kolejnego bufora `PIPE_BUF`.</span>
+{{< answer >}} Dowolnie dużo razy zanim zacznie się wykonywać i dowolnie dużo razy po zapisaniu `PIPE_BUF` bajtów zanim zacznie się zapis kolejnego bufora `PIPE_BUF`. {{< /answer >}}
 8. W jakich okolicznościach może zostać przerwane wysyłanie `PIPE_BUF` danych?  
-Odp: <span class="odpowiedz">W przypadku występowania obsługi sygnałów w programie, tylko zanim rozpocznie się transfer (błąd EINTR)</span>
+{{< answer >}} W przypadku występowania obsługi sygnałów w programie, tylko zanim rozpocznie się transfer (błąd EINTR) {{< /answer >}}
 9. Co oznacza odczyt zera bajtów z łącza?  
-Odp: <span class="odpowiedz">EOF czyli zerwanie połączenia.</span>
+{{< answer >}} EOF czyli zerwanie połączenia. {{< /answer >}}
 10. Jeśli program bazujący na fifo/pipe kończy się nagle komunikatem o przerwaniu działania sygnałem to o czym zapomniałeś?  
-Odp: <span class="odpowiedz">O prawidłowej obsłudze zerwania łącza w przypadku zapisu, trzeba dodać ignorowanie sygnału `SIGPIPE` i sprawdzać write pod kątem błędu `EPIPE`.</span>
+{{< answer >}} O prawidłowej obsłudze zerwania łącza w przypadku zapisu, trzeba dodać ignorowanie sygnału `SIGPIPE` i sprawdzać write pod kątem błędu `EPIPE`. {{< /answer >}}
 11. Czy EPIPE jest możliwy podczas odczytu z łącza?  
-Odp: <span class="odpowiedz">Nie. SIGPIPE/EPIPE dotyczy wyłącznie zapisu!</span>
+{{< answer >}} Nie. SIGPIPE/EPIPE dotyczy wyłącznie zapisu! {{< /answer >}}
 12. Czy zapis do łącza (write) może zwrócić zero?  
-Odp: <span class="odpowiedz">Zakładając, że nie próbujesz zapisać zera bajtów to nie. EOF dotyczy wyłącznie odczytu!<
-
-</span>
+{{< answer >}}Zakładając, że nie próbujesz zapisać zera bajtów to nie. EOF dotyczy wyłącznie odczytu!{{< /answer >}}
 </div>
 
 ------------------------------------------------------------------------
@@ -114,17 +112,17 @@ Zadanie podzielimy na etapy.
 <div class="cwiczenie">
 
 1. Czemu służy sekundowa przerwa pomiędzy uruchomieniem serwera a polecenie cat w wywołaniu programu?  
-Odp: <span class="odpowiedz">Daje czas na utworzenie fifo, inaczej może się zdarzyć, że szybciej uruchomi się polecenie cat i utworzy plik \"a\", wtedy nasz program nie będzie mógł utworzyć fifo o tej nazwie i zwróci błąd. Problemu nie zaobserwujemy jeśli w katalogu roboczym jest już fifo o nazwie \"a\", więc jeśli chcesz wymusić takie zachowanie programu upewnij się, że nie ma \"a\" w katalogu.</span>
+{{< answer >}} Daje czas na utworzenie fifo, inaczej może się zdarzyć, że szybciej uruchomi się polecenie cat i utworzy plik \"a\", wtedy nasz program nie będzie mógł utworzyć fifo o tej nazwie i zwróci błąd. Problemu nie zaobserwujemy jeśli w katalogu roboczym jest już fifo o nazwie \"a\", więc jeśli chcesz wymusić takie zachowanie programu upewnij się, że nie ma \"a\" w katalogu. {{< /answer >}}
 2. Jaki jest typ pliku \"a\" jak to sprawdzić?  
-Odp: <span class="odpowiedz">\$ls -l - typ ten to fifo \"p\"</span>
+{{< answer >}} \$ls -l - typ ten to fifo \"p\" {{< /answer >}}
 3. Czemu `EEXIST` nie jest traktowane jako błąd krytyczny po wykonaniu `mkfifo`?  
-Odp: <span class="odpowiedz">Wcześniej utworzone fifo też się nadaje na potrzeby programu zwłaszcza, że nie kasujemy fifo w kodzie.<span>
+{{< answer >}}Wcześniej utworzone fifo też się nadaje na potrzeby programu zwłaszcza, że nie kasujemy fifo w kodzie.{{< /answer >}}
 4. Czy czytanie z fifo po jednym znaku nie ogranicza wydajności?  
-Odp: <span class="odpowiedz">Nieznacznie spowalnia dodając wywołanie funkcji read do odczytu z bufora jądra. Nie ma absolutnej konieczności kopiowania tego bufora jeśli przetwarzanie ma odbywać się znak po znaku.</span>
+{{< answer >}} Nieznacznie spowalnia dodając wywołanie funkcji read do odczytu z bufora jądra. Nie ma absolutnej konieczności kopiowania tego bufora jeśli przetwarzanie ma odbywać się znak po znaku. {{< /answer >}}
 5. Czy pisanie znak po znaku nie ogranicza wydajności?  
-Odp: <span class="odpowiedz">W tym wypadku piszemy do buforowanego strumienia więc nie ma tu znacznego opóźnienia, ale już użycie write (czyli bez bufora) do zapisu pojedynczego znaku byłoby bardzo dużym ograniczeniem wydajności.</span>
+{{< answer >}} W tym wypadku piszemy do buforowanego strumienia więc nie ma tu znacznego opóźnienia, ale już użycie write (czyli bez bufora) do zapisu pojedynczego znaku byłoby bardzo dużym ograniczeniem wydajności. {{< /answer >}}
 6. Skąd wiadomo, że nie ma i nie będzie już więcej danych w łączu?  
-Odp: <span class="odpowiedz">EOF - zerwanie łącza wykryte podczas odczytu, gdy program/y piszący zakończą działanie i opróżniony będzie bufor łącza.</span>
+{{< answer >}} EOF - zerwanie łącza wykryte podczas odczytu, gdy program/y piszący zakończą działanie i opróżniony będzie bufor łącza. {{< /answer >}}
 
 </div>
 
@@ -152,15 +150,15 @@ Odp: <span class="odpowiedz">EOF - zerwanie łącza wykryte podczas odczytu, gdy
 <div class="cwiczenie">
 
 1. Czemu tym razem nie ma wywołania sleep podczas uruchamiania?  
-Odp: <span class="odpowiedz">Nieważne kto utworzy łącze, oraz w jakiej kolejności będą się programy do niego podłączać, druga strona zawsze poczeka na nawiązanie łączności. Zwróć uwagę, że program klient też może utworzyć łącze (mkfifo) oraz na brak flagi `O_NONBLOCK` która zmieniłaby sposób nawiązania połączenia.</span>
+{{< answer >}} Nieważne kto utworzy łącze, oraz w jakiej kolejności będą się programy do niego podłączać, druga strona zawsze poczeka na nawiązanie łączności. Zwróć uwagę, że program klient też może utworzyć łącze (mkfifo) oraz na brak flagi `O_NONBLOCK` która zmieniłaby sposób nawiązania połączenia. {{< /answer >}}
 2. Czemu stały rozmiar w tej komunikacji jest ważny?  
-Odp: <span class="odpowiedz">Bo tak najłatwiej serwer będzie wiedział ile bajtów czytać aby nie pomieszać danych od różnych klientów.</span>
+{{< answer >}} Bo tak najłatwiej serwer będzie wiedział ile bajtów czytać aby nie pomieszać danych od różnych klientów. {{< /answer >}}
 3. Czy można wysyłać bufor partiami, np oddzielnie wysłać zera uzupełniające ostatni bufor?  
-Odp: <span class="odpowiedz">Nie bo się pomiesza z danymi z innych procesów.</span>
+{{< answer >}} Nie bo się pomiesza z danymi z innych procesów. {{< /answer >}}
 4. Czemu służy memset?  
-Odp: <span class="odpowiedz">Uzupełnienie ostatniego bufora do pełnego rozmiaru `PIPE_BUF` aby zachować stałe długości komunikatów, zera są ignorowane przez program serwera w sposób naturalny (zero jest terminatorem stringu).</span>
+{{< answer >}} Uzupełnienie ostatniego bufora do pełnego rozmiaru `PIPE_BUF` aby zachować stałe długości komunikatów, zera są ignorowane przez program serwera w sposób naturalny (zero jest terminatorem stringu). {{< /answer >}}
 5. Jak ten program zareaguje na zerwanie łącza?  
-Odp: <span class="odpowiedz">Zabije go sygnał `SIGPIPE`.</span>
+{{< answer >}} Zabije go sygnał `SIGPIPE`. {{< /answer >}}
 
 </div>
 
@@ -187,11 +185,11 @@ Odp: <span class="odpowiedz">Zabije go sygnał `SIGPIPE`.</span>
 <div class="cwiczenie">
 
 1.  Czemu ponownie pojawia się sleep w wywołaniu?  
-    Odp: <span class="odpowiedz">Bez tego \"sleep\" może się zdarzyć, że jeden klient oraz serwer szybciej się uruchomią od reszty klientów, klient dokona transferu a serwer go przetworzy po czym oba programy się skończą. Pozostali klienci połączą się z fifo ale serwera który mógłby ich obsłużyć już nie będzie. Ci klienci będą czekać na połączenie aż ponownie uruchomimy serwer.</span>
+{{< answer >}} Bez tego \"sleep\" może się zdarzyć, że jeden klient oraz serwer szybciej się uruchomią od reszty klientów, klient dokona transferu a serwer go przetworzy po czym oba programy się skończą. Pozostali klienci połączą się z fifo ale serwera który mógłby ich obsłużyć już nie będzie. Ci klienci będą czekać na połączenie aż ponownie uruchomimy serwer. {{< /answer >}}
 2.  Skąd wiadomo ile danych pochodzi od jednego klienta?  
-    Odp: <span class="odpowiedz">Ustalono stały rozmiar wiadomości równy `PIPE_BUF`.</span>
+{{< answer >}} Ustalono stały rozmiar wiadomości równy `PIPE_BUF`. {{< /answer >}}
 3.  Czy można przesyłać bloki większe niż `PIPE_BUF` bajtów?  
-    Odp: <span class="odpowiedz">Nie ze względu brak gwarancji ciągłości zapisu w fifo.</span>
+{{< answer >}} Nie ze względu brak gwarancji ciągłości zapisu w fifo. {{< /answer >}}
 
 </div>
 
@@ -240,13 +238,13 @@ Rozwiązanie dzielimy na 2 etapy
 2.  Podobnie jak deskryptory, nieużywana pamięć na stercie powinna być zwolniona, upewnij się że rozumiesz które bloki i kiedy należy zwolnić w procesie potomnym.
 3.  Metoda losowania znaków z przedziału \[a,z\] powinna być absolutnie oczywista, jeśli nie jest to rozpisz to sobie na kartce i poćwicz dla różnych przedziałów liter i liczb
 4.  Czasem podczas działania programu (najlepiej ustawić n=10) pojawia się błąd: \"Interrupted system call\" , czemu?  
-    Odp: <span class="odpowiedz"> Wywołanie funkcji obsługi SIGCHLD przerywa read zanim coś uda się przeczytać.</span>
+{{< answer >}}  Wywołanie funkcji obsługi SIGCHLD przerywa read zanim coś uda się przeczytać. {{< /answer >}}
 5.  Jak się przed tym błędem bronić?  
-    Odp: <span class="odpowiedz"> Dodać restart nałatwiej w postaci makra `TEMP_FAILURE_RETRY(read(...))`.</span>
+{{< answer >}}  Dodać restart nałatwiej w postaci makra `TEMP_FAILURE_RETRY(read(...))`. {{< /answer >}}
 6.  Jak program reaguje na zerwanie łącza R ?  
-    Odp: <span class="odpowiedz"> Jest to naturalny koniec głównej pętli, kończy się proces rodzica gdyż zerwanie następuje dopiero po odłączeniu się ostatniego potomka.</span>
+{{< answer >}}  Jest to naturalny koniec głównej pętli, kończy się proces rodzica gdyż zerwanie następuje dopiero po odłączeniu się ostatniego potomka. {{< /answer >}}
 7.  Czemu nie ma w tym programie wywołania wait/waitpid na końcu procesu rodzica?  
-    Odp: <span class="odpowiedz"> Wszystkie procesy potomne muszą się zakończyć zanim osiągnięty będzie koniec procesu rodzica, bez tego nie byłoby zerwania łącza. Wszystkie zombi są \"łapane\" przez obsługę SIGCHLD. </span>
+{{< answer >}}  Wszystkie procesy potomne muszą się zakończyć zanim osiągnięty będzie koniec procesu rodzica, bez tego nie byłoby zerwania łącza. Wszystkie zombi są \"łapane\" przez obsługę SIGCHLD.  {{< /answer >}}
 
 </div>
 
@@ -274,30 +272,30 @@ Rozwiązanie dzielimy na 2 etapy
 <div class="cwiczenie">
 
 1.  Jak jest zorganizowane czekanie na sygnał w procesie rodzicu? Nie ma blokowania, nie używamy sigsuspend, sigwait ani pselect?  
-    Odp: <span class="odpowiedz">Program zorientuje się na pierwszym read w głównej pętli, dostaje informacje o \"błędzie\" EINTR.</span>
+{{< answer >}} Program zorientuje się na pierwszym read w głównej pętli, dostaje informacje o \"błędzie\" EINTR. {{< /answer >}}
 2.  Zwrócić uwagę na wszechobecne `TEMP_FAILURE_RETRY`. Czemu nie ma go przy tym omawianym powyżej read?  
-    Odp: <span class="odpowiedz">Bo chcemy móc zareagować na ewentualna zmianę zmiennej globalnej, makro by nam to uniemożliwiło restartując read bez względu na tą zmienną - rodzic nie rozsyłałby liter do potomków.</span>
+{{< answer >}} Bo chcemy móc zareagować na ewentualna zmianę zmiennej globalnej, makro by nam to uniemożliwiło restartując read bez względu na tą zmienną - rodzic nie rozsyłałby liter do potomków. {{< /answer >}}
 3.  Czy zamiast tak często wołać `TEMP_FAILURE_RETRY` można by użyć flagi `SA_RESTART`?  
-    Odp: <span class="odpowiedz">Nie, bo powyżej omawiany read nie byłby w ogóle przerywany - program nie działałby, dodatkowo kod stałby się mniej przenośny o czym wspominałem w materiałach do L2 na SOP1.</span>
+{{< answer >}} Nie, bo powyżej omawiany read nie byłby w ogóle przerywany - program nie działałby, dodatkowo kod stałby się mniej przenośny o czym wspominałem w materiałach do L2 na SOP1. {{< /answer >}}
 4.  Z jakich powodów nie każdy C-c powoduje wypisanie?  
-    Odp: <span class="odpowiedz"> Może akurat wylosowany adresat postanawia się zakończyć, zdarza się też że rodzic może zgubić sygnały przez ich sklejanie gdy jest zajęty obsługą poprzedniego a na kolejne sygnały czeka tylko podczas wywołania funkcji read.</span>
+{{< answer >}}  Może akurat wylosowany adresat postanawia się zakończyć, zdarza się też że rodzic może zgubić sygnały przez ich sklejanie gdy jest zajęty obsługą poprzedniego a na kolejne sygnały czeka tylko podczas wywołania funkcji read. {{< /answer >}}
 5.  Drugi z powyższych powodów mógłby być ograniczony przez globalny licznik zamiast binarnej flagi `last_signal`. Zrób taką modyfikację jako ćwiczenie.
 6.  Czy proces potomny może zgubić SIGINT?  
-    Odp: <span class="odpowiedz"> Teoretycznie mogą się \"skleić\" ale praktycznie jest na to bardzo mała szansa bo są natychmiast obsługiwane.</span>
+{{< answer >}}  Teoretycznie mogą się \"skleić\" ale praktycznie jest na to bardzo mała szansa bo są natychmiast obsługiwane. {{< /answer >}}
 7.  Czemu odczyt z R w rodzicu jest dwuetapowy a zapis w potomku MUSI być jednorazowy?  
-    Odp: <span class="odpowiedz">Inaczej mogły się przemieszać odczyty, patrz uwagi na początku tego tutoriala.</span>
+{{< answer >}} Inaczej mogły się przemieszać odczyty, patrz uwagi na początku tego tutoriala. {{< /answer >}}
 8.  Czemu ignorujemy SIGPIPE i czy to niezbędne?  
-    Odp: <span class="odpowiedz"> To jest niezbędne, inaczej pisanie do \"martwego\" dziecka zamknęłoby cały programu. Prawidłową reakcją na zerwanie łącza od potomka NIE JEST WYJŚCIE Z PROGRAMU.</span>
+{{< answer >}}  To jest niezbędne, inaczej pisanie do \"martwego\" dziecka zamknęłoby cały programu. Prawidłową reakcją na zerwanie łącza od potomka NIE JEST WYJŚCIE Z PROGRAMU. {{< /answer >}}
 9.  Kiedy normalnie kończy się proces rodzic?  
-    Odp: <span class="odpowiedz">Gdy odczyta z R zero bajtów czyli gdy łacze R zostanie zerwane, czyli gdy skończą się procesy potomne.</span>
+{{< answer >}} Gdy odczyta z R zero bajtów czyli gdy łacze R zostanie zerwane, czyli gdy skończą się procesy potomne. {{< /answer >}}
 10. Prawidłowa reakcja na zerwanie łącza jest zawsze ważna, sprawdź czy umiesz w kodzie wskazać wszystkie takie przypadki zarówno podczas odczytu jak i zapisu danych. Ile miejsc w kodzie tego dotyczy?  
-    Odp: <span class="odpowiedz"> 4 </span>
+{{< answer >}}  4  {{< /answer >}}
 11. Czemu używamy unsigned char, co jeśli będzie sam char?  
-    Odp: <span class="odpowiedz">Dla buforów o rozmiarze powyżej 126 c przedstawiałoby wartości ujemne!</span>
+{{< answer >}} Dla buforów o rozmiarze powyżej 126 c przedstawiałoby wartości ujemne! {{< /answer >}}
 12. Czemu najpierw ustawiamy ignorowanie SIGINT a dopiero po forku zmieniamy to na funkcję obsługi?  
-    Odp: <span class="odpowiedz"> Aby szybki C-c na początku programu go nie zabił.</span>
+{{< answer >}}  Aby szybki C-c na początku programu go nie zabił. {{< /answer >}}
 13. Czy obsługa SIGCHLD w tym programie jest niezbędna  
-    Odp: <span class="odpowiedz">Jej brak nie zepsuje działania co zadowoli słabszego programistę ale powstaną zombi czego dobry programista wolałby uniknąć.</span>
+{{< answer >}} Jej brak nie zepsuje działania co zadowoli słabszego programistę ale powstaną zombi czego dobry programista wolałby uniknąć. {{< /answer >}}
 
 </div>
 

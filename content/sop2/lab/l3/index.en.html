@@ -11,7 +11,7 @@ Introduction notes:
 <ol>
 <li>All materials from OPS1/OPS2 are still obligatory, especially tutorials on threads and processes!</li>
 <li>Quick look at this material will not suffice, you should compile and run all the programs, check how they work, read additional materials like man pages. As you read the material please do all the exercises and questions. At the end you will find sample task similar to the one you will do during the labs, please do it at home.</li>
-<li>You will find additional information in yellow sections, questions and tasks in blue ones. Under the question you will find the answer, to see it you have to select the text with the mouse. Please try to answer on you own before checking. </li>
+<li>You will find additional information in yellow sections, questions and tasks in blue ones. Under the question you will find the answer, to see it you have to click. Please try to answer on you own before checking. </li>
 <li>Full programs' codes are placed as attachments at the bottom of this page. On this page only vital parts of the code are displayed</p>
 <li>Codes, information and tasks are organized in logical sequence, in order to fully understand it you should follow this sequence. Sometimes former task makes context for the next one and it is harder to comprehend it without the study of previous parts.  </li>
 <li>Most of exercises require command line to practice, I usually assume that all the files are placed in the current working folder and that we do not need to add path parts to file names. </li>
@@ -57,7 +57,7 @@ all converted to 32 bit integers in an array.</p>
 <div class="cwiczenie">
 <ol>
 <li>Why not the structure? <br>
-<span class="odpowiedz">Unpacked structures are not portable due to different gaps between structure members, in this case using an array is simply easier (see the notes on the beginning of this tutorial).</span> </li>
+{{< answer >}} Unpacked structures are not portable due to different gaps between structure members, in this case using an array is simply easier (see the notes on the beginning of this tutorial). {{< /answer >}} </li>
 </ol>
 </div>
 <p>Server calculates the results of operation (+,-,*,/) on operands and sends
@@ -127,25 +127,25 @@ $ killall -s SIGINT prog23a_s</pre>
 <div class="cwiczenie">
 <ol>
 <li>How can you check on the socket file after you started the server?<br>
-<span class="odpowiedz">$ls -l a </span></li>
+{{< answer >}} $ls -l a  {{< /answer >}}</li>
 <li>What is the role of pselect call in this program?<br/>
-<span class="odpowiedz">This is the point the program waits for data input from the descriptors and at the same time waits for SIGINT signal delivery</span></li>
+{{< answer >}} This is the point the program waits for data input from the descriptors and at the same time waits for SIGINT signal delivery {{< /answer >}}</li>
 <li>Can we replace pselect with select?<br/>
-<span class="odpowiedz">Yes, but it is not worth the effort as then proper SIGINT handling would be much more code demanding</span></li>
+{{< answer >}} Yes, but it is not worth the effort as then proper SIGINT handling would be much more code demanding {{< /answer >}}</li>
 <li>As we wait only on one descriptor it may be worth considering to remove pselect entirely, does it ?</br>
-<span class="odpowiedz">Again, it is not worth the effort as we still need to handle the SIGINT (see the above answer) and in the next stage we will handle two sockets at the same time</span></li>
+{{< answer >}} Again, it is not worth the effort as we still need to handle the SIGINT (see the above answer) and in the next stage we will handle two sockets at the same time {{< /answer >}}</li>
 <li>Why network listening socket is in non blocking mode? <br/>
-<span class="odpowiedz">With this descriptor in blocking mode it is possible to block the program on "accept" call. Consider the scenario of the client trying to connect and then unexpectedly vanishing from the network. It may happen that pselect will report the socket to be ready for a connection but after the call the new client will disappear and at the time of accept call there will be no one to connect. The program will simply block on the accept until another client arrives. The not blocking mode prevents this situation.</span></li>
+{{< answer >}} With this descriptor in blocking mode it is possible to block the program on "accept" call. Consider the scenario of the client trying to connect and then unexpectedly vanishing from the network. It may happen that pselect will report the socket to be ready for a connection but after the call the new client will disappear and at the time of accept call there will be no one to connect. The program will simply block on the accept until another client arrives. The not blocking mode prevents this situation. {{< /answer >}}</li>
 <li>Why program uses int32_t (stdint.h) instead of plain int?<br/> 
-<span class="odpowiedz">Due to various sizes of the int on different architecture. It will be important in the second stage of the program.</span></li>
+{{< answer >}} Due to various sizes of the int on different architecture. It will be important in the second stage of the program. {{< /answer >}}</li>
 <li>Why SIGPIPE is ignored in the server?<br/>
-<span class="odpowiedz">It is generally easier to handle the broken pipe condition by checking for EPIPE error rather than handling the SIGPIPE signal when the reaction tho the disconnection is not critical - server only closes the current connection and continues to serve other clients.</span></li>
+{{< answer >}} It is generally easier to handle the broken pipe condition by checking for EPIPE error rather than handling the SIGPIPE signal when the reaction tho the disconnection is not critical - server only closes the current connection and continues to serve other clients. {{< /answer >}}</li>
 <li>Do we have to ignore SIGPIPE in the client?<br/>
-<span class="odpowiedz">In case of the client the reaction to the disconnection is critical and the way we deal with it is not so important. Ignoring of SIGPIPE can be omitted then the program will be terminated by signal instead of reporting EPIPE error as it is implemented above.</span></li>
+{{< answer >}} In case of the client the reaction to the disconnection is critical and the way we deal with it is not so important. Ignoring of SIGPIPE can be omitted then the program will be terminated by signal instead of reporting EPIPE error as it is implemented above. {{< /answer >}}</li>
 <li>Why bulk_read nad bulk_write are used in the program? SIGINT is terminating the program thus interruption of read and write should not be a problem.<br/>
-<span class="odpowiedz">For the same reason TEMP_FAILURE_RETRY is so common in the code - portability of this code to your solution, with bulk_read/write the code is interruption proof.</span></li>
+{{< answer >}} For the same reason TEMP_FAILURE_RETRY is so common in the code - portability of this code to your solution, with bulk_read/write the code is interruption proof. {{< /answer >}}</li>
 <li>What is the purpose of the unlink in the server code?<br/>
-<span class="odpowiedz">It removes the local socket the same way it removes a file or a fifo - clean up function.</li>
+{{< answer >}} It removes the local socket the same way it removes a file or a fifo - clean up function. {{< /answer >}}</li>
 </ol>
 </div>
 
@@ -187,11 +187,11 @@ $ killall -s SIGINT prog23b_s
 </ol></div>
 <div class="cwiczenie"><ol>
 <li>What is the purpose of socket option SO_REUSEADDR? <br/>
-<span class="odpowiedz">This option allows you to quickly bind to the same port on the server if the program run a moment ago. It is essential for testing when you encounter a bug, quickly correct it and then want to run the program again. Without this option system will block binding to the port for a few minutes.</span></li>
+{{< answer >}} This option allows you to quickly bind to the same port on the server if the program run a moment ago. It is essential for testing when you encounter a bug, quickly correct it and then want to run the program again. Without this option system will block binding to the port for a few minutes. {{< /answer >}}</li>
 <li>Does the above socket option mean that the packets from previous connection can still be received in a new session?<br/>
-<span class="odpowiedz">No, TCP protocol is immune to this kind of distraction, if it was UDP then the answer would be yes.</span></li>
+{{< answer >}} No, TCP protocol is immune to this kind of distraction, if it was UDP then the answer would be yes. {{< /answer >}}</li>
 <li>Why the address INADDR_ANY is used for the server, what is the value of this constant?</br>
-<span class="odpowiedz">This is a special address, the value is  0.0.0.0. It means any address. It is used as local address of the server in place of  real IP of the server (server can have more that one IP). It does not mean the program will be caching all the Internet connections! If the connection is directed (routed) to our server then we do not care what IP address client used, if ports match then connection is handled without IP matching. Very popular and convenient solution.</span></li>
+{{< answer >}} This is a special address, the value is  0.0.0.0. It means any address. It is used as local address of the server in place of  real IP of the server (server can have more that one IP). It does not mean the program will be caching all the Internet connections! If the connection is directed (routed) to our server then we do not care what IP address client used, if ports match then connection is handled without IP matching. Very popular and convenient solution. {{< /answer >}}</li>
 <li>Please check how the pselect call is extended to handle the second socket. Please notice that adding TCP required only a new set of connection establishing functions, once the connection works the same code is used as in stage one.</li>
 <li>TCP client code and local client code are very similar, integrate those two types of client into one program with parameter swich (-p local|tcp)</li>
 </ol>
@@ -230,29 +230,29 @@ Write client and a server program that communicate over UDP socket. Client task 
 </ol></div>
 <div class="cwiczenie"><ol>
 <li>In this example connection context is more demanding. What constitutes the context here?<br/>
-<span class="odpowiedz">The number of packets send of specified file  up to given moment is the context here - in other words struct connections.</span></li>
+{{< answer >}} The number of packets send of specified file  up to given moment is the context here - in other words struct connections. {{< /answer >}}</li>
 <li>What data is sent in datagram? What is the purpose of the metadata?</br>
-<span class="odpowiedz">The datagram consists of (1) 32 bit file part number, (2) 32 bit information if this is the last part of the file, (3) the file part.  Metadata helps to maintain the context, keep the track of the file being sent (1) and end the transmission (2).  </span></li>
+{{< answer >}} The datagram consists of (1) 32 bit file part number, (2) 32 bit information if this is the last part of the file, (3) the file part.  Metadata helps to maintain the context, keep the track of the file being sent (1) and end the transmission (2).   {{< /answer >}}</li>
 <li>Why and on what descriptors bulk_read and bulk_write are used? Should we extend this use on all the descriptors in the program?</br>
-<span class="odpowiedz">Mentioned functions are used to restart read and write after interruption on IO. Notice that it is restarting both interruption types: before IO starts (EINTR) and  the interruption in the middle of IO. Those functions are only used on files as datagrams are sent in atomic way (transfer can not be interrupted). In this program signals are handled in code parts that do not operate on files, still due to code portability bulk_ functions are used.</span></li>
+{{< answer >}} Mentioned functions are used to restart read and write after interruption on IO. Notice that it is restarting both interruption types: before IO starts (EINTR) and  the interruption in the middle of IO. Those functions are only used on files as datagrams are sent in atomic way (transfer can not be interrupted). In this program signals are handled in code parts that do not operate on files, still due to code portability bulk_ functions are used. {{< /answer >}}</li>
 <li>Do we expect broken connection in this program? Should we add checks in the code?<br/>
-<span class="odpowiedz">We do not have connection to break in UDP.</span></li>
+{{< answer >}} We do not have connection to break in UDP. {{< /answer >}}</li>
 <li>How findIndex works in server code: How addresses are compared? What byte order they are in? What will the function do if the address in new?<br/>
-<span class="odpowiedz">Addresses are compared in binary format without conversion to host byte order. We do not need to convert the byte order as we only compare the addresses, we do not display them. If new address is passed to this function it starts a new record for this address in the array (provide there is a space for it).</span></li>
+{{< answer >}} Addresses are compared in binary format without conversion to host byte order. We do not need to convert the byte order as we only compare the addresses, we do not display them. If new address is passed to this function it starts a new record for this address in the array (provide there is a space for it). {{< /answer >}}</li>
 <li>How this program deals with the duplicates of datagrams?<br/>
-<span class="odpowiedz">It keeps an array of active connections "struct connections"  with the number of last transferred part. Duplicated parts are not processed.</span></li>
+{{< answer >}} It keeps an array of active connections "struct connections"  with the number of last transferred part. Duplicated parts are not processed. {{< /answer >}}</li>
 <li>How this program deals with the reordered datagrams, i.e. when program receives a part that is farther in the file than the next expected?<br/>
-<span class="odpowiedz">This can not happen in this program, client will not send such a part without having all the previous parts confirmed by the server.</span></li>
+{{< answer >}} This can not happen in this program, client will not send such a part without having all the previous parts confirmed by the server. {{< /answer >}}</li>
 <li>How this program handles lost datagrams?<br/>
-<span class="odpowiedz">Client side re-transmission.</span></li>
+{{< answer >}} Client side re-transmission. {{< /answer >}}</li>
 <li>What will happen if the packet with confirmation from the server to the client gets lost?<br/>
-<span class="odpowiedz">The client will assume that the last part sent did not get to the server, it will send it again. Server will get the duplicate of the part that is already stored, it will not process it but it will send another confirmation. </span></li>
+{{< answer >}} The client will assume that the last part sent did not get to the server, it will send it again. Server will get the duplicate of the part that is already stored, it will not process it but it will send another confirmation.  {{< /answer >}}</li>
 <li>What is in the confirmation?<br/>
-<span class="odpowiedz">Server sends back exactly the same data as it received.</span></li>
+{{< answer >}} Server sends back exactly the same data as it received. {{< /answer >}}</li>
 <li>How timeout on the server response is implemented? <br/>
-<span class="odpowiedz">In function sendAndConfirm 0.5s alarm is set (with setitimer) then the program waits for the confirmation on regular not restarted recv call. If signal is received, the recv gets interrupted and the code checks if the timeout triggered.</span></li>
+{{< answer >}} In function sendAndConfirm 0.5s alarm is set (with setitimer) then the program waits for the confirmation on regular not restarted recv call. If signal is received, the recv gets interrupted and the code checks if the timeout triggered. {{< /answer >}}</li>
 <li>Why the program converts byte order only the part number and the last part marker and not the rest?<br/>
-<span class="odpowiedz">Only those two are send in binary integer format, the rest is a file part send as text string that does not require the conversion.</span></li>
+{{< answer >}} Only those two are send in binary integer format, the rest is a file part send as text string that does not require the conversion. {{< /answer >}}</li>
 <li>Analyze how 5 connection limit works, pay attention how "free" member in the connections structure works, how it is affected by the last part marker in the datagram?</li>
 </ol></div>
 <hr/>

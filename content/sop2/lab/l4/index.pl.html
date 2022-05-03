@@ -49,15 +49,15 @@ Podane zostały całe polecenia man do wydania z konsoli:<ul>
 <div class="cwiczenie"><ol>
 <li>Warto samemu dokonać dokładnej analizy powyższego kodu pod kątem elementów nie omawianych tutaj, proszę to zrobić jako ćwiczenie.</li>
 <li>Czemu przed uruchomieniem wątku w serwerze alokujemy pamięć? Czy można się tej alokacji pozbyć z kodu?<br/>
-<span class="odpowiedz">Nie możemy użyć jednej wspólnej struktury bo na raz może być więcej niż jeden wątek roboczy. Można zrobić tablice FS_NUM struktur ale  trzeba by wtedy zarządzać wolnymi polami w tej tablicy a to oznacza trochę więcej kodu. Najłatwiej jest zaalokować pamięć dla tej struktury przed uruchomieniem wątku. Pamiętamy o zwolnieniu tej pamięci w wątku zanim się skończy.</span></li>
+{{< answer >}} Nie możemy użyć jednej wspólnej struktury bo na raz może być więcej niż jeden wątek roboczy. Można zrobić tablice FS_NUM struktur ale  trzeba by wtedy zarządzać wolnymi polami w tej tablicy a to oznacza trochę więcej kodu. Najłatwiej jest zaalokować pamięć dla tej struktury przed uruchomieniem wątku. Pamiętamy o zwolnieniu tej pamięci w wątku zanim się skończy. {{< /answer >}}</li>
 <li>Gdzie jest odliczany czas dla klienta?</br>
-<span class="odpowiedz">W wątku roboczym, w tym celu go tworzymy.</span></li>
+{{< answer >}} W wątku roboczym, w tym celu go tworzymy. {{< /answer >}}</li>
 <li>Czemu służy semafor?</br>
-<span class="odpowiedz">Semafor odlicza ile jeszcze wątków można utworzyć aby na raz nie działało ich więcej niż FS_NUM (10). Na początek jego wartość to 10, przed utworzeniem kolejnego wątku zmniejszamy wartość semafora. Zanim wątek skończy zwiększa tą wartość. Jeśli wartość semafora jest zerowa to nie da się już utworzyć kolejnego wątku.</span></li>
+{{< answer >}} Semafor odlicza ile jeszcze wątków można utworzyć aby na raz nie działało ich więcej niż FS_NUM (10). Na początek jego wartość to 10, przed utworzeniem kolejnego wątku zmniejszamy wartość semafora. Zanim wątek skończy zwiększa tą wartość. Jeśli wartość semafora jest zerowa to nie da się już utworzyć kolejnego wątku. {{< /answer >}}</li>
 <li>Czemu przed utworzeniem kolejnego wątku roboczego w serwerze używamy sem_trywait? Co się stanie gdy zamienimy to na sem_wait?<br/>
-<span class="odpowiedz">Robimy tak, aby od razu zorientować się, że wyczerpaliśmy limit wątków. Gdyby zastąpić trywait wait'em to program poczekałby aż się zwolni jakiś wątek i dopiero wtedy zarejestrował klienta, ale to oznacza, że czas odliczony dla tego klienta byłby dłuższy niż on żądał!</span></li>
+{{< answer >}} Robimy tak, aby od razu zorientować się, że wyczerpaliśmy limit wątków. Gdyby zastąpić trywait wait'em to program poczekałby aż się zwolni jakiś wątek i dopiero wtedy zarejestrował klienta, ale to oznacza, że czas odliczony dla tego klienta byłby dłuższy niż on żądał! {{< /answer >}}</li>
 <li>Co powoduje limitowanie połączeń do 10 naraz?</br>
-<span class="odpowiedz">Semafor, zerknij na 2 powyższe pytania i odpowiedzi.</span></li>
+{{< answer >}} Semafor, zerknij na 2 powyższe pytania i odpowiedzi. {{< /answer >}}</li>
 </ol></div>
 <h3 id="task_zad2">Pula wątków - zmienne warunkowe</h3>
 <p>Autor zadania: <b>Jerzy Bartuszek</b></p>
@@ -75,29 +75,29 @@ Podane zostały całe polecenia man do wydania z konsoli:<ul>
 <div class="cwiczenie"><ol>
 <li>Warto samemu dokonać dokładnej analizy powyższego kodu pod kątem elementów nie omawianych tutaj, proszę to zrobić jako ćwiczenie.</li>
 <li>Czy warunek dla zmiennej warunkowej może być oparty o jedną zwykłą zmienna?<br>
-<span class="odpowiedz">Tak</span></li>
+{{< answer >}} Tak {{< /answer >}}</li>
 <li>Czy warunek dla zmiennej warunkowej może być oparty na wartościach kilku zmiennych w programie?<br>
-<span class="odpowiedz">Tak</span></li>
+{{< answer >}} Tak {{< /answer >}}</li>
 <li>Czy warunek dla zmiennej warunkowej może być oparty na zawartości pliku?<br>
-<span class="odpowiedz">Tak</span></li>
+{{< answer >}} Tak {{< /answer >}}</li>
 <li>Czy warunek dla zmiennej warunkowej może być oparty na istnieniu pliku?<br>
-<span class="odpowiedz">Tak</span></li>
+{{< answer >}} Tak {{< /answer >}}</li>
 <li>Jak można ogólnie określić na czym może być oparty warunek zmiennej warunkowej?<br>
-<span class="odpowiedz">Warunek może być absolutnie dowolny, to kod napisany przez programistę o tym decyduję więc granicą tego czym może być warunek jest tylko wyobraźnia kodującego.</span></li>
+{{< answer >}} Warunek może być absolutnie dowolny, to kod napisany przez programistę o tym decyduję więc granicą tego czym może być warunek jest tylko wyobraźnia kodującego. {{< /answer >}}</li>
 <li>Czy zmienna warunkowa może być użyta bez żadnego warunku?<br>
-<span class="odpowiedz">Tak, jest wtedy zwykłą pulą czekających wątków które możemy wybudzać pojedynczo lub wszystkie naraz.</span></li>
+{{< answer >}} Tak, jest wtedy zwykłą pulą czekających wątków które możemy wybudzać pojedynczo lub wszystkie naraz. {{< /answer >}}</li>
 <li>Co chroni muteks związany z zmienną warunkowa?<br>
-<span class="odpowiedz">Muteks ma chronić dostęp do tych elementów programu (zmiennych, plików itd.) które są testowane w warunku zmiennej warunkowej. Chodzi o to, aby w czasie sprawdzania warunku zmiennej (zablokowania muteksu) mieć pewność, że warunek ten nie zostanie zmodyfikowany.</span></li>
+{{< answer >}} Muteks ma chronić dostęp do tych elementów programu (zmiennych, plików itd.) które są testowane w warunku zmiennej warunkowej. Chodzi o to, aby w czasie sprawdzania warunku zmiennej (zablokowania muteksu) mieć pewność, że warunek ten nie zostanie zmodyfikowany. {{< /answer >}}</li>
 <li>Czy jeden muteks może chronić więcej niż jedną zmienna warunkową?<br>
-<span class="odpowiedz">Może, ale proszę pamiętaj o wydajności programu, takie rozwiązanie ograniczy też równoległość.</span></li>
+{{< answer >}} Może, ale proszę pamiętaj o wydajności programu, takie rozwiązanie ograniczy też równoległość. {{< /answer >}}</li>
 <li>Co wchodzi w skład zmiennej warunkowej w powyższym programie?<br>
-<span class="odpowiedz">Warunek jest oparty wyłącznie o zmienną "condition", do której wątki mają dostęp poprzez wskaźniki.</span></li>
+{{< answer >}} Warunek jest oparty wyłącznie o zmienną "condition", do której wątki mają dostęp poprzez wskaźniki. {{< /answer >}}</li>
 <li>Jak działa warunek zmiennej w tym programie?<br>
-<span class="odpowiedz">Gdy główny przyjmie nowe połączenie ustawia zamienną "condition" na 1 i budzi jeden z wątków czekających. Obudzony wątek jeśli widzi, że  "condition==1" to obsługuje połączenie.</span></li>
+{{< answer >}} Gdy główny przyjmie nowe połączenie ustawia zamienną "condition" na 1 i budzi jeden z wątków czekających. Obudzony wątek jeśli widzi, że  "condition==1" to obsługuje połączenie. {{< /answer >}}</li>
 <li>Który wątek powinien sprawdzić, że warunek zmiennej jest spełniony? Budzący czy obudzony?<br>
-<span class="odpowiedz">Warunek musi zawsze być sprawdzony przez wątek budzony, nie ma gwarancji że będzie on spełniony nawet jeśli wątek budzący go sprawdzał ponieważ muteks który blokuje zmianę warunku musi być na chwilę zwolniony pomiędzy wysłaniem prośby o obudzenie a samym obudzeniem. Jeśli w tym czasie muteks zostałby przejęty przez inny wątek to warunek może ulec zmianie! Dobrze jeśli wątek budzący sprawdzi warunek ale jeśli nie może tego zrobić bo nie ma dostępu do wszystkich składowych warunku to można ten krok pominąć.</span></li>
+{{< answer >}} Warunek musi zawsze być sprawdzony przez wątek budzony, nie ma gwarancji że będzie on spełniony nawet jeśli wątek budzący go sprawdzał ponieważ muteks który blokuje zmianę warunku musi być na chwilę zwolniony pomiędzy wysłaniem prośby o obudzenie a samym obudzeniem. Jeśli w tym czasie muteks zostałby przejęty przez inny wątek to warunek może ulec zmianie! Dobrze jeśli wątek budzący sprawdzi warunek ale jeśli nie może tego zrobić bo nie ma dostępu do wszystkich składowych warunku to można ten krok pominąć. {{< /answer >}}</li>
 <li>Czemu służy cleanup handler w wątku roboczym serwera?<br>
-<span class="odpowiedz">Bardzo ważne jest, aby wątek nie zakończył się nie zwolniwszy muteksu chroniącego zmienna warunkową, to zablokowałoby całą aplikację. Ten handler w razie awaryjnego wyjścia zwolni muteks.</span></li>
+{{< answer >}} Bardzo ważne jest, aby wątek nie zakończył się nie zwolniwszy muteksu chroniącego zmienna warunkową, to zablokowałoby całą aplikację. Ten handler w razie awaryjnego wyjścia zwolni muteks. {{< /answer >}}</li>
 
 </ol></div>
 

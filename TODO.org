@@ -9,7 +9,7 @@
 
  - [ ] W tutorialach zrobić sensowne nagłówki h2, h3, h4. Teraz są nieco przypadkowe
  - [ ] Zrobić h3/h4 w sekcjach z pytaniami, opisami (żółte i niebieskie ramki)
- - [ ] Być może warto rozważyć zmigrowanie pytań do elementu <details>. Wtedy pokazywanie odpowiedzi będzie zgrabniejsze.
+ - [X] Być może warto rozważyć zmigrowanie pytań do elementu <details>. Wtedy pokazywanie odpowiedzi będzie zgrabniejsze.
  - [ ] Napisać w L0 o makefile (przynajmniej wspomnieć, że będzie wymagany)
  - [ ] Oprócz regulaminu zrobić sekcję z często zadawanymi pytaniami organizacyjnymi
  - [ ] 

@@ -9,7 +9,7 @@ Introduction notes:
 <ol>
 <li>This tutorial is fairly easy and rather long, next ones will be harder and shorter</li>
 <li>Quick look at this material will not suffice, you should compile and run all the programs, check how they work, read additional materials like man pages. As you read the material please do all the exercises and questions. At the end you will find sample task similar to the one you will do during the labs, please do it at home.</li>
-<li>You will find additional information in yellow sections, questions and tasks in blue ones. Under the question you will find the answer, to see it you have to select the text with the mouse. Please try to answer on you own before checking. </li>
+<li>You will find additional information in yellow sections, questions and tasks in blue ones. Under the question you will find the answer, to see it you have to click. Please try to answer on you own before checking. </li>
 <li>Full programs' codes are placed as attachments at the bottom of this page.</p>
 <li>Codes, information and tasks are organized in logical sequence, in order to fully understand it you should follow this sequence. Sometimes former task makes context for the next one and it is harder to comprehend it without the study of previous parts.  </li>
 <li>Most of exercises require command line to practice, I usually assume that all the files are placed in the current working folder and that we do not need to add path parts to file names. </li>
@@ -56,10 +56,10 @@ Agenda:<ol>
 <div class="cwiczenie">
 <ol>
 <li>How you can find documentation on man command?<br/>
-Ans.:<span class="odpowiedz"> $man man</span></li>
+{{< answer >}}  $man man {{< /answer >}}</li>
 <li>If you use your own system to practice make sure you have POSIX man pages installed. If not, search google on how to install them in your Linux distribution and do it.</li>
 <li>Why $ man printf will not help you to understand the printf function?</br>
-Ans.:<span class="odpowiedz">If you do not specify the section, man system opens the lowest number section on given topic. In this case it opens section 1 on printf program (used in bash). You have to supply section number: $ man 3 printf ; to see Linux/Gnu version or better $ man 3p printf ; to see POSIX version.</span></li>
+{{< answer >}} If you do not specify the section, man system opens the lowest number section on given topic. In this case it opens section 1 on printf program (used in bash). You have to supply section number: $ man 3 printf ; to see Linux/Gnu version or better $ man 3p printf ; to see POSIX version. {{< /answer >}}</li>
 </div>
 </p>
 <p>
@@ -76,10 +76,10 @@ Ans.:<span class="odpowiedz">If you do not specify the section, man system opens
 <div class="cwiczenie">
 <ol>
 <li>How do we know what header files to include in this program?</br>
-Ans.: <span class="odpowiedz">stdio.h from  man 3 printf, stdlib.h for status macros</span></li>
+{{< answer >}} stdio.h from  man 3 printf, stdlib.h for status macros {{< /answer >}}</li>
 <li>Compile the code with "$ make prog1", it will deploy standard GNU make compilation template. Run the program.</li>
 <li>Why this compilation method is not good enough?</br>
-Ans.: <span class="odpowiedz"> Lack of -Wall flag, you will not see the code warnings.</span></li>
+{{< answer >}}  Lack of -Wall flag, you will not see the code warnings. {{< /answer >}}</li>
 </ol>
 </div>
 <em>solution <b>Makefile</b></em>
@@ -101,13 +101,13 @@ clean:
 <div class="cwiczenie">
 <ol>
 <li>How can you remove the old executable with this Makefile?<br/>
-Ans.:<span class="odpowiedz"> $make clean</span></li>
+{{< answer >}}  $make clean {{< /answer >}}</li>
 <li>How can you compile the code with this Makefile?<br/>
-Ans.:<span class="odpowiedz"> "$ make" or "$ make prog1"</span></li>
+{{< answer >}}  "$ make" or "$ make prog1" {{< /answer >}}</li>
 <li>How can you redirect the output of this program to the file?<br/>
-Ans.:<span class="odpowiedz"> $./prog1 > file.txt</span></li>
+{{< answer >}}  $./prog1 > file.txt {{< /answer >}}</li>
 <li>How to display this file?<br/>
-Ans.:<span class="odpowiedz"> $cat file.txt</span></li>
+{{< answer >}}  $cat file.txt {{< /answer >}}</li>
 <li>Make the copy of the source file, name it prog1b.c. Modify the Makefile so it can compile this new source file to the binary named prog1b. Make sure that the compilation is in deed using -Wall flag (it must be printed on the screen during compilation). If you succeed the first time try to deliberately break the Makefile by reverting some of the name changes (from  prog1b back to prog1) in various configurations.</li>
 </ol>
 </div>
@@ -153,11 +153,11 @@ Ans.:<span class="odpowiedz"> $cat file.txt</span></li>
 <li>Modify the Makefile from the previous task to compile this code.</li>
 <li>Run and test this program.</li>
 <li>Why scanf reads up to 21 characters (%21s)?<br/>
-Ans.:<span class="odpowiedz">If you limit it to 20 you will never know if user entered exactly 20 characters or maybe he tried to enter more than the limit.</span></li>
+{{< answer >}} If you limit it to 20 you will never know if user entered exactly 20 characters or maybe he tried to enter more than the limit. {{< /answer >}}</li>
 <li>Why we declare 22 chars sized array while storing at most 21 chars?<br/>
-Ans.:<span class="odpowiedz">In C all strings must end with zero code char, scanf will add this terminator and we must provide an array that can accommodate all the chars plus the terminating zero.</span></li>
+{{< answer >}} In C all strings must end with zero code char, scanf will add this terminator and we must provide an array that can accommodate all the chars plus the terminating zero. {{< /answer >}}</li>
 <li>How can you run this program to hide error message from the screen?<br/>
-Ans.:<span class="odpowiedz">You can redirect stderr to /dev/null, e.g.: $./prog2 2>/dev/null </span></li>
+{{< answer >}} You can redirect stderr to /dev/null, e.g.: $./prog2 2>/dev/null  {{< /answer >}}</li>
 </ol>
 </div>
 
@@ -212,13 +212,13 @@ clean:
 </pre>
 <div class="cwiczenie"><ol>
 <li>Compile and run the program with above Makefie, how can you compile only one target at a timel?<br/>
-Ans.:<span class="odpowiedz">$make prog3</span></li> 
+{{< answer >}} $make prog3 {{< /answer >}}</li> 
 <li>Check how this program works with 20 and 21 chars strings, explain the output.<br/>
-Ans.:<span class="odpowiedz">For 21 chars string  array can not accommodate new line char, fgets truncates what can not fit the limit, in this case it is only trailing new line.</span></li> 
+{{< answer >}} For 21 chars string  array can not accommodate new line char, fgets truncates what can not fit the limit, in this case it is only trailing new line. {{< /answer >}}</li> 
 <li>Why can we observe the welcoming messages in separated lines despite the fact that there is no new line in printf formatting string?<br/>
-Ans.:<span class="odpowiedz">fgets reads strings with trailing new line (if it fits the limit) and there is no need to add the second one,  printf prints what is in the buffer including new lines.</span></li>
+{{< answer >}} fgets reads strings with trailing new line (if it fits the limit) and there is no need to add the second one,  printf prints what is in the buffer including new lines. {{< /answer >}}</li>
 <li>Why buffer size id MAX_LINE+2?<br/>
-Ans.:<span class="odpowiedz">It should accommodate string+new line+trailing zero marker.</span></li>
+{{< answer >}} It should accommodate string+new line+trailing zero marker. {{< /answer >}}</li>
 </ol></div>
 <div class="dlaN"><ol>
 <li>Please notice that fgets can work with any stream, not only the stdin.</li>
@@ -235,8 +235,8 @@ Tom
 <div class="cwiczenie"><ol>
 <li>Create text file with above content.</li>
 <li>How can you run the program in a such away that it will get the input from the file instead of the keyboard (two ways) ?<br/>
-<li>Ans. A: <span class="odpowiedz"> redirect file to stdin: $ ./prog3 < dane.txt </span></br> 
-<li>Ans. B: <span class="odpowiedz"> pipeline : $ cat dane.txt | ./prog3 </span></li> 
+{{< answer >}} redirect file to stdin: $ ./prog3 < dane.txt {{< /answer >}}
+{{< answer >}} pipeline : $ cat dane.txt | ./prog3 {{< /answer >}}</li> 
 </ol></div>
 </p>
 
@@ -267,8 +267,8 @@ LDFLAGS=-fsanitize=address,undefined
 <div class="cwiczenie"><ol>
 <li>Compile, run and test this program with various parameters.</li>
 <li>How can you invoke  xargs to have file dane.txt used as the source of parameters?<br/>
-<li>Ans. A: <span class="odpowiedz">each word as separated argument: $ cat dane.txt | xargs ./prog4 </span></br> 
-<li>Ans. B: <span class="odpowiedz">each line as an argument: $ cat dane.txt |tr "\n" "\0"| xargs -0 ./prog4 </span></li> 
+{{< answer >}} each word as separated argument: $ cat dane.txt | xargs ./prog4 {{< /answer >}}
+{{< answer >}} each line as an argument: $ cat dane.txt |tr "\n" "\0"| xargs -0 ./prog4 {{< /answer >}}</li> 
 </ol></div>
 <div class="dlaN"><ol>
 <li>When using xarg on larger files you must be aware that the command line length can be limited in OS. Xargs can split data and invoke the command several times if you use appropriate flag. </li>
@@ -305,9 +305,9 @@ void usage(char* pname){
 <div class="cwiczenie"><ol>
 <li>Compile this program using universal Makefile from previous task.</li>
 <li>How this program works if you supply incorrect value as the parameter, explain why??<br/>
-Ans.: <span class="odpowiedz">It prints nothing as atoi in Linux returns 0 if it can not convert the string to the integer.</span></li>
+{{< answer >}} It prints nothing as atoi in Linux returns 0 if it can not convert the string to the integer. {{< /answer >}}</li>
 <li>Why argc has to be 3, we expect two arguments?<br/>
-Ans.: <span class="odpowiedz">argc is a counter of elements stored in argv which is storing two arguments and a name of the binary (argv[0]). in total 3 elements.</span></li> 
+{{< answer >}} argc is a counter of elements stored in argv which is storing two arguments and a name of the binary (argv[0]). in total 3 elements. {{< /answer >}}</li> 
 </ol>
 </div>
 <div class="dlaN"><ol>
@@ -379,9 +379,9 @@ Hello Danny<br/ >
 </ol></div>
 <div class="cwiczenie"><ol>
 <li>If you start another shell from the menu and run this program inside will it list the variable exported in the first one?</br>
-Ans.: <span class="odpowiedz"> No, those two shells inherit variables form the program launcher and there is no "sideways"  inheritance possible in UNIX.</span></li>
+{{< answer >}}  No, those two shells inherit variables form the program launcher and there is no "sideways"  inheritance possible in UNIX. {{< /answer >}}</li>
 <li>If I run the second shell from the first one and then run the program in 2nd one will it list the variable?</br>
-Ans.: <span class="odpowiedz"> Yes, the second one inherits the environment with this variable from the first one as it is parent child relation of those two processes.</span></li>
+{{< answer >}}  Yes, the second one inherits the environment with this variable from the first one as it is parent child relation of those two processes. {{< /answer >}}</li>
 </ol></div>
 </p>
 
@@ -413,7 +413,7 @@ Enhance prog3.c to multiply each welcome line of text as many times as environme
 <div class="cwiczenie"><ol>
 <li>Run the program with different values for variable TIMES</li>
 <li>How to check the RESULT value after the execution of the program? Will it be set?<br/>
-Ans.: <span class="odpowiedz"> $ env|grep RESULT ; it will not show on the list however. Changes in the environment are not propagated up the tree. The variable was set in the program process and , for a brief moment, in the shell executed by system function. After those processes have ended the variable vanished with them.</span></li>
+{{< answer >}}  $ env|grep RESULT ; it will not show on the list however. Changes in the environment are not propagated up the tree. The variable was set in the program process and , for a brief moment, in the shell executed by system function. After those processes have ended the variable vanished with them. {{< /answer >}}</li>
 </ol></div>
 </p>
 
@@ -461,15 +461,15 @@ void scan_dir (){
 </pre>
 <div class="cwiczenie"><ol>
 <li>Run this program in the folder with some files but without sub-folders, it may be the folder you are working on this tutorial in. Is the folder count zero? Explain it.<br/>
-Ans.: <span class="odpowiedz">No, each folder has two special hard linked folders - "." link to the folder itself and ".." the link to the parent folder, thus program counted 2 folders. </span></li>
+{{< answer >}} No, each folder has two special hard linked folders - "." link to the folder itself and ".." the link to the parent folder, thus program counted 2 folders.  {{< /answer >}}</li>
 <li>How to create symbolic link for the tests?<br/>
-Ans.: <span class="odpowiedz">$ ln -s prog9.c prog_link.c </span></li>
+{{< answer >}} $ ln -s prog9.c prog_link.c  {{< /answer >}}</li>
 <li>What is the difference between stat and lstat, if we replace lstat for stat in the code will it change the results?<br/>
-Ans.: <span class="odpowiedz">$It will always count zero links because stat trawers the link and always test the real object instead.</span></li>
+{{< answer >}} $It will always count zero links because stat trawers the link and always test the real object instead. {{< /answer >}}</li>
 <li>What members are defined in dirent structure according to the POSIX?<br/>
-Ans.: <span class="odpowiedz">file (object) name and its inode number. The rest of the properties can be read with stat/lstat</span></li>
+{{< answer >}} file (object) name and its inode number. The rest of the properties can be read with stat/lstat {{< /answer >}}</li>
 <li>What members are defined in dirent structure according to the LINUX (man readdir) ? <br/>
-Ans.: <span class="odpowiedz">Name,  inode and  3  other not covered by the standard. </span></li>
+{{< answer >}} Name,  inode and  3  other not covered by the standard.  {{< /answer >}}</li>
 
 </ol></div>
 
@@ -505,11 +505,11 @@ Use function form prog9.c to write a program that will count objects in all the 
 <div class="cwiczenie"><ol>
 <li>How this program deals with non existing folders, no access folders, relative paths and absolute paths as parameters?</li>
 <li>Why this program stores the initial working folder?<br/>
-Ans.: <span class="odpowiedz">Paths given as parameters may be relative to the start working folder. The program changes location in the tree of folders to "be" in folder pointed by the parameter but this automatically invalidates all other relative paths (other parameters) to make other relative paths valid again program must go back to initial position in the three. </span></li>
+{{< answer >}} Paths given as parameters may be relative to the start working folder. The program changes location in the tree of folders to "be" in folder pointed by the parameter but this automatically invalidates all other relative paths (other parameters) to make other relative paths valid again program must go back to initial position in the three.  {{< /answer >}}</li>
 <li>Is it true that program should terminate in the same working folder it was started with?<br/>
-Ans.: <span class="odpowiedz">No, the current working folder (CWD) is individual for each process (is a part of the environment), any change in child process has no effect on the parent, there is no reason to go back just before terminating the program.</span></li>
+{{< answer >}} No, the current working folder (CWD) is individual for each process (is a part of the environment), any change in child process has no effect on the parent, there is no reason to go back just before terminating the program. {{< /answer >}}</li>
 <li>Not all errors encountered in this program has to terminate it, what error can be handled in better way, how?<br/>
-Ans.: <span class="odpowiedz">if(chdir(argv[i]))continue; simplified solution, it would be nice to add some message to it. </span></li>
+{{< answer >}} if(chdir(argv[i]))continue; simplified solution, it would be nice to add some message to it.  {{< /answer >}}</li>
 </ol></div>
 <div class="dlaN"><ol>
 <li>Never ever code in this way:   printf(argv[i]). What will be printed if somebody puts %d or other printf placeholders in the arguments? This applies to any string not only the one from arguments.</li>
@@ -535,7 +535,7 @@ Write a program that counts all occurrences of the files, folders, symbolic link
 <li>Make sure you know how to declare and use pointers to functions in C</li>
 <li>Test how this program reacts on not available or not existing folders.</li>
 <li>Why FTW_PHYS flag is applied?<br/>
-Ans.: <span class="odpowiedz">Without it nftw trawers the links to real objects, so it can not count them, similar to stat and lstat functions.</span></li>
+{{< answer >}} Without it nftw trawers the links to real objects, so it can not count them, similar to stat and lstat functions. {{< /answer >}}</li>
 <li>How other flags modify nftw algorithm?</li>
 </ol></div>
 
@@ -565,14 +565,14 @@ Create a new file with name, permissions and size specified by parameters (-n NA
 <pre>{{% include "prog12.c" %}}</pre>
 <div class="cwiczenie"><ol>
 <li>What bitmap is created with:  ~perms&amp;0777 ? <br/>
-Ans.: <span class="odpowiedz"> reverted permission bits cut to 9 least significant bits. If you do not know how it works then learn C bit operations.</span></li>
+{{< answer >}}  reverted permission bits cut to 9 least significant bits. If you do not know how it works then learn C bit operations. {{< /answer >}}</li>
 <li>How char randomization works in this program? <br/>
-Ans.: <span class="odpowiedz"> Program iterates through all the chars in sequence: A,B,C ... Z and then A again, For each char random position in the file is chosen. Expression  'A'+(i%('Z'-'A'+1)) should have no secrets for you, please make sure you know how it works. Such a construction will return many times during our labs.</span></li>
+{{< answer >}}  Program iterates through all the chars in sequence: A,B,C ... Z and then A again, For each char random position in the file is chosen. Expression  'A'+(i%('Z'-'A'+1)) should have no secrets for you, please make sure you know how it works. Such a construction will return many times during our labs. {{< /answer >}}</li>
 <li>Run the program few times and check the sizes of the files created ("$ ls -l"), are they always equal to the expected ones? How can you explain the difference for small files sizes and how for big (64K+) ones?<br/>
-Ans.: <span class="odpowiedz">Most of the time you will observe smaller files than expected. In both size ranges the problem has the same root - file creation method. First of all the file is initially empty, we place chars at random positions, quite often not the last position in the file, and that's why smaller files are somehow smaller. Big size range is also affected by the limit on the value of random number you can obtain from rand function. it can be at most RAND_MAX (the actual value can vary, expect 2 bytes number in Linux). The highest position occupied by non zero character will not be larger than RAND_MAX thus the output file can not be larger than RAND_MAX.</span></li>
+{{< answer >}} Most of the time you will observe smaller files than expected. In both size ranges the problem has the same root - file creation method. First of all the file is initially empty, we place chars at random positions, quite often not the last position in the file, and that's why smaller files are somehow smaller. Big size range is also affected by the limit on the value of random number you can obtain from rand function. it can be at most RAND_MAX (the actual value can vary, expect 2 bytes number in Linux). The highest position occupied by non zero character will not be larger than RAND_MAX thus the output file can not be larger than RAND_MAX. {{< /answer >}}</li>
 <li>Modify the program to always produce files of expected size.</li>
 <li>Why one case of unlink error is ignored?<br/>
-Ans.: <span class="odpowiedz"> ENOENT means no file to remove, in this case it can't be considered a problem, there is nothing to delete. File removal is necessary only if the file exists.</span></li>
+{{< answer >}}  ENOENT means no file to remove, in this case it can't be considered a problem, there is nothing to delete. File removal is necessary only if the file exists. {{< /answer >}}</li>
 </ol></div>
 
 <div class="dlaN"><ol>

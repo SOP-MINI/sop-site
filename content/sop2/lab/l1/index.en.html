@@ -9,7 +9,7 @@ Introduction notes:
 <ol>
 <li>All materials from OPS1 are still obligatory, especially tutorials L1,L2 i L3!</li>
 <li>Quick look at this material will not suffice, you should compile and run all the programs, check how they work, read additional materials like man pages. As you read the material please do all the exercises and questions. At the end you will find sample task similar to the one you will do during the labs, please do it at home.</li>
-<li>You will find additional information in yellow sections, questions and tasks in blue ones. Under the question you will find the answer, to see it you have to select the text with the mouse. Please try to answer on you own before checking. </li>
+<li>You will find additional information in yellow sections, questions and tasks in blue ones. Under the question you will find the answer, to see it you have to click. Please try to answer on you own before checking. </li>
 <li>Full programs' codes are placed as attachments at the bottom of this page. On this page only vital parts of the code are displayed</p>
 <li>Codes, information and tasks are organized in logical sequence, in order to fully understand it you should follow this sequence. Sometimes former task makes context for the next one and it is harder to comprehend it without the study of previous parts.  </li>
 <li>Most of exercises require command line to practice, I usually assume that all the files are placed in the current working folder and that we do not need to add path parts to file names. </li>
@@ -29,29 +29,29 @@ Introduction notes:
 </div>
 <div class="cwiczenie"><ol>
 <li>Do you need to divide the communication into PIPE_BUF parts in case of one to one connection i.e.  one process writes and one reads?<br/>
-Ad: <span class="odpowiedz">There is no need to do it, there is no competition over the link, no interference from other processeses. </span></li>
+{{< answer >}} There is no need to do it, there is no competition over the link, no interference from other processeses.  {{< /answer >}}</li>
 <li>Can you open a pipe or FIFO to communicate inside of one process/thread?<br/>
-Ad: <span class="odpowiedz">It is possible and allowed but very rare case though. </span></li>
+{{< answer >}} It is possible and allowed but very rare case though.  {{< /answer >}}</li>
 <li>What extra precaution has to be taken in to consideration in above scenario?<br/>
-Ad: <span class="odpowiedz">Deadlock, the link has internal buffer of PIPE_BUF size, if you overflow it the process/thraad will block as it cannot at the same read the excess of data from the link. This blockade can be prevented with O_NONBLOCK mode.</span></li>
+{{< answer >}} Deadlock, the link has internal buffer of PIPE_BUF size, if you overflow it the process/thraad will block as it cannot at the same read the excess of data from the link. This blockade can be prevented with O_NONBLOCK mode. {{< /answer >}}</li>
 <li>Is quick sending a few portions of data (with multiple writes) of total size below PIPE_BUF guaranteed to be continous?<br/>
-Ad: <span class="odpowiedz">NO, the guarantee is only valid for ONE write.</span></li>
+{{< answer >}} NO, the guarantee is only valid for ONE write. {{< /answer >}}</li>
 <li>In case of multiple writing processes that need to send messages of variant length, is sending them in atomic sizes enough for the receiving process to properly receive them?<br/>
-Ad: <span class="odpowiedz">NO, the reading end must know how many bytes belong to each message. If size are mixed then it is impossible  to guess. You can add the size of the message at it beginning and the reader can first read the size, then the rest of the message or you can always use fixed size of the messages by adding something neutral (zero code may be a good choice for textual data) do fill the missing end part of the message.</span></li>
+{{< answer >}} NO, the reading end must know how many bytes belong to each message. If size are mixed then it is impossible  to guess. You can add the size of the message at it beginning and the reader can first read the size, then the rest of the message or you can always use fixed size of the messages by adding something neutral (zero code may be a good choice for textual data) do fill the missing end part of the message. {{< /answer >}}</li>
 <li>When can a write of  2*PIPE_BUF bytes to the link be interrupted?  How do you know about the interruption? The question concerns all types of possible interruptions - caused by signal handling function, CPU scheduler or broken link.<br/>
-Ad: <span class="odpowiedz">Before anything is sent it (by signal), it is reported as EINTR error. After sending PIPE_BUF bytes (scheduler), then write returns less than expected size of 2*PIPE_BUF.</span></li>
+{{< answer >}} Before anything is sent it (by signal), it is reported as EINTR error. After sending PIPE_BUF bytes (scheduler), then write returns less than expected size of 2*PIPE_BUF. {{< /answer >}}</li>
 <li>Assuming very intensive signal handling in the program, how many times can the above write be interrupted?<br/>
-Ad: <span class="odpowiedz">You can not tell exactly, multiple times before it starts and multiple times after first PIPE_BUF bytes transfer.</span></li>
+{{< answer >}} You can not tell exactly, multiple times before it starts and multiple times after first PIPE_BUF bytes transfer. {{< /answer >}}</li>
 <li>When can be interrupted the transfer of PIPE_BUF bytes?<br/>
-Ad: <span class="odpowiedz">It can be interrupted if you handle signals in the program only before any data gets transmitted (EINTR error) or by broken pipe.</span></li>
+{{< answer >}} It can be interrupted if you handle signals in the program only before any data gets transmitted (EINTR error) or by broken pipe. {{< /answer >}}</li>
 <li>What does it mean if you read zero bytes from the link?<br/>
-Ad: <span class="odpowiedz">EOF - broken pipe/fifo.</span></li>
+{{< answer >}} EOF - broken pipe/fifo. {{< /answer >}}</li>
 <li>What did you forget to check if your pipe/fifo program terminates abruptly with message about signal interruption?<br/>
-Ad: <span class="odpowiedz">You forgot to check for broken pipe condition on write end, you should ignore SIGPIPE and check for EPIPE errors on write statements.</span></li>
+{{< answer >}} You forgot to check for broken pipe condition on write end, you should ignore SIGPIPE and check for EPIPE errors on write statements. {{< /answer >}}</li>
 <li>Can EPIPE be reported on link read?<br/>
-Ad: <span class="odpowiedz">NO, SIGPIPE/EPIPE concerns only writing to the link!</span></li>
+{{< answer >}} NO, SIGPIPE/EPIPE concerns only writing to the link! {{< /answer >}}</li>
 <li>Can writing to pipe report zero as return value?<br/>
-Ad: <span class="odpowiedz">Assuming you did not try to write zero bytes it can not. EOF concerns only reads!</span></li>
+{{< answer >}} Assuming you did not try to write zero bytes it can not. EOF concerns only reads! {{< /answer >}}</li>
 
 </div>
 
@@ -108,17 +108,17 @@ CFLAGS= -std=gnu99 -Wall
 </ol></div>
 <div class="cwiczenie"><ol>
 <li>Why there is one second sleep in execution command between a server start and a cat command?<br/>
-Ad: <span class="odpowiedz">It allows enough time for the server to start up and create the fifo file "a", without it, the cat command can be first to create "a" as a regular file, then the server would not open a fifo but a regular file instead. You would not notice the problem if "a" already exists and is a FIFO, to reproduce the problem make sure "a" is missing and  remove the sleep 1 from the execution commands.</span></li>
+{{< answer >}} It allows enough time for the server to start up and create the fifo file "a", without it, the cat command can be first to create "a" as a regular file, then the server would not open a fifo but a regular file instead. You would not notice the problem if "a" already exists and is a FIFO, to reproduce the problem make sure "a" is missing and  remove the sleep 1 from the execution commands. {{< /answer >}}</li>
 <li>What is the type of "a" in file system and how to check it?<br/>
-Ad: <span class="odpowiedz">$ls -l  - it is a fifo "p"</span></li>
+{{< answer >}} $ls -l  - it is a fifo "p" {{< /answer >}}</li>
 <li>Why EEXIST reported by mkfifo is not treated as a critical error?<br/>
-Ad: <span class="odpowiedz">We do not remove the fifo file in this stage, if you run the program for the second time "a" will be already in the filesystem and it can be safely reused instead of forcing the user to manually remove it every time.</span></li>
+{{< answer >}} We do not remove the fifo file in this stage, if you run the program for the second time "a" will be already in the filesystem and it can be safely reused instead of forcing the user to manually remove it every time. {{< /answer >}}</li>
 <li>Isn't reading from fifo char by char inefficient?<br/>
-Ad: <span class="odpowiedz">The data is read from the fifo buffer, the only extra  overhead includes the one extra function call. It is not the fastest way but it also can not be called very inefficient.</span></li>
+{{< answer >}} The data is read from the fifo buffer, the only extra  overhead includes the one extra function call. It is not the fastest way but it also can not be called very inefficient. {{< /answer >}}</li>
 <li>Isn't writing char by char inefficient?<br/>
-Ad: <span class="odpowiedz">In this program we write to buffered stream, the extra overhead is minimal, but when you write chat by char to unbuffered descriptor then the overhead becomes a serious problem.</span></li>
+{{< answer >}} In this program we write to buffered stream, the extra overhead is minimal, but when you write chat by char to unbuffered descriptor then the overhead becomes a serious problem. {{< /answer >}}</li>
 <li>How can you tell that the link does not have and will not have any more data for the reader?<br/>
-Ad: <span class="odpowiedz">EOF - broken pipe detected on read occurs when all writing processes/threads disconnect the link and the buffer is depleted. </span></li>
+{{< answer >}} EOF - broken pipe detected on read occurs when all writing processes/threads disconnect the link and the buffer is depleted.  {{< /answer >}}</li>
 
 </div>
 
@@ -144,15 +144,15 @@ Ad: <span class="odpowiedz">EOF - broken pipe detected on read occurs when all w
 
 <div class="cwiczenie"><ol>
 <li>Why this time sleep was not required in execution commands?<br/>
-Ad: <span class="odpowiedz">Now it does not matter who creates the fifo and what is the sequence of it's opening , the other side will always wait. The client program can create the fifo with mkfifo (unlike cat command) and  the nonblocking mode is not used.</span></li>
+{{< answer >}} Now it does not matter who creates the fifo and what is the sequence of it's opening , the other side will always wait. The client program can create the fifo with mkfifo (unlike cat command) and  the nonblocking mode is not used. {{< /answer >}}</li>
  <li>Why constant size of send messages is important in this program?<br/>
-Ad: <span class="odpowiedz">This is the simplest way for the server to know how many bytes comes from one client.</span></li>
+{{< answer >}} This is the simplest way for the server to know how many bytes comes from one client. {{< /answer >}}</li>
 <li>What is memset used for?<br/>
-Ad: <span class="odpowiedz">For a quick way to fill the missing part of the last buffer (to the required size of PIPE_BUF) with zeros. Zeros at the end of the string are natural terminators.</span></li>
+{{< answer >}} For a quick way to fill the missing part of the last buffer (to the required size of PIPE_BUF) with zeros. Zeros at the end of the string are natural terminators. {{< /answer >}}</li>
 <li>Can you send the zeros filling after the last part of the file in separated writes?<br/>
-Ad: <span class="odpowiedz">NO, it can mix with the data from the other clients.</span></li> 
+{{< answer >}} NO, it can mix with the data from the other clients. {{< /answer >}}</li> 
 <li>How this program will react to broken pipe (fifo in this case but we name any disconnected link in this way) ?<br/>
-Ad: <span class="odpowiedz">It will be killed by SIGPIPE.</span></li>
+{{< answer >}} It will be killed by SIGPIPE. {{< /answer >}}</li>
 </div>
 
 </p>
@@ -172,11 +172,11 @@ Ad: <span class="odpowiedz">It will be killed by SIGPIPE.</span></li>
 </ol></div>
 <div class="cwiczenie"><ol>
 <li>Why sleep is used once more in the execution commands?<br/>
-Ad: <span class="odpowiedz">Without this sleep it may happen that if one of the clients and the server are given enough CPU time earlier than the rest of the clients, they will be able to start, connect overt the FIFO and exchange the data. When sole connected client exits the server will assume that it should terminate before other client even got chance to connect to FIFO! The abandoned clients will hang for long on the fifo without a server to serve them.</span></li>
+{{< answer >}} Without this sleep it may happen that if one of the clients and the server are given enough CPU time earlier than the rest of the clients, they will be able to start, connect overt the FIFO and exchange the data. When sole connected client exits the server will assume that it should terminate before other client even got chance to connect to FIFO! The abandoned clients will hang for long on the fifo without a server to serve them. {{< /answer >}}</li>
 <li>How server knows how much bytes comes from one client?<br/>
-Ad: <span class="odpowiedz">Messages have fixed size of PIPE_BUF.</span></li>
+{{< answer >}} Messages have fixed size of PIPE_BUF. {{< /answer >}}</li>
 <li>Can we send blocks of more bytes than PIPE_BUF at a time?<br/>
-Ad: <span class="odpowiedz">No, it is not guaranteed to be continuous/atomic.</span></li>
+{{< answer >}} No, it is not guaranteed to be continuous/atomic. {{< /answer >}}</li>
 
 </ol></div>
 </p>
@@ -217,13 +217,13 @@ Write n-process program where n child processes communicate with parent over one
 <li>Likewise descriptors unused memory should be released, make sure you know what heap parts should be deallocated in "child" process.</li>
 <li>[a-z] characters randomization should be obvious. If it is not try to build more general formula from this example on paper, try to apply it to other ranges of chars and numbers.</li>
 <li>Sometimes (set n=10 for most frequent observation) program stops with the message : "Interrupted system call" , why? <br/>
-Ad: <span class="odpowiedz"> SIGCHLD handling interrupts read before it can read anything.</span></li> 
+{{< answer >}}  SIGCHLD handling interrupts read before it can read anything. {{< /answer >}}</li> 
 <li>How can we protect the code from this interruption? <br/>
-Ad: <span class="odpowiedz">The simplest solution would be to add macro: TEMP_FAILURE_RETRY(read(...)).</span></li>
+{{< answer >}} The simplest solution would be to add macro: TEMP_FAILURE_RETRY(read(...)). {{< /answer >}}</li>
 <li>How the program reacts on broken pipe R?<br/>
-Ad: <span class="odpowiedz">This is natural end of the main loop and the program because it happens when all the children disconnect from R, they do it when they are terminating.</span></li>
+{{< answer >}} This is natural end of the main loop and the program because it happens when all the children disconnect from R, they do it when they are terminating. {{< /answer >}}</li>
 <li>Why the parent process do not wait for children at the end of the process code? <br/>
-Ad: <span class="odpowiedz"> In this code all the children must terminate to end the main parent loop, when the parent reaches the end of code there are no children to wait for as they all must have been waited for by SIGCHILD handler.</span></li>
+{{< answer >}}  In this code all the children must terminate to end the main parent loop, when the parent reaches the end of code there are no children to wait for as they all must have been waited for by SIGCHILD handler. {{< /answer >}}</li>
 
 </ol></div>
 </p>
@@ -246,30 +246,30 @@ Ad: <span class="odpowiedz"> In this code all the children must terminate to end
 
 <div class="cwiczenie"><ol>
 <li>Where the parent program waits for the SIGINT signal? There is no blocking, no sigsuspend or sigwait?<br/>
-Ad: <span class="odpowiedz">Most of the time program waits for input on the first read in parent's main loop, if it is interrupted by signal it exits with EINTR error.</span></li>
+{{< answer >}} Most of the time program waits for input on the first read in parent's main loop, if it is interrupted by signal it exits with EINTR error. {{< /answer >}}</li>
 <li>Please notice that nearly every interruptible function in the code is restarted with TEMP_FAILURE_RETRY macro, all but one above mentioned read, why?<br/>
-Ad: <span class="odpowiedz">With macro restarting this read, it would be impossible to react on the delivery of the signal and the program wouldn't work. In this case the interruption is a valid information for us! </span></li>
+{{< answer >}} With macro restarting this read, it would be impossible to react on the delivery of the signal and the program wouldn't work. In this case the interruption is a valid information for us!  {{< /answer >}}</li>
 <li>Can we use SA_RESTART flag on signal handler to do the automatic restarts and get rid of TEMP_FAILURE_RETRY?<br/>
-Ad: <span class="odpowiedz">No,  for the same reasons as described in the previous answer. Additionally our code would get less portable as I mentioned in preparation materials for L2 of OPS1.</span></li>
+{{< answer >}} No,  for the same reasons as described in the previous answer. Additionally our code would get less portable as I mentioned in preparation materials for L2 of OPS1. {{< /answer >}}</li>
 <li>Why not all C-c keystrokes result in printout from the program?<br/>
-Ad: <span class="odpowiedz"> It may be due to the chosen child terminating at the same SIGINT (it has 20% chance to do it), signals may merge in the time the main parent loop is still processing the previous C-c and is not waiting on the before mentioned read.</span> </li>
+{{< answer >}}  It may be due to the chosen child terminating at the same SIGINT (it has 20% chance to do it), signals may merge in the time the main parent loop is still processing the previous C-c and is not waiting on the before mentioned read. {{< /answer >}} </li>
 <li>The second reason can be eliminated if you change global variable last_signal to act as the counter that gets increased every time signal arrives, then you can send as many chars to random children as your counter tells you. Please modify the program in this way as an exercise.</li>
 <li>Can child process marge the signals?<br/>
-Ad: <span class="odpowiedz">Only in theory as the signals are immediately and quickly handled.</span></li>
+{{< answer >}} Only in theory as the signals are immediately and quickly handled. {{< /answer >}}</li>
 <li>Why parent can read the data from the pipe R in parts (first size, then the rest)  and child must send data to R in one write? <br/>
-Ad: <span class="odpowiedz">To prevent mixing of the data from various children, see the remarks at the beginning of this tutorial.</span></li>
+{{< answer >}} To prevent mixing of the data from various children, see the remarks at the beginning of this tutorial. {{< /answer >}}</li>
 <li>Why the program ignores SIGPIPE, is it safe?<br/>
-Ad: <span class="odpowiedz">It is not only safe but also necessary, without it the attempt to send the char to "dead" child would kill the whole program. In many cases the fatal termination is NOT the CORRECT WAY of DEALING with BROKEN PIPE!</span></li>
+{{< answer >}} It is not only safe but also necessary, without it the attempt to send the char to "dead" child would kill the whole program. In many cases the fatal termination is NOT the CORRECT WAY of DEALING with BROKEN PIPE! {{< /answer >}}</li>
 <li>What is the STOP condition for a main parent loop?<br/>
-Ad: <span class="odpowiedz">When parent reads zero bytes from R, it means broken pipe and it can only happen when all children are terminated.</span></li>
+{{< answer >}} When parent reads zero bytes from R, it means broken pipe and it can only happen when all children are terminated. {{< /answer >}}</li>
 <li>A proper reaction to broken pipe is always important, check if you can indicate all broken pipe checks in the code, both on read and write. How many spots in the code can you find?<br/>
-Ad: <span class="odpowiedz"> 4 </span></li>
+{{< answer >}}  4  {{< /answer >}}</li>
 <li>Why we use unsigned char type, what would happen if you remove unsigned from it?<br/>
-Ad: <span class="odpowiedz">For buffers larger than 126, buffer sizes read from R would we treated as negative!</span></li>
+{{< answer >}} For buffers larger than 126, buffer sizes read from R would we treated as negative! {{< /answer >}}</li>
 <li>Why SIGINT is first ignored in the parent and the proper signal handler function is added after the children are created?<br/>
-Ad: <span class="odpowiedz"> To prevent the premature end of our program due to quick C-c before it is ready to handle it.</span></li>
+{{< answer >}}  To prevent the premature end of our program due to quick C-c before it is ready to handle it. {{< /answer >}}</li>
 <li>Is SIGCHLD handler absolutely necessary in this code?<br/>
-Ad: <span class="odpowiedz">It won't break the logic, but without it zombi will linger and that is something a good programmer would not accept.</span></li>
+{{< answer >}} It won't break the logic, but without it zombi will linger and that is something a good programmer would not accept. {{< /answer >}}</li>
 </ol></div>
 </p>
 <hr/>

@@ -11,7 +11,7 @@ Uwagi wstępne:
 <ol>
 <li>Obowiązują wszystkie materiały z SOP1 i SOP2 jakie były do tej pory, szczególnie ważne są te dotyczące wątków i procesów!</li>
 <li>Szybkie przejrzenie tutoriala prawdopodobnie nic nie pomoże, należy samodzielnie uruchomić programy, sprawdzić jak działają, poczytać materiały dodatkowe takie jak strony man. W trakcie czytania sugeruję wykonywać ćwiczenia a na koniec przykładowe zadanie.</li>
-<li>Na żółtych polach podaję dodatkowe informacje, niebieskie zawierają pytania i ćwiczenia. Pod pytaniami znajdują się odpowiedzi, które staną się widoczne dopiero po zaznaczeniu ich myszką. Proszę najpierw spróbować sobie odpowiedzieć na pytanie samemu a dopiero potem sprawdzać odpowiedź.</p>
+<li>Na żółtych polach podaję dodatkowe informacje, niebieskie zawierają pytania i ćwiczenia. Pod pytaniami znajdują się odpowiedzi, które staną się widoczne dopiero po kliknięciu. Proszę najpierw spróbować sobie odpowiedzieć na pytanie samemu a dopiero potem sprawdzać odpowiedź.</p>
 <li>Pełne kody do zajęć znajdują się w załącznikach na dole strony. W tekście są tylko te linie kodu, które są konieczne do zrozumienia problemu.</li>
 <li>Materiały i ćwiczenia są ułożone w pewną logiczną całość, czasem do wykonania ćwiczenia konieczny jest stan osiągnięty poprzednim ćwiczeniem dlatego zalecam wykonywanie ćwiczeń w miarę przyswajania materiału.</li>
 <li>Większość ćwiczeń wymaga użycia konsoli poleceń, zazwyczaj zakładam, ze pracujemy w jednym i tym samym katalogu roboczym więc wszystkie potrzebne pliki są "pod ręką" tzn. nie ma potrzeby podawania ścieżek dostępu.</li>
@@ -56,7 +56,7 @@ Wszystko przekonwertowane do postaci 32 bitowych liczb w tablicy.</p>
 <div class="cwiczenie">
 <ol>
 <li>Czemu nie struktura? <br>
-<span class="odpowiedz">Struktury bez pakowania są mniej przenośne ze względu na optymizację adresacji pamięci - różne przerwy pomiędzy polami, w tym przypadku łatwiej wyślemy tablice, która nie ma tej przypadłości co struktura.</span> </li>
+{{< answer >}} Struktury bez pakowania są mniej przenośne ze względu na optymizację adresacji pamięci - różne przerwy pomiędzy polami, w tym przypadku łatwiej wyślemy tablice, która nie ma tej przypadłości co struktura. {{< /answer >}} </li>
 </ol>
 </div>
 
@@ -129,25 +129,25 @@ $ killall -s SIGINT prog23a_s</pre>
 <div class="cwiczenie">
 <ol>
 <li>Jak po uruchomieniu serwera można podejrzeć plik gniazda? <br>
-<span class="odpowiedz">$ls -l a </span></li>
+{{< answer >}} $ls -l a  {{< /answer >}}</li>
 <li>Czym jest w programie wywołanie pselect?<br/>
-<span class="odpowiedz">Jest punktem w którym program czeka na dostępność danych na wielu deskryptorach oraz na nadejście sygnału SIGINT</span></li>
+{{< answer >}} Jest punktem w którym program czeka na dostępność danych na wielu deskryptorach oraz na nadejście sygnału SIGINT {{< /answer >}}</li>
 <li>Czy można użyć tu select a zamiast pselect?<br/>
-<span class="odpowiedz">Można ale nie warto bo dodanie poprawnej obsługi SIGINT będzie wtedy bardziej pracochłonne</span></li>
+{{< answer >}} Można ale nie warto bo dodanie poprawnej obsługi SIGINT będzie wtedy bardziej pracochłonne {{< /answer >}}</li>
 <li>Skoro czekamy tylko na połączenie na jednym deskryptorze to może warto pozbyć się pselect zupełnie?</br>
-<span class="odpowiedz">Nie warto, bo za chwilę w drugim etapie dodamy czekanie na drugim deskryptorze, dodatkowo implementacja prawidłowej obsługi sygnału SIGINT będzie pracochłonna.</span></li>
+{{< answer >}} Nie warto, bo za chwilę w drugim etapie dodamy czekanie na drugim deskryptorze, dodatkowo implementacja prawidłowej obsługi sygnału SIGINT będzie pracochłonna. {{< /answer >}}</li>
 <li>Czemu gniazdo sieciowe jest w trybie nieblokującym? <br/>
-<span class="odpowiedz">Bez tego trybu mogłoby się zdarzyć, że klient który chce się połączyć "zginie" pomiędzy select, które potwierdzi gotowość do połączenia a accept, które faktycznie przyjmie to połączenie. Wtedy na nieblokującym gnieździe program zatrzymałby się aż do nadejścia kolejnego połączenia nie reagując na sygnał SIGINT.</span></li>
+{{< answer >}} Bez tego trybu mogłoby się zdarzyć, że klient który chce się połączyć "zginie" pomiędzy select, które potwierdzi gotowość do połączenia a accept, które faktycznie przyjmie to połączenie. Wtedy na nieblokującym gnieździe program zatrzymałby się aż do nadejścia kolejnego połączenia nie reagując na sygnał SIGINT. {{< /answer >}}</li>
 <li>Czemu użyto int32_t (stdint.h) a nie  zwykły int?<br/> 
-<span class="odpowiedz">Ze względu na różne rozmiary int'a  na różnych architekturach co stanie się ważne w 2 etapie.</li>
+{{< answer >}} Ze względu na różne rozmiary int'a  na różnych architekturach co stanie się ważne w 2 etapie. {{< /answer >}}</li>
 <li>Czemu ignorujemy SIGPIPE w serwerze?<br/>
-<span class="odpowiedz">Łatwiej obsłużyć błąd EPIPE niż sygnał, zwłaszcza, że informacja o przedwczesnym zakończeniu się klienta nie może prowadzić do zamknięcia serwera.</span></li>
+{{< answer >}} Łatwiej obsłużyć błąd EPIPE niż sygnał, zwłaszcza, że informacja o przedwczesnym zakończeniu się klienta nie może prowadzić do zamknięcia serwera. {{< /answer >}}</li>
 <li>Czy musimy ignorować SIGPIPE w kliencie ? <br/>
-<span class="odpowiedz">Nie, robimy to "na zapas", błąd EPIPE w kliencie i tak traktujemy jako krytyczny, klient bez serwera nie może działać dalej zatem gdyby nie ignorować SIGPIPE program kończyłby się i tak tylko że zabity sygnałem.</span></li>
+{{< answer >}} Nie, robimy to "na zapas", błąd EPIPE w kliencie i tak traktujemy jako krytyczny, klient bez serwera nie może działać dalej zatem gdyby nie ignorować SIGPIPE program kończyłby się i tak tylko że zabity sygnałem. {{< /answer >}}</li>
 <li>Czemu w programie użyto bulk_read i bulk_write? Nie ma obsługi sygnałów poza SIGINT, który i tak kończy działanie programu. <br/>
-<span class="odpowiedz">Z tego samego powodu dla którego tak często EINTR jest obsłużony - przenośność kodu do innych rozwiązań.</span></li>
+{{< answer >}} Z tego samego powodu dla którego tak często EINTR jest obsłużony - przenośność kodu do innych rozwiązań. {{< /answer >}}</li>
 <li>Czemu służy unlink w kodzie serwera? <br/>
-<span class="odpowiedz">Usuwamy gniazdo lokalne tak samo jak usuwamy plik -  funkcja porządkowa.</li>
+{{< answer >}} Usuwamy gniazdo lokalne tak samo jak usuwamy plik -  funkcja porządkowa. {{< /answer >}}</li>
 </ol>
 </div>
 
@@ -190,11 +190,11 @@ $ killall -s SIGINT prog23b_s
 </ol></div>
 <div class="cwiczenie"><ol>
 <li>Czemu służy opcja gniazda SO_REUSEADDR? <br/>
-<span class="odpowiedz">Dodanie tej opcji pozwala na szybkie ponowne wykorzystanie tego samego portu serwera, jest to ważne gdy chcemy szybko poprawić jakiś błąd w kodzie i ponownie uruchomić program. Bez tej opcji system blokuje dostęp do portu na kilka minut.</span></li>
+{{< answer >}} Dodanie tej opcji pozwala na szybkie ponowne wykorzystanie tego samego portu serwera, jest to ważne gdy chcemy szybko poprawić jakiś błąd w kodzie i ponownie uruchomić program. Bez tej opcji system blokuje dostęp do portu na kilka minut. {{< /answer >}}</li>
 <li>Czy powyższa opcja nie naraża nas na błędy komunikacji wynikające z możliwości otrzymania jakichś pozostałości po poprzednim połączeniu?<br/>
-<span class="odpowiedz">Nie, protokół tcp jest na takie "śmieci" uodporniony. Gdyby połączenie było typu udp wtedy odpowiedź byłaby twierdząca.</span></li>
+{{< answer >}} Nie, protokół tcp jest na takie "śmieci" uodporniony. Gdyby połączenie było typu udp wtedy odpowiedź byłaby twierdząca. {{< /answer >}}</li>
 <li>Co to za adres INADDR_ANY i czemu jest często używany jako adres lokalny?
-<span class="odpowiedz">To adres specjalny postaci 0.0.0.0, który ma szczególne znaczenie w adresacji. Oznacza dowolny adres. Jeśli gniazdu serwera (nasłuchującemu) damy taki adres to oznacza, że jakiekolwiek połączenie nadejdzie do serwera, niezależnie jak zaadresowane to będzie przyjęte. To oczywiście nie oznacza, że przechwycimy wszystkie połączenia  w sieci, to oznacza, że nie jest ważne jaki adres w sieci ma serwer (może mieć nawet kilka) jeśli tylko ustawienia sieci spowodują, że połączenie będzie kierowane na dany serwer to nasz program na nim będzie mógł je przyjąć <em>nie znając swojego faktycznego lokalnego adresu!</em> </span></li>
+{{< answer >}} To adres specjalny postaci 0.0.0.0, który ma szczególne znaczenie w adresacji. Oznacza dowolny adres. Jeśli gniazdu serwera (nasłuchującemu) damy taki adres to oznacza, że jakiekolwiek połączenie nadejdzie do serwera, niezależnie jak zaadresowane to będzie przyjęte. To oczywiście nie oznacza, że przechwycimy wszystkie połączenia  w sieci, to oznacza, że nie jest ważne jaki adres w sieci ma serwer (może mieć nawet kilka) jeśli tylko ustawienia sieci spowodują, że połączenie będzie kierowane na dany serwer to nasz program na nim będzie mógł je przyjąć <em>nie znając swojego faktycznego lokalnego adresu!</em>  {{< /answer >}}</li>
 <li>Przeanalizuj jak został w serwerze rozwinięty pselect aby obsłużyć drugi typ połączenia. Zwrócić uwagę, że dodanie TCP w serwerze wymagało tylko dodania kodu nawiązania połączenia, reszta jest ta sama.</li>
 <li>Kod klienta jest bardzo podobny do klienta lokalnego, jako ćwiczenie proponuję zintegrowanie tych kodów do jednego programu z przełącznikiem -p local|tcp</li>
 </ol>
@@ -249,29 +249,29 @@ $ killall -s SIGINT prog23b_s
 </ol></div>
 <div class="cwiczenie"><ol>
 <li> W tym zadaniu  kontekst połączenia jest ważny i wymaga wysiłku aby go utrzymać. Co jest kontekstem połączenia?<br/>
-<span class="odpowiedz">Kontekstem jest ilość poprawnie przesłanych pakietów do danej chwili.</span></li>
+{{< answer >}} Kontekstem jest ilość poprawnie przesłanych pakietów do danej chwili. {{< /answer >}}</li>
 <li>Jakie dane są przesyłane w pojedynczym datagramie? Czemu służą przesyłane metadane?</br>
-<span class="odpowiedz">Pakiet składa się z (1) 32 bitowego numeru fragmentu, (2) 32 bitowej informacji czy to ostatni fragment oraz (3) z fragmentu pliku. Metadane służą do kontroli kontekstu (1) oraz do zakończenia transmisji (2).  </span></li>
+{{< answer >}} Pakiet składa się z (1) 32 bitowego numeru fragmentu, (2) 32 bitowej informacji czy to ostatni fragment oraz (3) z fragmentu pliku. Metadane służą do kontroli kontekstu (1) oraz do zakończenia transmisji (2).   {{< /answer >}}</li>
 <li>Czemu i na jakich deskryptorach są używane funkcje bulk_read i bulk_write, czy nie powinno się rozszerzyć tego użycia na wszystkie deskryptory?/br>
-<span class="odpowiedz"> Funkcje są potrzebne do restartowania read i write  w sytuacji przerwania w trakcie operacji IO ( w odróżnieniu od EINTR czyli przerwania przed operacją). Funkcje te są używane tylko do działań na plikach ponieważ przesyłanie datagramów jest ATOMOWE i nie może być przerwane w trakcie. W tym programie występuje obsługa sygnałów ale tam gdzie się ich spodziewamy nie dokonujemy operacji na plikach. To zabezpieczenie jest nadmiarowe, dodane z myślą o przenoszeniu tego kodu do innych programów. </span></li>
+{{< answer >}}  Funkcje są potrzebne do restartowania read i write  w sytuacji przerwania w trakcie operacji IO ( w odróżnieniu od EINTR czyli przerwania przed operacją). Funkcje te są używane tylko do działań na plikach ponieważ przesyłanie datagramów jest ATOMOWE i nie może być przerwane w trakcie. W tym programie występuje obsługa sygnałów ale tam gdzie się ich spodziewamy nie dokonujemy operacji na plikach. To zabezpieczenie jest nadmiarowe, dodane z myślą o przenoszeniu tego kodu do innych programów.  {{< /answer >}}</li>
 <li>Czy może wystąpić sytuacja zerwania połączenia? Czy nie powinniśmy tego rozpoznawać?<br/>
-<span class="odpowiedz">Nie może, udp nie wytwarza połączenia, które mogłoby być zerwane.</span></li>
+{{< answer >}} Nie może, udp nie wytwarza połączenia, które mogłoby być zerwane. {{< /answer >}}</li>
 <li>Przeanalizuj jak działa findIndex w serwerze, zwłaszcza jak są porównywane adresy. W jakim byte orderze są? Jak zachowa się ta funkcja jeśli adres jest nowy? <br/>
-<span class="odpowiedz">Porównywane adresy są w byte order sieci, nie mamy potrzeby ich konwertować skoro jedynie je porównujemy a nie np. wyświetlamy. Funkcja dla nowego adresu zakłada nowy rekord (o ile ma jeszcze wolne miejsce w tablicy).</span></li>
+{{< answer >}} Porównywane adresy są w byte order sieci, nie mamy potrzeby ich konwertować skoro jedynie je porównujemy a nie np. wyświetlamy. Funkcja dla nowego adresu zakłada nowy rekord (o ile ma jeszcze wolne miejsce w tablicy). {{< /answer >}}</li>
 <li>Jak sobie poradzimy z duplikatami datagramów?<br/>
-<span class="odpowiedz">Trzymamy tablice stanu połączeń "struct connections", wiemy, który fragment już wypisaliśmy i nie powtarzamy go.</span></li>
+{{< answer >}} Trzymamy tablice stanu połączeń "struct connections", wiemy, który fragment już wypisaliśmy i nie powtarzamy go. {{< /answer >}}</li>
 <li>Jak sobie poradzimy, z odwrotną kolejnością datagramów, czyli gdy otrzymamy fragment dalszy niż aktualnie oczekiwany?<br/>
-<span class="odpowiedz">Odwrócenie nie  może się zdarzyć, bo klient nie prześle dalszych części dopóki nie potwierdzimy wcześniejszych.</span></li>
+{{< answer >}} Odwrócenie nie  może się zdarzyć, bo klient nie prześle dalszych części dopóki nie potwierdzimy wcześniejszych. {{< /answer >}}</li>
 <li>Jak sobie poradzimy z ginącymi pakietami ?<br/>
-<span class="odpowiedz">Obsługuje to retransmisja po stronie klienta.</span></li>
+{{< answer >}} Obsługuje to retransmisja po stronie klienta. {{< /answer >}}</li>
 <li>Co się stanie jeśli zaginie potwierdzenie pakietu a nie sam pakiet?<br/>
-<span class="odpowiedz">Klient uzna, że pakiet nie dotarł i prześle go ponownie. Serwer nie wyświetli pakietu drugi raz ale odeśle potwierdzenie po raz kolejny. </span></li>
+{{< answer >}} Klient uzna, że pakiet nie dotarł i prześle go ponownie. Serwer nie wyświetli pakietu drugi raz ale odeśle potwierdzenie po raz kolejny.  {{< /answer >}}</li>
 <li>Co zawierają potwierdzenia?<br/>
-<span class="odpowiedz">Odsyłamy to co dostaliśmy, cały pakiet bez zmiany.</span></li>
+{{< answer >}} Odsyłamy to co dostaliśmy, cały pakiet bez zmiany. {{< /answer >}}</li>
 <li>Jak jest zaimplementowany timeout na odpowiedź od serwera? <br/>
-<span class="odpowiedz">W funkcji sendAndConfirm najpierw ustawiamy alarm na 0.5 sekundy (setitimer) następnie program stara się odebrać potwierdzenie. Brak restartu funkcji recv makrem nie  jest przypadkowy, po ew. przerwaniu musimy móc sprawdzić czy to nie był oczekiwany timeout. </span></li>
+{{< answer >}} W funkcji sendAndConfirm najpierw ustawiamy alarm na 0.5 sekundy (setitimer) następnie program stara się odebrać potwierdzenie. Brak restartu funkcji recv makrem nie  jest przypadkowy, po ew. przerwaniu musimy móc sprawdzić czy to nie był oczekiwany timeout.  {{< /answer >}}</li>
 <li>Czemu konwertujemy tylko byte order numeru fragmentu i znacznika ostatniego elementu a reszta danych nie jest odwracana?<br/>
-<span class="odpowiedz">Tylko te dwie dane są przesyłane jako liczby binarne,  reszta to tekst, który nie wymaga tego zabiegu. </span></li>
+{{< answer >}} Tylko te dwie dane są przesyłane jako liczby binarne,  reszta to tekst, który nie wymaga tego zabiegu.  {{< /answer >}}</li>
 <li>Przeanalizuj jak działa limitowanie do 5 połączeń, zwróć uwagę na pole free w strukturze i znaczenie znacznika ostatniego fragmentu przesyłanego przez klienta.</li>
 </ol></div>
 <hr/>

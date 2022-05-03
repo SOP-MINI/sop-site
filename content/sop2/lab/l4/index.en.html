@@ -61,15 +61,15 @@ concurrent threads can be imposed with POSIX semaphore.</p>
 <div class="cwiczenie"><ol>
 <li>It is worth of your time to analyze the above code in aspects not covered here (network, thread,mutex), please do it as an exercise.</li>
 <li>Why it is necessary to allocate memory before we start the thread, can this be avoided?<br/>
-<span class="odpowiedz">One common structure is not enough as each thread has to have its own, you can have an array of structures (FS_NUM sized) but then you need to  manage this array in the way you manage memory so it is easier to allocate a structure on a heap. Naturally this memory has to be released somewhere, in this case, in the thread itself.</span></li>
+{{< answer >}} One common structure is not enough as each thread has to have its own, you can have an array of structures (FS_NUM sized) but then you need to  manage this array in the way you manage memory so it is easier to allocate a structure on a heap. Naturally this memory has to be released somewhere, in this case, in the thread itself. {{< /answer >}}</li>
 <li>Where client timer is executed?</br>
-<span class="odpowiedz">In the working thread, time counting is the reason we create the thread.</span></li>
+{{< answer >}} In the working thread, time counting is the reason we create the thread. {{< /answer >}}</li>
 <li>What is the semaphore used for?</br>
-<span class="odpowiedz">It keeps the count of threads that can still be started without exceeding  FS_NUM. Initially its value is set to 10 and before creating next thread it must be decreased by one. Zero value blocks the creation of the threads. Before the thread terminates it increases the semaphore by one.</span></li>
+{{< answer >}} It keeps the count of threads that can still be started without exceeding  FS_NUM. Initially its value is set to 10 and before creating next thread it must be decreased by one. Zero value blocks the creation of the threads. Before the thread terminates it increases the semaphore by one. {{< /answer >}}</li>
 <li>Why sem_trywait is used not just sem_wait before the new thread is created? What if we use sem_wait instead? <br/>
-<span class="odpowiedz">We need to know that we reached the thread limit immediately so we can send deny message to the client. With blocking wait server would wait until one of the threads finishes and increases the semaphore but it would mean longer alarm span than requested by the client!</span></li>
+{{< answer >}} We need to know that we reached the thread limit immediately so we can send deny message to the client. With blocking wait server would wait until one of the threads finishes and increases the semaphore but it would mean longer alarm span than requested by the client! {{< /answer >}}</li>
 <li>What limits the concurrent connections to 10 on the server?</br>
-<span class="odpowiedz">Semaphore, see two questions above.</span></li>
+{{< answer >}} Semaphore, see two questions above. {{< /answer >}}</li>
 </ol></div>
 <h3 id="task_zad2">Threads pool - conditional variables</h3>
 <p>Task author: <b>Jerzy Bartuszek</b></p>
@@ -99,31 +99,30 @@ size of a single file does not exceed 500 bytes and its name is no longer than
 <div class="cwiczenie"><ol>
 <li>It is worth of your time to analyze the above code in aspects not covered here (network, thread,mutex), please do it as an exercise.</li>
 <li>Can a condition of conditional variable be based on regular variable value?<br>
-<span class="odpowiedz">Yes.</span></li>
+{{< answer >}} Yes. {{< /answer >}}</li>
 <li>Can a condition of conditional variable be based on a combination of regular variables' values?<br>
-<span class="odpowiedz">Yes.</span></li>
+{{< answer >}} Yes. {{< /answer >}}</li>
 <li>Can a condition of conditional variable be based on file content?<br>
-<span class="odpowiedz">Yes.</span></li>
+{{< answer >}} Yes. {{< /answer >}}</li>
 <li>Can a condition of conditional variable be based on file existence?<br>
-<span class="odpowiedz">Yes.</span></li>
+{{< answer >}} Yes. {{< /answer >}}</li>
 <li>What are the limitations for the condition of conditional variable?<br>
-<span class="odpowiedz">Everything you can code that will return true or false, coder imagination defines the limit.</span></li>
+{{< answer >}} Everything you can code that will return true or false, coder imagination defines the limit. {{< /answer >}}</li>
 <li>Can we use conditional variable without any condition at all?<br>
-<span class="odpowiedz">Yes. it will become a pool of threads waiting for wakening as you need.</span></li>
+{{< answer >}} Yes. it will become a pool of threads waiting for wakening as you need. {{< /answer >}}</li>
 <li>Conditional variable must have a mutex, what is protected by it?<br>
-<span class="odpowiedz">Mutex protects the access to the elements (variables,files) used in the variable condition so it remains unchanged when the code tests the condition. You must acquire the mutext prior to changing the state of those elements and prior to condition testing.</span></li>
+{{< answer >}} Mutex protects the access to the elements (variables,files) used in the variable condition so it remains unchanged when the code tests the condition. You must acquire the mutext prior to changing the state of those elements and prior to condition testing. {{< /answer >}}</li>
 <li>Can one mutex protect multiple conditional variables?<br>
-<span class="odpowiedz">It can, but please consider the efficiency and parallelism of your code, it will be lowered.</span></li>
+{{< answer >}} It can, but please consider the efficiency and parallelism of your code, it will be lowered. {{< /answer >}}</li>
 
 <li>What are the parts of the condition for the conditional variable in the above code?<br>
-<span class="odpowiedz">The condition is solely based on the variable called "condition", all threads have access to this variable via pointers.</span></li>
+{{< answer >}} The condition is solely based on the variable called "condition", all threads have access to this variable via pointers. {{< /answer >}}</li>
 <li>How does the conditional variable works in this program?<br>
-<span class="odpowiedz">When main thread accepts a new connection it sets the "condition" variable to 1 and wakes one of waiting (waiting for the condition) threads. The thread that wakes, checks for "condition==1" and if it is true it handles the connection.</span></li>
+{{< answer >}} When main thread accepts a new connection it sets the "condition" variable to 1 and wakes one of waiting (waiting for the condition) threads. The thread that wakes, checks for "condition==1" and if it is true it handles the connection. {{< /answer >}}</li>
 <li>Who should check for the condition to be true? The thread that wakes or maybe the one that is being wakened?<br>
-<span class="odpowiedz">
-The condition must be always checked by the thread being wakened. Even if the one that wakes checked it before it could have changed in meantime as the mutex was released and could have been acquired by some other thread to invalidate the condition! Generally it is better if the condition is checked also before signaling but sometimes it is not possible as wakening thread may not have access to all the condition components.</span></li>
+{{< answer >}}  The condition must be always checked by the thread being wakened. Even if the one that wakes checked it before it could have changed in meantime as the mutex was released and could have been acquired by some other thread to invalidate the condition! Generally it is better if the condition is checked also before signaling but sometimes it is not possible as wakening thread may not have access to all the condition components. {{< /answer >}}</li>
 <li>What is cleanup handler in working thread used for?<br>
-<span class="odpowiedz">It is essential not to end the working thread without releasing the mutext that blocks the conditional (it would freeze entire program) . This handler releases the mutex in case of emergency exit.</span></li>
+{{< answer >}} It is essential not to end the working thread without releasing the mutext that blocks the conditional (it would freeze entire program) . This handler releases the mutex in case of emergency exit. {{< /answer >}}</li>
 
 </ol></div>
 

@@ -67,30 +67,30 @@ Podane zostały całe polecenia man do wydania z konsoli:<ul>
 <div class="cwiczenie"><ol>
 <li>Na początek prześledź co się dzieje w programie dla pojedynczej iteracji (k=1), potem dla wielu iteracji (k>1).</li>
 <li>Jaki jest schemat użycia 3 buforów i 3 struktur aiocb? Jakie dane są w kolejnych trzech strukturach począwszy od curpos?<br>
-Ad.<span class="odpowiedz">Bufory są używane cyklicznie, dla ułatwienia wyliczeń pozycji z "zawijaniem" używane jest makro SHIFT. Zawartość kolejnych struktur na początku iteracji to: (curpos) dane gotowe do zapisu, (curpos+1) dane odczytane i gotowe do przetworzenia, (curpos+2) pozycja na kolejny odczyt.</span></li>
+{{< answer >}} Bufory są używane cyklicznie, dla ułatwienia wyliczeń pozycji z "zawijaniem" używane jest makro SHIFT. Zawartość kolejnych struktur na początku iteracji to: (curpos) dane gotowe do zapisu, (curpos+1) dane odczytane i gotowe do przetworzenia, (curpos+2) pozycja na kolejny odczyt. {{< /answer >}}</li>
 <li>Zwróć uwagę na to co w tym programie odbywa się równolegle, narysuj sobie oś czasu gdzie jednostką jest iteracja głównej pętli programu, w każdym kroku (załóż k=4) zaznacz co się dzieje w danym buforze (0,1,2), możliwe operacje to odczyt R, zapis W, przetwarzanie P i nic -. Pamiętamy,że pierwszy odczyt i ostatni zapis w programie odbywają się poza pętlą.<br>
 Ad.<br>
-<span class="odpowiedz">0 1 2<br>
+{{< answer >}}0 1 2<br>
 - P R<br>
 R W P<br>
 P R W<br>
-W P -<br></span></li>
+W P -{{< /answer >}}</li>
 <li>Czemu synchronizacja odczytu i zapisu nie jest wykonana od razu po zleceniu operacji a dopiero na koniec iteracji?<br>
-Ad.<span class="odpowiedz">Aby uzyskać równoległość operacji IO z przetwarzaniem, synchronizacja odbywa się dopiero po zakończeniu obracania bufora co daje szansę tym operacjom na wykonanie się w tle obliczeń.</span></li>
+{{< answer >}} Aby uzyskać równoległość operacji IO z przetwarzaniem, synchronizacja odbywa się dopiero po zakończeniu obracania bufora co daje szansę tym operacjom na wykonanie się w tle obliczeń. {{< /answer >}}</li>
 <li>Czy w iteracji  indeksy czytanego bloku i zapisywanego są różne?<br>
-Ad.<span class="odpowiedz">Nie, dla jednej iteracji (k=1) nie są sprawdzane, dla wielu iteracji sprawdzamy jedynie czy wylosowane wartości są różne ale są to indeksy bloku do zapisu i kolejnego odczytu - ten odczyt nie dotyczy aktualnej iteracji a dopiero następnej</span></li>
+{{< answer >}} Nie, dla jednej iteracji (k=1) nie są sprawdzane, dla wielu iteracji sprawdzamy jedynie czy wylosowane wartości są różne ale są to indeksy bloku do zapisu i kolejnego odczytu - ten odczyt nie dotyczy aktualnej iteracji a dopiero następnej {{< /answer >}}</li>
 <li>Czemu zatem w zadaniu jest warunek o różnych indeksach w iteracji?<br>
-Ad.<span class="odpowiedz">Bez tego warunku, w jednym czasie moglibyśmy asynchronicznie zapisać blok na danej pozycji i asynchronicznie czytać blok z tej samej pozycji a to może doprowadzić do zniekształcenia zawartości bloku. Problem nie dotyczy pojedynczej iteracji (k=1), gdyż taki przypadek odbywa się synchronicznie. </span></li>
+{{< answer >}} Bez tego warunku, w jednym czasie moglibyśmy asynchronicznie zapisać blok na danej pozycji i asynchronicznie czytać blok z tej samej pozycji a to może doprowadzić do zniekształcenia zawartości bloku. Problem nie dotyczy pojedynczej iteracji (k=1), gdyż taki przypadek odbywa się synchronicznie.  {{< /answer >}}</li>
 <li>Czemu w drugim losowaniu w getindex maksymalna wartość jest o jeden mniejsza od pierwszego losowania?<br>
-Ad.<span class="odpowiedz">Ten trik upraszcza kod, bez tego musielibyśmy dodatkowo sprawdzać przypadek gdy indeksy są równe i jednocześnie maksymalne, wtedy zamiast zwiększać musielibyśmy zmniejszać.</span></li>
+{{< answer >}} Ten trik upraszcza kod, bez tego musielibyśmy dodatkowo sprawdzać przypadek gdy indeksy są równe i jednocześnie maksymalne, wtedy zamiast zwiększać musielibyśmy zmniejszać. {{< /answer >}}</li>
 <li>Czemu w pierwszej iteracji głównej pętli pomijamy zapis a w ostatniej odczyt?<br>
-Ad.<span class="odpowiedz">W pierwszej iteracji nie mamy jeszcze danych do zapisu, w ostatniej nie potrzebujemy już czytać kolejnego bloku, przetwarzamy już ostatni.</span></li>
+{{< answer >}} W pierwszej iteracji nie mamy jeszcze danych do zapisu, w ostatniej nie potrzebujemy już czytać kolejnego bloku, przetwarzamy już ostatni. {{< /answer >}}</li>
 <li>Czy pierwszy odczyt i ostatni zapis w programie muszą być wykonane za pomocą operacji AIO?</li>
-Ad.<span class="odpowiedz">Nie, ponieważ są od razu synchronizowane za pomocą aio_suspend to w łatwiej byłoby użyć zwykłego read i write.</span></li>
+{{< answer >}} Nie, ponieważ są od razu synchronizowane za pomocą aio_suspend to w łatwiej byłoby użyć zwykłego read i write. {{< /answer >}}</li>
 <li>Kiedy następuje anulowanie operacji AIO i czy jest poprawnie przeprowadzone?<br>
-Ad.<span class="odpowiedz">Anulowanie nastąpi w funkcji cleanup o ile program otrzyma SIGINT (zmienna globalna work), po anulowaniu operacji nie ma pewności (nie jest to w programie sprawdzane) czy wszystkie operacje się zakończyły anulowaniem (AIO_CANCELED) lub sukcesem (AIO_ALLDONE), Jeśli jakieś operacje nadal trwają (AIO_NOTCANCELED) to trzeba na nie poczekać zanim przejdzie się do usuwania buforów.</span> <br>Poprawienie tego mechanizmu proszę potraktować jako dodatkowe ćwiczenie.</li>
+{{< answer >}} Anulowanie nastąpi w funkcji cleanup o ile program otrzyma SIGINT (zmienna globalna work), po anulowaniu operacji nie ma pewności (nie jest to w programie sprawdzane) czy wszystkie operacje się zakończyły anulowaniem (AIO_CANCELED) lub sukcesem (AIO_ALLDONE), Jeśli jakieś operacje nadal trwają (AIO_NOTCANCELED) to trzeba na nie poczekać zanim przejdzie się do usuwania buforów. {{< /answer >}} <br>Poprawienie tego mechanizmu proszę potraktować jako dodatkowe ćwiczenie.</li>
 <li>Przerób program tak aby zamiast operacji AIO wykonywał operacje synchronicznie (wystarczy zamienić operacje aio_ na ich odpowiedniki synchroniczne oraz pozbyć się aio_suspend). Wykonaj testy dla małych (10B) i dużych (2MB) rozmiarów bloków . Duży plik testowy (200MB) możesz zrobić poleceniem "$dd bs=1024 count=200000 if=/dev/urandom of=testBin.txt". Kiedy AIO jest szybsze a kiedy wolniejsze? Do pomiaru czasu działania możesz użyć polecenia time ($ man time).<br>
-Ad.<span class="odpowiedz">W moich testach małe bloki wypadły porównywalnie w obu przypadkach co jest oznacz, że AIO w implementacji Linuksowej jest mało obciążające. Dla dużych bloków różnice były już bardzo wyraźne na korzyść AIO - ponad 2 razy szybciej dla 100 operacji.</span></li>
+{{< answer >}} W moich testach małe bloki wypadły porównywalnie w obu przypadkach co jest oznacz, że AIO w implementacji Linuksowej jest mało obciążające. Dla dużych bloków różnice były już bardzo wyraźne na korzyść AIO - ponad 2 razy szybciej dla 100 operacji. {{< /answer >}}</li>
 </ol></div>
 <hr/>
 <p class="cwiczenie">

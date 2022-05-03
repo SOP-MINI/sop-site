@@ -14,7 +14,7 @@ draft: false
 Introduction notes:
 <ol>
 <li>Quick look at this material will not suffice, you should compile and run all the programs, check how they work, read additional materials like man pages. As you read the material please do all the exercises and questions. At the end you will find sample task similar to the one you will do during the labs, please do it at home.</li>
-<li>You will find additional information in yellow sections, questions and tasks in blue ones. Under the question you will find the answer, to see it you have to select the text with the mouse. Please try to answer on you own before checking. </li>
+<li>You will find additional information in yellow sections, questions and tasks in blue ones. Under the question you will find the answer, to see it you have to click. Please try to answer on you own before checking. </li>
 <li>Full programs' codes are placed as attachments at the bottom of this page. On this page only vital parts of the code are displayed</p>
 <li>Codes, information and tasks are organized in logical sequence, in order to fully understand it you should follow this sequence. Sometimes former task makes context for the next one and it is harder to comprehend it without the study of previous parts.  </li>
 <li>Most of exercises require command line to practice, I usually assume that all the files are placed in the current working folder and that we do not need to add path parts to file names. </li>
@@ -85,25 +85,25 @@ LDLIBS=-lpthread -lm
 </ol></div>
 <div class="cwiczenie"><ol>
 <li>ERR macro does not send "kill" signal as in multi-process program, why ?<br/>
-Ad:<span class="odpowiedz">Call to exit terminates all the threads in current process, there is no need to "kill" other processes.</span></li>
+{{< answer >}} Call to exit terminates all the threads in current process, there is no need to "kill" other processes. {{< /answer >}}</li>
 <li>How input data is passed to the new  threads?<br/>
-Ad:<span class="odpowiedz">Exclusively by the pointer to structure  argsEstimation_t that is passed as thread function arguments. There is no need (nor the excuse) to use global variables!</span></li>
+{{< answer >}} Exclusively by the pointer to structure  argsEstimation_t that is passed as thread function arguments. There is no need (nor the excuse) to use global variables! {{< /answer >}}</li>
 <li>Is the thread input data shared between the threads?<br/>
-Ad:<span class="odpowiedz">Not in this program. In this case there is no need to synchronize the access to this data. Each thread gets a pointer to the private copy of the structure.</span></li>
+{{< answer >}} Not in this program. In this case there is no need to synchronize the access to this data. Each thread gets a pointer to the private copy of the structure. {{< /answer >}}</li>
 <li>How the random seed for rand_r() is prepared for each thread?<br/>
-Ad:<span class="odpowiedz">It is randomized in the main thread and passed as a part of input data in  argsEstimation_t .</span></li>
+{{< answer >}} It is randomized in the main thread and passed as a part of input data in  argsEstimation_t . {{< /answer >}}</li>
 <li>In this multi thread program we see srand/rand calls, is this correct? It contradicts what was said a few lines above.<br/>
-Ad:<span class="odpowiedz">Only one thread is using srand/rand and those functions are called before working threads come to life. The problem with  srand/rand and threads originates from one global variable used in the library to hold the current seed. In this code only on thread access this seed thus it is correct.</span></li>
+{{< answer >}} Only one thread is using srand/rand and those functions are called before working threads come to life. The problem with  srand/rand and threads originates from one global variable used in the library to hold the current seed. In this code only on thread access this seed thus it is correct. {{< /answer >}}</li>
 <li>Can we share one input data structure for all the threads instead of having a copy for every thread?<br/>
-Ad:<span class="odpowiedz">No due to random seed, it must be different for all the threads.</span></li>
+{{< answer >}} No due to random seed, it must be different for all the threads. {{< /answer >}}</li>
 <li>Can we make the array with the thread input data automatic variable (not allocated)? <br/>
-Ad:<span class="odpowiedz">Only if we add some limit on the number of working threads (up to 1000) otherwise this array may use all the stack of the main thread.</span></li>
+{{< answer >}} Only if we add some limit on the number of working threads (up to 1000) otherwise this array may use all the stack of the main thread. {{< /answer >}}</li>
 <li>Why do we need to release the memory returned from the working thread?<br/>
-Ad:<span class="odpowiedz">This memory was allocated in the thread and has to be released somewhere in the same process, The heap is sheared by all the threads if you do not release it you will leak the memory. It will not be released automatically on the thread termination.</span></li>
+{{< answer >}} This memory was allocated in the thread and has to be released somewhere in the same process, The heap is sheared by all the threads if you do not release it you will leak the memory. It will not be released automatically on the thread termination. {{< /answer >}}</li>
 <li>Why can't we return the data as the address of local (to the thread) automatic variable? <br/>
-Ad:<span class="odpowiedz">The moment thread terminates is the moment of its stack memory release. If you have a pointer to this released stack you should not use it as this memory can be overwritten immediately. What worse, in most cases this memory will stil be the same and faulty program will work in 90% of cases. If you make this kind of mistake it is later very hard to find out why sometimes your code fails. Please be careful and try to avoid this flaw.</span></li>
+{{< answer >}} The moment thread terminates is the moment of its stack memory release. If you have a pointer to this released stack you should not use it as this memory can be overwritten immediately. What worse, in most cases this memory will stil be the same and faulty program will work in 90% of cases. If you make this kind of mistake it is later very hard to find out why sometimes your code fails. Please be careful and try to avoid this flaw. {{< /answer >}}</li>
 <li>can we avoid memory allocation in the working thread?<br/>
-Ad:<span class="odpowiedz">Yes, if we add extra variable to the input structure of the thread. The result can then be stored in this variable. </span></li>
+{{< answer >}} Yes, if we add extra variable to the input structure of the thread. The result can then be stored in this variable.  {{< /answer >}}</li>
 </ol></div>
 </p>
                                 <hr />
@@ -142,19 +142,19 @@ Each thread throws beans separately from others, after each throw, number of bea
 
 <div class="cwiczenie"><ol>
 <li>Is data passed to threads in argsThrower_t structure shared between them?<br/>
-Ad:<span class="odpowiedz">Some of it, counters and bins are shared and thus protected with mutexes.</span></li>
+{{< answer >}} Some of it, counters and bins are shared and thus protected with mutexes. {{< /answer >}}</li>
 <li>Is structure argsThrower_t  optimal?<br/>
-Ad:<span class="odpowiedz">No - some fields point the same data for every thread. Common parts can be moved to additional structure and one pointer for this structure instead of 6 will be stored in  argsThrower_t. Additionally we store tids in this structure while it is not used in the thread code.</span></li>
+{{< answer >}} No - some fields point the same data for every thread. Common parts can be moved to additional structure and one pointer for this structure instead of 6 will be stored in  argsThrower_t. Additionally we store tids in this structure while it is not used in the thread code. {{< /answer >}}</li>
 <li>Why do we mostly use pointers in the threads input data?<br/>
-Ad:<span class="odpowiedz"> We share the data, without the pointers we would have independent copies of those variables in each thread.</span></li>
+{{< answer >}}  We share the data, without the pointers we would have independent copies of those variables in each thread. {{< /answer >}}</li>
 <li>Can we pass mutexes as variables? Not as pointers?<br/>
-Ad:<span class="odpowiedz">NO, POSIX FORBIDS, copy of a mutex does not have to be a working mutex! Even if it would work, it should be quite obvious that, a copy would be a different  mutex.</li></span>
+{{< answer >}} NO, POSIX FORBIDS, copy of a mutex does not have to be a working mutex! Even if it would work, it should be quite obvious that, a copy would be a different  mutex.</li> {{< /answer >}}
 <li>This program uses a lot of mutexes, can we reduce the number of them?<br/>
-Ad:<span class="odpowiedz">Yes, in extreme case it can be reduced to only one mutex but at the cost of concurrency. In more reasonable approach you can have 2 mutexes for the counters and one for all the bins, although the concurrency is lower in this case  the running time of a program can be a bit shorter as operations on mutexes are quite time consuming for the OS.</li>
+{{< answer >}} Yes, in extreme case it can be reduced to only one mutex but at the cost of concurrency. In more reasonable approach you can have 2 mutexes for the counters and one for all the bins, although the concurrency is lower in this case  the running time of a program can be a bit shorter as operations on mutexes are quite time consuming for the OS. {{< /answer >}}</li>
 <li>To check if the working threads terminated, the main threads periodically  checks if the numer of thrown beans is equal to the number of beans in total. Is this optimal solution?<br/>
-Ad:<span class="odpowiedz">No, it is so called "soft busy waiting" but without synchronization tool like conditional variable it can not be solved better.</span></li>
+{{< answer >}} No, it is so called "soft busy waiting" but without synchronization tool like conditional variable it can not be solved better. {{< /answer >}}</li>
 <li>Do all the threads created in this program really work?<br/>
-Ad:<span class="odpowiedz">No ,especially when there is a lot of threads. It is possible that some of threads "starve". The work code for the thread is very fast, thread creation is rather slow, it is possible that last threads created will have no beans left to throw. To check it please add per thread thrown beans counters and print them on stdout at the thread termination. The problem can be avoided if we add synchronization on threads start - make them start at the same time but this again requires the methods that will be introduced during OPS2 (barier or conditional variable).</span></li>
+{{< answer >}} No ,especially when there is a lot of threads. It is possible that some of threads "starve". The work code for the thread is very fast, thread creation is rather slow, it is possible that last threads created will have no beans left to throw. To check it please add per thread thrown beans counters and print them on stdout at the thread termination. The problem can be avoided if we add synchronization on threads start - make them start at the same time but this again requires the methods that will be introduced during OPS2 (barier or conditional variable). {{< /answer >}}</li>
 </ol></div>
 
 </p>
@@ -189,20 +189,20 @@ The program takes sole 'k' parameter and prints the list of numbers form 1 to k 
 </ol></div>
 <div class="cwiczenie"><ol>
 <li>How many threads run in this program?<br/>
-Ad:<span class="odpowiedz">Two, main thread created by system (every process has one starting thread) and the thread created by the code. </span></li>
-<li>Name differences and similarities between sigwait i sigsuspend: <span class="odpowiedz"><ul>
+{{< answer >}} Two, main thread created by system (every process has one starting thread) and the thread created by the code.  {{< /answer >}}</li>
+<li>Name differences and similarities between sigwait i sigsuspend: {{< answer >}}<ul>
   <li>sigwait does not require signal handling routine as sigsuspend</li>
   <li>both functions require blocking of the anticipated signal/signals</li>
   <li>sigwait can not be interrupted by signal handling function (it is POSIX requirement), sigsuspend can</li>
   <li>sigwait does not change the mask of blocked signals, even if signal handler is set it will not be triggered (in this example we do not have handlers), it will be executed on sigsuspend call</li>
-</ul></span></li>
+</ul>{{< /answer >}}</li>
 <li>After successful call to   sigwait  only one type of pending signal is removed from the pending signals vector thus the problem we experienced with sigsuspend in L2 example can  be corrected when using sigwait instead of sigsuspend. Please correct the program in L2 as an exercise.</li>
 <li>Does the method of waiting for the end of working thread have the same flow as the method in previous example?<br/>
-Ad:<span class="odpowiedz">No, periodical printout of the table is a part of the task, busy waiting is when looping is coded only for waiting for the condition to become true. Despite that in this example we join the thread.</span></li>
+{{< answer >}} No, periodical printout of the table is a part of the task, busy waiting is when looping is coded only for waiting for the condition to become true. Despite that in this example we join the thread. {{< /answer >}}</li>
 <li>Can we use sigprocmask instead of pthread_sigmask in this program?<br/>
-Ad:<span class="odpowiedz">Yes, the signal blocking is set prior to thread creation, still in single thread phase of the program.</span></li>
+{{< answer >}} Yes, the signal blocking is set prior to thread creation, still in single thread phase of the program. {{< /answer >}}</li>
 <li>Why system calls to functions operating on mutex (acquire, release)  are not tested for errors?<br/>
-Ad:<span class="odpowiedz">Basic mutex type (the type used in this program, default one) is not checking nor reporting errors. Adding those checks would not be such a bad idea as they are not harming the code and if you decide to later change the mutex type to error checking it will not require many changes in the code.</span></li>
+{{< answer >}} Basic mutex type (the type used in this program, default one) is not checking nor reporting errors. Adding those checks would not be such a bad idea as they are not harming the code and if you decide to later change the mutex type to error checking it will not require many changes in the code. {{< /answer >}}</li>
 
 </ol></div>
 </p>
@@ -243,21 +243,21 @@ The program stores the counters of students studding on year 1,2,3 and the final
 <div class="cwiczenie"><ol>
 
 <li>How many mutexes this program uses and what they protect?<br/>
-Ad:<span class="odpowiedz">Four exactly, one for each year/counter.</span></li>
+{{< answer >}} Four exactly, one for each year/counter. {{< /answer >}}</li>
 <li>Must current year of a student be a part of argsModify_t structure?<br/>
-Ad:<span class="odpowiedz">No it could have been automatic in thread variable, then structure argsModify_t would be no longer needed and you would pass pointer to  yearCounters instead.</span></li>
+{{< answer >}} No it could have been automatic in thread variable, then structure argsModify_t would be no longer needed and you would pass pointer to  yearCounters instead. {{< /answer >}}</li>
 <li>What does it mean that the thread cancellation state is set to PTHREAD_CANCEL_DEFERRED ?<br/>
-Ad:<span class="odpowiedz">Cancellation will only happen during certain function calls (so called cancellation points), it will not disturb the rest of the code in the thread. In other words the thread can finish a part of its work before it is canceled.</span></li>
+{{< answer >}} Cancellation will only happen during certain function calls (so called cancellation points), it will not disturb the rest of the code in the thread. In other words the thread can finish a part of its work before it is canceled. {{< /answer >}}</li>
 <li>What functions used in the thread code are cancellation points?<br/>
-Ad:<span class="odpowiedz"> Only nanosleep (called from msleep) is a cancellation point in this code.</span></li>
+{{< answer >}}  Only nanosleep (called from msleep) is a cancellation point in this code. {{< /answer >}}</li>
 <li>How do we learn what functions are cancellation points?<br/>
-Ad:<span class="odpowiedz">$man 7 pthreads</span></li>
+{{< answer >}} $man 7 pthreads {{< /answer >}}</li>
 <li>What one in this call " pthread_cleanup_pop(1);" means ?<br/>
-Ad:<span class="odpowiedz">It means that the handler is not only removed from the handlers stack but also executed.</span></li>
+{{< answer >}} It means that the handler is not only removed from the handlers stack but also executed. {{< /answer >}}</li>
 <li>When the year counter is decreased?<br/>
-Ad:<span class="odpowiedz">In two cases, during cancellation (rare case), during the removal of cleanup handler from the stack of handlers.</span></li>
+{{< answer >}} In two cases, during cancellation (rare case), during the removal of cleanup handler from the stack of handlers. {{< /answer >}}</li>
 <li>Algorithm selecting a thread for cancellation has an apparent flow, can you name it and tell what threat it creates?<br/>
-Ad:<span class="odpowiedz">This random selection can last very long if only a few "live" threads are left on a large list of threads. Try to run the program with 10 as the parameter to check it.</span></li>
+{{< answer >}} This random selection can last very long if only a few "live" threads are left on a large list of threads. Try to run the program with 10 as the parameter to check it. {{< /answer >}}</li>
 <li>Improve random selection as an exercise.</li>
 <li>Have a look at the method used to measure the 4 seconds life time of the program (clock_gettime, nanosleep). Please change the solution  to use alarm function and the SIGALRM handler as an exercise. </li>
 

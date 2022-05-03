@@ -10,15 +10,6 @@
     margin-top: 1em;
 }
 
-.odpowiedz {
-    opacity: 0;
-    font-style: italic;
-}
-
-.odpowiedz:hover {
-    opacity: 1;
-}
-
 pre {
     margin-left: 1.5em;
     padding-left: 0.5em;

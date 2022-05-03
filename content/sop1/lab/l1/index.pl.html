@@ -9,7 +9,7 @@ Uwagi wstępne:
 <ol>
 <li>To jest mega łatwy  tutorial ale za to długi, kolejne będą coraz trudniejsze i krótsze</li>
 <li>Szybkie przejrzenie tutoriala prawdopodobnie nic nie pomoże, należy samodzielnie uruchomić programy, sprawdzić jak działają, poczytać materiały dodatkowe takie jak strony man. W trakcie czytania sugeruję wykonywać ćwiczenia a na koniec przykładowe zadanie.</li>
-<li>Na żółtych polach podaję dodatkowe informacje, niebieskie zawierają pytania i ćwiczenia. Pod pytaniami znajdują się odpowiedzi, które staną się widoczne dopiero po zaznaczeniu ich myszką. Proszę najpierw spróbować sobie odpowiedzieć na pytanie samemu a dopiero potem sprawdzać odpowiedź.</p>
+<li>Na żółtych polach podaję dodatkowe informacje, niebieskie zawierają pytania i ćwiczenia. Pod pytaniami znajdują się odpowiedzi, które staną się widoczne dopiero po kliknięciu. Proszę najpierw spróbować sobie odpowiedzieć na pytanie samemu a dopiero potem sprawdzać odpowiedź.</p>
 <li>Pełne kody do zajęć znajdują się w załącznikach na dole strony.</li>
 <li>Materiały i ćwiczenia są ułożone w pewną logiczną całość, czasem do wykonania ćwiczenia konieczny jest stan osiągnięty poprzednim ćwiczeniem dlatego zalecam wykonywanie ćwiczeń w miarę przyswajania materiału.</li>
 <li>Większość ćwiczeń wymaga użycia konsoli poleceń, zazwyczaj zakładam, ze pracujemy w jednym i tym samym katalogu roboczym więc wszystkie potrzebne pliki są "pod ręką" tzn. nie ma potrzeby podawania ścieżek dostępu.</li>
@@ -57,10 +57,10 @@ Agenda:<ol>
 <div class="cwiczenie">
 <ol>
 <li>Gdzie znaleźć dokumentację samego polecenia man?<br/>
-Odp:<span class="odpowiedz"> $man man</span></li>
+{{< answer >}} $man man {{< /answer >}}</li>
 <li>Jeśli ćwiczysz na własnym systemie Linux upewnij się, że masz zainstalowane strony z dokumentacją posix, jeśli nie to z pomocą "Wójka Google" sprawdź jak doinstalować te strony i zrób to.</li>
 <li>Czemu wpisanie man printf nie pomoże nam w zrozumieniu funkcji printf?</br>
-Odp:<span class="odpowiedz">Ponieważ otwiera się pierwsza sekcja pomocy, a ta dotyczy poleceń powłoki, ponieważ istnieje polecenie printf to dostajemy informacje na jego temat. Należy podać numer sekcji: man 3 printf aby obejrzeć pomoc Linuksową lub lepiej man 3p printf aby obejrzeć opis standardu. </span></li>
+{{< answer >}} Ponieważ otwiera się pierwsza sekcja pomocy, a ta dotyczy poleceń powłoki, ponieważ istnieje polecenie printf to dostajemy informacje na jego temat. Należy podać numer sekcji: man 3 printf aby obejrzeć pomoc Linuksową lub lepiej man 3p printf aby obejrzeć opis standardu.  {{< /answer >}}</li>
 </div>
 
 </p>
@@ -78,10 +78,10 @@ Odp:<span class="odpowiedz">Ponieważ otwiera się pierwsza sekcja pomocy, a ta 
 <div class="cwiczenie">
 <ol>
 <li>Skąd wiadomo jakie pliki nagłówkowe trzeba włączyć?</br>
-Odp: <span class="odpowiedz">stdio.h z man 3 printf, stdlib.h dla stałych</span></li>
+{{< answer >}} stdio.h z man 3 printf, stdlib.h dla stałych {{< /answer >}}</li>
 <li>Skompiluj program poleceniem "make prog1", używasz w ten sposób domyślnego szablonu kompilacji programu GNU make. uruchom program wynikowy.</li>
 <li>Czemu taki sposób kompilacji będzie dla nas nieprzydatny?</br>
-Odp: <span class="odpowiedz"> brak flagi -Wall, nie wiemy jakie warningi "czają" się w naszym kodzie. </span></li>
+{{< answer >}}  brak flagi -Wall, nie wiemy jakie warningi "czają" się w naszym kodzie.  {{< /answer >}}</li>
 </ol>
 </div>
 
@@ -104,13 +104,13 @@ clean:
 <div class="cwiczenie">
 <ol>
 <li>Jak za pomocą programu make i podanego Makefile usunąć stary plik wykonywalny?<br/>
-Odp:<span class="odpowiedz"> $make clean</span></li>
+{{< answer >}} $make clean {{< /answer >}}</li>
 <li>Jak za pomocą programu make i podanego Makefile przeprowadzić kompilacje?<br/>
-Odp:<span class="odpowiedz"> $make lub $make prog1</span></li>
+{{< answer >}} $make lub $make prog1 {{< /answer >}}</li>
 <li>Jak przekierować wyjcie tego programu do pliku?<br/>
-Odp:<span class="odpowiedz"> $./prog1 > plik.txt</span></li>
+{{< answer >}} $./prog1 > plik.txt {{< /answer >}}</li>
 <li>Jak teraz wyświetlić ten plik?<br/>
-Odp:<span class="odpowiedz"> $cat plik.txt</span></li>
+{{< answer >}} $cat plik.txt {{< /answer >}}</li>
 <li>Zrób kopię programu prog1.c, niech się nazywa prog1b.c. Przerób plik Makefile tak aby kompilował ten nowy plik do binarki o nazwie prog1b, zwróć uwagę aby przy faktycznej kompilacji (a nie tylko w Makefile) była obecna flaga -Wall. Jeśli uda Ci się to za pierwszym razem to spróbuj sprowokować błąd celowo zmieniając niektóre prog1b z powrotem na prog1 w różnych konfiguracjach.</li>
 </ol>
 </div>
@@ -156,11 +156,11 @@ Odp:<span class="odpowiedz"> $cat plik.txt</span></li>
 <li>Przerób Makefile z poprzedniego przykłady tak, aby można było skompilować ten program. </li>
 <li>Uruchom i przetestuj program</li>  
 <li>Czemu w kodzie pojawia się 21 jako rozmiar maksymalny w formatowaniu scanf (%21s)?<br/>
-Odp:<span class="odpowiedz">Czytając maksymalnie 20 znaków nie wiemy czy użytkownik podał dokładnie 20 czy może więcej, czytając maksymalnie 21 wiemy o przekroczeniu limitu.</span></li>
+{{< answer >}} Czytając maksymalnie 20 znaków nie wiemy czy użytkownik podał dokładnie 20 czy może więcej, czytając maksymalnie 21 wiemy o przekroczeniu limitu. {{< /answer >}}</li>
 <li>Czemu deklarujemy 22 jako rozmiar tablicy na ciąg znaków skoro czytamy najwyżej 21 znaków?<br/>
-Odp:<span class="odpowiedz">W C ciągi znaków kończą się znakiem zera, scanf dopisze to zero za ostatnim znakiem, zatem każdy ciąg zawsze musi mieć ten dodatkowy znak doliczony do rozmiaru. </span></li>
+{{< answer >}} W C ciągi znaków kończą się znakiem zera, scanf dopisze to zero za ostatnim znakiem, zatem każdy ciąg zawsze musi mieć ten dodatkowy znak doliczony do rozmiaru.  {{< /answer >}}</li>
 <li>Jak można zmienić  sposób wywołania tego programu tak aby komunikat o ewentualnym błędzie wykonania nie pojawił się na ekranie?<br/>
-Odp:<span class="odpowiedz">Można przekierować stderr do /dev/null, np. tak: $./prog2 2>/dev/null </span></li>
+{{< answer >}} Można przekierować stderr do /dev/null, np. tak: $./prog2 2>/dev/null  {{< /answer >}}</li>
 </ol>
 </div>
 
@@ -217,13 +217,13 @@ clean:
 
 <div class="cwiczenie"><ol>
 <li>Skompiluj za pomocą polecenia make i uruchom program, jak dla powyższego Makefile skompilować tylko jeden cel?<br/>
-Odp:<span class="odpowiedz">$make prog3</span></li> 
+{{< answer >}} $make prog3 {{< /answer >}}</li> 
 <li>Sprawdź jak się zachowa dla ciągów 20  i 21 znakowych. Czemu akurat tak?<br/>
-Odp:<span class="odpowiedz">Dla ciągu 21 znakowego w tablicy nie zmieści się znak nowej linii, fgets nie przepełnia buforu zatem obcina to co przekracza podany limit  - w tym przypadki nową linię.</span></li> 
+{{< answer >}} Dla ciągu 21 znakowego w tablicy nie zmieści się znak nowej linii, fgets nie przepełnia buforu zatem obcina to co przekracza podany limit  - w tym przypadki nową linię. {{< /answer >}}</li> 
 <li>Czemu w wywołaniu printf nie dodaliśmy znaku nowej linii na końcu a mimo to powitania wyświetlają się w oddzielnych liniach?<br/>
-Odp:<span class="odpowiedz">fgets pobiera też \n o ile zmieści się w buforze, wypisując taki ciąg nie musimy już  dodawać swojego \n </span></li>
+{{< answer >}} fgets pobiera też \n o ile zmieści się w buforze, wypisując taki ciąg nie musimy już  dodawać swojego \n  {{< /answer >}}</li>
 <li>Czemu rozmiar bufora jest MAX_LINE+2?<br/>
-Odp:<span class="odpowiedz">Musi się zmieścić znak nowej linii i kończące łańcuch znakowy zero</span></li>
+{{< answer >}} Musi się zmieścić znak nowej linii i kończące łańcuch znakowy zero {{< /answer >}}</li>
 </ol></div>
 <div class="dlaN"><ol>
 <li>Zwróć uwagę, że fgets pracuje na dowolnym strumieniu, nie tylko na stdin</li>
@@ -241,8 +241,8 @@ Tom
 <div class="cwiczenie"><ol>
 <li>Utwórz plik tekstowy z powyższą zawartością.</li>
 <li>Jak skłonić nasz program aby pobrał dane z pliku a nie z klawiatury (na dwa sposoby)?<br/>
-<li>Odp A: <span class="odpowiedz"> przekierować plik na stdin: $ ./prog3 < dane.txt </span></br> 
-<li>Odp A: <span class="odpowiedz"> wykorzystać potok : $ cat dane.txt | ./prog3 </span></li> 
+{{< answer >}} przekierować plik na stdin: $ ./prog3: $ ./prog3 < dane.txt {{< /answer >}}
+{{< answer >}} wykorzystać potok : $ cat dane.txt | ./prog3: $ cat dane.txt | ./prog3 {{< /answer >}}</li> 
 </ol></div>
 </p>
 
@@ -273,8 +273,8 @@ LDFLAGS=-fsanitize=address,undefined
 <div class="cwiczenie"><ol>
 <li>Skompiluj o uruchom program, przetestuj dla różnych parametrów</li>
 <li>jak za pomocą programu xargs przekształcić zawartość pliku dane.txt na argumenty wywołania naszego programu?<br/>
-<li>Odp A: <span class="odpowiedz">każdy wyraz to oddzielny argument: $ cat dane.txt | xargs ./prog4 </span></br> 
-<li>Odp B: <span class="odpowiedz">każda linia to argument: $ cat dane.txt |tr "\n" "\0"| xargs -0 ./prog4 </span></li> 
+{{< answer >}} każdy wyraz to oddzielny argument: $ cat dane.txt | xargs ./prog4 {{< /answer >}}
+{{< answer >}} każda linia to argument: $ cat dane.txt |tr "\n" "\0"| xargs -0 ./prog4 {{< /answer >}}</li> 
 </ol></div>
 <div class="dlaN"><ol>
 <li>Używając powyższego dla większych plików trzeba pamiętać, że długość linii poleceń jest limitowana (różnie w różnych systemach). xargs może podzielić dane na więcej wywołań gdy sobie tego zażyczymy.</li>
@@ -311,9 +311,9 @@ void usage(char* pname){
 <div class="cwiczenie"><ol>
 <li>Skompiluj ten program używając uniwersalnego Makefile z poprzedniego zadania.</li>
 <li>Jak działa program dla wartości powtórzeń niepoprawnie podanych, czemu tak?<br/>
-Odp: <span class="odpowiedz"> Nic nie wypisze ponieważ atoi pod Linuksem zwraca zero jeśli nie można zamienić tekstu na liczbę.</span></li>
+{{< answer >}}  Nic nie wypisze ponieważ atoi pod Linuksem zwraca zero jeśli nie można zamienić tekstu na liczbę. {{< /answer >}}</li>
 <li>Czemu argc ma być 3, mamy przecież 2 argumenty? <br/>
-Odp: <span class="odpowiedz"> argc to jest licznik elementów w tablicy argv, mieszczą się tam dwa argumenty i nazwa programu, w sumie 3 elementy </span></li> 
+{{< answer >}}  argc to jest licznik elementów w tablicy argv, mieszczą się tam dwa argumenty i nazwa programu, w sumie 3 elementy  {{< /answer >}}</li> 
 </ol>
 </div>
 <div class="dlaN"><ol>
@@ -382,9 +382,9 @@ Hello Danny<br/ >
 </ol></div>
 <div class="cwiczenie"><ol>
 <li>Czy jeśli uruchomię drugą powłokę z menu środowiska i w niej uruchomię program to zmienna TVAR1 nadal będzie widoczna?</br>
-Odp: <span class="odpowiedz"> Nie, te dwie powłoki dziedziczą zmienne od  procesu uruchamiającego programy w  środowisku zatem druga powłoka nie może dziedziczyć nic "w bok" od pierwszej.</span></li>
+{{< answer >}}  Nie, te dwie powłoki dziedziczą zmienne od  procesu uruchamiającego programy w  środowisku zatem druga powłoka nie może dziedziczyć nic "w bok" od pierwszej. {{< /answer >}}</li>
 <li>Czy jeśli uruchomię drugą powłokę z pierwszej i w niej uruchomię program to zmienna TVAR1 nadal będzie widoczna?</br>
-Odp: <span class="odpowiedz"> Tak, druga powłoka dziedziczy zmienne od swojego rodzica czyli od pierwszej powłoki.</span></li>
+{{< answer >}}  Tak, druga powłoka dziedziczy zmienne od swojego rodzica czyli od pierwszej powłoki. {{< /answer >}}</li>
 </ol></div>
 </p>
 
@@ -415,7 +415,7 @@ Odp: <span class="odpowiedz"> Tak, druga powłoka dziedziczy zmienne od swojego 
 <div class="cwiczenie"><ol>
 <li>Wykonaj program z różnymi ustawieniami TIMES</li>
 <li>Jak po wykonaniu programu sprawdzić czy zmienna RESULT jest ustawiona? Będzie ?<br/>
-Odp: <span class="odpowiedz"> $ env|grep RESULT ; nie będzie ustawiona bo zmienne nie są propagowane wzwyż drzewa procesów. Zmienna była ustawiona tylko w programie i w powłoce w nim na chwilę wywołanej (f. system) ale po zakończeniu tych procesów nie zachowała się.</span></li>
+{{< answer >}}  $ env|grep RESULT ; nie będzie ustawiona bo zmienne nie są propagowane wzwyż drzewa procesów. Zmienna była ustawiona tylko w programie i w powłoce w nim na chwilę wywołanej (f. system) ale po zakończeniu tych procesów nie zachowała się. {{< /answer >}}</li>
 </ol></div>
 </p>
 
@@ -462,15 +462,15 @@ void scan_dir (){
 </pre>
 <div class="cwiczenie"><ol>
 <li>Uruchom ten program w katalogu w którym masz jakieś pliki, może być ten w którym wykonujesz ten tutorial, ważne aby nie było w nim katalogów, czy wyniki zgadzają się z tym czego oczekujemy tj. zero katalogów, trochę plików?<br/>
-Odp: <span class="odpowiedz">Nie, są dwa katalogi, program policzył katalog "." i  "..", każdy katalog ma hard link na samego siebie "." i katalog rodzic ".." </span></li>
+{{< answer >}} Nie, są dwa katalogi, program policzył katalog "." i  "..", każdy katalog ma hard link na samego siebie "." i katalog rodzic ".."  {{< /answer >}}</li>
 <li>Jak utworzyć link symboliczny do testów ? <br/>
-Odp: <span class="odpowiedz">$ ln -s prog9.c prog_link.c </span></li>
+{{< answer >}} $ ln -s prog9.c prog_link.c  {{< /answer >}}</li>
 <li>Jak różnią się stat i lstat? Czy jeśli w kodzie zmienić lstat na stat to zliczymy linki poprawnie ? <br/>
-Odp: <span class="odpowiedz">$ Nie, link zostanie potraktowany tak jak obiekt który wskazuje, to jest właśnie różnica pomiędzy tymi dwoma funkcjami. </span></li>
+{{< answer >}} $ Nie, link zostanie potraktowany tak jak obiekt który wskazuje, to jest właśnie różnica pomiędzy tymi dwoma funkcjami.  {{< /answer >}}</li>
 <li>Jakie pola zawiera struktura opisująca obiekt w systemie plików (dirent) wg. POSIX ? <br/>
-Odp: <span class="odpowiedz">Tylko numer inode i nazwę, resztę danych o pliku odczytujemy funkcjami lstat/stat </span></li>
+{{< answer >}} Tylko numer inode i nazwę, resztę danych o pliku odczytujemy funkcjami lstat/stat  {{< /answer >}}</li>
 <li>Jakie pola zawiera struktura opisująca obiekt w systemie plików (dirent) w Linuksie (man readdir) ? <br/>
-Odp: <span class="odpowiedz">Numer inode, nazwę  i 3 inne nie objęte standardem </span></li>
+{{< answer >}} Numer inode, nazwę  i 3 inne nie objęte standardem  {{< /answer >}}</li>
 
 </ol></div>
 
@@ -504,11 +504,11 @@ Odp: <span class="odpowiedz">Numer inode, nazwę  i 3 inne nie objęte standarde
 <div class="cwiczenie"><ol>
 <li>Sprawdź jak program zachowa się w przypadku nieistniejących katalogów, katalogów co do których nie masz prawa dostępu , czy poprawnie poradzi sobie ze ścieżkami względnymi podawanymi jako parametr a jak z bezwzględnymi.</li>
 <li>Czemu program pobiera i zapamiętuje aktualny katalog roboczy?<br/>
-Odp: <span class="odpowiedz">Podawane programowi jako parametry ścieżki mogą być względne czyli zapisane względem początkowego położenia w drzewie katalogów, program przed wywołaniem funkcji skanującej z poprzedniego zadania zmienia katalog roboczy tak aby "być" w folderze skanowanym. Ta zmiana powoduje, że wszystkie inne ścieżki względne stają się niepoprawne (są prowadzone z innego punktu drzewa niż program działa) dlatego po sprawdzeniu katalogu program musi wrócić do katalogu wyjściowego skąd kolejna ścieżka względna ma sens. </span></li>
+{{< answer >}} Podawane programowi jako parametry ścieżki mogą być względne czyli zapisane względem początkowego położenia w drzewie katalogów, program przed wywołaniem funkcji skanującej z poprzedniego zadania zmienia katalog roboczy tak aby "być" w folderze skanowanym. Ta zmiana powoduje, że wszystkie inne ścieżki względne stają się niepoprawne (są prowadzone z innego punktu drzewa niż program działa) dlatego po sprawdzeniu katalogu program musi wrócić do katalogu wyjściowego skąd kolejna ścieżka względna ma sens.  {{< /answer >}}</li>
 <li>Czy prawdziwe jest stwierdzenie, że program powinien "wrócić" do tego katalogu w którym był uruchomiony?<br/>
-Odp: <span class="odpowiedz">Nie, katalog roboczy to właściwość procesu, jeśli proces dziecko zmienia swój CWD to nie ma to wpływu na proces rodzic, zatem nie ma obowiązku ani potrzeby wracać. </span></li>
+{{< answer >}} Nie, katalog roboczy to właściwość procesu, jeśli proces dziecko zmienia swój CWD to nie ma to wpływu na proces rodzic, zatem nie ma obowiązku ani potrzeby wracać.  {{< /answer >}}</li>
 <li>W tym programie nie wszystkie błędy muszą zakończyć się wyjściem, który można inaczej obsłużyć i jak?<br/>
-Odp: <span class="odpowiedz">if(chdir(argv[i]))continue; To oczywiście nieco uproszczone rozwiązanie, można by dodać jakiś komunikat.  </span></li>
+{{< answer >}} if(chdir(argv[i]))continue; To oczywiście nieco uproszczone rozwiązanie, można by dodać jakiś komunikat.   {{< /answer >}}</li>
 </ol></div>
 <div class="dlaN"><ol>
 <li>Nigdy i pod żadnym pozorem  nie pisz printf(argv[i]), jeśli ktoś poda jako katalog %d to jak to wyświetli printf? To dotyczy nie tylko argumentów programu ale dowolnych ciągów znaków.</li>
@@ -534,7 +534,7 @@ Odp: <span class="odpowiedz">if(chdir(argv[i]))continue; To oczywiście nieco up
 <li>Powtórz sobie jak działają wskazania na funkcje w C.</li>
 <li>Sprawdź jak program sobie radzi z niedostępnymi i nieistniejącymi katalogami.</li>
 <li>W jakim celu użyta jest flaga FTW_PHYS?<br/>
-Odp: <span class="odpowiedz">Bez tej flagi nftw przechodzi przez linki symboliczne do wskazywanych obiektów, czyli nie może ich zliczać, analogicznie jak f.stat</span></li>
+{{< answer >}} Bez tej flagi nftw przechodzi przez linki symboliczne do wskazywanych obiektów, czyli nie może ich zliczać, analogicznie jak f.stat {{< /answer >}}</li>
 <li>Sprawdź jak inne flagi modyfikują zachowanie nftw.</li>
 </ol></div>
 
@@ -563,14 +563,14 @@ Odp: <span class="odpowiedz">Bez tej flagi nftw przechodzi przez linki symbolicz
 <pre>{{< include "prog12.c" >}}</pre>
 <div class="cwiczenie"><ol>
 <li>Jaką maskę bitową tworzy wyrażenie ~perms&amp;0777 ? <br/>
-Odp: <span class="odpowiedz"> odwrotność wymaganych parametrem -p uprawnień przycięta do 9 bitów, jeśli nie rozumiesz jak to działa koniecznie powtórz sobie operacje bitowe w C. </span></li>
+{{< answer >}}  odwrotność wymaganych parametrem -p uprawnień przycięta do 9 bitów, jeśli nie rozumiesz jak to działa koniecznie powtórz sobie operacje bitowe w C.  {{< /answer >}}</li>
 <li>Jak działa losowanie znaków ? <br/>
-Odp: <span class="odpowiedz"> W losowych miejscach wstawia kolejne znaki alfabetu od A do Z potem znowu A itd. Wyrażenie 'A'+(i%('Z'-'A'+1)) powinno być zrozumiałe, jeśli nie poświęć mu więcej czasu takie losowania będą się jeszcze pojawiać. </span></li>
+{{< answer >}}  W losowych miejscach wstawia kolejne znaki alfabetu od A do Z potem znowu A itd. Wyrażenie 'A'+(i%('Z'-'A'+1)) powinno być zrozumiałe, jeśli nie poświęć mu więcej czasu takie losowania będą się jeszcze pojawiać.  {{< /answer >}}</li>
 <li>Uruchom program kilka razy, pliki wynikowe wyświetl poleceniem cat i less sprawdź jakie mają rozmiary (ls -l), czy zawsze równe podanej w parametrach wartości? Z czego wynikają różnice dla małych rozmiarów -s a z czego dla dużych (> 64K) rozmiarów?<br/>
-Odp: <span class="odpowiedz">Prawie zawsze rozmiary są różne w obu przypadkach wynika to ze sposobu tworzenia pliku, który jest na początku pusty a potem w losowych lokalizacjach wstawiane są znaki, nie zawsze będzie wylosowany znak na ostatniej pozycji. Losowanie podlega limitowi 2 bajtowego RAND_MAX, wiec w dużych plikach losowane są znaki na pozycjach do granicy RAND_MAX.  </span></li>
+{{< answer >}} Prawie zawsze rozmiary są różne w obu przypadkach wynika to ze sposobu tworzenia pliku, który jest na początku pusty a potem w losowych lokalizacjach wstawiane są znaki, nie zawsze będzie wylosowany znak na ostatniej pozycji. Losowanie podlega limitowi 2 bajtowego RAND_MAX, wiec w dużych plikach losowane są znaki na pozycjach do granicy RAND_MAX.   {{< /answer >}}</li>
 <li>Przerób program tak aby rozmiar zawsze był zgodny z założonym.</li>
 <li>Czemu podczas sprawdzania błędu unlink jeden przypadek ignorujemy?<br/>
-Odp: <span class="odpowiedz"> ENOENT oznacza brak pliku, jeśli plik o podanej nazwie nie istniał to nie możemy go skasować, ale to nie przeszkadza programowi, w tym kontekście to nie jest błąd. Bez tego wyjątku moglibyśmy tylko nadpisywać istniejące pliki a nie tworzyć nowe. </span></li>
+{{< answer >}}  ENOENT oznacza brak pliku, jeśli plik o podanej nazwie nie istniał to nie możemy go skasować, ale to nie przeszkadza programowi, w tym kontekście to nie jest błąd. Bez tego wyjątku moglibyśmy tylko nadpisywać istniejące pliki a nie tworzyć nowe.  {{< /answer >}}</li>
 </ol></div>
 
 <div class="dlaN"><ol>

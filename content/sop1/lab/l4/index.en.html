@@ -42,32 +42,31 @@ The program processes a  <em>workfile</em>. The file is split into <em>n</em> (n
 <div class="cwiczenie"><ol>
 <li>Start with the analysis how the code runs for one iteration (k=1) and then for multiple iterations (k>0).</li>
 <li>In what way 3 buffers and 3 aiocb's are utilised? What is stored in 3 structures starting at curpos?<br>
-Ad.<span class="odpowiedz">Buffers (and structures) are used in cyclic way. To ease the calculation of next index in the array (with wrapping) macro SHIFT was introduced. The designation of buffers in a sequence starting at curpos at the beginning of the iteration is: (curpos) ready block  to write in this iteration, (curpos+1) block read and ready for processing in this iteration, (curpos+2) block for  read operation to be started in this iteration.</span></li>
+{{< answer >}} Buffers (and structures) are used in cyclic way. To ease the calculation of next index in the array (with wrapping) macro SHIFT was introduced. The designation of buffers in a sequence starting at curpos at the beginning of the iteration is: (curpos) ready block  to write in this iteration, (curpos+1) block read and ready for processing in this iteration, (curpos+2) block for  read operation to be started in this iteration. {{< /answer >}}</li>
 <li>Try to describe what happens concurrently in the main loop, draw a time line whit time unit equal to one iteration, for each buffer (1,2,3) and each time slot (assume k=4) write what is done with the buffer. Possible notations are read (R), write (W), processing (P) and nothing (-).  Please notice that the first read and the last write are done outside of the main loop, do not include them.<br>
-Ad.<br>
-<span class="odpowiedz">0 1 2<br>
+{{< answer >}}0 1 2<br>
 - P R<br>
 R W P<br>
 P R W<br>
-W P -<br></span></li>
+W P -{{< /answer >}}</li>
 <li>Why AIO synchronization (aio_suspend) is not done immediately after the operation, instead it is postponed till the end of the iteration?<br>
-Ad.<span class="odpowiedz">To achieve some concurrency of IO and buffer processing. The synchronization is done after the buffer reversing and in time before it, both IO and processing runs in parallel. </li>
+{{< answer >}} To achieve some concurrency of IO and buffer processing. The synchronization is done after the buffer reversing and in time before it, both IO and processing runs in parallel. {{< /answer >}}</li>
 <li>Are indexes of read block A and write block B always different?<br>
-Ad.<span class="odpowiedz">No, for one iteration no check is made, for many iterations we only check if concurrent read and write blocks are at different positions but do notice that in one iteration we read the block we are going to process during next iteration. It may happen that the write position will be exactly the same as read position. </span></li>
+{{< answer >}} No, for one iteration no check is made, for many iterations we only check if concurrent read and write blocks are at different positions but do notice that in one iteration we read the block we are going to process during next iteration. It may happen that the write position will be exactly the same as read position.  {{< /answer >}}</li>
 <li>What is the meaning of  different indexes condition in this task?<br>
-Ad.<span class="odpowiedz">For this algorithm it is critical not to read and write the same block in parallel (in the same iteration) thus the condition on indexes. Without it, data in file may get corrupted. The problem does not affect one iteration as this is solved without real AIO.</span></li>
+{{< answer >}} For this algorithm it is critical not to read and write the same block in parallel (in the same iteration) thus the condition on indexes. Without it, data in file may get corrupted. The problem does not affect one iteration as this is solved without real AIO. {{< /answer >}}</li>
 <li>When selcting values for indexes the second value is randomly selected from narrower range, the maximum is decreased by one, why?<br>
-Ad.<span class="odpowiedz">This trick helps us to keep code shorter,  if indexes are equal you always can increase the second one because it was at most maximum minus one. Without it you must code the case when indexes are equal and maximal at the same time.</span></li>
+{{< answer >}} This trick helps us to keep code shorter,  if indexes are equal you always can increase the second one because it was at most maximum minus one. Without it you must code the case when indexes are equal and maximal at the same time. {{< /answer >}}</li>
 <li>Why in first iteration of the main loop we skip write and in the last one we skip read operation?<br>
-Ad.<span class="odpowiedz">In first iteration we do not have ready buffer to write in the last one we do not need another read because we will not write it anywhere, we are done with iterations.</span></li>
+{{< answer >}} In first iteration we do not have ready buffer to write in the last one we do not need another read because we will not write it anywhere, we are done with iterations. {{< /answer >}}</li>
 <li>Is it necessary to use AIO for the first read and the last write in the program?</li>
-Ad.<span class="odpowiedz">No, those operations must be immediately synchronized - regular read and write can be used instead.</span></li>
+{{< answer >}} No, those operations must be immediately synchronized - regular read and write can be used instead. {{< /answer >}}</li>
 <li>When AIO cancellation takes place, is it correctly coded?<br>
-Ad.<span class="odpowiedz">It is initiated in cleanup function provide the process received the SIGINT signal (we know about it from global work variable). After the cancellation this code is not checking if the cancellation was fully successful (AIO_CANCELED) or fully failed (AIO_ALLDONE) or partially done (AIO_NOTCANCELED). In the last case the program should wait for the operations still in progress before it can release the buffers' memory.</span> <br>
+{{< answer >}} It is initiated in cleanup function provide the process received the SIGINT signal (we know about it from global work variable). After the cancellation this code is not checking if the cancellation was fully successful (AIO_CANCELED) or fully failed (AIO_ALLDONE) or partially done (AIO_NOTCANCELED). In the last case the program should wait for the operations still in progress before it can release the buffers' memory. {{< /answer >}} <br>
 Correct the code for exercise. </li>
 <li>Convert all AIO operations to synchronous IO (change all aio_ calls to synchronous IO calls and get rid of aio_suspend). Do some testing for small blocks (10B) and large blocks (2MB). To create large random file you can run this "$dd bs=1024 count=200000 if=/dev/urandom of=testBin.txt". 
 When AIO is faster, can it be slower that regular IO? To measure time you can use time command ($ man time).<br>
-Ad.<span class="odpowiedz">In my tests small blocks were processed in comparable times, this proves the Linux implementation of AIO to be quite fast, I expected it to be slower.  Processing of large blocks was more than two times faster with AIO. I tested for 100 iterations.</span></li>
+{{< answer >}} In my tests small blocks were processed in comparable times, this proves the Linux implementation of AIO to be quite fast, I expected it to be slower.  Processing of large blocks was more than two times faster with AIO. I tested for 100 iterations. {{< /answer >}}</li>
 </ol></div>
 <hr/>
 <p class="cwiczenie">
