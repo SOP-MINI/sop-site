@@ -3,10 +3,10 @@
    the other 10000 times "b".
  */
 
+#include <pthread.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <pthread.h>
 
 void *process(void *arg)
 {

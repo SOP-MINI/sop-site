@@ -5,7 +5,8 @@
 
 extern char **environ;
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
 	int index = 0;
 	while (environ[index])
 		printf("%s\n", environ[index++]);

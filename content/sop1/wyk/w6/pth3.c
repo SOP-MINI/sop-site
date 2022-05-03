@@ -1,51 +1,43 @@
 /* pth3.c - this program implements correctly concurrent operations on
- * the same variable by two threads. 
+ * the same variable by two threads.
  */
+
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
-#define prt1(p) fprintf(stderr,p)
+
+#define prt1(p) fprintf(stderr, p)
 int cnt, n;
 
-pthread_mutex_t blokada = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void *worker(void *arg)
 {
-
 	int i, v;
 
 	for (i = 0; i < n; i++) {
-
-		if (pthread_mutex_lock(&blokada)) {
-
+		if (pthread_mutex_lock(&mutex)) {
 			prt1("mutex_lock");
 			return NULL;
-
 		}
 
 		v = cnt;
 
-		printf("Thread with TID=%lu: %d\n",
-		       (unsigned long)pthread_self(), v + ((int *)arg)[0]);
+		printf("Thread with TID=%lu: %d\n", (unsigned long)pthread_self(), v + ((int *)arg)[0]);
 
 		cnt = v + ((int *)arg)[0];
 
-		if (pthread_mutex_unlock(&blokada)) {
-
+		if (pthread_mutex_unlock(&mutex)) {
 			prt1("mutex_unlock");
 			return NULL;
-
 		}
-
 	}
 
 	return NULL;
-
 }
 
 int main(int argc, char *argv[])
 {
-
 	int inc = 1, dec = -1;
 
 	pthread_t tid1, tid2;
@@ -82,5 +74,4 @@ int main(int argc, char *argv[])
 	fprintf(stderr, "\n%s ends with n=%d, cnt=%d\n", argv[0], n, cnt);
 
 	return 0;
-
 }

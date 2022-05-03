@@ -129,7 +129,7 @@ Ans.:<span class="odpowiedz"> $cat file.txt</span></li>
 <em>for convenience lets add macro :</em>
 <pre>
 #define ERR(source) (perror(source),\
-		     fprintf(stderr,"%s:%d\n",__FILE__,__LINE__),\
+		     fprintf(stderr, "%s:%d\n", __FILE__, __LINE__),\
 		     exit(EXIT_FAILURE))
 
 </pre>
@@ -144,9 +144,9 @@ Ans.:<span class="odpowiedz"> $cat file.txt</span></li>
 <em>code extension for <b>prog2.c</b></em>
 <pre>
 	char name[22];
-	scanf("%21s",name);
-	if(strlen(name)>20) ERR("Name too long");
-	printf("Hello %s\n",name);
+	scanf("%21s", name);
+	if (strlen(name) > 20) ERR("Name too long");
+	printf("Hello %s\n", name);
 </pre>
 <div class="cwiczenie">
 <ol>
@@ -290,8 +290,9 @@ Write a program that accepts 2 arguments: name and counter n &gt; 0, more than t
 <p>
 <em>Additional function in file <b>prog5.c</b></em>
 <pre>
-void usage(char* pname){
-	fprintf(stderr,"USAGE:%s name times>0\n",pname);
+void usage(char *pname)
+{
+	fprintf(stderr, "USAGE:%s name times>0\n", pname);
 	exit(EXIT_FAILURE);
 }
 </pre>
@@ -341,7 +342,7 @@ Hello Danny<br/ >
 <p>
 <em>lets correct usage in <b>prog6.c</b>:</em>
 <pre>
-	fprintf(stderr,"USAGE:%s ([-t x] -n Name) ... \n",pname);
+	fprintf(stderr, "USAGE:%s ([-t x] -n Name) ... \n", pname);
 </pre>
 <em>code for <b>prog6.c</b> file:</em>
 <pre>{{% include "prog6.c" %}}</pre>
@@ -437,27 +438,36 @@ Write a program counting objects (files, links, folders and others) in current w
 <p>
 <em>function in <b>prog9.c</b> file:</em>
 <pre>
-void scan_dir (){
+void scan_dir()
+{
 	DIR *dirp;
 	struct dirent *dp;
 	struct stat filestat;
-	int dirs=0,files=0,links=0,other=0;
-	if(NULL == (dirp = opendir("."))) ERR("opendir");
+	int dirs = 0, files = 0, links = 0, other = 0;
+	if (NULL == (dirp = opendir(".")))
+		ERR("opendir");
 	do {
 		errno = 0;
 		if ((dp = readdir(dirp)) != NULL) {
-			if (lstat(dp-&gt;d_name, &amp;filestat)) ERR("lstat");
-			if (S_ISDIR(filestat.st_mode)) dirs++;
-			else if (S_ISREG(filestat.st_mode)) files++;
-			else if (S_ISLNK(filestat.st_mode)) links++;
-			else other++;
+			if (lstat(dp->d_name, &filestat))
+				ERR("lstat");
+			if (S_ISDIR(filestat.st_mode))
+				dirs++;
+			else if (S_ISREG(filestat.st_mode))
+				files++;
+			else if (S_ISLNK(filestat.st_mode))
+				links++;
+			else
+				other++;
 		}
 	} while (dp != NULL);
-	if (errno != 0) ERR("readdir");
-	if(closedir(dirp)) ERR("closedir");
-	printf("Files: %d, Dirs: %d, Links: %d, Other: %d\n",files,dirs,links,other);
-}
 
+	if (errno != 0)
+		ERR("readdir");
+	if (closedir(dirp))
+		ERR("closedir");
+	printf("Files: %d, Dirs: %d, Links: %d, Other: %d\n", files, dirs, links, other);
+}
 </pre>
 <div class="cwiczenie"><ol>
 <li>Run this program in the folder with some files but without sub-folders, it may be the folder you are working on this tutorial in. Is the folder count zero? Explain it.<br/>

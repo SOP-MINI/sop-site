@@ -1,11 +1,12 @@
 /* pth2.c - The program shows (unexpected?) consequences of concurrent
  * operations on a shared variable by two threads.
  */
+
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
 
-#define prt1(p) fprintf(stderr,p)
+#define prt1(p) fprintf(stderr, p)
 int cnt, n;
 
 void *worker(void *arg)
@@ -13,8 +14,7 @@ void *worker(void *arg)
 	int i, v;
 	for (i = 0; i < n; i++) {
 		v = cnt;
-		printf("Thread with TID=%lu: %d\n",
-		       (unsigned long)pthread_self(), v + ((int *)arg)[0]);
+		printf("Thread with TID=%lu: %d\n", (unsigned long)pthread_self(), v + ((int *)arg)[0]);
 		cnt = v + ((int *)arg)[0];
 	}
 	return NULL;
