@@ -97,9 +97,7 @@ Zadanie podzielimy na etapy.
 
 *rozwiązanie **prog21a\_s.c**:*
 
-```
-{{< include "prog21a_s.c"  >}}
-```
+{{< includecode "prog21a_s.c"  >}}
 
 *Uruchamianie:* `./prog21a_s a & sleep 1; cat prog21a_s.c > a`
 
@@ -134,9 +132,7 @@ Zadanie podzielimy na etapy.
 
 *rozwiązanie **prog21\_c.c**:*
 
-```
-{{< include "prog21_c.c"  >}}
-```
+{{< includecode "prog21_c.c"  >}}
 
 *Uruchamianie:* `./prog21a_s a & ./prog21_c a prog21a_s.c`
 
@@ -169,9 +165,7 @@ Zadanie podzielimy na etapy.
 
 *rozwiązanie **prog21b\_s.c**:*
 
-```
-{{< include "prog21b_s.c" >}}
-```
+{{< includecode "prog21b_s.c" >}}
 
 *Uruchamianie:* `./prog21_c a Makefile & ./prog21_c a prog21b_s.c & ./prog21_c a prog21_c.c & sleep 1; ./prog21b_s a`
 
@@ -228,9 +222,7 @@ Rozwiązanie dzielimy na 2 etapy
 
 *rozwiązanie **prog22a.c**:*
 
-```
-{{< include "prog22a.c" >}}
-```
+{{< includecode "prog22a.c" >}}
 
 <div class="cwiczenie">
 
@@ -256,9 +248,7 @@ Rozwiązanie dzielimy na 2 etapy
 
 *rozwiązanie **prog22b.c**:*
 
-```
-{{< include "prog22b.c"  >}}
-```
+{{< includecode "prog22b.c"  >}}
 
 <div class="uwagi">
 

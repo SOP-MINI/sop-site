@@ -11,16 +11,17 @@ During the Operating systems class we will mostly use -fsanitize=address and -fs
 The advantage of using sanitizers is ability to find code problems that are either impossible of very expensive (in terms of computation costs) to detect during the compilation. On the other hand only problems that actually happened during the execution will be detected (which may depend on e.g. input data).
 
 The example of unsafe stdin reading:
+```
+#include <stdio.h>
 
-    #include <stdio.h>
-    
-    int main(int argc, char** argv) {
-      int x=5;
-      char name[10];
-      scanf("%s", name); // Reading stirng of unknown (probably exceeding 9) length
-      printf("You typed: %s\nThe number is %d\n", name, x);
-      return 0;
-    }
+int main(int argc, char** argv) {
+  int x=5;
+  char name[10];
+  scanf("%s", name); // Reading stirng of unknown (probably exceeding 9) length
+  printf("You typed: %s\nThe number is %d\n", name, x);
+  return 0;
+}
+```
 
 Compiling the program without -fsanitize and typing a string longer than 9 characters on stdin will end up with messing the x variable value. In small program such problem is easy to locate, but in actual lab code...  
 Now try compiling it with sanitizers:  

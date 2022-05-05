@@ -71,7 +71,7 @@ LDLIBS=-lpthread -lm
 </ol></div>
 
 <em>rozwiązanie, cały <b>prog17.c</b>:</em>
-<pre>{{< include "prog17.c" >}}</pre>
+{{< includecode "prog17.c" >}}
 <div class="dlaN"><ol>
 <li>Program ten (i następne) nie pokazuje usage, zamiast tego ma zdefiniowane wartości domyślne dla parametrów pracy, wywołaj go bez parametrów w celu sprawdzenia.</li>
 <li>Deklaracje zapowiadające (nie definicje) funkcji mogą być bardzo użyteczne, czasem są wręcz niezbędne, jeśli nie wiesz o czym mowa poczytaj <a href="http://en.cppreference.com/w/c/language/function_declaration"> tutaj</a>.</li>
@@ -131,7 +131,7 @@ LDLIBS=-lpthread -lm
                                 </p>
 <p>
 <em>rozwiązanie, cały <b>prog18.c</b>:</em>
-<pre>{{< include "prog18.c" >}}</pre>
+{{< includecode "prog18.c" >}}
 <div class="dlaN"><ol>
 <li>Wszystkie dane konieczne do pracy wątku są przekazywane przez strukturę argsThrower_t, wynik jego pracy to modyfikacja w tablicy bins, znowu nic nie jest przekazywane przez zmienne globalne.</li>
 <li>W programie mamy dwa muteksy  chroniące dostęp do liczników oraz całą tablice muteksów chroniących dostęp do komórek tablicy bins (po jednym na komórkę). Zatem muteksów jest BIN_COUNT+2.  </li>
@@ -179,7 +179,7 @@ LDLIBS=-lpthread -lm
 
 <p>
 <em>rozwiązanie, cały <b>prog19.c</b>:</em>
-<pre>{{< include "prog19.c" >}}</pre>
+{{< includecode "prog19.c" >}}
 
 <div class="dlaN"><ol>
 
@@ -232,7 +232,7 @@ LDLIBS=-lpthread -lm
                                 </p>
 <p>
 <em>rozwiązanie, cały <b>prog20.c</b>:</em>
-<pre>{{< include "prog20.c" >}}</pre>
+{{< includecode "prog20.c" >}}
 
 <div class="dlaN"><ol>
 <li>Wątkom przekazuje się  strukturę z aktualnym rokiem oraz z wskazaniem na 4 liczniki z muteksami, struktura argsModify_t  nie powiela błędu z zadania 2 czyli nie przekazuje indywidualnych kopii zbyt wielu wskaźników.</li>

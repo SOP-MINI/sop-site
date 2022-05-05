@@ -35,10 +35,10 @@ Podane zostały całe polecenia man do wydania z konsoli:<ul>
 <p>Serwer ma mieć limit 10 aktywnych klientów, jeśli podłączy się 11ty to ma dostać natychmiast specjalną wiadomość o braku zasobów. Limit ma być zaimplementowany na semaforze. Wolno użyć tylko jednego gniazda UDP po stronie serwera, wszystkie datagramy maja składać się wyłącznie z jednej liczby typu int16_t.</p>
 
 <em>Rozwiązanie: <b>server.c</b></em>
-<pre>{{< include "server.c" >}}</pre>
+{{< includecode "server.c" >}}
 
 <em>Rozwiązanie: <b>client.c</b></em>
-<pre>{{< include "client.c" >}}</pre>
+{{< includecode "client.c" >}}
 <div class="dlaN"><ol>
 <li>Powyższy długi kod nie będzie tu komentowany pod kątem wątków, muteksów czy też gniazd sieciowych. Odpowiednie materiały znajdziecie w poprzednich tutorialach (także tych z SOP1). Tutaj skupimy się tylko na semaforach.</li>
 <li>Semafory, podobnie jak muteksy, przekazujemy do funkcji (też do wątków) tylko poprzez wskaźnik, kopia semafora nie jest semaforem!</li>
@@ -65,9 +65,9 @@ Podane zostały całe polecenia man do wydania z konsoli:<ul>
 <p>Klient po uruchomieniu oczekuje na wejście z stdin (nawę pliku), przesyła ją do serwera i odbiera wynik, który następnie wyświetla na ekran po czym się kończy.</p>
 <p>Klient z serwerem komunikuje się poprzez połączenie TCP , zakładamy, że rozmiary plików nie przekraczają 500 bajtów a nazwy plików nie przekraczają 30 znaków.</p>
 <em>Rozwiązanie: <b>server2.c</b></em>
-<pre>{{< include "server2.c" >}}</pre>
+{{< includecode "server2.c" >}}
 <em>Rozwiązanie: <b>client2.c</b></em>
-<pre>{{< include "client2.c" >}}</pre>
+{{< includecode "client2.c" >}}
 <div class="dlaN"><ol>
 <li>Powyższy długi kod nie będzie tu komentowany pod kątem wątków, muteksów czy też gniazd sieciowych. Odpowiednie materiały znajdziecie w poprzednich tutorialach (także tych z SOP1). Tutaj skupimy się tylko na zmiennej warunkowej.</li>
 <li>W kodzie klienta i wątkach roboczych serwera nie występują sygnały ale ochrona przed przerwaniem sygnałem jest zapewniona także w tym kodzie dla większej przenośności kodu.</li>

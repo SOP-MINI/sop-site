@@ -75,7 +75,7 @@ LDLIBS=-lpthread -lm
 </ol></div>
 
 <em>Solution <b>prog17.c</b>:</em>
-<pre>{{% include "prog17.c" %}}</pre>
+{{% includecode "prog17.c" %}}
 <div class="dlaN"><ol>
 <li> This and following programs do not show USAGE information, the default parameters values are assumed if options are missing. Run it without parameters to see how it works.</li>
 <li>Functions' declarations at the beginning of the code (not the functions definitions) are quite useful, sometimes mandatory. If you do not know the difference please read <a href="http://en.cppreference.com/w/c/language/function_declaration"> this</a>.</li>
@@ -132,7 +132,7 @@ Each thread throws beans separately from others, after each throw, number of bea
                                 </p>
 <p>
 <em>Solution <b>prog18.c</b>:</em>
-<pre>{{% include "prog18.c" %}}</pre>
+{{% includecode "prog18.c" %}}
 <div class="dlaN"><ol>
 <li>Once again all thread input data is passed as pointer to the structure (Thrower_t), treads results modify bins array (pointer in the same structure), no global variables used.</li>
 <li>In this code two mutexes protect two counters and an array of mutexes protects the bins' array (one mutex for every cell in the array). In total we have  BIN_COUNT+2 mutexes. </li>
@@ -179,7 +179,7 @@ The program takes sole 'k' parameter and prints the list of numbers form 1 to k 
 
 <p>
 <em>Solution <b>prog19.c</b>:</em>
-<pre>{{% include "prog19.c" %}}</pre>
+{{% includecode "prog19.c" %}}
 
 <div class="dlaN"><ol>
 
@@ -230,7 +230,7 @@ The program stores the counters of students studding on year 1,2,3 and the final
                                 </p>
 <p>
 <em>Solution <b>prog20.c</b>:</em>
-<pre>{{% include "prog20.c" %}}</pre>
+{{% includecode "prog20.c" %}}
 
 <div class="dlaN"><ol>
 <li>Threads receive the pointer to the structure with current year and pointer to years counters, structure  argsModify_t does not have the same flow as one in task 2 of this tutorial i.e. program is not making too many unnecessary references to the same data.</li>

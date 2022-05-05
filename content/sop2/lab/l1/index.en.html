@@ -98,7 +98,7 @@ CFLAGS= -std=gnu99 -Wall
 </ol>
 
 <em>solution <b>prog21a_s.c</b>:</em>
-<pre>{{% include "prog21a_s.c" %}}</pre>
+{{% includecode "prog21a_s.c" %}}
 
 <em>Execution:</em> ./prog21a_s a & sleep 1; cat prog21a_s.c > a
 
@@ -133,7 +133,7 @@ CFLAGS= -std=gnu99 -Wall
 </ol>
 
 <em>Solution: <b>prog21_c.c</b>:</em>
-<pre>{{% include "prog21_c.c" %}}</pre>
+{{% includecode "prog21_c.c" %}}
 <em>Execution:</em> ./prog21a_s a & ./prog21_c a prog21a_s.c 
 
 
@@ -163,7 +163,7 @@ CFLAGS= -std=gnu99 -Wall
 </ol>
 
 <em>Solution <b>prog21b_s.c</b>:</em>
-<pre>{{% include "prog21b_s.c" %}}</pre>
+{{% includecode "prog21b_s.c" %}}
 <em>Execution:</em> ./prog21_c a Makefile & ./prog21_c a prog21b_s.c & ./prog21_c a prog21_c.c & sleep 1; ./prog21b_s a
 
 <div class="dlaN"><ol>
@@ -210,7 +210,7 @@ Write n-process program where n child processes communicate with parent over one
 </ol>
 
 <em>Solution <b>prog22a.c</b>:</em>
-<pre>{{% include "prog22a.c" %}}</pre>
+{{% includecode "prog22a.c" %}}
 
 <div class="cwiczenie"><ol>
 <li>It is important to close all unused descriptors, this pipe program has a lot to close, please make sure you know which descriptors are to be closed right at the beginning.</li>
@@ -235,7 +235,7 @@ Write n-process program where n child processes communicate with parent over one
 </ol>
 
 <em>Solution <b>prog22b.c</b>:</em>
-<pre>{{% include "prog22b.c" %}}</pre>
+{{% includecode "prog22b.c" %}}
 
 <div class="dlaN"><ol>
 <li>Please notice that messages sent via pipe R have variant size - first byte states the message size.</li>

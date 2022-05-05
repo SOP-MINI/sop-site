@@ -27,15 +27,16 @@ Let's do a simple example to familiarize you with routines required during the g
   - know how to copy files with cp command
 
 *solution **prog1.c**:*
+```c
+#include <stdio.h>
+#include <stdlib.h>
 
-    #include <stdio.h>
-    #include <stdlib.h>
-    
-    int main(int argc, char **argv)
-    {
-        printf("Hello world\n");
-        return EXIT_SUCCESS;
-    }
+int main(int argc, char **argv)
+{
+    printf("Hello world\n");
+    return EXIT_SUCCESS;
+}
+```
 
 *compilation:*
 

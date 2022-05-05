@@ -47,10 +47,10 @@ concurrent threads can be imposed with POSIX semaphore.</p>
 
 
 <em>Solution: <b>server.c</b></em>
-<pre>{{% include "server.c" %}}</pre>
+{{% includecode "server.c" %}}
 
 <em>Solution: <b>client.c</b></em>
-<pre>{{% include "client.c" %}}</pre>
+{{% includecode "client.c" %}}
 <div class="dlaN"><ol>
 <li>Network, thread or mutex aspects of the above long code will not be discussed here, please refer to the previous tutorials (also in OPS1). Here we will only cover semaphores.</li>
 <li>Semaphores (like mutexes) can not be copied, you can only use pointers to pass them to the functions, also to the thread function.</li>
@@ -89,9 +89,9 @@ size of a single file does not exceed 500 bytes and its name is no longer than
 30 characters.</p>
 
 <em>Solution: <b>server2.c</b></em>
-<pre>{{% include "server2.c" %}}</pre>
+{{% includecode "server2.c" %}}
 <em>Solution: <b>client2.c</b></em>
-<pre>{{% include "client2.c" %}}</pre>
+{{% includecode "client2.c" %}}
 <div class="dlaN"><ol>
 <li>Network, thread or mutex aspects of the above long code will not be discussed here, please refer to the previous tutorials (also in OPS1). Here we will only cover conditional variable.</li>
 <li>This code does not handle signals but code protection against interruption is added to extend portability.</li>
