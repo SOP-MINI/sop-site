@@ -13,3 +13,6 @@
  - [ ] Napisać w L0 o makefile (przynajmniej wspomnieć, że będzie wymagany)
  - [ ] Oprócz regulaminu zrobić sekcję z często zadawanymi pytaniami organizacyjnymi
  - [ ] Dodać flagi kompilacji (sanitizery) do tutoriali SOP2
+ - [ ] Zmienić przykład w tutorialu SOP1 do wątków, bo metoda Monte
+   Carlo nie jest znana studentom i zaciemnia obraz. Albo lepiej ją
+   opisać, jeśli się da w 4 zdaniach.
