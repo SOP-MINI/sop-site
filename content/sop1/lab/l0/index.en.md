@@ -50,34 +50,56 @@ Important note: use of -Wall compiler flag is compulsory. Besides that each assi
 
 *compressing (with check):*
 
-    $ tar -cjf nowakj.tar.bz2 prog1.c
-    $ tar -tjf nowakj.tar.bz2
-
-Substitute nowakj with your MiNI account name.
+    $ tar -cjf $USER.tar.bz2 prog1.c
+    $ tar -tjf $USER.tar.bz2
 
 <div class="dlaN">
 
   - You can type multiple files and folders instead of one file.
 
-  - **ATTENTION** you can not freely reorder the switches of the tar command, the f switch has an argument (the archive).
+  - **ATTENTION** you can not freely reorder the switches of the tar command, the `-f` switch has an argument (the archive).
 
   - **ATTENTION** you can not freely reorder the tar arguments, eg.:
     
-    ~~`$ tar -cjf prog1.c nowakj.tar.bz2`~~
+    ~~`$ tar -cjf prog1.c $USER.tar.bz2`~~
     
-    will erase your source file \!\!\!
+    will erase your source file\!\!\! Remember that the archive name should be right next to the `-f` switch.
 
 </div>
 
 *work upload (with check):*
 
-    $ cp nowakj.tar.bz2 {{< teacherdir >}}
-    $ ls -l {{< teacherdir >}}nowakj.tar.bz2
-
-Substitute nowakj with your MiNI account name.
+    $ cp $USER.tar.bz2 {{< teacherdir >}}
+    $ ls -l {{< teacherdir >}}$USER.tar.bz2
 
 <div class="dlaN">
 
 The destination folder will sometimes change, it will always be stated in your task.
 
 </div>
+
+---
+
+### Environment preparation
+
+Unlike the previous classes, we do not require any particular IDE. However, a good editor should:
+
+- show live compilation errors (which allows us to learn about them and find relevant code quicker),
+- autocomplete function names (helpful while entering longer names).
+
+A good choice would be Visual Studio Code (not to be confused with Visual Studio), which is commonly chosen due to its beginner-friendliness. Another common choices are Emacs and Vim (as well as Neovim which is sadly not available in the lab by default), but those have a higher barrier to entry. All mentioned editors require additional configuration, which you should do before the first graded labs. Of course it would be a good idea to have a similar setup at home and during labs.
+
+We suggest you shouldn't use larger IDEs, such as ~~CLion~~ if you do not know them well; otherwise their functionalities will hurt you more than help. Also do not use in-browser editors such as ~~<https://www.onlinegdb.com>~~; otherwise in case of PC instability you might lose your code (as it is only stored in browser) and need to begin from scratch.
+
+---
+
+### Before first graded labs
+
+You should:
+
+- read [syllabus]({{< ref "../../syllabus" >}}), [grading]({{< ref "../../zasady" >}}) and [schedule]({{< ref "../../harmonogram" >}}),
+- prepare the editor to your liking (or be able to do it quickly at the start of labs),
+- read [the relevant tutorial]({{< ref "../l1/index.en.html" >}}),
+- complete [the example task]({{< ref "../l1-example.en.md" >}}),
+- practice the operations you did on lab zero,
+- read the relevant `man` pages and other entry test material.
