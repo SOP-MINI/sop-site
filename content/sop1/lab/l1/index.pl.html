@@ -33,6 +33,7 @@ Agenda:<ol>
 <li> <a href="#folders2">Zadanie 10 - katalogi 2 </a></li>
 <li> <a href="#folders3">Zadanie 11 - katalogi 3 </a></li>
 <li> <a href="#files">Zadanie 12 - operacje na plikach </a></li>
+<li> <a href="#task_buffering">Zadanie 13 – buforowanie standardowego wyjścia </a></li>
 </ol>
 
 <hr/ >
@@ -604,6 +605,30 @@ void scan_dir()
 </ol></div>
 </p>
 <hr/ >
+
+<h3 id="task_buffering">Zadanie 13 – buforowanie standardowego wyjścia</h3>
+<div class="dlaN">
+Ten temat ma więcej wspólnego z ogólnym programowaniem w C niż z systemami operacyjnymi, niemniej jednak wspominamy o nim, bowiem w poprzednich latach był częstym źródłem problemów.
+</div>
+<p>
+<em>kod do pliku <b>prog13.c</b></em>
+{{% includecode "prog13.c" %}}
+<div class="cwiczenie">
+<ol>
+<li>Spróbuj uruchomić ten (bardzo prosty!) kod z terminala. Co widać na terminalu? <br/> {{< answer >}} To czego się spodziewaliśmy: co sekundę pokazuje się liczba. {{</ answer >}}
+<li>Spróbuj uruchomić kod ponownie, tym razem jednak przekierowując wyjście do pliku <code>./plik_wykonwyalny > plik_z_wyjściem</code>. Następnie spróbuj otworzyć plik z wyjściem w trakcie działania programu, a potem zakończyć działanie programu przez Ctrl+C i otworzyć plik jeszcze raz. Co widać tym razem? <br/> {{< answer >}} Jeśli zrobimy te kroki wystarczająco szybko, plik okazuje się być pusty! To zjawisko wynika z tego, że biblioteka standardowa wykrywa, że dane nie trafiają bezpośrednio do terminala, i dla wydajności buforuje je, zapisując je do pliku dopiero gdy zbierze się ich wystarczająco dużo. To oznacza, że dane nie są dostępne od razu, a w razie nietypowego zakończenia programu (tak jak kiedy użyliśmy Ctrl+C) mogą wręcz zostać stracone. Oczywiście, jeśli damy programowi dojść do końca działania, to wszystkie dane zostaną zapisane do pliku (proszę spróbować!). Mechanizm buforowania można skonfigurować, ale nie musimy tego robić, jak za chwilę zobaczymy. {{</ answer >}}
+<li>Spróbuj uruchomić kod podobnie, ponownie pozwalając wyjściu trafić do terminala (jak za pierwszym razem), ale spróbuj usunąć nową linię z argumentu <code>printf</code>: <code>printf("%d", i);</code>. Co widzimy tym razem? <br/> {{< answer >}} Wbrew temu co powiedzieliśmy wcześniej, nie widać wyjścia mimo to, że tym razem dane trafiają bezpośrednio do terminala; dzieje się natomiast to samo co w poprzednim kroku. Otóż biblioteka buforuje standardowe wyjście nawet jeśli dane trafiają do terminala; jedyną różnicą jest to, że reaguje na znak nowej linii, wypisując wszystkie dane zebrane w buforze. To ten mechanizm sprawił, że w pierwszym kroku nie wydarzyło się nic dziwnego. Właśnie dlatego czasami zdarza się Państwu, że <code>printf</code> nie wypisuje nic na ekran; jeśli zapomnimy o znaku nowej linii, standardowa biblioteka nic nie wypisze na ekran dopóki w innym wypisywanym stringu nie pojawi się taki znak, lub program się nie zakończy poprawnie. {{</ answer >}}
+<li>Spróbuj ponownie zrobić poprzednie trzy kroki, tym razem jednak wypisując dane do strumienia standardowego błędu: <code>fprintf(stderr, /* parametry wcześniej przekazywane do printf */);</code>. Co dzieje się tym razem? Żeby przekierować standardowy błąd do pliku, należy użyć <code>>2</code> zamiast <code>></code>. {{< answer >}} Tym razem nic się nie buforuje i zgodnie z oczekiwaniami widzimy jedną cyfrę co sekundę. Standardowa biblioteka nie buforuje standardowego błędu, bowiem często wykorzystuje się go do debugowania. {{</ answer >}}
+</ol>
+</div>
+<div class="dlaN">
+<ol>
+<li>Często możemy chcieć użyć <code>printf(...)</code> do debugowania, dodając wywołania tej funkcji w celu sprawdzenia wartości zmiennych bądź czy wywołanie dochodzi do jakiegoś miejsca w naszym kodzie. W takich przypadkach należy zamiast tej funkcji użyć <code>fprintf(stderr, ...)</code> i wypisywać do standardowego błędu. W przeciwnym przypadku może się okazać, że nasze dane zostaną zbuforowane i zostaną wypisane później niż się spodziewamy, a w skrajnych przypadkach wcale. Jeśli nie wiemy, do którego strumienia wypisywać, należy preferować standardowy błąd.
+<li>Przy pisaniu prawdziwych aplikacji konsolowych strumienia standardowego wyjścia używa się wyłącznie do wypisywania rezultatów, a do czegokolwiek innego używa się standardowego błędu. Na przykład <code>grep</code> wypisze znalezione wystąpienia na standardowe wyjście, ale ewentualne błędy przy otwarciu pliku trafią na standardowy błąd. Nawet nasze makro <code>ERR</code> wypisuje błąd do strumienia standardowego błędu.
+</ol>
+</div>
+</p>
+
 <p class="cwiczenie">
 Wykonaj przykładowe <a href="{{< ref "../l1-example" >}}">ćwiczenie</a> z poprzednich lat. To zadanie szacuję na 60 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a  do zajęć. Pamiętaj, że w aktualnym układzie zajęć będzie dane zadnie na nieco ponad godzinę, więc trochę bardziej pracochłonne.
 </p>

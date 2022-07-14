@@ -32,6 +32,7 @@ Agenda:<ol>
 <li> <a href="#folders2">Task 10 - directories 2 </a></li>
 <li> <a href="#folders3">Task 11 - directories 3 </a></li>
 <li> <a href="#files">Task 12 - file access and operations </a></li>
+<li> <a href="#task_buffering">Task 13 - stdout buffering</a></li>
 </ol>
 
 <hr/ >
@@ -604,6 +605,30 @@ Create a new file with name, permissions and size specified by parameters (-n NA
 <li>You should call srand only once per process and make sure it gets unique seed, in this program time in seconds is sufficient.</li>
 </ol></div>
 </p>
+
+<h3 id="task_buffering">Task 13 – stdout buffering</h3>
+<div class="dlaN">
+Note that this topic is less about operating systems and more about general C programming, however we mention it for completeness as related issues were quite common in the past years.
+</div>
+<p>
+<em>code for <b>prog13.c</b> file:</em>
+{{% includecode "prog13.c" %}}
+<div class="cwiczenie">
+<ol>
+<li>Try running the above (very simple!) code from the terminal. What do you see? <br/> {{< answer >}} As expected, you just see one number each second, no funky business… yet. {{</ answer >}}
+<li>Try running the above code again, but this time redirect it to the file: <code>./executable > file</code>. Afterwards, try opening the file while the program is running, and then Ctrl+C the program and reopen the file again. What do you see? <br/> {{< answer >}} If you do this quickly enough, the file will be empty! That is because the standard library detects that the output does not go to the terminal, and buffers it for performance, which means that the actual write operation happens only when enough data accumulate. This means that the data is not available immediately, and can even be lost in case the program ends abnormally (for instance when we use Ctrl+C). Of course, if you let the program run until completion, it will output all the data in the end (try it out!). While this is configurable, you will not need to do so as you will see in a second. {{</ answer >}}
+<li>Try running the above code again, with output going to the terminal (like in the first step), but remove the newline from the <code>printf</code> function argument: <code>printf("%d", i);</code>. What do you see? <br/> {{< answer >}} Surprisingly, even though the output goes directly to the terminal, the same thing as in the second step happens and we don't see any output. That is because the buffering happens even in this case; only now a newline tells the standard library to flush all the data. This is why you didn't see anything weird happening in the first step. This is also why you might find that your <code>printf</code> is not outputting anything; if you forget the newline at the end of the string, the standard library will not do anything until there actually is a newline or the program ends correctly. {{</ answer >}}
+<li>Retry the first three steps, but output to the standard error instead: <code>fprintf(stderr, /* parameters you passed to printf */);</code>. What happens now? Note that in order to redirect standard error to file, you need <code>>2</code> instead of <code>></code>. {{< answer >}} Now there is no buffering: in all three cases you really see a number each second. Indeed, the standard library will not buffer standard error, as this stream is meant for debugging. {{</ answer >}}
+</ol>
+</div>
+<div class="dlaN">
+<ol>
+<li>You might find yourself debugging your code using <code>printf(...)</code>, by adding calls to this function and checking the values of parameters and/or seeing if those places in code are reached. When you do so, you should rather use <code>fprintf(stderr, ...)</code> in order to output to standard error. Otherwise, as you have seen, the output data is buffered by standard library and in some cases might never be output despite the call succeding. In general, if in doubt, prefer standard error.
+<li>When writing actual console applications we tend to use standard output only to output actual results, and standard error for everything else. For instance <code>grep</code> will output lines that contain the matched string to standard output, but if it can't open the file, it will complain on the standard error. Note that our <code>ERR</code> macro also outputs to standard error.
+</ol>
+</div>
+</p>
+
 <p class="cwiczenie">
 As an exercise do <a href="{{< ref "../l1-example" >}}">this</a> task. It was used in previous years in a bit different labs timing. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab. In a new timing there is more time for the task and it will be slightly larger.
 </p>
