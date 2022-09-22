@@ -1,21 +1,21 @@
 ---
-title: "W8. Asynchroniczne operacje wejścia/wyjścia"
-date: 2022-02-05T18:02:42+01:00
+title: "W7. Zarządzanie procesami i wątkami."
+date: 2022-02-05T18:02:38+01:00
 draft: false
 ---
 
 ## Zakres wykładu
 
-1.  Omówienie korzyści z asynchronicznych operacji IO
-2.  Blok kontrolny operacji IO
-3.  Inicjowanie operacji asynchronicznego IO
-4.  Sprawdzanie statusu operacji AIO
-5.  Czekanie na zakończenie operacji AIO
-6.  Anulowanie operacji AIO
-7.  Przykłady
+  - Pojęcia podstawowe: faza procesora, faza oczekiwania (wejścia/wyjścia). statystyki faz procesora i algorytm planowania przydziału.
+  - Planista przydziału procesora (krótkoterminowy), ekspedytor. Planowanie wywłaszczające i niewywłaszczające
+  - Kryteria planowania i optymalizacji algorytmu przydziału procesora.
+  - Podstawowe algorytmy szeregowania: FCFS, SJF/SRTF, priority, round-robin (RR).
+  - Uśrednianie wykładnicze a przewidywanie długości następnej fazy procesora.
+  - Diagram Gantta. Średni i maksymalny czas oczekiwania, czas obiegu.
+  - Kolejki wielopoziomowe i ze sprzężeniem zwrotnym.
+  - Podstawowe cechy algorytmów przydziału procesora w systemach Linux i MS Windows.
 
-  
 ## Materiały
 
-1.  Dokumentacja GNU: [tutaj](http://www.gnu.org/software/libc/manual/html_node/Asynchronous-I_002fO.html)
-2.  Slajdy do wykładu: [SOP1\_AIO.pdf]({{< resource "SOP1_AIO_0.pdf" >}})
+1.  podręcznik: rozdział 6 (planowanie przydziału procesora).
+2.  slajdy: [Planowanie\_CPU.pdf]({{< resource "Planowanie_CPU_6.pdf" >}})

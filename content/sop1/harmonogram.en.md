@@ -18,7 +18,7 @@ Winter semester of 2021/2022
 | 17.10 | [POSIX signals]({{< ref "wyk/w4" >}})                        |
 | 01.12 | [Low-level input/output operations.]({{< ref "wyk/w5" >}})   |
 | 15.12 | [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})      |
-| 12.01 | [Asynchronous input/output.]({{< ref "wyk/w8" >}})           |
+| 12.01 | [Asynchronous input/output.]({{< ref "wyk/w7" >}})           |
 
 ## Laboratories: Mondays, 14:15-17, rooms 301, 302, 303.
 

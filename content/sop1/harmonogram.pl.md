@@ -13,10 +13,10 @@ menu: sop1
 | 13.10 | [Wstęp. Systemy komputerowe i operacyjne.]({{< ref "wyk/w1" >}}) |
 | 27.10 | [Procesy]({{< ref "wyk/w2" >}})                              |
 | 10.11 | [System plików i jego interfejs. Strumieniowe wejście/wyjście.]({{< ref "wyk/w3" >}}) |
-| 24.11 | [Sygnały POSIX]({{< ref "wyk/w5" >}})                        |
-| 08.12 | [Niskopoziomowe operacje wejścia/wyjścia]({{< ref "wyk/w4" >}}) |
+| 24.11 | [Sygnały POSIX]({{< ref "wyk/w4" >}})                        |
+| 08.12 | [Niskopoziomowe operacje wejścia/wyjścia]({{< ref "wyk/w5" >}}) |
 | 22.12 | [Wątki. P-wątki i muteksy.]({{< ref "wyk/w6" >}})            |
-| 19.01 | [Asynchroniczne operacje wejścia/wyjścia]({{< ref "wyk/w8" >}}) |
+| 19.01 | [Asynchroniczne operacje wejścia/wyjścia]({{< ref "wyk/w7" >}}) |
 
 ## Zajęcia laboratoryjne: wtorki, godz. 14:**45** - 17:00, sale 218, 219, 304
 

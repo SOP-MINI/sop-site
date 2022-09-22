@@ -1,21 +1,21 @@
 ---
-title: "Lec7. Management of threads and processes"
-date: 2022-02-05T22:35:50+01:00
+title: "Lec 8. Asynchronous input/output"
+date: 2022-02-05T22:35:56+01:00
 draft: false
 ---
 
-## Scope
+## Lecture Scope
 
-  - Basic concepts - CPU-I/O burst cycles, statistics of burst cycles and scheduling.
-  - Short-term scheduler, preemptive vs non-preemptive scheduling, dispatcher, dispatch latency.
-  - Scheduling criteria.
-  - Basic scheduling algorithms: FCFS, SJF/SRTF, priority, round-robin (RR).
-  - Exponential average for next burst cycle time prediction.
-  - Gantt Diagram. Average and maximum waiting times. Turn-around time.
-  - Multilevel queues. Multilevel queues with feedback.
-  - Basics of Linux and MS Windows scheduling.
+1.  Benefits of Asynchronous I/O
+2.  AIO control block structure
+3.  Starting of AIO reads and writes
+4.  AIO operation status
+5.  Synchronization with AIO operations
+6.  AIO canceling
+7.  Examples
 
-## Reference
+  
+## References
 
-1.  Textbook: chapter "Process scheduling" - nr 5 in 8th and 10th ed., nr 6 in 9th ed.
-2.  Slides: [CPU\_scheduling.pdf]({{< resource "CPU_scheduling_6.pdf" >}})
+1.  GNU Documentation: [here](http://www.gnu.org/software/libc/manual/html_node/Asynchronous-I_002fO.html)
+2.  Lecture slides: [SOP1\_AIO.pdf]({{< resource "SOP1_AIO_0.pdf" >}})
