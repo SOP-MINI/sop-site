@@ -5,9 +5,6 @@ draft: false
 menu: sop1
 ---
 
-Winter semester of 2021/2022
-
-
 ## Lecture: Thurdsays, 8:15 - 10:00, room 328
 
 | Date  | Topic                                                        |
@@ -21,20 +18,22 @@ Winter semester of 2021/2022
 | 04.01 | [Asynchronous input/output.]({{< ref "wyk/w7" >}}) **Wednesday, room 102!** |
 | 19.01 | [CPU Scheduling]({{< ref "wyk/w8" >}})                       |
 
-## Laboratories: Mondays, 14:15-17, rooms 301, 302, 303.
+## Laboratories: Mondays, 2:15-5pm, rooms 203, 218.
 
-| Date       | Topic                                                          |
-| ---------- | -----------------------------------                            |
-| 11.10.2021 | [L0 Introduction]({{< ref "lab/l0" >}})                        |
-| 18.10.2021 | [L0 Introduction]({{< ref "lab/l0" >}})                        |
-| 25.10.2021 | [L1 POSIX program execution environment]({{< ref "lab/l1" >}}) |
-| 8.11.2021  | [L1 POSIX program execution environment]({{< ref "lab/l1" >}}) |
-| 29.11.2021 | [L2 Processes and signals]({{< ref "lab/l2" >}})               |
-| 6.12.2021  | [L2 Processes and signals]({{< ref "lab/l2" >}})               |
-| 13.12.2021 | [L3 Threads and mutexes]({{< ref "lab/l3" >}})                 |
-| 20.12.2021 | [L3 Threads and mutexes]({{< ref "lab/l3" >}})                 |
-| 3.01.2022  | [L4 AIO]({{< ref "lab/l4" >}})                                 |
-| 17.01.2022 | [L4 AIO]({{< ref "lab/l4" >}})                                 |
-| 24.01.2022 | L5 Retakes pt. 1                                               |
-| 31.01.2022 | L5 Retakes pt. 2                                               |
+| Date                | Topic                                                          | Lab group  in USOS |
+| ----------          | -----------------------------------                            | ---------          |
+| 2022-10-10          | [L0 Introduction]({{< ref "lab/l0" >}})                        | 1, 3               |
+| 2022-10-17          | [L0 Introduction]({{< ref "lab/l0" >}})                        | 2, 4               |
+| 2022-11-07          | [L1 POSIX program execution environment]({{< ref "lab/l1" >}}) | 1, 3               |
+| 2022-11-14          | [L1 POSIX program execution environment]({{< ref "lab/l1" >}}) | 2, 4               |
+| 2022-12-05          | [L2 Processes and signals]({{< ref "lab/l2" >}})               | 1, 3               |
+| 2022-12-05          | [L2 Processes and signals]({{< ref "lab/l2" >}})               | 2, 4               |
+| 2023-01-02          | [L3 Threads and mutexes]({{< ref "lab/l3" >}})                 | 1, 3               |
+| 2023-01-09          | [L3 Threads and mutexes]({{< ref "lab/l3" >}})                 | 2, 4               |
+| 2023-01-16          | [L4 AIO]({{< ref "lab/l4" >}})                                 | 1, 3               |
+| 2023-01-23          | [L4 AIO]({{< ref "lab/l4" >}})                                 | 2, 4               |
+| 2023-01-24          | **7:00pm** retake signup closes (in moodle)                    | Everyone           |
+| In the exam session | L5 Retakes                                                     | Everyone           |
+
+
 

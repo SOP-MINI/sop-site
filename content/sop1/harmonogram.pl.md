@@ -19,20 +19,24 @@ menu: sop1
 | 12.01 | [Asynchroniczne operacje wejścia/wyjścia]({{< ref "wyk/w7" >}}) |
 | 26.01 | [Planowanie przydziału czasu CPU]({{< ref "wyk/w8" >}})      |
 
-## Zajęcia laboratoryjne: wtorki, godz. 14:**45** - 17:00, sale 218, 219, 304
+## Zajęcia laboratoryjne: wtorki, godz. 14:15 - 17:00, sale 218, 219, 304
 
-| Data                      | Tytuł                                                          |
-| ------------------------- | ---------                                                      |
-| 5.10.2021                 | [L0 Wprowadzenie]({{< ref "lab/l0" >}})                        |
-| 12.10.2021                | [L0 Wprowadzenie]({{< ref "lab/l0" >}})                        |
-| 9.11.2021                 | [L1 Środowisko wykonania programu POSIX]({{< ref "lab/l1" >}}) |
-| 16.11.2021                | [L1 Środowisko wykonania programu POSIX]({{< ref "lab/l1" >}}) |
-| 23.11.2021                | [L2 Procesy i sygnały]({{< ref "lab/l2" >}})                   |
-| 30.11.2021                | [L2 Procesy i sygnały]({{< ref "lab/l2" >}})                   |
-| 07.12.2021                | [L3 Wątki i muteksy]({{< ref "lab/l3" >}})                     |
-| 14.12.2021                | [L3 Wątki i muteksy]({{< ref "lab/l3" >}})                     |
-| ~~4.01.2022~~ 11.01.2022  | [L4 AIO]({{< ref "lab/l4" >}})                                 |
-| ~~11.01.2022~~ 18.01.2022 | [L4 AIO]({{< ref "lab/l4" >}})                                 |
-| 25.01.2021 (obie grupy)   | L5 Poprawy cz. 1                                               |
-| 01.02.2021 (obie grupy)   | L5 Poprawy cz. 2                                               |
+| Data                      | Tytuł                                                          | Grupy Lab USOS  |
+| ------------------------- | ---------                                                      | -------         |
+| 2022-10-18                | [L0 Wprowadzenie]({{< ref "lab/l0" >}})                        | 1,3,5           |
+| 2022-10-25                | [L0 Wprowadzenie]({{< ref "lab/l0" >}})                        | 2,4,6           |
+| 2022-11-22                | [L1 Środowisko wykonania programu POSIX]({{< ref "lab/l1" >}}) | 1,3,5           |
+| 2022-11-29                | [L1 Środowisko wykonania programu POSIX]({{< ref "lab/l1" >}}) | 2,4,6           |
+| 2022-12-13                | [L2 Procesy i sygnały]({{< ref "lab/l2" >}})                   | 1,3,5           |
+| 2022-12-20                | [L2 Procesy i sygnały]({{< ref "lab/l2" >}})                   | 2,4,6           |
+| 2023-01-03                | [L3 Wątki i muteksy]({{< ref "lab/l3" >}})                     | 1,3,5           |
+| 2023-01-10                | [L3 Wątki i muteksy]({{< ref "lab/l3" >}})                     | 2,4,6           |
+| 2023-01-17                | [L4 AIO]({{< ref "lab/l4" >}})                                 | 1,3,5           |
+| 2023-01-24                | [L4 AIO]({{< ref "lab/l4" >}})                                 | 2,4,6           |
+| 2023-01-25                | **19:00** -- zamknięcie zapisów na poprawy w moodle            | Wszystkie grupy |
+| W sesji egzaminacyjnej    | L5 Poprawy                                                     | Wszystkie grupy |
+
+
+*Termin popraw zostanie podany po opublikowaniu grafiku sesji egzaminacyjnej, w dniu, kiedy drugi rok ISI nie ma żadnego egzaminu*
+
 
