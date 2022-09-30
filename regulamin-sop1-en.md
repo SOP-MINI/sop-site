@@ -13,14 +13,14 @@ The subject consists of a lecture and a laboratory.
 
 - The laboratory consists of five classes denoted as Lab0, Lab1, Lab2, Lab3, Lab4. The laboratory classes take place according to the schedule provided on the course website. The course website also includes preparation materials for classes.
 
-	- L0 class is devoted to the preparation of the environment. During this class, students have to recall the skills of the Unix Fundamentals course and to configure the development environment. Any deficiencies in the configuration or skills (e.g., lack of intellisense, underlining errors in the editor or poor ability to navigate through directories) in all subsequent classes will not be an excuse for poor grades and cannot be used as an excuse for less strict grading.
-    - Lab1, Lab2, Lab3 and Lab4 classes assess abilities in the topics given in the laboratory schedule. You should prepare on your own for each class, using the materials on the course website and lecture materials. Each of the classes consists of three parts:
+  - L0 class is devoted to the preparation of the environment. During this class, students have to recall the skills of the Unix Fundamentals course and to configure the development environment. Any deficiencies in the configuration or skills (e.g., lack of intellisense, underlining errors in the editor or poor ability to navigate through directories) in all subsequent classes will not be an excuse for poor grades and cannot be used as an excuse for less strict grading.
 
-	    - questions and answers (approx. 30 minutes): during this part, the teacher answers students' questions.
-		- entry (8 minutes): solving the moodle test
-        - programming task (90 minutes)
-		
-	- In the exam session, there is a retake where you can improve your grades in exactly one topic (Lab1, Lab2, Lab3, or Lab4). You can retake either one part (test, program) or both. Registration for the retakes will start immediately after the last laboratory classes in the semester and will be open for **24 hours** only.
+  - Lab1, Lab2, Lab3 and Lab4 classes assess abilities in the topics given in the laboratory schedule. Students should prepare on their own for each class, using the materials on the course website and lecture materials. Each of the classes consists of three parts:
+
+    - questions and answers (approx. 30 minutes): during this part, the teacher answers students' questions.
+    - entry (8 minutes): solving the moodle test
+    - programming task (90 minutes)
+- In the exam session, there is a retake where you can improve your grades in exactly one topic (Lab1, Lab2, Lab3, or Lab4). You can retake either one part (test, program) or both. Registration for the retakes will start immediately after the last laboratory classes in the semester and will be open for **24 hours** only.
 
 
 # Course materials
@@ -28,9 +28,9 @@ The subject consists of a lecture and a laboratory.
  - Materials provided during the lecture (e.g. slides, code snippets)
  - Literature given at the lecture and available on the subject's website
  - Descriptions of laboratory exercises on the subject page
- - [The GNU C library manual] (http://www.gnu.org/software/libc/manual/)
- - [The Single UNIX specification, Version 3] (http://www.unix.org/version3/online.html) (includes IEEE Std 1003.1 and ISO / IEC 9945)
- - [POSIX FAQ] (http://www.opengroup.org/austin/papers/posix_faq.html)
+ - [The GNU C library manual](http://www.gnu.org/software/libc/manual/)
+ - [The Single UNIX specification Version 3](http://www.unix.org/version3/online.html) (includes IEEE Std 1003.1 and ISO / IEC 9945)
+ - [POSIX FAQ](http://www.opengroup.org/austin/papers/posix_faq.html)
 
 
 # Class attendance
@@ -62,14 +62,14 @@ Methods used for effects verification during the laboratory:
 	 - The uploaded solution of **Lab3** will be additionally graded in terms of code quality and aesthetics. This will be checked after the lab. For the problems you will receive up to 10 (but no more than number of points from the lab) penalty points that will be subtracted from the base result of Lab3.
 	 - Powtórka?? The solution of the Lab3 task will also be assessed in terms of code aesthetics. The assessment will be made after the class. Penalty points are awarded for problems in the code, which are subtracted from the points obtained during the classes. You can lose up to 10 points, but not more than the number of points obtained during the classes.
      - Laboratory tasks are solved using the Arch Linux system on the computers in the laboratory. It is not allowed to show solutions on your own computer.
-	 
+	
 - ## Lab task solution formalities
 
   - The task must be coded in *C* (not C++)
-  - The solution of must be submitted as a archive in .tar.gz, .tar.xz or .tar.bz2 format. After typical extraction (flags -xzf, -xJf or -xjf) the archive must be unpacked to the directory named $USER where $USER is your login.
-  - The archive must contain source files (.c, .h) and a Makefile
-  - One should be able to compile the whole solution by issuing a single *make* command
-  - The *-Wall* flag and the other compiler flags required in the task must be *obligatorily* turned on during gcc compilation
+  - The solution of must be submitted as a archive in `.tar.gz`, `.tar.xz` or `.tar.bz2` format. After typical extraction (flags `-xzf`, `-xJf` or `-xjf`) the archive must be unpacked to the directory named `$USER` where `$USER` is your login.
+  - The archive must contain source files (`.c`, `.h`) and a `Makefile`
+  - One should be able to compile the whole solution by issuing a single `make` command
+  - The `-Wall` flag and the other compiler flags required in the task must be **obligatorily** turned on during `gcc` compilation
   - The archive must be copied to the network share location given in the task.
 
 # Aids acceptable for use in verifying achievement of learning outcomes
@@ -85,12 +85,12 @@ Methods used for effects verification during the laboratory:
 
 | Points in total | Grade |
 | --------------- | ----- |
-| s≥90            | 5     |
-| 80≤ s \<90      | 4.5   |
-| 70≤ s \<80      | 4     |
-| 60≤ s \<70      | 3.5   |
-| 50≤ s \<60      | 3     |
-| s\<50           | 2     |
+| s ≥ 90          | 5     |
+| 80 ≤ s \< 90    | 4.5   |
+| 70 ≤ s \< 80    | 4     |
+| 60 ≤ s \< 70    | 3.5   |
+| 50 ≤ s \< 60    | 3     |
+| s \< 50         | 2     |
 
 
 # Deadline and procedure for announcing grades
@@ -99,12 +99,12 @@ Methods used for effects verification during the laboratory:
 
   - The number of points obtained for the subsequent stages of the laboratory task is given at the time of checking by the teacher and written on a sheet with the content of the task
   - The number of points obtained for entry is displayed in moodle after the test is completed
-  - Points from both parts of the laboratory are placed in usos no later than 24 hours after the class. The number of points in usos determines the final grade
+  - Points from both parts of the laboratory are placed in USOS no later than 24 hours after the class. The number of points in USOS determines the final grade
   
-- Final evaluation
+- Final grade
 
   - Issued in USOS within 24 hours from the publication of the results of the last L4 laboratory in USOS
-  - Corrected during the exam session within 24 hours from the publication of the results of the resit laboratory in USOS
+  - Corrected during the exam session within 24 hours from the publication of the results of the retakes in USOS
 
 
 # Rules of repetition of classes due to failure of a subject

@@ -67,8 +67,8 @@ Metody weryfikacji efektów na laboratorium:
 
    - Rozwiązanie każdego zadania musi być przesłane w formie archiwum w formacie `.tar.gz`, `.tar.xz` lub `.tar.bz2` tak aby po rozpakowaniu archiwum z flagami `-xjf`, `-xJf` lub `-xzf` utworzył się podkatalog o nazwie `$USER` zawierający wszystkie wymagane pliki. `$USER` jest loginem wydziałowym.
    - Archiwum musi zawierać wyłącznie pliki źródłowe (`.c`,`.h`) oraz plik `Makefile`
-   - Plik `Makefile` ma pozwalać na kompilację całego rozwiązania pojedynczą komendą *make*
-   - Podczas kompilacji `gcc` *obowiązkowo* ma być użyta flaga *-Wall* i inne flagi wymagane w zadaniu
+   - Plik `Makefile` ma pozwalać na kompilację całego rozwiązania pojedynczą komendą `make`
+   - Podczas kompilacji `gcc` **obowiązkowo** ma być użyta flaga `-Wall` i inne flagi wymagane w zadaniu
    - Gotowe archiwum należy wgrać do katalogu na udziale sieciowym wskazanego w treści zadania.
 
 
