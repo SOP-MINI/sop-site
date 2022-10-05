@@ -1,7 +1,7 @@
 ---
 title: "Graded task 1 on POSIX program environment"
 date: 2022-02-07T20:01:59+01:00
-draft: false
+bookHidden: true
 ---
 
 ## The problem:

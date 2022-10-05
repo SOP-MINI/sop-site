@@ -1,8 +1,10 @@
 ---
-title: "W4. Niskopoziomowe operacje wejścia/wyjścia."
+title: "Niskopoziomowe I/O"
 date: 2022-02-05T18:02:29+01:00
-draft: false
+weight: 50
 ---
+
+# Wykład 5 - Niskopoziomowe operacje wejścia/wyjścia
 
 ## Zakres wykładu
 

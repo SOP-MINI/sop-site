@@ -1,24 +1,26 @@
 ---
 title: "Schedule"
 date: 2022-02-10T10:00:00+01:00
-draft: false
-menu: sop1
 ---
 
-## Lecture: Thurdsays, 8:15 - 10:00, room 328
+## Lecture
 
-| Date  | Topic                                                        |
-| ----- | ------------------------------------------------------------ |
-| 06.10 | [Introduction. Computer and operating systems.]({{< ref "wyk/w1" >}}) |
-| 20.10 | [Processes]({{< ref "wyk/w2" >}})                            |
-| 03.11 | [File system and its interface. Stream-based I/O.]({{< ref "wyk/w3" >}}) |
-| 17.10 | [POSIX signals]({{< ref "wyk/w4" >}})                        |
-| 01.12 | [Low-level input/output operations.]({{< ref "wyk/w5" >}})   |
-| 15.12 | [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})      |
-| 04.01 | [Asynchronous input/output.]({{< ref "wyk/w7" >}}) **Wednesday, room 102!** |
-| 19.01 | [CPU Scheduling]({{< ref "wyk/w8" >}})                       |
+Thurdsays, 8:15 - 10:00, room 328
 
-## Laboratories: Mondays, 2:15-5pm, rooms 203, 218.
+| Date       | Topic                                                        |
+|------------| ------------------------------------------------------------ |
+| 06.10.2022 | [Introduction. Computer and operating systems.]({{< ref "wyk/w1" >}}) |
+| 20.10.2022 | [Processes]({{< ref "wyk/w2" >}})                            |
+| 03.11.2022 | [File system and its interface. Stream-based I/O.]({{< ref "wyk/w3" >}}) |
+| 17.11.2022 | [POSIX signals]({{< ref "wyk/w4" >}})                        |
+| 01.12.2022 | [Low-level input/output operations.]({{< ref "wyk/w5" >}})   |
+| 15.12.2022 | [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})      |
+| 04.01.2023 | [Asynchronous input/output.]({{< ref "wyk/w7" >}}) **Wednesday, room 102!** |
+| 19.01.2023 | [CPU Scheduling]({{< ref "wyk/w8" >}})                       |
+
+## Laboratories
+
+Mondays, 2:15-5pm, rooms 203, 218.
 
 | Date                | Topic                                                          | Lab group  in USOS |
 | ----------          | -----------------------------------                            | ---------          |

@@ -1,8 +1,10 @@
 ---
-title: "Lec6. Threads. P-threads and mutexes"
+title: "Threads"
 date: 2022-02-05T22:35:46+01:00
-draft: false
+weight: 60
 ---
+
+# Lecture 6 - Threads, P-threads and mutexes
 
 ## Scope
 

@@ -1,7 +1,6 @@
 ---
 title: "Wykład 3. Synchronizacja. Zakleszczenia"
 date: 2022-01-28T17:23:23+01:00
-draft: false
 ---
 
 ## Zakres wykładu

@@ -1,8 +1,10 @@
 ---
-title: "Lec5. POSIX signals"
+title: "Signals"
 date: 2022-02-05T22:35:41+01:00
-draft: false
+weight: 40
 ---
+
+# Lecture 5 - POSIX signals
 
 ## Scope
 

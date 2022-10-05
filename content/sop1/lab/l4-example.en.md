@@ -1,7 +1,7 @@
 ---
 title: "Laboratory task 4: AIO"
 date: 2022-02-07T20:02:11+01:00
-draft: false
+bookHidden: true
 ---
 
 ## Task

@@ -1,7 +1,6 @@
 ---
 title: "Lec14. Protection and security"
 date: 2022-02-05T16:19:23+01:00
-draft: false
 ---
 
 ## Scope of the lecture

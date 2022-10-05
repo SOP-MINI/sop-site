@@ -1,7 +1,6 @@
 ---
 title: "Wykład 9. Zarządzanie pamięcią"
 date: 2022-02-04T22:05:53+01:00
-draft: false
 ---
 
 ## Zakres wykładu

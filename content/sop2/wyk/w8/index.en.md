@@ -1,7 +1,6 @@
 ---
 title: "Lec8. Network security issues"
 date: 2022-02-04T22:00:23+01:00
-draft: false
 ---
 
 ## Scope of the lecture

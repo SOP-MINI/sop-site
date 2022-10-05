@@ -1,8 +1,10 @@
 ---
-title: "W5. Sygnały POSIX"
+title: "Sygnały"
 date: 2022-02-05T18:02:32+01:00
-draft: false
+weight: 40
 ---
+
+# Wykład 5 - Sygnały POSIX
 
 ## Zakres wykładu
 

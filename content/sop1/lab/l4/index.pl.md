@@ -1,12 +1,12 @@
 ---
-title: "Laboratorium 4 - Asynchroniczne operacje wejścia/wyjścia"
+title: "L4 - Asynchroniczne wejście/wyjście"
 date: 2022-02-05T19:27:11+01:00
-draft: false
+weight: 50
 ---
 
+# L4 - Asynchroniczne wejście/wyjście
+
 <div class="dlaN">
-
-
 <p>Temat AIO jest wyraźnie mniej obszerny od poprzednich tematów i ten tutorial jest też krótszy. Proszę zwrócić uwagę na aspekt bardziej samodzielnego przygotowania się do zajęć na podstawie stron dokumentacji man i wykładu.</p>
 <hr/ >
 <h3>Jak się przygotować do zajęć?</h3>

@@ -1,7 +1,7 @@
 ---
 title: "List of topics for Lab3 introductory test (threads)"
 date: 2022-02-07T20:06:46+01:00
-draft: false
+bookHidden: true
 ---
 
 Only the new topics. You still need all previous labs knowledge which is not listed here.

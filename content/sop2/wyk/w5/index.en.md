@@ -1,7 +1,6 @@
 ---
 title: "Lec5. Introduction to networking"
 date: 2022-02-03T19:14:17+01:00
-draft: false
 ---
 
 ## Scope

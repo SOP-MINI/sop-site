@@ -1,7 +1,6 @@
 ---
 title: "Lec4. POSIX synchronization"
 date: 2022-02-03T19:09:50+01:00
-draft: false
 ---
 ## Scope
   

@@ -1,8 +1,10 @@
 ---
-title: "Tutorial 4 - Asynchronous input/output operations"
+title: "L4 - Asynchronous input/output"
 date: 2022-02-07T19:57:36+01:00
-draft: false
+weight: 50
 ---
+
+# Tutorial 4 - Asynchronous input/output
 
 <div class="dlaN">
 <p>AIO topic is significantly shorter that previous topics, so is this tutorial. We expect more self studding from you,  please read lecture materials and man pages in addition to this page.</p>

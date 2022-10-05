@@ -1,7 +1,6 @@
 ---
 title: "Wykład 12. Realizacje systemów plików. Rozproszone systemy plików. "
 date: 2022-02-05T15:56:44+01:00
-draft: false
 ---
 
 ## Zakres wykładu

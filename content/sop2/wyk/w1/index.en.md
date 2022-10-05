@@ -1,7 +1,6 @@
 ---
 title: "Lec1. Introduction to interprocess communication (IPC). IPC with pipes/FIFOs"
 date: 2022-02-10T10:00:00+01:00
-draft: false
 ---
 ## Scope
   

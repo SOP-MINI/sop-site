@@ -1,7 +1,6 @@
 ---
 title: "Lec12. Implementations of file systems. Distributed file systems."
 date: 2022-02-05T15:56:46+01:00
-draft: false
 ---
 ## Scope of the lecture
 

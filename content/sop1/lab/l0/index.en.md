@@ -1,10 +1,12 @@
 ---
-title: "Introduction Lab for OPS1"
+title: "L0 - Introduction"
 date: 2022-02-07T19:29:05+01:00
-draft: false
+weight: 10
 ---
 
-<div class="dlaN">
+# Introduction Lab for OPS1
+
+{{< hint info >}}
 
 This laboratory does not require any preparation , it's aim is to explain all the rules and answer all the question about graded labs and the classes schedule. Please carefully read everything about [syllabus]({{< ref "../../syllabus" >}}), [grading]({{< ref "../../zasady" >}}) and [schedule]({{< ref "../../harmonogram" >}}). Also have a look at the [reference]({{< ref "../../materialy" >}}).
 
@@ -12,19 +14,18 @@ On [reference]({{< ref "../../materialy" >}}) page you can find self preparation
 
 Let's do a simple example to familiarize you with routines required during the graded labs.
 
-</div>
+{{< /hint >}}
 
------
+### The task
 
-### The task.
+Goal: Write a trivial program "hello world", compile it, run it , compress the source and copy to the required
+destination . *What student has to know:*
 
-*Goal:* Write a trivial program "hello world", compile it, run it , compress the source and copy to the required destination . *What student has to know:*
-
-  - know one of available (in our labs) programmers environment for Linux
-  - know how to do basic compilation with gcc
-  - know how to use a command line interface
-  - know how to use tar compressing command
-  - know how to copy files with cp command
+- know one of available (in our labs) programmers environment for Linux
+- know how to do basic compilation with gcc
+- know how to use a command line interface
+- know how to use tar compressing command
+- know how to copy files with cp command
 
 *solution **prog1.c**:*
 ```c
@@ -40,45 +41,53 @@ int main(int argc, char **argv)
 
 *compilation:*
 
-    $ gcc -Wall -fsanitize=address,undefined -o prog1 prog1.c
+```shell
+gcc -Wall -fsanitize=address,undefined -o prog1 prog1.c
+```
 
-Important note: use of -Wall compiler flag is compulsory. Besides that each assignment will require usage of particular set of sanitizers. [More information about sanitizers during the lab.]({{< ref "../sanitizers" >}})
+Important note: use of `-Wall` compiler flag is compulsory.
+Besides that each assignment will require usage of particular set of sanitizers.
+[More information about sanitizers during the lab.]({{< ref "../sanitizers" >}})
 
 *running:*
 
-    $ ./prog1
+```shell
+./prog1
+```
 
 *compressing (with check):*
 
-    $ tar -cjf $USER.tar.bz2 prog1.c
-    $ tar -tjf $USER.tar.bz2
+```shell
+tar -cjf $USER.tar.bz2 prog1.c
+tar -tjf $USER.tar.bz2
+```
 
-<div class="dlaN">
+{{< hint info >}}
+You can type multiple files and folders instead of one file.
+{{< /hint >}}
 
-  - You can type multiple files and folders instead of one file.
+{{< hint danger >}}
+**ATTENTION** you can not freely reorder the switches of the tar command, the `-f` switch has an argument (the archive).
+{{< /hint >}}
 
-  - **ATTENTION** you can not freely reorder the switches of the tar command, the `-f` switch has an argument (the archive).
+{{< hint danger >}}
+**ATTENTION** you can not freely reorder the tar arguments, eg.:
 
-  - **ATTENTION** you can not freely reorder the tar arguments, eg.:
-    
-    ~~`$ tar -cjf prog1.c $USER.tar.bz2`~~
-    
-    will erase your source file\!\!\! Remember that the archive name should be right next to the `-f` switch.
+~~`$ tar -cjf prog1.c $USER.tar.bz2`~~
 
-</div>
+will erase your source file\!\!\! Remember that the archive name should be right next to the `-f` switch.
+{{< /hint >}}
 
 *work upload (with check):*
 
-    $ cp $USER.tar.bz2 {{< teacherdir >}}
-    $ ls -l {{< teacherdir >}}$USER.tar.bz2
+```shell
+cp $USER.tar.bz2 {{< teacherdir >}}
+ls -l {{< teacherdir >}}$USER.tar.bz2
+```
 
-<div class="dlaN">
-
+{{< hint info >}}
 The destination folder will sometimes change, it will always be stated in your task.
-
-</div>
-
----
+{{< /hint >}}
 
 ### Environment preparation
 
@@ -90,8 +99,6 @@ Unlike the previous classes, we do not require any particular IDE. However, a go
 A good choice would be Visual Studio Code (not to be confused with Visual Studio), which is commonly chosen due to its beginner-friendliness. Another common choices are Emacs and Vim (as well as Neovim which is sadly not available in the lab by default), but those have a higher barrier to entry. All mentioned editors require additional configuration, which you should do before the first graded labs. Of course it would be a good idea to have a similar setup at home and during labs.
 
 We suggest you shouldn't use larger IDEs, such as ~~CLion~~ if you do not know them well; otherwise their functionalities will hurt you more than help. Also do not use in-browser editors such as ~~<https://www.onlinegdb.com>~~; otherwise in case of PC instability you might lose your code (as it is only stored in browser) and need to begin from scratch.
-
----
 
 ### Before first graded labs
 

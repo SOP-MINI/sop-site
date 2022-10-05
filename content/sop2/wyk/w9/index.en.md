@@ -1,7 +1,6 @@
 ---
 title: "Lec9. Memory management"
 date: 2022-02-04T22:05:56+01:00
-draft: false
 ---
 
 ## Scope of the lecture

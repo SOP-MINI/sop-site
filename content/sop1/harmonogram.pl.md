@@ -1,25 +1,26 @@
 ---
-atitle: "Harmonogram"
+title: "Harmonogram"
 date: 2022-02-10T10:00:00+01:00
-draft: false
-menu: sop1
 ---
 
-## Wykłady: Czwartki, godz. 8:15 - 10:00, s. 328
+## Wykłady
 
+Czwartki, godz. 8:15 - 10:00, s. 328
 
-| Data  | Tytuł                                                        |
-| ----- | ------------------------------------------------------------ |
-| 13.10 | [Wstęp. Systemy komputerowe i operacyjne.]({{< ref "wyk/w1" >}}) |
-| 27.10 | [Procesy]({{< ref "wyk/w2" >}})                              |
-| 10.11 | [System plików i jego interfejs. Strumieniowe wejście/wyjście.]({{< ref "wyk/w3" >}}) |
-| 24.11 | [Sygnały POSIX]({{< ref "wyk/w4" >}})                        |
-| 08.12 | [Niskopoziomowe operacje wejścia/wyjścia]({{< ref "wyk/w5" >}}) |
-| 22.12 | [Wątki. P-wątki i muteksy.]({{< ref "wyk/w6" >}})            |
-| 12.01 | [Asynchroniczne operacje wejścia/wyjścia]({{< ref "wyk/w7" >}}) |
-| 26.01 | [Planowanie przydziału czasu CPU]({{< ref "wyk/w8" >}})      |
+| Data       | Tytuł                                                        |
+|------------| ------------------------------------------------------------ |
+| 13.10.2022 | [Wstęp. Systemy komputerowe i operacyjne.]({{< ref "wyk/w1" >}}) |
+| 27.10.2022 | [Procesy]({{< ref "wyk/w2" >}})                              |
+| 10.11.2022 | [System plików i jego interfejs. Strumieniowe wejście/wyjście.]({{< ref "wyk/w3" >}}) |
+| 24.11.2022 | [Sygnały POSIX]({{< ref "wyk/w4" >}})                        |
+| 08.12.2022 | [Niskopoziomowe operacje wejścia/wyjścia]({{< ref "wyk/w5" >}}) |
+| 22.12.2022 | [Wątki. P-wątki i muteksy.]({{< ref "wyk/w6" >}})            |
+| 12.01.2023 | [Asynchroniczne operacje wejścia/wyjścia]({{< ref "wyk/w7" >}}) |
+| 26.01.2023 | [Planowanie przydziału czasu CPU]({{< ref "wyk/w8" >}})      |
 
-## Zajęcia laboratoryjne: wtorki, godz. 14:15 - 17:00, sale 218, 219, 304
+## Zajęcia laboratoryjne
+
+Wtorki, godz. 14:15 - 17:00, sale 218, 219, 304
 
 | Data                      | Tytuł                                                          | Grupy Lab USOS  |
 | ------------------------- | ---------                                                      | -------         |
@@ -38,5 +39,4 @@ menu: sop1
 
 
 *Termin popraw zostanie podany po opublikowaniu grafiku sesji egzaminacyjnej, w dniu, kiedy drugi rok ISI nie ma żadnego egzaminu*
-
 

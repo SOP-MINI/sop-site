@@ -1,7 +1,6 @@
 ---
 title: "Lec7. Network programming"
 date: 2022-02-03T19:24:24+01:00
-draft: false
 ---
 
 ## Scope

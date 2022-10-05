@@ -1,7 +1,6 @@
 ---
 title: "Zadanie testowe z tematu gniazd sieciowych i funkcji select"
 date: 2022-02-01T19:36:27+01:00
-draft: false
 ---
 
 ## Treść

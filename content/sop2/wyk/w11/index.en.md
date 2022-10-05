@@ -1,7 +1,6 @@
 ---
 title: "Lec11. File systems"
 date: 2022-02-04T22:17:05+01:00
-draft: false
 ---
 
 ## Scope of the lecture

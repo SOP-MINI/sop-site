@@ -1,7 +1,6 @@
 ---
 title: "GCC Sanitizers"
 date: 2022-02-05T17:31:35+01:00
-draft: false
 ---
 
 Oprócz podstawowej diagnostyki w trakcie kompilacji (opcja -Wall kompilatora, która włącza sporo komunikatów ostrzegawczych, sugerujących problemy z kodem), na zajęciach wymagamy użycia sanitizera (w wolnym tłumaczeniu uzdrowiciela) wbudowanego w nowsze kompilatory. Mechanizm ten powoduje, że kod wynikowy programu zostanie rozbudowany o dodatkowe sprawdzenia poprawności i w przypadku niezgodności zostanie wygenerowany błąd. Po dokładną listę elementów, które można w ten sposób sprawdzić, odsyłamy do dokumentacji kompilatora.

@@ -1,7 +1,6 @@
 ---
 title: "Wykład 8. Zagadnienia bezpieczeństwa sieciowego"
 date: 2022-02-04T22:00:19+01:00
-draft: false
 ---
 ## Zakres wykładu
 

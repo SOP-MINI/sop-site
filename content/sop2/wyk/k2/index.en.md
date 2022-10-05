@@ -1,7 +1,6 @@
 ---
 title: "Scope of the OPS2 test 2"
 date: 2022-02-05T16:21:02+01:00
-draft: false
 ---
 
 - OPS1.Lec8: [Management of threads and processes]({{< ref "../w8" >}})

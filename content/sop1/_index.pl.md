@@ -1,9 +1,9 @@
 ---
 title: "Systemy operacyjne 1"
 date: 2022-02-10T10:00:00+01:00
-draft: false
-layout: single
 ---
+
+# Systemy operacyjne 1
 
 [Strona przedmiotu Systemy operacyjne 1 w USOSie](https://usosweb.usos.pw.edu.pl/kontroler.php?_action=katalog2/przedmioty/pokazPrzedmiot&prz_kod=1120-IN000-ISP-0236)
 

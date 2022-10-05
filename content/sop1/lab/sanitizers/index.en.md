@@ -1,7 +1,6 @@
 ---
 title: "GCC Sanitizers"
 date: 2022-02-05T17:31:35+01:00
-draft: false
 ---
 
 Besides compiler diagnostics provided by -Wall compilation option during the class it is require to use sanitizers that are build in sufficiently new compilers. Sanitizers cause that emitted code is instrumented with many runtime checks that provide additional program verification layer. For more details please refer to the compiler documentation.

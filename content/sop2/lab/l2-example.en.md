@@ -1,7 +1,6 @@
 ---
 title: "Task on POSIX message  queues"
 date: 2022-02-01T19:36:27+01:00
-draft: false
 ---
 
 ## Goal

@@ -1,7 +1,6 @@
 ---
 title: "Wykład 5. Wprowadzenie do sieci TCP/IP"
 date: 2022-02-03T19:14:33+01:00
-draft: false
 ---
 
 ## Zakres wykładu

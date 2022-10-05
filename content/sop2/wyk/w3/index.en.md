@@ -1,7 +1,6 @@
 ---
 title: "Lec3. Synchronization. Deadlocks"
 date: 2022-01-28T17:23:23+01:00
-draft: false
 ---
 
 ## Scope

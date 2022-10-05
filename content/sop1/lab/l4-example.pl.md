@@ -1,7 +1,7 @@
 ---
 title: "Zadanie testowe z tematu AIO"
 date: 2022-02-05T19:36:54+01:00
-draft: false
+bookHidden: true
 ---
 
 ## Treść

@@ -1,7 +1,6 @@
 ---
 title: "Zadanie testowe z tematu pipe/FIFO"
 date: 2022-02-01T19:32:59+01:00
-draft: false
 ---
 ## Treść
 

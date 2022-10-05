@@ -1,7 +1,7 @@
 ---
 title: "Zadanie testowe z tematu Wątki muteksy i sygnały"
 date: 2022-02-05T19:36:50+01:00
-draft: false
+bookHidden: true
 ---
 
 ## Treść

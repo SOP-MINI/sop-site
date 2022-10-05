@@ -1,0 +1,37 @@
+theme: hugo-book
+
+disableKinds:
+  - taxonomy
+  - term
+  - RSS
+  - sitemap
+
+buildFuture: true
+defaultContentLanguageInSubdir: true
+enableGitInfo: true
+
+languages:
+  pl:
+    languageName: Polski (Informatyka)
+    title: Systemy Operacyjne (Informatyka)
+    weight: 1
+  en:
+    languageName: English (Computer Science)
+    title: Operating Systems (Computer Science)
+    weight: 2
+
+params:
+  BookTheme: "auto"
+  BookSection: "*"
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+    extensions:
+      linkify: false
+  highlight:
+    noclasses: false
+
+minify:
+  minifyOutput: true

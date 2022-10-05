@@ -1,8 +1,10 @@
 ---
-title: "Lec 8. Asynchronous input/output"
+title: "Asynchronous I/O"
 date: 2022-02-05T22:35:56+01:00
-draft: false
+weight: 70
 ---
+
+# Lecture 8 - Asynchronous input/output
 
 ## Lecture Scope
 

@@ -1,7 +1,6 @@
 ---
 title: "Wykład 14. Ochrona i bezpieczeństwo"
 date: 2022-02-05T15:59:32+01:00
-draft: false
 ---
 
 ## Zakres wykładu

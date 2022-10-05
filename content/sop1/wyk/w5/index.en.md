@@ -1,8 +1,10 @@
 ---
-title: "Lec4. Low-level input/output operations"
+title: "Low-level I/O"
 date: 2022-02-05T22:35:36+01:00
-draft: false
+weight: 50
 ---
+
+# Lecture 5 - Low-level input/output
 
 ## Scope
 

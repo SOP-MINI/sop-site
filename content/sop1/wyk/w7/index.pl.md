@@ -1,8 +1,10 @@
 ---
-title: "W8. Asynchroniczne operacje wejścia/wyjścia"
+title: "Asynchroniczne I/O"
 date: 2022-02-05T18:02:42+01:00
-draft: false
+weight: 70
 ---
+
+# Wykład 7 - Asynchroniczne operacje wejścia/wyjścia
 
 ## Zakres wykładu
 

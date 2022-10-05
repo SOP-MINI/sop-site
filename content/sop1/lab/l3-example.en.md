@@ -1,7 +1,7 @@
 ---
 title: "Laboratory task 3: threads mutexes, signals"
 date: 2022-02-07T20:02:06+01:00
-draft: false
+bookHidden: true
 ---
 
 ## Task

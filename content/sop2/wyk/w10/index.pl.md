@@ -1,7 +1,6 @@
 ---
 title: "Wykład 10. Pamięć wirtualna"
 date: 2022-02-04T22:11:05+01:00
-draft: false
 ---
 
 ## Zakres wykładu

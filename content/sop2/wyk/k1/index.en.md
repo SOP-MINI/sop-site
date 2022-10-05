@@ -1,7 +1,6 @@
 ---
 title: "Scope of the OPS2 test 1"
 date: 2022-02-05T16:20:57+01:00
-draft: false
 ---
 
 - OPS2.Lec1: [Introduction to interprocess communication (IPC). IPC with pipes/FIFOs.]({{< ref "../w1" >}})

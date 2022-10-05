@@ -1,11 +1,9 @@
 ---
 title: "Systemy operacyjne 2"
 date: 2022-02-10T10:00:00+01:00
-draft: false
-layout: single
 ---
 
-[Strona przedmiotu Systemy operacyjne 2 w usosie](https://usosweb.usos.pw.edu.pl/kontroler.php?_action=katalog2/przedmioty/pokazPlanZajecPrzedmiotu&prz_kod=1120-IN000-ISP-0245&cdyd_kod=2022L&division=semester)
+[Strona przedmiotu Systemy operacyjne 2 w USOSie](https://usosweb.usos.pw.edu.pl/kontroler.php?_action=katalog2/przedmioty/pokazPlanZajecPrzedmiotu&prz_kod=1120-IN000-ISP-0245&cdyd_kod=2022L&division=semester)
 
 ## Obsada
 

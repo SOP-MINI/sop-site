@@ -1,7 +1,6 @@
 ---
 title: "Wykład 1. Wprowadzenie do komunikacji międzyprocesowej (IPC). Łącza."
 date: 2022-02-10T10:00:00+01:00
-draft: false
 ---
 
 ## Zakres wykładu

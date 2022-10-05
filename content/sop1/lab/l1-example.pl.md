@@ -1,7 +1,7 @@
 ---
-title: "Zadanie testowe nr 1 z  tematu Środowisko wykonania programu POSIX"
+title: "Zadanie testowe nr 1 z tematu Środowisko wykonania programu POSIX"
 date: 2022-02-05T19:32:55+01:00
-draft: false
+bookHidden: true
 ---
 
 ## Treść

@@ -1,8 +1,10 @@
 ---
-title: "W3: Interfejs systemu plików. Strumieniowe wejście/wyjście."
+title: "System plików"
 date: 2022-02-05T18:02:26+01:00
-draft: false
+weight: 30
 ---
+
+# Wykład 3 - Interfejs systemu plików i strumieniowe wejście/wyjście
 
 ## Zakres wykładu
 

@@ -1,7 +1,6 @@
 ---
 title: "Lec10.  Virtual memory"
 date: 2022-02-04T22:11:02+01:00
-draft: false
 ---
 
 ## Scope of the lecture

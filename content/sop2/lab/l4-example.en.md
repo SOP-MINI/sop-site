@@ -1,7 +1,6 @@
 ---
 title: "Test task on POSIX synchronization, network sockets, semaphores and threads"
 date: 2022-02-01T19:36:27+01:00
-draft: false
 ---
 
 ## The task

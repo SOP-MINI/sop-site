@@ -1,7 +1,7 @@
 ---
 title: "Zadanie testowe nr 1 z tematu Procesy, sygnały i deskryptory"
 date: 2022-02-05T19:34:07+01:00
-draft: false
+bookHidden: true
 ---
 
 ## Treść

@@ -1,8 +1,10 @@
 ---
-title: "Lec3. File system and its interface. Stream-based I/O"
+title: "Filesystem"
 date: 2022-02-05T22:35:32+01:00
-draft: false
+weight: 30
 ---
+
+# Lecture 3 - File system interface and stream-based I/O
 
 ## Scope 
 

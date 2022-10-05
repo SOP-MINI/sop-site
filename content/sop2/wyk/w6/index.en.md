@@ -1,7 +1,6 @@
 ---
 title: "Lec6. Sockets"
 date: 2022-02-03T19:18:47+01:00
-draft: false
 ---
 
 ## Scope

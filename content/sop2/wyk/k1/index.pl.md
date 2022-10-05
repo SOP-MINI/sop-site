@@ -1,7 +1,6 @@
 ---
 title: "Zakres kolokwium 1"
 date: 2022-02-05T16:04:12+01:00
-draft: false
 ---
 
 - SOP2.W1: [Wprowadzenie do komunikacji międzyprocesowej (IPC). Łącza.]({{<ref "../w1">}})
