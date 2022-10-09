@@ -29,7 +29,7 @@ Mondays, 2:15-5pm, rooms 203, 218.
 | 2022-11-07          | [L1 POSIX program execution environment]({{< ref "lab/l1" >}}) | 1, 3               |
 | 2022-11-14          | [L1 POSIX program execution environment]({{< ref "lab/l1" >}}) | 2, 4               |
 | 2022-12-05          | [L2 Processes and signals]({{< ref "lab/l2" >}})               | 1, 3               |
-| 2022-12-05          | [L2 Processes and signals]({{< ref "lab/l2" >}})               | 2, 4               |
+| 2022-12-12          | [L2 Processes and signals]({{< ref "lab/l2" >}})               | 2, 4               |
 | 2023-01-02          | [L3 Threads and mutexes]({{< ref "lab/l3" >}})                 | 1, 3               |
 | 2023-01-09          | [L3 Threads and mutexes]({{< ref "lab/l3" >}})                 | 2, 4               |
 | 2023-01-16          | [L4 AIO]({{< ref "lab/l4" >}})                                 | 1, 3               |
