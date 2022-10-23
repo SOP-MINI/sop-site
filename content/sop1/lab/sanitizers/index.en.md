@@ -10,13 +10,13 @@ During the Operating systems class we will mostly use -fsanitize=address and -fs
 The advantage of using sanitizers is ability to find code problems that are either impossible of very expensive (in terms of computation costs) to detect during the compilation. On the other hand only problems that actually happened during the execution will be detected (which may depend on e.g. input data).
 
 The example of unsafe stdin reading:
-```
+```c
 #include <stdio.h>
 
 int main(int argc, char** argv) {
   int x=5;
   char name[10];
-  scanf("%s", name); // Reading stirng of unknown (probably exceeding 9) length
+  scanf("%s", name); // Reading string of unknown (probably exceeding 9) length
   printf("You typed: %s\nThe number is %d\n", name, x);
   return 0;
 }
@@ -25,6 +25,6 @@ int main(int argc, char** argv) {
 Compiling the program without -fsanitize and typing a string longer than 9 characters on stdin will end up with messing the x variable value. In small program such problem is easy to locate, but in actual lab code...  
 Now try compiling it with sanitizers:  
 `  gcc -Wall -fsanitize=address,undefined array-problem.c -o array-problem `  
-Again try to type strings longer and shorter than 9. This time longer string caused a descriptive error message (please get familiar with those messages before the first lab). There is one inconvenience tough, the part regarding our program in stack trace (the main function) is missing the line number. We can ask compiler to emit debug info (in particular line numbers) to the output program by passing -g option: `  gcc -g -Wall -fsanitize=address,undefined array-problem.c -o array-problem `
+Again try to type strings longer and shorter than 9. This time longer string caused a descriptive error message (please get familiar with those messages before the first lab). There is one inconvenience tough, the part regarding our program in stack trace (the main function) is missing the line number. We can ask compiler to emit debug info (in particular line numbers) to the output program by passing -g option: `  gcc -g -Wall -fsanitize=address,undefined array-problem.c -o array-problem `; this is also helpful when using a debugger.
 
 *Along the assignment for each lab you will be provided with a set of mandatory sanitizers for given lab. Note that enabling all the sanitizers is not possible as some of them are mutually exclusive.*

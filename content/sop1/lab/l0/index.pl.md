@@ -56,6 +56,10 @@ Użycie flagi `-Wall` jest obowiązkowe w trakcie laboratorium,
 program nie powinien generować istotnych ostrzeżeń. 
 Każde zadanie wymaga również użycia odpowiedniego zestawu opcji `-fsanitize`. 
 [Więcej informacji o sanitizerach.]({{< ref "../sanitizers" >}})
+{{< hint danger >}}
+**UWAGA** nie wolno dowolnie mieszać parametrów polecenia `gcc`, 
+parametr `-o` ma argument -- ścieżkę do wynikowego programu.
+{{< /hint >}}
 
 *uruchomienie:*
 
@@ -71,12 +75,16 @@ tar -tjf $USER.tar.bz2
 ```
 
 {{< hint info >}}
-Można podać wiele plików lub katalogów do spakowania.
+Można podać wiele plików lub katalogów do spakowania. Na przykład:
+```shell
+tar -cjf $USER.tar.bz2 file1.c file2.c
+```
+utworzy archiwum składające się z dwóch plików: `file1.c` oraz `file2.c`. Oczywiście mogą Państwo również spakować cały katalog.
 {{< /hint >}}
 
 {{< hint danger >}}
 **UWAGA** nie wolno dowolnie mieszać parametrów polecenia `tar`, 
-parametr `-f` ma argument - ścieżkę do archiwum.
+parametr `-f` ma argument -- ścieżkę do archiwum.
 {{< /hint >}}
 
 {{< hint danger >}}
