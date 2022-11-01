@@ -30,7 +30,3 @@ weight: 20
 2. Slajdy: [Procesy.pdf]({{< resource "Procesy_0.pdf" >}}), [Procesy\_POSIX.pdf]({{< resource "Procesy_POSIX_5.pdf" >}})
 3. Rozdział 26 dokumentacji "GNU C
    library": [Processes](http://www.gnu.org/software/libc/manual/html_node/Processes.html#Processes)
-4. [Archiwum](http://alpha.mini.pw.edu.pl/~opalskil/OS1src/processes/S2.zip) kodu wykorzystywanego na wykładzie do
-   eksperymentów, które przede wszystkim mają pokazać interesujące własności funkcji systemowych (POSIX) i biblioteki C.
-   Zazwyczaj przykłady nie promują jednak dobrych praktyki programowania. Jeśli kod skłoni studentów do dalszych
-   interesujących eksperymentów - proszę o podzielenie się z wykładowcą obserwacjami.

@@ -6,23 +6,28 @@ weight: 10
 
 # Lecture 1 - Operating and computer systems
 
-## Basic content
+## Scope
 
 - What is the operating system?
-- Computer system and its 4 components.
-- Fundamental modes of computer system operation: off-line, on-line/interactive, real-time (RT)
-- Operating system goals
-- Computer system resources
-- Operating system services
-- Concurrent resource use
-- System functions, system API, API standards. Standard C language libraries: ANSI, POSIX (libc), GNU (glibc).
-- Operating systems structures: simple, monolithic kernel, mikrokernel, hybrid; use of loadable kernel modules.
+- Four components of the computer system.
+- Fundamental modes of computer system operation: 
+  - off-line,
+  - on-line / interactive,
+  - real-time (RT).
 
-## Auxiliary content
+- Operating system goals.
+- Computer system resources.
+- Operating system services.
+- System functions, system API, API standards.
+- Operating systems structures: 
+  - simple, monolithic kernel, 
+  - mikrokernel, 
+  - hybrid, 
+  - use of loadable kernel modules.
 
-- Interrupts, traps - handling and use (I/O, system function calls, error detection)
-- DMA - application for fast CPU-I/O device communication; memory-related limitations
-- Hardware protection: dual mode CPU (and priviledged instructions), I/O protection, memory protection, system timer
+- Interrupts, traps - handling and use (I/O, system function calls, error detection).
+- DMA - application for fast CPU-I/O device communication; memory-related limitations.
+- Hardware protection: dual mode CPU (and priviledged instructions), I/O protection, memory protection, system timer.
 
 ## Reference
 

@@ -27,4 +27,3 @@ weight: 20
 1. Textbook (8th-10th ed.): chapter 3 (Process Concept, 3.1-3.4).
 2. Slides: [Processes.pdf]({{< resource "Processes_0.pdf" >}}), [POSIX\_processes.pdf]({{< resource "POSIX-processes_5.pdf" >}})
 3. Section 26 of the GNU C library documentation: [Processes](http://www.gnu.org/software/libc/manual/html_node/Processes.html#Processes)
-4. [Archive](../../../../common_src1/processes/S2.zip) of programs, that were used during lecture for experimentation. Note that the code is to expose interesting features of POSIX system and C library functions and not to give examples of good programming practices. The code is intended as a reminder of activities performed during a lecture. Perhaps it might stimulate further experimentation. Do not forget to share interesting results with the lecturer.

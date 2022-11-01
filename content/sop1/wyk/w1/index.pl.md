@@ -6,26 +6,28 @@ weight: 10
 
 # Wykład 1 - Systemy operacyjne i komputerowe
 
-## Treści podstawowe
+## Zakres materiału
 
 - Co to jest i do czego służy system operacyjny?
-- System komputerowy i jego 4 składniki.
-- Podstawowe tryby przetwarzania: wsadowy, z podziałem czasu (TS), interakcyjny, czasu rzeczywistego (RT)
-- Zadania systemu operacyjnego
-- Zasoby systemu komputerowego
+- Cztery składniki systemu komputerowego.
+- Podstawowe tryby przetwarzania:
+  - wsadowy,
+  - z podziałem czasu (TS) / interakcyjny, 
+  - czasu rzeczywistego (RT).
+
+- Zadania systemu operacyjnego.
+- Zasoby systemu komputerowego.
 - Podsystemy systemu operacyjnego.
-- Wspólbieżność dostępu do zasobów
-- Funkcje systemowe, API systemu operacyjnego, standardy API. Biblioteki standardowe języka C: ANSI, POSIX (libc), GNU (
-  glibc).
-- Struktury systemów operacyjnych: prosta, z monolitycznym jądrem, z mikrojądrem, hybrydowa; wykorzystanie ładowalnych
-  modułów jądra.
+- Funkcje systemowe, API systemu operacyjnego, standardy API.
+- Struktury systemów operacyjnych: 
+  - prosta, z monolitycznym jądrem, 
+  - z mikrojądrem, 
+  - hybrydowa; 
+  - wykorzystanie ładowalnych modułów jądra.
 
-## Treści dodatkowe
-
-- Przerwania, pułapki - ich obsługa i wykorzystanie (obsługa wejścia/wyjścia, wywołanie funkcji systemowych, obsługa
-  błędów)
-- DMA - wykorzystanie do komunikacji CPU-szybkie urządzenia; ograniczenia wydajności
-- Ochrona sprzętowa: dualny tryb CPU, ochrona wejścia/wyjścia, ochrona pamięci, czasomierz
+- Przerwania, pułapki - ich obsługa i wykorzystanie (obsługa wejścia/wyjścia, wywołanie funkcji systemowych, obsługa błędów).
+- DMA - wykorzystanie do komunikacji CPU-szybkie urządzenia; ograniczenia wydajności.
+- Ochrona sprzętowa: dualny tryb CPU, ochrona wejścia/wyjścia, ochrona pamięci, czasomierz.
 
 ## Materiały
 
