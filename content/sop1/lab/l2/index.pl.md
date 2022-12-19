@@ -118,7 +118,7 @@ studentom myli - nie są współdzielone pomiędzy procesami pokrewnymi.
 Typ zmiennej globalnej nie jest przypadkowy, co więcej jest to jedyny BEZPIECZNY i POPRAWNY typ. Wynika to z
 asynchronicznej natury wywołania f. obsługi sygnału a dokładniej: Primo "volatile" oznacza wyłączenie optymizacji
 kompilatora, ważne żeby kompilator nie uznał wartości zmiennej za stałą bo jej zmiany nie wynikają z kodu i tak mogłoby
-się okazać, że czytelna dla nas pęta while(work) gdzie work jest zmienną globalną zmienia się na while(1) po
+się okazać, że czytelna dla nas pętla while(work) gdzie work jest zmienną globalną zmienia się na while(1) po
 optymizacji. Secundo sig_atomic_t oznacza największy typ numeryczny, który jest przetwarzany w pojedynczej instrukcji
 CPU. Jeśli weźmiemy większy typ numeryczny przerwanie obsługą sygnału może zakłócić wartość wynikową nawet prostego
 porównania a==0 o ile przerwanie wypadnie w trakcie porównania i zmieni już porównane bajty.
@@ -126,7 +126,7 @@ porównania a==0 o ile przerwanie wypadnie w trakcie porównania i zmieni już p
 Z powyższego wynika, że nie przekazujemy pomiędzy funkcją obsługi a głównym kodem nic poza prostymi liczbami, stanami.
 Do tego dochodzi dobra praktyka nie przerywania programu na zbyt długo co pozostawia nam bardzo mało poprawnych,
 przenośnych i bezpiecznych rozwiązań w kwestii jak dzielić logikę programu pomiędzy główny kod a funkcję obsługi
-sygnału. Najprostsza zasada aby funkcję obsługi były ekstremalnie krótkie (przypisanie, inkrementacja zmiennej itp) a
+sygnału. Najprostsza zasada aby funkcje obsługi były ekstremalnie krótkie (przypisanie, inkrementacja zmiennej itp) a
 cała logika pozostała w głównym kodzie jest najlepsza.
 
 Funkcja memset bywa konieczna a zazwyczaj jest użyteczna przy inicjowaniu nie w pełni znanych nam struktur (nie wiemy
