@@ -70,7 +70,7 @@ write the name of the library without first "lib" part)
 Flag `-lm` adds math library, this library is called lm.so  (not libmath.so as you could have guessed)
 
 <em>Solution <b>prog17.c</b>:</em>
-{{% includecode "prog17.c" %}}
+{{< includecode "prog17.c" >}}
 
 This and following programs do not show USAGE information, the default parameters values are assumed if options are
 missing. Run it without parameters to see how it works.
@@ -140,7 +140,7 @@ What you need to know:
 - Bean machine on this <a href="https://en.wikipedia.org/wiki/Bean_machine"> site.</a>
 
 <em>Solution <b>prog18.c</b>:</em>
-{{% includecode "prog18.c" %}}
+{{< includecode "prog18.c" >}}
 
 Once again all thread input data is passed as pointer to the structure (Thrower_t), treads results modify bins array (
 pointer in the same structure), no global variables used.
@@ -191,7 +191,7 @@ What you need to know:
 - man 3p sigwait
 
 <em>Solution <b>prog19.c</b>:</em>
-{{% includecode "prog19.c" %}}
+{{< includecode "prog19.c" >}}
 
 Thread input structure argsSignalHandler_t holds the shared threads data (an array and STOP flag) with protective
 mutexes and not shared (signal mask and tid of thread designated to handle the signals).
@@ -244,7 +244,7 @@ What you need to know:
 - man 3p clock_getres
 
 <em>Solution <b>prog20.c</b>:</em>
-{{% includecode "prog20.c" %}}
+{{< includecode "prog20.c" >}}
 
 Threads receive the pointer to the structure with current year and pointer to years counters, structure argsModify_t
 does not have the same flow as one in task 2 of this tutorial i.e. program is not making too many unnecessary references
