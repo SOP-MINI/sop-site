@@ -35,8 +35,6 @@ Wtorki, godz. 14:15 - 17:00, sale 218, 219, 304
 | 2023-01-17                | [L4 AIO]({{< ref "lab/l4" >}})                                 | 1,3,5           |
 | 2023-01-24                | [L4 AIO]({{< ref "lab/l4" >}})                                 | 2,4,6           |
 | 2023-01-25                | **19:00** -- zamknięcie zapisów na poprawy w moodle            | Wszystkie grupy |
-| W sesji egzaminacyjnej    | L5 Poprawy                                                     | Wszystkie grupy |
+| 2023-01-30 9:00, 2023-02-01 9:00 | L5 Poprawy                                                     | Wszystkie grupy |
 
-
-*Termin popraw zostanie podany po opublikowaniu grafiku sesji egzaminacyjnej, w dniu, kiedy drugi rok ISI nie ma żadnego egzaminu*
 
