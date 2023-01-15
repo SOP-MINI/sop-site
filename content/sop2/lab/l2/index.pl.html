@@ -44,7 +44,7 @@ Podane zostały całe polecenia man do wydania z konsoli:</p><ul>
 
 <p>
 <em>Rozwiązanie: <b>mq_example.c</b></em>
-{{% includecode "mq_example.c" %}}
+{{< includecode "mq_example.c" >}}
 
 <div class="dlaN"><ol>
 <li>Zwróć uwagę na użycie wskaźnika przesyłanego z sygnałem, nieco inny jest prototyp funkcji obsługi sygnału (ma dodatkowy parametr siginfo_t*) , podczas instalowania obsługi użyto flagi SA_SIGINFO  aby przesłanie wskaźnika było możliwe. Warto zauważyć, że nie wysyłamy sami takiego sygnału, dostajemy go jako notyfikację zdarzenia w kolejce. Funkcją <em>kill</em> nie możemy wysłać  wskaźnika można to zrobić jedynie funkcją <em>sigqueue</em>.</li>

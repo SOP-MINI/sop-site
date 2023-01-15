@@ -32,7 +32,7 @@ The program processes a  <em>workfile</em>. The file is split into <em>n</em> (n
 
 <p>
 <em>solution <b>archunix5a.c</b>:</em>
-{{% includecode "archunix5a.c" %}}
+{{< includecode "archunix5a.c" >}}
 </p>
 <p>The above task and its solution was prepared by Jerzy Bartuszek (UNIX course).</p>
 <div class="dlaN"><ol>

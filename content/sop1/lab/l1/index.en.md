@@ -65,7 +65,7 @@ to see Linux/Gnu version or better `man 3p printf` to see POSIX version.
 {{< /expand >}}
 
 <em>solution <b>prog1.c</b>:</em>
-{{% includecode "prog1.c" %}}
+{{< includecode "prog1.c" >}}
 
 Please notice that you should always return int value from main function. 
 Although you can change main return value to void it opposes the POSIX that mandates all the processes 
@@ -240,7 +240,7 @@ unfreeze the terminal press C-q
 Above shortcuts work in bash (and some other shell programs) that we use in the labs.
 
 <em>code for <b>prog3.c</b></em>
-{{% includecode "prog3.c" %}}
+{{< includecode "prog3.c" >}}
 <em>New makefile <b>Makefile</b> compiles multiple targetrs:</em>
 
 ```makefile
@@ -307,7 +307,7 @@ What you need to know:
 - man 1 xargs
 
 <em>code for <b>prog4.c</b></em>
-{{% includecode "prog4.c" %}}
+{{< includecode "prog4.c" >}}
 
 <em>Full <b>Makefile</b></em>
 
@@ -360,7 +360,7 @@ void usage(char *pname)
 - Printing usage syntax in case of missing or wrong arguments is a good programming practice.
 
 <em>Code for <b>prog5.c</b> file:</em>
-{{% includecode "prog5.c" %}}
+{{< includecode "prog5.c" >}}
 
 Compile this program using universal Makefile from previous task.
 
@@ -413,7 +413,7 @@ fprintf(stderr, "USAGE:%s ([-t x] -n Name) ... \n", pname);
 ```
 
 <em>code for <b>prog6.c</b> file:</em>
-{{% includecode "prog6.c" %}}
+{{< includecode "prog6.c" >}}
 
 Test how this program deals with invalid options, spare positional (not preceded with option letter) parameters, missing
 arguments and missing options.
@@ -448,7 +448,7 @@ What you need to know:
 - man 7 environ
 
 <em>code for <b>prog7.c</b> file:</em>
-{{% includecode "prog7.c" %}}
+{{< includecode "prog7.c" >}}
 
 You can add your own variable in the following way: `$ TVAR2="122345" ./prog7` , it will show up on the list but it will
 not be stored in the parent environment i.e. next run `./prog7` will not list it.
@@ -477,7 +477,7 @@ What you need to know:
 - man 3 system (3p) is a bit confusing
 
 <em>code for <b>prog8.c</b> file:</em>
-{{% includecode "prog8.c" %}}
+{{< includecode "prog8.c" >}}
 
 Please notice that environmental variable may be absent and that this code is prepared for this situation. Good
 programmer always checks for errors. If you are in a harry and skip those checks your must be aware that your code is
@@ -621,7 +621,7 @@ What you need to know:
 - man 3p chdir
 
 <em>code for <b>prog10.c</b> file:</em>
-{{% includecode "prog10.c" %}}
+{{< includecode "prog10.c" >}}
 
 How this program deals with non existing folders, no access folders, relative paths and absolute paths as parameters?
 
@@ -656,7 +656,7 @@ What you need to know:
 - man 3p nftw
 
 <em>code for <b>prog11.c</b> file:</em>
-{{% includecode "prog11.c" %}}
+{{< includecode "prog11.c" >}}
 
 - Make sure you know how to declare and use pointers to functions in C
 - Test how this program reacts on not available or not existing folders.
@@ -700,7 +700,7 @@ What you need to know:
 - [Glibc documentation on umask](http://www.gnu.org/software/libc/manual/html_node/Setting-Permissions.html)
 
 <em>code for <b>prog12.c</b> file:</em>
-{{% includecode "prog12.c" %}}
+{{< includecode "prog12.c" >}}
 
 What bitmap is created with: `~perms&0777` ? 
 {{< expand "Answer" >}} 
@@ -782,7 +782,7 @@ Note that this topic is less about operating systems and more about general C pr
 however we mention it for completeness as related issues were quite common in the past years.
 
 <em>code for <b>prog13.c</b> file:</em>
-{{% includecode "prog13.c" %}}
+{{< includecode "prog13.c" >}}
 
 Try running the above (very simple!) code from the terminal. What do you see? 
 {{< expand "Answer" >}} As expected, you just see one number each second, no funky business… yet.

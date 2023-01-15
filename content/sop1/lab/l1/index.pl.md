@@ -779,7 +779,7 @@ sekundach.
 Ten temat ma więcej wspólnego z ogólnym programowaniem w C niż z systemami operacyjnymi, niemniej jednak wspominamy o nim, bowiem w poprzednich latach był częstym źródłem problemów.
 
 <em>kod do pliku <b>prog13.c</b></em>
-{{% includecode "prog13.c" %}}
+{{< includecode "prog13.c" >}}
 
 Spróbuj uruchomić ten (bardzo prosty!) kod z terminala. Co widać na terminalu? 
 {{< expand "Odpowiedź" >}} 

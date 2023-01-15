@@ -32,7 +32,7 @@ Program creates 'n' sub-processes (n is 1st program parameter), each of those pr
 - <a href="https://www.gnu.org/software/libc/manual/html_node/Job-Control.html">Job Control</a>
 
 <em>solution, 1st stage <b>prog13a.c</b>:</em>
-{{% includecode "prog13a.c" %}}
+{{< includecode "prog13a.c" >}}
 
 Use the general makefile (the last one) from the first tutorial, execute "make prog13a"
 
@@ -74,7 +74,7 @@ In the next stage child waiting and child counting will be added. How can we kno
 {{< expand "Answer" >}} SIGCHLD counting will not be precise as signals can marge, the only sure method is to count successful calls to wait or waitpid. {{< /expand >}}
 
 <em>solution 2nd stage <b>prog13b.c</b>:</em>
-{{% includecode "prog13b.c" %}}
+{{< includecode "prog13b.c" >}}
 
 It is worth knowing that waitpid can tell us about temporary lack of terminated children (returns zero) and about permanent lack of them (error ECHILD). The second case is not a critical error, your code should expect it.
 
@@ -168,7 +168,7 @@ Do we expect zero terminated children at this handler? See ahead at the end of m
 {{< expand "Answer" >}} Yes,  wait at the end of main can catch the child before SIGCHLD function does, then the function is left with zero children.It is a race condition.  {{< /expand >}}
 
 <em>solution <b>prog14.c</b>:</em>
-{{% includecode "prog14.c" %}}
+{{< includecode "prog14.c" >}}
 
 Please notice that sleep and alarm function can conflict, according to POSIX sleep can be implemented on SIGALRM and
 there is no way to nest signals. Never nest them or use nanosleep instead of sleep as in the code above.
@@ -221,7 +221,7 @@ What you need to know:
 - man 3p sigemptyset
 
 <em>solution part <b>prog15.c</b>:</em>
-{{% includecode "prog15.c" %}}
+{{< includecode "prog15.c" >}}
 
 The program terminates on SIGINT (C-c)
 
@@ -273,7 +273,7 @@ This task has two stages.
 {{< /hint >}}
 
 <em>solution 1st stage, parts of <b>prog16a.c</b>:</em>
-{{% includecode "prog16a.c" %}}
+{{< includecode "prog16a.c" >}}
 
 Do remember that you can read good quality really random bytes from /dev/random file but the amount is limited or read
 unlimited amount of data from /dev/urandom but these are pseudo random bytes.
@@ -327,7 +327,7 @@ Why permissions of a newly created file are supposed to be full (0777)? Are they
 {{< expand "Answer" >}} umask will reduce the permissions, if no set  permissions are required it is a good idea to allow the umask to regulate the effective rights {{< /expand >}}
 
 <em>solution 2nd stage, parts of <b>prog16b.c</b>:</em>
-{{% includecode "prog16b.c" %}}
+{{< includecode "prog16b.c" >}}
 
 Run it with the same parameters as before - flaws are gone now.
 
