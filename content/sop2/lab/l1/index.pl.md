@@ -1,39 +1,36 @@
 ---
-title: "Tutorial SOP2 L1: FIFO/pipe"
+title: "L1 - FIFO/pipe"
 date: 2022-02-10T10:00:00+01:00
+weight: 10
 ---
 
-<div class="wstepne">
+# Tutorial 1 - FIFO/pipe
 
+{{< hint info >}}
 Uwagi wstępne:
-
-1.  Obowiązują wszystkie materiały z SOP1, szczególnie tutoriale L1,L2 i L3!
-2.  Szybkie przejrzenie tutoriala prawdopodobnie nic nie pomoże, należy samodzielnie uruchomić programy, sprawdzić jak działają, poczytać materiały dodatkowe takie jak strony man. W trakcie czytania sugeruję wykonywać ćwiczenia a na koniec przykładowe zadanie.
-3.  Na żółtych polach podaję dodatkowe informacje, niebieskie zawierają pytania i ćwiczenia. Pod pytaniami znajdują się odpowiedzi, które staną się widoczne dopiero po kliknięciu. Proszę najpierw spróbować sobie odpowiedzieć na pytanie samemu a dopiero potem sprawdzać odpowiedź.
-4.  Pełne kody do zajęć znajdują się w załącznikach na dole strony. W tekście są tylko te linie kodu, które są konieczne do zrozumienia problemu.
-5.  Materiały i ćwiczenia są ułożone w pewną logiczną całość, czasem do wykonania ćwiczenia konieczny jest stan osiągnięty poprzednim ćwiczeniem dlatego zalecam wykonywanie ćwiczeń w miarę przyswajania materiału.
-6.  Większość ćwiczeń wymaga użycia konsoli poleceń, zazwyczaj zakładam, ze pracujemy w jednym i tym samym katalogu roboczym więc wszystkie potrzebne pliki są \"pod ręką\" tzn. nie ma potrzeby podawania ścieżek dostępu.
-7.  Czasem podaję znak `$` aby podkreślić, że chodzi o polecenie konsolowe, nie piszemy go jednak w konsoli np.: piszę `$make` w konsoli wpisujemy samo `make`.
-8.  To co ćwiczymy wróci podczas kolejnych zajęć. Jeśli po zajęciach i teście coś nadal pozostaje niejasne proszę to poćwiczyć a jeśli trzeba dopytać się u prowadzących.
-9.  W tym materiale do synchronizacji procesów używamy tylko FIFO/pipe, jeśli moglibyśmy dodać semafor (lub inne metody IPC) to niektóre ograniczenia można łatwo obejść (np. wiele procesów czytających z wspólnego FIFO/pipe), w ten sposób jednak łatwiej w pełni zrozumieć opisywane mechanizmy. Często też dodawanie zewnętrznej synchronizacji jest zbędne i wynika tylko z niewiedzy.
-10. Przypominam, że FIFO i pipe są jednokierunkowymi kanałami komunikacji. W przypadku FIFO jest to dość łatwe do zapamiętania bo o kierunku decydujemy podczas jego otwierania. W przypadku pipe mamy parę deskryptorów i tu już trzeba widzieć że indeks\[0\] to wyłącznie odczyt, \[1\] wyłącznie zapis. Zapamiętanie może ułatwić analogia z stdin/out ( 0 stdin, 1 stdout).
-11. W przypadku gdy z jednego łącza korzysta wiele procesów piszących i jeden czytający podczas *jednego zapisu* danych do pipe/FIFO mamy gwarancję ciągłości danych wpisanych przez jeden proces jeśli ilość tych danych nie przekracza stałej PIPE\_BUF. Planując komunikację od wielu procesów do jednego nie można przekraczać rozmiaru PIPE\_BUF dla pojedynczego zapisu.
-12. Analogiczna sytuacja z odczytem (wiele procesów czytających) nie jest już w żaden sposób atomowa, nie ma gwarancji, ile danych można odczytać w sposób ciągły zanim inny proces przejmie kontrolę nad odczytem.
-13. Zerwanie łącza (czy to na skutek jego zamknięcia przez wszystkie procesy na jednym końcu komunikacji czy też na skutek \"zabicia\" tych procesów) objawi się powstaniem sytuacji EOF (End od File) podczas odczytu lub otrzymaniem sygnału SIGPIPE podczas zapisu. Domyślną reakcją na SIGPIPE jest zabicie procesu. Jeśli sygnał ten będzie blokowany/ignorowany lub obsługiwany przez własną funkcję to zapis do łącza zwróci błąd EPIPE.
-14. Warto zapamiętać, że identyczne zasady zerwania połączenia obowiązują dla gniazd sieciowych.
-15. Pipe jest od razu połączony, do FIFO trzeba się podłączyć. Jeśli nie użyjemy flagi O\_NONBLOCK to podłączanie będzie blokować wykonanie programu/wątku aż do momentu gdy druga strona połączenia będzie dostępna. Użycie flagi O\_NONBLOCK wyłączy blokowanie ale do momentu pełnego nawiązania połączenia nie mamy użytecznego łącza i musimy się liczyć z błędami komunikacji przy zapisie ENXIO oraz z EOF podczas odczytu.
-16. `PIPE_BUF` na Linuxie to 4kb
-17. W POSIXie `PIPE_BUF` to co najmniej 512 bajtów.
-
-</div>
-
-
-<div class="cwiczenie">
+- Obowiązują wszystkie materiały z SOP1, szczególnie tutoriale L1,L2 i L3!
+- Szybkie przejrzenie tutoriala prawdopodobnie nic nie pomoże, należy samodzielnie uruchomić programy, sprawdzić jak działają, poczytać materiały dodatkowe takie jak strony man. W trakcie czytania sugeruję wykonywać ćwiczenia a na koniec przykładowe zadanie.
+- Na żółtych polach podaję dodatkowe informacje, niebieskie zawierają pytania i ćwiczenia. Pod pytaniami znajdują się odpowiedzi, które staną się widoczne dopiero po kliknięciu. Proszę najpierw spróbować sobie odpowiedzieć na pytanie samemu a dopiero potem sprawdzać odpowiedź.
+- Pełne kody do zajęć znajdują się w załącznikach na dole strony. W tekście są tylko te linie kodu, które są konieczne do zrozumienia problemu.
+- Materiały i ćwiczenia są ułożone w pewną logiczną całość, czasem do wykonania ćwiczenia konieczny jest stan osiągnięty poprzednim ćwiczeniem dlatego zalecam wykonywanie ćwiczeń w miarę przyswajania materiału.
+- Większość ćwiczeń wymaga użycia konsoli poleceń, zazwyczaj zakładam, ze pracujemy w jednym i tym samym katalogu roboczym więc wszystkie potrzebne pliki są \"pod ręką\" tzn. nie ma potrzeby podawania ścieżek dostępu.
+- Czasem podaję znak `$` aby podkreślić, że chodzi o polecenie konsolowe, nie piszemy go jednak w konsoli np.: piszę `$make` w konsoli wpisujemy samo `make`.
+- To co ćwiczymy wróci podczas kolejnych zajęć. Jeśli po zajęciach i teście coś nadal pozostaje niejasne proszę to poćwiczyć a jeśli trzeba dopytać się u prowadzących.
+- W tym materiale do synchronizacji procesów używamy tylko FIFO/pipe, jeśli moglibyśmy dodać semafor (lub inne metody IPC) to niektóre ograniczenia można łatwo obejść (np. wiele procesów czytających z wspólnego FIFO/pipe), w ten sposób jednak łatwiej w pełni zrozumieć opisywane mechanizmy. Często też dodawanie zewnętrznej synchronizacji jest zbędne i wynika tylko z niewiedzy.
+- Przypominam, że FIFO i pipe są jednokierunkowymi kanałami komunikacji. W przypadku FIFO jest to dość łatwe do zapamiętania bo o kierunku decydujemy podczas jego otwierania. W przypadku pipe mamy parę deskryptorów i tu już trzeba widzieć że indeks\[0\] to wyłącznie odczyt, \[1\] wyłącznie zapis. Zapamiętanie może ułatwić analogia z stdin/out ( 0 stdin, 1 stdout).
+- W przypadku gdy z jednego łącza korzysta wiele procesów piszących i jeden czytający podczas *jednego zapisu* danych do pipe/FIFO mamy gwarancję ciągłości danych wpisanych przez jeden proces jeśli ilość tych danych nie przekracza stałej PIPE\_BUF. Planując komunikację od wielu procesów do jednego nie można przekraczać rozmiaru PIPE\_BUF dla pojedynczego zapisu.
+- Analogiczna sytuacja z odczytem (wiele procesów czytających) nie jest już w żaden sposób atomowa, nie ma gwarancji, ile danych można odczytać w sposób ciągły zanim inny proces przejmie kontrolę nad odczytem.
+- Zerwanie łącza (czy to na skutek jego zamknięcia przez wszystkie procesy na jednym końcu komunikacji czy też na skutek \"zabicia\" tych procesów) objawi się powstaniem sytuacji EOF (End od File) podczas odczytu lub otrzymaniem sygnału SIGPIPE podczas zapisu. Domyślną reakcją na SIGPIPE jest zabicie procesu. Jeśli sygnał ten będzie blokowany/ignorowany lub obsługiwany przez własną funkcję to zapis do łącza zwróci błąd EPIPE.
+- Warto zapamiętać, że identyczne zasady zerwania połączenia obowiązują dla gniazd sieciowych.
+- Pipe jest od razu połączony, do FIFO trzeba się podłączyć. Jeśli nie użyjemy flagi O\_NONBLOCK to podłączanie będzie blokować wykonanie programu/wątku aż do momentu gdy druga strona połączenia będzie dostępna. Użycie flagi O\_NONBLOCK wyłączy blokowanie ale do momentu pełnego nawiązania połączenia nie mamy użytecznego łącza i musimy się liczyć z błędami komunikacji przy zapisie ENXIO oraz z EOF podczas odczytu.
+- `PIPE_BUF` na Linuxie to 4kb
+- W POSIXie `PIPE_BUF` to co najmniej 512 bajtów.
+{{< /hint >}}
 
 1. Czy w sytuacji połączenia jednego procesu piszącego z jednym czytającym też trzeba przesyłać dane w paczkach nie przekraczających `PIPE_BUF`?  
 {{< answer >}} Nie ma takiej konieczności, nie występuje w tym, wariancie problem konkurowania o możliwość zapisu. {{< /answer >}}
 2. Czy można otworzyć łącze pipe lub FIFO w obrębie jednego procesu/wątku?  
-{{< answer >}}Można, choć to bardzo rzadki przypadek. {{ /answer }}
+{{< answer >}}Można, choć to bardzo rzadki przypadek. {{< /answer >}}
 3. O jakim zagrożeniu związanym z powyższym typem połączenia trzeba szczególnie pamiętać?  
 {{< answer >}} O zakleszczeniu, łącze ma wewnętrzny bufor o wymiarze `PIPE_BUF`, próba wpisania tam większej ilości danych skończy się zablokowaniem procesu/wątku, który nie może w tym samym czasie czytać tych danych i zwalniać bufora. Można sobie znacząco ułatwić zadanie używając deskryptorów w trybie `O_NONBLOCK`. {{< /answer >}}
 4. Czy wysyłając kilka porcji danych bezpośrednio po sobie (kilka wywołań write) o sumarycznej wielkości poniżej PIPE\_BUF nadal mamy gwarancję ciągłości zapisu?  
@@ -54,59 +51,53 @@ Uwagi wstępne:
 {{< answer >}} Nie. SIGPIPE/EPIPE dotyczy wyłącznie zapisu! {{< /answer >}}
 12. Czy zapis do łącza (write) może zwrócić zero?  
 {{< answer >}}Zakładając, że nie próbujesz zapisać zera bajtów to nie. EOF dotyczy wyłącznie odczytu!{{< /answer >}}
-</div>
 
-------------------------------------------------------------------------
 
-## Zadania
+## Zadanie 1: FIFO
 
-1.  [Zadanie 1 - FIFO](#task_zad1)
-2.  [Zadanie 2 - pipe](#task_zad2)
+Cel:
 
-------------------------------------------------------------------------
+Napisz aplikację typu klient-serwer, komunikacja pomiędzy klientami a serwerem odbywa się za pomocą pojedynczego,
+współdzielonego łącza FIFO. Serwer odbiera dane w porcjach, usuwa z nich wszystkie nie alfanumeryczne znaki. Dane
+wynikowe są wypisywane na ekranie wraz z informacją o PID procesu od jakiego pochodzą. Dane klienta do przesłania
+serwerowi pochodzą z pliku wskazanego jako parametr programu klienta.
 
-### Zadanie 1: FIFO{#task_zad1}
-
-*Cel:*
-
-Napisz aplikację typu klient-serwer, komunikacja pomiędzy klientami a serwerem odbywa się za pomocą pojedynczego, współdzielonego łącza FIFO. Serwer odbiera dane w porcjach, usuwa z nich wszystkie nie alfanumeryczne znaki. Dane wynikowe są wypisywane na ekranie wraz z informacją o PID procesu od jakiego pochodzą. Dane klienta do przesłania serwerowi pochodzą z pliku wskazanego jako parametr programu klienta.
-
-Aplikacja klienta kończy się jak tylko prześle cały plik, aplikacja serwera kończy się gdy nie będzie żadnego klienta połączonego z FIFO serwera. Oba programy mają poprawnie reagować na zerwanie łącza!
+Aplikacja klienta kończy się jak tylko prześle cały plik, aplikacja serwera kończy się gdy nie będzie żadnego klienta
+połączonego z FIFO serwera. Oba programy mają poprawnie reagować na zerwanie łącza!
 
 Zadanie podzielimy na etapy.
 
-\
-*Co student musi wiedzieć:*
+Co student musi wiedzieć:
 
--   `man 7 fifo`
--   `man 7 pipe`
--   `man 3p mkfifo`
--   `man 3 isalpha`
--   `man 0p limits.h`
+- `man 7 fifo`
+- `man 7 pipe`
+- `man 3p mkfifo`
+- `man 3 isalpha`
+- `man 0p limits.h`
 
-*rozwiązanie **Makefile wspólny dla wszystkich zadań w tym tutorialu**:*
+Makefile wspólny dla wszystkich zadań w tym tutorialu:
 
-    CC=gcc
-    CFLAGS= -std=gnu99 -Wall
+```makefile
+CC=gcc
+CFLAGS= -std=gnu99 -Wall
+```
 
-#### Etap 1
+### Etap 1
 
-1.  Przygotować uproszczony serwer, który utworzy FIFO i wszystko co z niego przeczyta pozbawi znaków nie alfanumerycznych a następnie wypisze na ekran
-2.  Użyć polecenia \"cat\" jako klienta
+1. Przygotować uproszczony serwer, który utworzy FIFO i wszystko, co z niego przeczyta pozbawi znaków nie
+   alfanumerycznych, a następnie wypisze na ekran
+2. Użyć polecenia `cat` jako klienta
 
-*rozwiązanie **prog21a\_s.c**:*
+Rozwiązanie **prog21a\_s.c**:
 
 {{< includecode "prog21a_s.c"  >}}
 
-*Uruchamianie:* `./prog21a_s a & sleep 1; cat prog21a_s.c > a`
+Uruchamianie: `./prog21a_s a & sleep 1; cat prog21a_s.c > a`
 
-<div class="uwagi">
-
-1.  Proszę pamiętać o obowiązku sprawdzania błędów funkcji systemowych (open,close,read itd.) to m.in. różni dobry kod od złego.
-
-</div>
-
-<div class="cwiczenie">
+{{< hint warning >}}
+Proszę pamiętać o obowiązku sprawdzania błędów funkcji systemowych (open,close,read itd.) to m.in. różni dobry kod od
+złego.
+{{< /hint >}}
 
 1. Czemu służy sekundowa przerwa pomiędzy uruchomieniem serwera a polecenie cat w wywołaniu programu?  
 {{< answer >}} Daje czas na utworzenie fifo, inaczej może się zdarzyć, że szybciej uruchomi się polecenie cat i utworzy plik \"a\", wtedy nasz program nie będzie mógł utworzyć fifo o tej nazwie i zwróci błąd. Problemu nie zaobserwujemy jeśli w katalogu roboczym jest już fifo o nazwie \"a\", więc jeśli chcesz wymusić takie zachowanie programu upewnij się, że nie ma \"a\" w katalogu. {{< /answer >}}
@@ -121,28 +112,21 @@ Zadanie podzielimy na etapy.
 6. Skąd wiadomo, że nie ma i nie będzie już więcej danych w łączu?  
 {{< answer >}} EOF - zerwanie łącza wykryte podczas odczytu, gdy program/y piszący zakończą działanie i opróżniony będzie bufor łącza. {{< /answer >}}
 
-</div>
-
-#### Etap 2
+### Etap 2
 
 1.  Przygotować kompletny program klienta, który czyta plik i wysyła go w porcjach `PIPE_BUF` do fifo.
 2.  Wszystkie wysyłane bufory muszą mieć rozmiar `PIPE_BUF`, także ten ostatni.
 3.  Każdy bufor musi być oznaczony numerem PID.
 
-*rozwiązanie **prog21\_c.c**:*
+Rozwiązanie **prog21\_c.c**:
 
 {{< includecode "prog21_c.c"  >}}
 
-*Uruchamianie:* `./prog21a_s a & ./prog21_c a prog21a_s.c`
+Uruchamianie: `./prog21a_s a & ./prog21_c a prog21a_s.c`
 
-<div class="uwagi">
+Proszę zwrócić uwagę jak PID jest przekazany binarnie w buforze. Dzięki takiemu kodowaniu oszczędzamy czas na konwersji z formy binarnej na tekstową i odwrotnie a dodatkowo wiemy dokładnie ile bajtów zajmie PID (`sizeof(pid_t)`), jak widać technicznie wymaga to tylko rzutowania wskaźników i sprytnego przesunięcia początku treści w buforze. Co więcej możemy w ten sposób zakodować większą ilość danych binarnych używając struktury zamiast typu prostego. Jeśli odbiorca skompilował program tak samo jak nadawca (chodzi o ew. pakowanie struktury) to nie trzeba robić konwersji, ani myśleć o długościach składników struktury.
 
-1.  Proszę zwrócić uwagę jak PID jest przekazany binarnie w buforze. Dzięki takiemu kodowaniu oszczędzamy czas na konwersji z formy binarnej na tekstową i odwrotnie a dodatkowo wiemy dokładnie ile bajtów zajmie PID (`sizeof(pid_t)`), jak widać technicznie wymaga to tylko rzutowania wskaźników i sprytnego przesunięcia początku treści w buforze. Co więcej możemy w ten sposób zakodować większą ilość danych binarnych używając struktury zamiast typu prostego. Jeśli odbiorca skompilował program tak samo jak nadawca (chodzi o ew. pakowanie struktury) to nie trzeba robić konwersji, ani myśleć o długościach składników struktury.
-2.  Tym razem plik łącza otwieramy do zapisu a nie do odczytu jak to miało miejsce na serwerze, proszę pamiętać o jednym kierunku przepływu danych w pipe/fifo.
-
-</div>
-
-<div class="cwiczenie">
+Tym razem plik łącza otwieramy do zapisu a nie do odczytu jak to miało miejsce na serwerze, proszę pamiętać o jednym kierunku przepływu danych w pipe/fifo.
 
 1. Czemu tym razem nie ma wywołania sleep podczas uruchamiania?  
 {{< answer >}} Nieważne kto utworzy łącze, oraz w jakiej kolejności będą się programy do niego podłączać, druga strona zawsze poczeka na nawiązanie łączności. Zwróć uwagę, że program klient też może utworzyć łącze (mkfifo) oraz na brak flagi `O_NONBLOCK` która zmieniłaby sposób nawiązania połączenia. {{< /answer >}}
@@ -155,27 +139,19 @@ Zadanie podzielimy na etapy.
 5. Jak ten program zareaguje na zerwanie łącza?  
 {{< answer >}} Zabije go sygnał `SIGPIPE`. {{< /answer >}}
 
-</div>
+### Etap 3
 
-#### Etap 3
+1. Dodać podział na bloki po stronie serwera
+2. Dodać kasowanie FIFO
 
-1.  Dodać podział na bloki po stronie serwera
-2.  Dodać kasowanie FIFO
-
-*rozwiązanie **prog21b\_s.c**:*
+Rozwiązanie **prog21b\_s.c**:
 
 {{< includecode "prog21b_s.c" >}}
 
-*Uruchamianie:* `./prog21_c a Makefile & ./prog21_c a prog21b_s.c & ./prog21_c a prog21_c.c & sleep 1; ./prog21b_s a`
-
-<div class="uwagi">
+Uruchamianie: `./prog21_c a Makefile & ./prog21_c a prog21b_s.c & ./prog21_c a prog21_c.c & sleep 1; ./prog21b_s a`
 
 1.  Zwróć uwagę na unlink na końcu programu - usuwa FIFO z systemu plików tak samo jak usuwa zwykły plik.
 2.  Zwróć uwagę jak rozkodowano PID - analogicznie do jego kodowania.
-
-</div>
-
-<div class="cwiczenie">
 
 1.  Czemu ponownie pojawia się sleep w wywołaniu?  
 {{< answer >}} Bez tego \"sleep\" może się zdarzyć, że jeden klient oraz serwer szybciej się uruchomią od reszty klientów, klient dokona transferu a serwer go przetworzy po czym oba programy się skończą. Pozostali klienci połączą się z fifo ale serwera który mógłby ich obsłużyć już nie będzie. Ci klienci będą czekać na połączenie aż ponownie uruchomimy serwer. {{< /answer >}}
@@ -184,46 +160,41 @@ Zadanie podzielimy na etapy.
 3.  Czy można przesyłać bloki większe niż `PIPE_BUF` bajtów?  
 {{< answer >}} Nie ze względu brak gwarancji ciągłości zapisu w fifo. {{< /answer >}}
 
-</div>
+## Zadanie 2: pipe
 
+Cel:
 
-### pipe {#task_zad2}
+Napisać wieloprocesowy program w którym n procesów potomnych komunikuje się z procesem rodzica poprzez współdzielony
+pipe R, a rodzic komunikuje się z procesami potomnymi poprzez indywidualne łącza pipe P1,P2,\...,Pn
 
-*Cel:*
+W reakcji na C-c proces rodzic losuje pipe do którego wysyła losowy znak z przedziału \[a-z\], w reakcji na ten sam
+sygnał procesy potomne kończą się z 20% prawdopodobieństwem. Proces potomny który dostanie na swoim pipe znak wysyła na
+pipe R bufor tych samych znaków o wymiarze losowych \[1,200\] bajtów.
 
-Napisać wieloprocesowy program w którym n procesów potomnych komunikuje się z procesem rodzica poprzez współdzielony pipe R, a rodzic komunikuje się z procesami potomnymi poprzez indywidualne łącza pipe P1,P2,\...,Pn
-
-W reakcji na C-c proces rodzic losuje pipe do którego wysyła losowy znak z przedziału \[a-z\], w reakcji na ten sam sygnał procesy potomne kończą się z 20% prawdopodobieństwem. Proces potomny który dostanie na swoim pipe znak wysyła na pipe R bufor tych samych znaków o wymiarze losowych \[1,200\] bajtów.
-
-Proces rodzic wypisuje znaki otrzymane z pipe R na bieżąco. Gdy skończą się wszystkie procesy potomne proces rodzić również ma się skończyć
+Proces rodzic wypisuje znaki otrzymane z pipe R na bieżąco. Gdy skończą się wszystkie procesy potomne proces rodzić
+również ma się skończyć
 
 Rozwiązanie dzielimy na 2 etapy
-
-<div class="uwagi">
 
 1.  Proszę zwrócić uwagę na zerwanie łącza i prawidłową reakcję na nie - zamykamy jeden pipe a nie cały program.
 2.  200 bajtów to maksymalny rozmiar przesyłu, czy będzie atomowy? Na Linuksie wiemy że tak, gdy nie ma pewności (program przenośny między platformami) można rozmiar uzależnić od wymiaru PIPE\_BUF lub dodać warunek sprawdzający w programie w stylu \"jeśli rozmiar \> PIPE\_BUF to rozmiar=PIPE\_BUF\".
 
-</div>
+Co student musi wiedzieć:
 
-*Co student musi wiedzieć:*
+- `man 3p pipe`
 
--   `man 3p pipe`
+### Etap 1
 
-#### Etap 1
+1. Tworzymy tyle procesów potomnych ile trzeba (parametr programu)
+2. Tworzymy łącza do komunikacji
+3. Zamykamy nieużywane deskryptory
+4. Inicjujemy generatory liczb losowych
+5. Proces rodzic czeka na dane na pipe R, wypisuje je na ekran, jak się skończą kończy działanie
+6. Procesy potomne wypisują losową literę do pipe R i się kończą
 
-1.  Tworzymy tyle procesów potomnych ile trzeba (parametr programu)
-2.  Tworzymy łącza do komunikacji
-3.  Zamykamy nieużywane deskryptory
-4.  Inicjujemy generatory liczb losowych
-5.  Proces rodzic czeka na dane na pipe R, wypisuje je na ekran, jak się skończą kończy działanie
-6.  Procesy potomne wypisują losową literę do pipe R i się kończą
-
-*rozwiązanie **prog22a.c**:*
+Rozwiązanie **prog22a.c**:
 
 {{< includecode "prog22a.c" >}}
-
-<div class="cwiczenie">
 
 1.  Ważne jest, aby w programie zamykać nieużywane deskryptory, w tym programie jest ich naprawdę sporo, upewnij się, że rozumiesz które deskryptory są niepotrzebne.
 2.  Podobnie jak deskryptory, nieużywana pamięć na stercie powinna być zwolniona, upewnij się że rozumiesz które bloki i kiedy należy zwolnić w procesie potomnym.
@@ -237,28 +208,20 @@ Rozwiązanie dzielimy na 2 etapy
 7.  Czemu nie ma w tym programie wywołania wait/waitpid na końcu procesu rodzica?  
 {{< answer >}}  Wszystkie procesy potomne muszą się zakończyć zanim osiągnięty będzie koniec procesu rodzica, bez tego nie byłoby zerwania łącza. Wszystkie zombi są \"łapane\" przez obsługę SIGCHLD.  {{< /answer >}}
 
-</div>
-
 #### Etap 2
 
 1.  Dodajemy obsługę sygnału `SIGINT`
 2.  Dodajemy zabezpieczenia przed przerwaniem funkcji systemowych przez sygnał (cały czas działania programu)
 3.  Dodajemy brakującą część zadania
 
-*rozwiązanie **prog22b.c**:*
+Rozwiązanie **prog22b.c**:
 
 {{< includecode "prog22b.c"  >}}
-
-<div class="uwagi">
 
 1.  Zwróć uwagę, że komunikaty przesyłane przez pipe R mają różne długości - pierwszy bajt opisuje długość.
 2.  Ponieważ długość bloku wysyłanego jako wynik jest zakodowana na jednym bajcie na początku bloku nie możemy dowolnie (ponad 255) zwiększać stałej `MAX_BUFF` , ponieważ jest to zupełnie nieoczywiste i ważne dodano stosowny komentarz przy definicji stałej.
 3.  Z logiki zadania wynika, że z czasem coraz więcej deskryptorów pipe od procesów potomnych będzie nieczynna (bo procesy dzieci giną z 20% prawdopodobieństwem) aby niepotrzebnie do takich \"umarłych\" procesów nie wysyłać liter, ich deskryptory w rodzicu musimy jakoś oznaczyć jako zamknięte. Używamy do tego wartości zero, która co prawda jest poprawną wartością deskryptora ale zazwyczaj jest używana jako stdin więc nie pojawi się naturalnie jako deskryptor pipe. Gdy program zorientuje się, że nie może wysłać do procesu potomnego, zamyka odpowiedni deskryptor pipe funkcją close, ale to nie wystarcza do oznaczenia deskryptora jako nieczynnego, musimy go jeszcze wyzerować bo funkcja close nie robi (i nie może) tego dla nas.
 4.  Losowanie deskryptora do wysyłki musi się liczyć z \"trafieniem\" zera w tablicy, aby nie powtarzać losowania zastosowano prosty trik, szukamy w sąsiednich polach tablicy niezerowego deskryptora, do tego używając operacji modulo \"zawijamy tablice w koło. Aby nie kręcić się bez końca gdy tablica jest już cała wyzerowana dodano warunek sprawdzający czy aby nie szukamy za długo.
-
-</div>
-
-<div class="cwiczenie">
 
 1.  Jak jest zorganizowane czekanie na sygnał w procesie rodzicu? Nie ma blokowania, nie używamy sigsuspend, sigwait ani pselect?  
 {{< answer >}} Program zorientuje się na pierwszym read w głównej pętli, dostaje informacje o \"błędzie\" EINTR. {{< /answer >}}
@@ -285,10 +248,6 @@ Rozwiązanie dzielimy na 2 etapy
 {{< answer >}}  Aby szybki C-c na początku programu go nie zabił. {{< /answer >}}
 13. Czy obsługa SIGCHLD w tym programie jest niezbędna  
 {{< answer >}} Jej brak nie zepsuje działania co zadowoli słabszego programistę ale powstaną zombi czego dobry programista wolałby uniknąć. {{< /answer >}}
-
-</div>
-
-## Przykładowe zadanie do samodzielnego rozwiązania
 
 Wykonaj przykładowe [ćwiczenie]({{< ref "../l1-example" >}}) z poprzednich lat. To zadanie szacuję na 60 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a do zajęć. Pamiętaj, że w aktualnym układzie zajęć będzie dane zadnie na około 1,5 godziny, więc trochę bardziej pracochłonne.
 
