@@ -9,31 +9,25 @@ Thurdsays, 8:15 - 10:00, room 328
 
 | Date       | Topic                                                        |
 |------------| ------------------------------------------------------------ |
-| 06.10.2022 | [Introduction. Computer and operating systems.]({{< ref "wyk/w1" >}}) |
-| 20.10.2022 | [Processes]({{< ref "wyk/w2" >}})                            |
-| 03.11.2022 | [File system and its interface. Stream-based I/O.]({{< ref "wyk/w3" >}}) |
-| 17.11.2022 | [POSIX signals]({{< ref "wyk/w4" >}})                        |
-| 01.12.2022 | [Low-level input/output operations.]({{< ref "wyk/w5" >}})   |
-| 15.12.2022 | [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})      |
-| 04.01.2023 | [Asynchronous input/output.]({{< ref "wyk/w7" >}}) **Wednesday, room 102!** |
-| 19.01.2023 | [CPU Scheduling]({{< ref "wyk/w8" >}})                       |
+|  3.10.2023 | [Introduction. Computer and operating systems.]({{< ref "wyk/w1" >}}) |
+| 10.10.2023 | [Processes]({{< ref "wyk/w2" >}})                            |
+| 17.10.2023 | [File system and its interface. Stream-based I/O.]({{< ref "wyk/w3" >}}) |
+| 24.10.2023 | [POSIX signals]({{< ref "wyk/w4" >}})                        |
+| 31.10.2023 | [Low-level input/output operations.]({{< ref "wyk/w5" >}})   |
+|  7.11.2023 | [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})      |
+| 14.11.2023 | [Asynchronous input/output.]({{< ref "wyk/w7" >}})  |
 
 ## Laboratories
 
 Mondays, 2:15-5pm, rooms 203, 218.
 
-| Date                | Topic                                                          | Lab group  in USOS |
-| ----------          | -----------------------------------                            | ---------          |
-| 2022-10-10          | [L0 Introduction]({{< ref "lab/l0" >}})                        | 1, 3               |
-| 2022-10-17          | [L0 Introduction]({{< ref "lab/l0" >}})                        | 2, 4               |
-| 2022-11-07          | [L1 POSIX program execution environment]({{< ref "lab/l1" >}}) | 1, 3               |
-| 2022-11-14          | [L1 POSIX program execution environment]({{< ref "lab/l1" >}}) | 2, 4               |
-| 2022-12-05          | [L2 Processes and signals]({{< ref "lab/l2" >}})               | 1, 3               |
-| 2022-12-12          | [L2 Processes and signals]({{< ref "lab/l2" >}})               | 2, 4               |
-| 2023-01-02          | [L3 Threads and mutexes]({{< ref "lab/l3" >}})                 | 1, 3               |
-| 2023-01-09          | [L3 Threads and mutexes]({{< ref "lab/l3" >}})                 | 2, 4               |
-| 2023-01-16          | [L4 AIO]({{< ref "lab/l4" >}})                                 | 1, 3               |
-| 2023-01-23          | [L4 AIO]({{< ref "lab/l4" >}})                                 | 2, 4               |
-| 2023-01-24          | **7:00pm** retake signup closes (in moodle)                    | Everyone           |
-| 2023-02-09 8:30, 2023-02-09 11:15  | L5 Retakes                                                     | Everyone           |
+| Date                | Topic                                                          |
+| ----------          | -----------------------------------                            |
+| 17.10.2023          | [L0 Introduction]({{< ref "lab/l0" >}})                        |
+| 31.10.2023          | [L1 Filesystem and IO]({{< ref "lab/l1" >}})                   |
+| 14.11.2023          | [L2 Processes and signals]({{< ref "lab/l2" >}})               |
+| 28.11.2023          | [L3 Threads and mutexes]({{< ref "lab/l3" >}})                 |
+| 12.12.2023          | [L4 Synchronization]({{< ref "lab/l4" >}})                     |
+| 15.12.2023          | **7:00pm** retake signup closes (in moodle)                    |
+|  9.01.2024          | L5 Retakes                                                     |
 
