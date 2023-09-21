@@ -13,7 +13,7 @@ Przedmiot składa się z wykładu i laboratorium.
 
   - Laboratorium składa się z pięciu zajęć oznaczonych kolejno L0, L1, L2, L3, L4. Zajęcia odbywają się zgodnie z harmonogramem podanym na stronie przedmiotu. Na stronie przedmiotu znajdują się też materiały przygotowawcze do zajęć.
   - Zajęcia L0 to zajęcia poświęcone na przygotowanie środowiska. W trakcie tych zajęć studenci przypominają sobie umiejętności z przedmiotu Podstawy systemu unix i konfigurują środowisko programistyczne. Wszelkie braki w konfiguracji lub tych umiejętnościach (np. brak podpowiadania nazw funkcji, podkreślania błędów w edytorze, czy brak umiejętności poruszania się po katalogach) na wszystkich kolejnych zajęciach nie są okolicznością łagodzącą przy ocenianiu. Druga część L0 ma postać warsztatów na której prowadzący wyjaśnia podstawy systemu kontroli wersji git oraz oceniania kolejnych zajęć na podstawie prostego zadania przykładowego.
-  - Zajęcia L1, L2, L3 i L4 służą ocenie umiejętności w obszarze wskazanym w harmonogramie przedmiotu. Do każdych zajęć należy przygotować się samodzielnie, korzystając z materiałów na stronie przedmiotu i materiałów wykładowych. Każde z zajęć zbudowane składa się z dwóch części:
+  - Zajęcia L1, L2, L3 i L4 służą ocenie umiejętności w obszarze wskazanym w harmonogramie przedmiotu. Do każdych zajęć należy przygotować się samodzielnie, korzystając z materiałów na stronie przedmiotu i materiałów wykładowych. Każde z zajęć składa się z dwóch części:
     - wejściówka (8 minut): rozwiązywanie testu w moodle
     - zadanie programistyczne (120 minut)
   - W sesji egzaminacyjnej jest organizowana poprawa, na której można poprawiać oceny uzyskane na dokładnie jednych zajęciach (L1, L2, L3, lub L4). Można poprawiać albo jedną część (wejściówkę, program) albo obie części. Zapisy na poprawy zostaną uruchomione od razu po ostatnich zajęciach laboratoryjnych w semestrze i potrwają **24 godziny**.
@@ -66,7 +66,7 @@ Metody weryfikacji efektów nauczania na laboratorium:
   - Rozwiązanie zadania L3 będzie również ocenione pod względem estetyki kodu. Ocena będzie wykonana po zajęciach. Za problemy w kodzie otrzymuje się punkty karne, które są odejmowane od punktów uzyskanych na zajęciach. Można stracić do 10 punktów, jednak nie więcej niż liczba punktów uzyskanych na zajęciach.
 
 
-# Pomoce dopuszczone do użycia podczas weryfikacji osiągnięcia efektów nauczania;
+# Pomoce dopuszczone do użycia podczas weryfikacji osiągnięcia efektów nauczania
 
 - W trakcie rozwiązywania wejściówki **nie można** korzystać z żadnych materiałów pomocniczych. Niedozwolona jest komunikacja z innymi.
 - W czasie rozwiązywania zadań programistycznych **można** korzystać z tutoriala, własnych materiałów, rozwiązań zadań przykładowych, dokumentacji systemowej oraz Internetu jednak tak, by oceniana praca była dziełem samodzielnym - w szczególności niedozwolone jest używanie rozwiązań oparty o AI, jak chat GPT, Github Copilot i podobnych.
