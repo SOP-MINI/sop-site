@@ -8,8 +8,8 @@ weight: 10
 
 {{< hint info >}}
 
-Te pierwsze zajęcia wymagają od ciebie pewnego przygotowania, jednak głownie 
-mają służyć wyjaśnieniu wszelkich wątpliwości co do zasad prowadzenia zajęć i harmonogramu.
+Pierwsze zajęcia wymagają od ciebie pewnego przygotowania, jednak głownie 
+mają służyć wyjaśnieniu wszelkich wątpliwości co do zasad prowadzenia zajęć i konfiguracji środowiska na dalsze laboratoria.
 Przeczytaj proszę informacje podane w działach [program]({{< ref "../../syllabus" >}}),
 [regulamin]({{< ref "../../zasady" >}}) i [harmonogram]({{< ref "../../harmonogram" >}}).
 Zerknij też na materiały [pomocnicze]({{< ref "../../materialy" >}}).
@@ -20,7 +20,7 @@ od 15 do 30 minut na odpowiadanie na pytania od studentów dotyczące danego dzi
 Można też się skonsultować droga mailową lub osobiście w czasie dyżurów prowadzących laboratoria.
 
 W ramach przygotowania do kolejnych zajęć zrobimy proste ćwiczenie symulujące pracę na punktowanych laboratoriach.
-Zadanie będzie wymagać od ciebie znalezienia kilku błedów i rozszerzenia programu o prostą funkcjonalność.
+Zadanie będzie wymagać od ciebie znalezienia kilku błędów i rozszerzenia programu o prostą funkcjonalność.
 Dzięki temu będzie można sprawdzić jak twoje środowisko sprawuje się w akcji.
 W przypadku znalezienia problemów będzie można je wyeliminować przed pierwszymi punktowanymi laboratoriami.
 
@@ -646,7 +646,7 @@ $ git push origin
 Proszę pamiętać, że za etap można uzyskać punkty, gdy jego kod znajdzie się na zdalnym repozytorium.
 Możliwość synchronizacji z serwerem zostaje utracona z końcem laboratorium.
 
-## Przed pierwszym punktowanym laboratorium
+## Przed laboratorium L1
 
 Należy:
 

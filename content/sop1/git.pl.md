@@ -12,7 +12,7 @@ Taki system ma za zadanie ułatwić programistom (ale nie tylko) śledzić zmian
 W przypadku naszych laboratoriów ma on za zadanie uporządkować oddawane przez ciebie kody z laboratorium.
 
 Na laboratoriach zapoznamy się z podstawami systemu kontroli wersji GIT.
-Powstał on przy rozwijaniu kodu jądra Linuxa i od tamtego czasu rozpowszechnił się jako jeden z najbardziej powszechnych systemów tego typu.
+Powstał on przy rozwijaniu kodu jądra Linuxa i od tamtego czasu rozpowszechnił się jako jeden z najbardziej popularnych systemów tego typu.
 Mimo powierzchownego skomplikowania posiada on wiele przydatnych cech.
 
 ## Podstawowe działanie GITa - co znaczy śledzić plik?
