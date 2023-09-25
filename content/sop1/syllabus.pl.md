@@ -37,7 +37,7 @@ Następnikiem tego przedmiotu jest "Systemy Operacyjne 2".
 
 **Procesy i wątki.** Koncepcje procesu, procesu lekkiego, włókna i wątku; cykl życia i interfejs programisty. Realizacja współbieżności procesów i wątków. Współprogramy (*coroutines*) i kontynuacje. Sygnały i wyjątki oraz ich obsługa. Funkcje systemowe POSIX związane z obsługą procesów, sygnałów i wątków.
 
-**Modele i interfejsy systemów plików.** Plik, organizacja systemu plików. Operacje na systemie plików i interfejs programisty. Dostęp i ochrona plików, tryby dostępu do plików. Funkcje systemowe (POSIX) związane z obsługą synchroniczną i asynchroniczną plików i katalogów. Funkcje obsługi strumieni wejścia/wyjścia standardowej biblioteki języka C.
+**Modele i interfejsy systemów plików.** Plik, organizacja systemu plików. Operacje na systemie plików i interfejs programisty. Dostęp i ochrona plików, tryby dostępu do plików. Funkcje systemowe (POSIX) związane z obsługą plików i katalogów. Funkcje obsługi strumieni wejścia/wyjścia standardowej biblioteki języka C.
 
 ## Zakres zajęć laboratoryjnych:
 

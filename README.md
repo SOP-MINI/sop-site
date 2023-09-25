@@ -2,7 +2,7 @@
 
 ### Obejmuje przedmioty SOP1 / SOP2 / OPS1 / OPS2
 
-Strona używa generatora Hugo w wersji 0.80 (niewykluczone, że inne wersje też działają, nie testowałem).
+Strona używa generatora Hugo (testowane wersje 0.80, ostatnio 0.117).
 
 Żeby zbudować stronę do katalogu public/ wystarczy odpalić `hugo` bez argumentów. 
 

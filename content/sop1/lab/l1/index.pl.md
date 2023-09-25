@@ -1,10 +1,10 @@
 ---
-title: "L1 - Środowisko wykonania programu POSIX"
+title: "L1 - System plików"
 date: 2022-02-05T18:39:22+01:00
 weight: 20
 ---
 
-# Tutorial 1 - Środowisko wykonania programu POSIX
+# Tutorial 1 - System plików
 
 {{< hint info >}}
 Uwagi wstępne:
