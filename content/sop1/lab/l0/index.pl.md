@@ -507,27 +507,27 @@ Co student musi wiedzieć:
 <em>zawartość do pliku <b>prog7.c</b></em>
 {{< includecode "prog7.c" >}}
 
-Własną zmienna mogę dodać np. tak: `TVAR2="122345" ./prog7` , pojawi się na wypisie ale nie zostanie zapamiętana w
+Własną zmienna mogę dodać np. tak: `TVAR2="122345" ./prog7` , pojawi się na wypisie, ale nie zostanie zapamiętana w
 powłoce, tzn. kolejne wywołania programu  `./prog7` już jej nie pokażą.
 
-Mogę też dodać zmienną trwale do środowiska powłoki `export TVAR1='qwert'` i teraz ilekroć wywołam program `./prog7`
+Mogę też dodać zmienną trwale do środowiska powłoki `export TVAR1='qwert'` i teraz, ilekroć wywołam program `./prog7`
 ta zmienna wciąż tam będzie.
 
 Czy jeśli uruchomię drugą powłokę z menu środowiska i w niej uruchomię program to zmienna TVAR1 nadal będzie widoczna?
 {{< expand "Odpowiedź" >}}
-Nie, te dwie powłoki dziedziczą zmienne od procesu uruchamiającego programy w środowisku
+Nie, te dwie powłoki dziedziczą zmienne od procesu uruchamiającego programy w środowisku,
 zatem druga powłoka nie może dziedziczyć nic "w bok" od pierwszej.
 {{< /expand >}}
 
 Czy jeśli uruchomię drugą powłokę z pierwszej i w niej uruchomię program to zmienna TVAR1 nadal będzie widoczna?
 {{< expand "Odpowiedź" >}}
-Tak, druga powłoka dziedziczy zmienne od swojego rodzica czyli od pierwszej powłoki. 
+Tak, druga powłoka dziedziczy zmienne od swojego rodzica, czyli od pierwszej powłoki. 
 {{< /expand >}}
 
 ## Zadanie 8 - zmienne środowiskowe 2
 
-Cel: Zmodyfikować prog3.c tak aby każda linia tekstu "Hello NAME" była powielona tyle razy ile nakazuje mnożnik
-przekazany przez zmienną środowiskową TIMES. Na zakończenie programu ustawić zmienną środowiskową RESULT na "Done
+Cel: Zmodyfikować prog3.c tak, aby każda linia tekstu "Hello NAME" była powielona tyle razy, ile nakazuje mnożnik
+przekazany przez zmienną środowiskową TIMES. Na zakończenie programu ustawić zmienną środowiskową RESULT na "Done".
 
 Co student musi wiedzieć: 
 - man 3p getenv
@@ -540,29 +540,32 @@ Co student musi wiedzieć:
 
 Zwróć uwagę na możliwy błąd braku zmiennej środowiska i jego obsługę na początku kodu. Dobry programista nigdy nie
 pomija sprawdzania błędów, jeśli się śpieszysz i pomijasz to Twój kod jest gorszy - musisz być tego świadomy/a.
-Najgorzej gdy programista pomija sprawdzanie błędów z niewiedzy lub ignorancji.
+Najgorzej, gdy programista pomija sprawdzanie błędów z niewiedzy lub ignorancji.
 
-Drugi przykład sprawdzenia błędu jest po wywołaniu putenv, skoro tak często mamy to robić to przydałoby się makro, coś
-na wzór ERR którego to już raz użyliśmy.
+Drugi przykład sprawdzenia błędu jest po wywołaniu putenv.
+Skoro tak często mamy to robić to przydałoby się makro.
+Coś na wzór ERR, którego już raz użyliśmy.
 
 Innym sposobem na manipulowanie środowiskiem jest funkcja setenv.
 
-Funkcja system służy nam do sprawdzenia tego co i tak wiemy, skoro nie było błędu putenv to nie spodziewamy się aby tu
-był, jednak na potrzeby przykładu robimy takie sprawdzenie dwa razy, raz getenv("RESULT") a potem jeszcze system.
+Funkcja system służy nam do sprawdzenia tego, co i tak wiemy.
+Skoro nie było błędu putenv to nie spodziewamy się, aby tutaj był.
+Jednak na potrzeby przykładu robimy takie sprawdzenie dwa razy, raz getenv("RESULT"), a potem jeszcze system.
 
 Użycie funkcji system jest równoważne z uruchomieniem powłoki jako procesu dziecka, komenda jest podana. Funkcja system
-zwróci to co normalnie zwróciłby program, to co można w bash'u sprawdzić wywołaniem  "$ $?" (pierwszy dolar nie jest
-częścią polecenia) czyli status zakończenia ostatniego polecenia/programu.
+zwróci to, co normalnie zwróciłby program, to co można w bash'u sprawdzić wywołaniem "$ $?" (pierwszy dolar nie jest
+częścią polecenia), czyli status zakończenia ostatniego polecenia/programu.
 
-Co ciekawe niektóre systemy nie maja powłoki, gdy brak shella funkcja system nie działa! Dostajemy błąd 127.
+Co ciekawe niektóre systemy nie mają powłoki!
+Gdy brak shella funkcja system nie działa. Dostajemy błąd 127.
 
-Wykonaj program z różnymi ustawieniami TIMES
+Wykonaj program z różnymi ustawieniami TIMES.
 
-Jak po wykonaniu programu sprawdzić czy zmienna RESULT jest ustawiona? Będzie ?
+Jak po wykonaniu programu sprawdzić, czy zmienna RESULT jest ustawiona?
 {{< expand "Odpowiedź" >}}  
-`env|grep RESULT` nie będzie ustawiona bo zmienne nie są propagowane wzwyż drzewa procesów. 
+`env|grep RESULT` nie będzie ustawiona, bo zmienne nie są propagowane wzwyż drzewa procesów. 
 Zmienna była ustawiona tylko w programie i w powłoce w nim na chwilę wywołanej (f. system),
-ale po zakończeniu tych procesów nie zachowała się. 
+ale po zakończeniu tych procesów się nie zachowała. 
 {{< /expand >}}
 
 ### Zadanie do sprawdzenia środowiska. 
@@ -601,7 +604,7 @@ Każde zadanie wymaga również użycia odpowiedniego zestawu opcji `-fsanitize`
 [Więcej informacji o sanitizerach.]({{< ref "../sanitizers" >}})
 {{< hint danger >}}
 **UWAGA** nie wolno dowolnie mieszać parametrów polecenia `gcc`, 
-parametr `-o` ma argument -- ścieżkę do wynikowego programu.
+parametr `-o` ma argument — ścieżkę do wynikowego programu.
 {{< /hint >}}
 
 *uruchomienie:*
@@ -615,7 +618,7 @@ parametr `-o` ma argument -- ścieżkę do wynikowego programu.
 {{< hint info >}}
 
 Tą sekcję należy wykonać w sali na laboratorium L0.
-Przed przejściem przez tą sekcję trzeba zapoznać się z opsiem użycia [GITa]({{< ref "../../git" >}})
+Przed przejściem przez tą sekcję trzeba zapoznać się z opisem użycia [GITa]({{< ref "../../git" >}})
 Wymaga ona dostępu do serwera dostępnego tylko w trakcie trwania laboratorium.
 Zachęcam jednak do przeczytania jej i przygotowania się do wykonania poniższych kroków.
 
@@ -624,16 +627,16 @@ Zachęcam jednak do przeczytania jej i przygotowania się do wykonania poniższy
 Na laboratorium każde zadanie będzie rozwiązywane w takim repozytorium.
 Dane do zdalnego dostępu zostaną podane na laboratorium.
 Twoim celem jest śledzenie zmian w repozytorium w trakcie trwania laboratorium i ich synchronizacja z serwerem.
-**Jeżeli jakis kod nie znajdzie się na serwerze nie będzie oceniany**.
+**Jeżeli jakiś kod nie znajdzie się na serwerze, nie będzie oceniany**.
 
-Zanim przejdziemy do pobierania kodu trzeba uzyskać swój osobisty klucz SSH z platformy [LeON](https://leon.pw.edu.pl).
+Zanim przejdziemy do pobierania kodu, trzeba uzyskać swój osobisty klucz SSH z platformy [LeON](https://leon.pw.edu.pl).
 Na stornie przedmiotu można pobrać dwa pliki: `id_ed25519` oraz `id_ed25519.pub`.
 Należy je umieścić w folderze `~/.ssh`.
-Każda para kluczy jest unikatowa dla studenta i musi byc uzywana tylko przez jednego studenta.
+Każda para kluczy jest unikatowa dla studenta i musi być używana tylko przez jednego studenta.
 
 Pierwszym krokiem będzie wykonanie kopii zdalnego repozytorium na swoją stację roboczą poleceniem
 
-TODO: Franek bedzie musial podmienic wszystkie REPO_URL na odpowiedni inny placeholder
+TODO: Franek będzie musiał podmienić wszystkie REPO_URL na odpowiedni inny placeholder.
 ```shell
 $ git clone REPO_URL
 ```
@@ -643,7 +646,7 @@ W tym folderze należy wykonać laboratorium.
 
 Zadanie składa się z etapów.
 Po zakończeniu etapu należy wykonać commita do repozytorium.
-Aby zsynchronizować lokalne zmiany do serwera należy wykonać polecenie
+Aby zsynchronizować lokalne zmiany do serwera, należy wykonać polecenie
 
 ```shell
 $ git push origin
