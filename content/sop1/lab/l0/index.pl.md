@@ -1,16 +1,16 @@
 ---
-title: "L0 - Wstęp"
+title: "L0 - Środowisko wykonania programu POSIX"
 date: 2022-02-05T17:26:02+01:00
 weight: 10
 ---
 
-# Laboratorium wstępne do zajęć z SOP1. Srodowisko wykonania programu POSIX.
+# Laboratorium wstępne do zajęć z SOP1. Środowisko wykonania programu POSIX.
 
 {{< hint info >}}
 
-Pierwsze zajęcia wymagają od ciebie pewnego przygotowania, jednak głownie 
+Pierwsze zajęcia wymagają od ciebie pewnego przygotowania, jednak głównie 
 mają służyć wyjaśnieniu wszelkich wątpliwości co do zasad prowadzenia zajęć i konfiguracji środowiska na dalsze laboratoria.
-Przeczytaj proszę informacje podane w działach [program]({{< ref "../../syllabus" >}}),
+Przeczytaj proszę informacje podane w działach [GIT]({{< ref "../../git">}}), [program]({{< ref "../../syllabus" >}}),
 [regulamin]({{< ref "../../zasady" >}}) i [harmonogram]({{< ref "../../harmonogram" >}}).
 Zerknij też na materiały [pomocnicze]({{< ref "../../materialy" >}}).
 
@@ -21,7 +21,7 @@ Można też się skonsultować droga mailową lub osobiście w czasie dyżurów 
 
 W ramach przygotowania do kolejnych zajęć zrobimy proste ćwiczenie symulujące pracę na punktowanych laboratoriach.
 Zadanie będzie wymagać od ciebie znalezienia kilku błędów i rozszerzenia programu o prostą funkcjonalność.
-Dzięki temu będzie można sprawdzić jak twoje środowisko sprawuje się w akcji.
+Dzięki temu będzie można sprawdzić, jak twoje środowisko sprawuje się w akcji.
 W przypadku znalezienia problemów będzie można je wyeliminować przed pierwszymi punktowanymi laboratoriami.
 
 {{< /hint >}}
@@ -31,22 +31,23 @@ W przypadku znalezienia problemów będzie można je wyeliminować przed pierwsz
 
 W przeciwieństwie do poprzednich przedmiotów nie wymagamy żadnego konkretnego środowiska.
 Niemniej jednak odpowiedni edytor powinien potrafić:
-
-- wyświetlać błędy kompilacji na żywo wraz z kodem (co powoduje, że dowiadujemy się o nich znacznie szybciej, jak
-  również pozwala nam znacznie łatwiej znaleźć odpowiedni fragment kodu),
-- podpowiadać nazwy funkcji (przydatne przy wpisywaniu dłuższych nazw).
+- wyświetlać błędy kompilacji na żywo wraz z kodem (co powoduje, że dowiadujemy się o nich znacznie szybciej,
+jak również pozwala nam znacznie łatwiej znaleźć odpowiedni fragment kodu),
+- podpowiadać nazwy funkcji (przydatne przy wpisywaniu dłuższych nazw),
 - dawać możliwość uruchomienia pisanego programu z debuggerem.
 
-Przykładowym edytorem, który dobrze się sprawdzi, jest Visual Studio Code (nie mylić z Visual Studio), który jest
+Przykładowym edytorem, który dobrze się sprawdzi, jest Visual Studio Code (nie mylić z Visual Studio) oraz QT Creator, który jest
 częstym wyborem ze względu na niski próg wejścia. Innymi częstymi wyborami są Emacs oraz Vim (oraz niedostępny domyślnie
 w laboratorium Neovim), które jednak cechują się wyższym progiem wejścia. Wszystkie wymienione edytory wymagają
 dodatkowej konfiguracji, którą warto przeprowadzić przed pierwszym punktowanym laboratorium. Oczywiście warto, żeby
 konfiguracja edytora w domu była podobna do tej laboratorium.
 
-Nie zalecamy korzystania z większych środowisk, takich jak na przykład ~~CLion~~, osobom które dobrze ich nie znają; w
-przeciwnym wypadku dodatkowe ich funkcje mogą bardziej przeszkadzać niż pomagać. Ponadto nie wolno używać środowisk
-opartych na przeglądarce, takich jak na przykład ~~<https://www.onlinegdb.com>~~; wynika to z tego, że przechowują one
-kod wyłącznie w przeglądrce, co w przypadku problemów ze stabilnością komputera może skutkować utratą kodu i
+Nie zalecamy korzystania z większych środowisk, takich jak na przykład ~~CLion~~, osobom które dobrze ich nie znają. 
+W przeciwnym wypadku ich dodatkowe funkcje mogą bardziej przeszkadzać niż pomagać.
+Ponadto nie wolno używać środowisk opartych na przeglądarce,
+takich jak na przykład ~~<https://www.onlinegdb.com>~~.
+Wynika to z tego, że przechowują one kod wyłącznie w przeglądarce,
+co w przypadku problemów ze stabilnością komputera może skutkować utratą kodu i
 koniecznością zaczęcia od nowa.
 
 {{< hint info >}}
@@ -69,13 +70,14 @@ Uwagi wstępne:
   samemu a dopiero potem sprawdzać odpowiedź.
 - Pełne kody do zajęć znajdują się w załącznikach na dole strony.
 - Materiały i ćwiczenia są ułożone w pewną logiczną całość, czasem do wykonania ćwiczenia konieczny jest stan osiągnięty
-  poprzednim ćwiczeniem dlatego zalecam wykonywanie ćwiczeń w miarę przyswajania materiału.
+  poprzednim ćwiczeniem, dlatego zalecam wykonywanie ćwiczeń w miarę przyswajania materiału.
+- Materiały zakładają, że umiesz używać języka C w stopniu podstawowym (tzn. umiesz operować na pamięci, przetwarzać stringi itp.). Jeżeli nie czujesz się pewnie z tymi operacjami, polecam przypomnieć sobie materiał z przedmiotu Programowanie 1.
 - Większość ćwiczeń wymaga użycia konsoli poleceń, zazwyczaj zakładam, że pracujemy w jednym i tym samym katalogu
   roboczym więc wszystkie potrzebne pliki są "pod ręką" tzn. nie ma potrzeby podawania ścieżek dostępu.
-- Czasem podaję znak $ aby podkreślić, że chodzi o polecenie konsolowe, nie piszemy go jednak w konsoli np.: piszę "
-  $make" w konsoli wpisujemy samo "make".
-- To, co ćwiczymy wróci podczas kolejnych zajęć. Jeśli po zajęciach i teście coś nadal pozostaje niejasne proszę to
-  poćwiczyć a jeśli trzeba dopytać się u prowadzących.
+- Czasem podaję znak $ aby podkreślić, że chodzi o polecenie konsolowe, nie piszemy go jednak w konsoli np.: piszę "$make" w konsoli wpisujemy samo "make".
+- To, co ćwiczymy, wróci podczas kolejnych zajęć. 
+Jeśli po zajęciach i teście coś nadal pozostaje niejasne, proszę to poćwiczyć.
+Prowadzący także mogą pomóc rozwiać wątpliwości.
 {{< /hint >}}
 
 ## Zadanie 1 - stdout
@@ -90,8 +92,8 @@ Co student musi wiedzieć:
 - [Tutorial na temat gcc i make]({{< resource "tutorial.gcc_make.txt" >}})
 
 Absolutnie nie doradzam szukania stron man przez googla, bo często znajdują się stare dokumenty a czasem dokumentacje
-innych systemów (HP-UX,solaris), które mogą się różnić od standardu i zawierać błędy. Najlepiej używać lokalnego systemu
-man na stacjach w laboratoriach.
+innych systemów (HP-UX,solaris), które mogą się różnić od standardu i zawierać błędy.
+Najlepiej używać lokalnego systemu man na stacjach w laboratoriach.
 
 Dokumentacja systemowa man podzielona jest na sekcje, opis tych sekcji jest podany na stronie opisu komendy man.
 
@@ -106,7 +108,7 @@ man man
 {{< /expand >}}
 
 Jeśli ćwiczysz na własnym systemie Linux, upewnij się, że masz zainstalowane strony z dokumentacją posix, jeśli nie to z
-pomocą "Wójka Google" sprawdź jak doinstalować te strony i zrób to.
+pomocą "Wujka Google" sprawdź jak doinstalować te strony i zrób to.
 
 Czemu wpisanie man printf nie pomoże nam w zrozumieniu funkcji printf?
 {{< expand "Odpowiedź" >}}
@@ -177,11 +179,11 @@ cat plik.txt
 ```
 {{< /expand >}}
 
-Zrób kopię programu prog1.c, niech się nazywa prog1b.c. Przerób plik Makefile tak aby kompilował ten nowy plik do binarki o nazwie prog1b, zwróć uwagę aby przy faktycznej kompilacji (a nie tylko w Makefile) była obecna flaga -Wall. Jeśli uda Ci się to za pierwszym razem to spróbuj sprowokować błąd celowo zmieniając niektóre prog1b z powrotem na prog1 w różnych konfiguracjach.
+Zrób kopię programu prog1.c, niech się nazywa prog1b.c. Przerób plik Makefile tak, aby kompilował ten nowy plik do binarki o nazwie prog1b, zwróć uwagę, aby przy faktycznej kompilacji (a nie tylko w Makefile) była obecna flaga -Wall. Jeśli uda Ci się to za pierwszym razem to spróbuj sprowokować błąd celowo zmieniając niektóre prog1b z powrotem na prog1 w różnych konfiguracjach.
 
 ## Zadanie 2 - stdin, stderr
 
-Cel: Rozwinąć prog1.c tak aby wypisywał na ekran powitanie dla imienia podanego z linii poleceń, imiona powyżej 20
+Cel: Rozwinąć prog1.c tak, aby wypisywał na ekran powitanie dla imienia podanego z linii poleceń, imiona powyżej 20
 znaków powinny generować błąd programu (natychmiastowe wyjście i komunikat)
 
 Co student musi wiedzieć: 
@@ -216,34 +218,34 @@ Uruchom i przetestuj program.
 
 Czemu w kodzie pojawia się 21 jako rozmiar maksymalny w formatowaniu scanf (%21s)?
 {{< expand "Odpowiedź" >}}
-Czytając maksymalnie 20 znaków nie wiemy czy użytkownik podał dokładnie 20 czy może więcej,
-czytając maksymalnie 21 wiemy o przekroczeniu limitu. 
+Czytając maksymalnie 20 znaków, nie wiemy, czy użytkownik podał dokładnie 20, czy może więcej.
+Czytając maksymalnie 21, wiemy o przekroczeniu limitu. 
 {{< /expand >}}
 
-Czemu deklarujemy 22 jako rozmiar tablicy na ciąg znaków skoro czytamy najwyżej 21 znaków?
+Czemu deklarujemy 22 jako rozmiar tablicy na ciąg znaków, skoro czytamy najwyżej 21 znaków?
 {{< expand "Odpowiedź" >}}
 W C ciągi znaków kończą się znakiem zera, scanf dopisze to zero za ostatnim znakiem, 
 zatem każdy ciąg zawsze musi mieć ten dodatkowy znak doliczony do rozmiaru.
 {{< /expand >}}
 
-Jak można zmienić sposób wywołania tego programu tak aby komunikat o ewentualnym błędzie wykonania nie pojawił się na
+Jak można zmienić sposób wywołania tego programu tak, aby komunikat o ewentualnym błędzie wykonania nie pojawił się na
 ekranie?
 {{< expand "Odpowiedź" >}}
 Można przekierować stderr do /dev/null, np. tak: `./prog2 2>/dev/null`
 {{< /expand >}}
 
-Gdy podajemy zbyt długie imię pojawia się komunikat "Name too long: Success", czemu success? Zmienna errno nie jest
-ustawiana bo to błąd w naszym kodzie a nie w wywołaniu funkcji bibliotecznej - makro jest napisane przyszłościowo pod
+Gdy podajemy zbyt długie imię, pojawia się komunikat "Name too long: Success", czemu success? Zmienna errno nie jest
+ustawiana, bo to błąd w naszym kodzie, a nie w wywołaniu funkcji bibliotecznej - makro jest napisane przyszłościowo pod
 kątem błędów w funkcjach.
 
-Gdy podamy podwójne imię np.: "Anna Maria" program wypisze tylko pierwsze, w scanf prosimy o jeden wyraz a nie całą
+Gdy podamy podwójne imię np.: "Anna Maria" program wypisze tylko pierwsze, w scanf prosimy o jeden wyraz, a nie całą
 linię. Całe linie będziemy czytać za chwilę.
 
-Program nie zaczyna się od zapytania użytkownika o imię tylko od razu oczekuje danych. Takie podejście jest bardzo
+Program nie zaczyna się od zapytania użytkownika o imię, tylko od razu oczekuje danych. Takie podejście jest bardzo
 UNIXowe, takie programy lepiej nadają się do użycia w skryptach lub w przetwarzaniu danych z plików (następne zadanie).
 Na drugim biegunie jest podejście interaktywne (bardziej w stylu Windows), z grzeczną prośbą o podanie imienia na
-początku. Wybór stylu interakcji zależy od zastosowania, można połączyć oba jeśli rozpoznamy (f. isatty) czy program
-działa interaktywnie na konsoli czy może jest to tzw. przetwarzanie wsadowe.
+początku. Wybór stylu interakcji zależy od zastosowania, można połączyć oba, jeśli rozpoznamy (f. isatty) czy program
+działa interaktywnie na konsoli, czy może jest to tzw. przetwarzanie wsadowe.
 
 W prog2.c nie wykorzystano wartości zwracanej przez scanf. Niestety zbyt długi wyraz na stdin
 (dla specyfikacji %s) nie jest traktowany jako błąd i scanf() zwraca 1 (tak jak i dla wyrazu krótszego od 21 znaków)
@@ -259,17 +261,18 @@ ncurses). Nie będziemy się tym zajmować na SOP.
 
 ## Zadanie 3 - stdin cd..
 
-Cel: Rozwinąć prog2.c tak aby wypisywał na ekran powitanie dla każdego ciągu imion (słów) podanego ze standardowego
+Cel: Rozwinąć prog2.c tak, aby wypisywał na ekran powitanie dla każdego ciągu imion (słów) podanego ze standardowego
 wejścia. Program ma pobierać całe linie tekstu (do 20 znaków) i wypisywać na stdout. Operacja jest powtarzana aż do
-napotkania końca strumienia (C-d). Linie dłuższe niż 20 znaków mają być skracane ale błąd nie ma być zgłaszany
+napotkania końca strumienia (C-d). Linie dłuższe niż 20 znaków mają być skracane, ale błąd nie ma być zgłaszany
 
 Co student musi wiedzieć: 
 - man 3p fgets
 
-`C-d` (czyli w notacji Windowsowej Ctrl d) powoduje zamknięcie strumienia, zupełnie jakbyśmy wykonali na nim close. Gdy
-strumień napotyka permanentny koniec danych to taki stan nazywamy EOF (end of file). Zwróć uwagę, że to nie to samo co
-chwilowy brak danych gdy program czeka na "wolnego" względem programu człowieka aby ten coś wpisał, to są dwie różne
-sytuacje które musisz rozróżniać!
+`C-d` (czyli w notacji Windowsowej Ctrl d) powoduje zamknięcie strumienia, zupełnie jakbyśmy wykonali na nim close.
+Gdy strumień napotyka permanentny koniec danych to taki stan nazywamy EOF (end of file).
+Zwróć uwagę, że to nie to samo co chwilowy brak danych, 
+gdy program czeka na "powolnego" człowieka, aby ten coś wpisał.
+Są dwie różne sytuacje które musisz rozróżniać!
 
 `C-d` działa tylko po znaku nowej linii! Strumień tekstowy powinien kończyć się znakiem nowej linii.
 
@@ -280,10 +283,10 @@ przywrócić wybrany do życia piszac %N gdzie N to numer wiszącego procesu
 
 `C-\` wysyła SIGQUIT, kończy program i generuje zrzut pamięci
 
-`C-s` zamraża terminal, nie ma wpływu na proces o ile ten nie przepełni bufora, wtedy musi czekać. Mając nawyk
-zapisywania pracy Ctrl S z Windows łatwo można sobie niechcący zawiesić terminal. Aby odwiesić terminal naciskamy C-q.
+`C-s` zamraża terminal, nie ma wpływu na proces, o ile ten nie przepełni bufora, wtedy musi czekać. Mając nawyk
+zapisywania pracy Ctrl S z Windows, łatwo można sobie niechcący zawiesić terminal. Aby odwiesić terminal, naciskamy C-q.
 
-Powyższe skróty działają w powłoce bash której używamy w labach (też w kilku innych powłokach).
+Powyższe skróty działają w powłoce bash, której używamy w labach (też w kilku innych powłokach).
 
 <em>kod do <b>prog3.c</b></em>
 {{< includecode "prog3.c" >}}
@@ -308,15 +311,16 @@ make prog3
 ```
 {{< /expand >}}
  
-Sprawdź jak się zachowa dla ciągów 20 i 21 znakowych. Czemu akurat tak?
+Sprawdź, jak się zachowa dla ciągów 20 i 21 znakowych. Czemu akurat tak?
 {{< expand "Odpowiedź" >}}
-Dla ciągu 21 znakowego w tablicy nie zmieści się znak nowej linii, 
-fgets nie przepełnia buforu zatem obcina to co przekracza podany limit - w tym przypadki nową linię. 
+Dla ciągu 21 znakowego w tablicy nie zmieści się znak nowej linii. 
+fgets nie przepełnia buforu, zatem obcina wszystko, co przekracza podany limit - w tym przypadku znak nowej linii. 
 {{< /expand >}}
  
-Czemu w wywołaniu printf nie dodaliśmy znaku nowej linii na końcu a mimo to powitania wyświetlają się w oddzielnych liniach?
+Czemu w wywołaniu printf nie dodaliśmy znaku nowej linii na końcu, a mimo to powitania wyświetlają się w oddzielnych liniach?
 {{< expand "Odpowiedź" >}} 
-fgets pobiera też \n o ile zmieści się w buforze, wypisując taki ciąg nie musimy już dodawać swojego `\n`
+fgets pobiera też \n o ile zmieści się w buforze.
+Wypisując taki ciąg nie musimy już dodawać swojego `\n`.
 {{< /expand >}}
 
 Czemu rozmiar bufora jest MAX_LINE+2?
@@ -328,7 +332,7 @@ Zwróć uwagę, że `fgets` pracuje na dowolnym strumieniu, nie tylko na `stdin`
 
 Ten program jest wolny od "magic numbers" i tak powinno być zawsze.
 
-<em>plik testowy <b>dane.txt</b></em>
+<em>Plik testowy <b>dane.txt</b></em>
 ```
 Alice 
 Marry Ann
@@ -338,7 +342,7 @@ Tom
 
 Utwórz plik tekstowy z powyższą zawartością.
 
-Jak skłonić nasz program aby pobrał dane z pliku a nie z klawiatury (na dwa sposoby)?
+Jak skłonić nasz program, aby pobrał dane z pliku, a nie z klawiatury (na dwa sposoby)?
 {{< expand "Odpowiedź 1" >}} 
 przekierować plik na stdin: `./prog3 < dane.txt`
 {{< /expand >}}
@@ -364,10 +368,11 @@ CFLAGS=-Wall -fsanitize=address,undefined
 LDFLAGS=-fsanitize=address,undefined
 ```
 
-Aby używać szablonów kompilacji trzeba podać nazwę pliku wykonywalnego jako parametr make, w tym przykładzie będzie to "
-$ make prog4". Tym razem kompilacja jest z pożądaną flagą -Wall gdyż podany Makefile modyfikuje standardowy szablon.
+Aby używać szablonów kompilacji, trzeba podać nazwę pliku wykonywalnego jako parametr make.
+W tym przykładzie będzie to "$ make prog4".
+Tym razem kompilacja jest z pożądaną flagą -Wall, gdyż podany Makefile modyfikuje standardowy szablon.
 
-Aby parametrem uczynić dwa lub więcej słów trzeba ująć je w apostrofy lub wpisać znak \ przed każdą spacją (lub innym
+Aby parametrem uczynić dwa lub więcej słów trzeba ująć je w apostrofy albo wpisać znak \ przed każdą spacją (lub innym
 tzw. białym znakiem).
 
 Argument o numerze zero to zawsze nazwa programu!
@@ -382,8 +387,8 @@ każdy wyraz to oddzielny argument: `cat dane.txt | xargs ./prog4`
 każda linia to argument: `cat dane.txt |tr "\n" "\0"| xargs -0 ./prog4`
 {{< /expand >}}
 
-Używając powyższego dla większych plików trzeba pamiętać, że długość linii poleceń jest limitowana (różnie w różnych
-systemach). `xargs` może podzielić dane na więcej wywołań gdy sobie tego zażyczymy.
+Używając powyższego dla większych plików, trzeba pamiętać, że długość linii poleceń jest limitowana (różnie w różnych
+systemach). `xargs` może podzielić dane na więcej wywołań, gdy sobie tego zażyczymy.
 
 ## Zadanie 5 - parametry wywołania programu 2
 
@@ -411,11 +416,11 @@ Dobrą praktyką jest wypisywanie tzw. usage przy braku wymaganych argumentów
 <em>Kod do pliku <b>prog5.c</b>:</em>
 {{< includecode "prog5.c" >}}
 
-Skompiluj ten program używając uniwersalnego Makefile z poprzedniego zadania.
+Skompiluj ten program, używając uniwersalnego Makefile z poprzedniego zadania.
 
 Jak działa program dla wartości powtórzeń niepoprawnie podanych, czemu tak?
 {{< expand "Odpowiedź" >}}
-Nic nie wypisze ponieważ atoi pod Linuksem zwraca zero jeśli nie można zamienić tekstu na liczbę.
+Nic nie wypisze, ponieważ atoi pod Linuksem zwraca zero, jeśli nie można zamienić tekstu na liczbę.
 {{< /expand >}}
 
 Czemu argc ma być 3, mamy przecież 2 argumenty? 
@@ -424,23 +429,23 @@ Czemu argc ma być 3, mamy przecież 2 argumenty?
 {{< /expand >}}
 
 Zwróć uwagę na obrócony zapis porównania (0==j), jaki z takiego pisania może być zysk? Jeśli pomyłkowo zapiszę (0=j) to
-się nie skompiluje i szybko dowiem się o błędzie. Gdybym napisał (j=0) to się skompiluje a o miejscu wystąpienia błędu
+się nie skompiluje i szybko dowiem się o błędzie. Gdybym napisał (j=0) to się skompiluje, a o miejscu wystąpienia błędu
 dowiem się dopiero po czasochłonnej analizie kodu. To jest dodatkowe zabezpieczenie.
 
-Zwróć uwagę, że starsze standardy C nie dopuszczały deklarowania zmiennych w środku kodu, ale tak jest czytelniej bo
-zmienne deklarujemy gdy stają się potrzebne.
+Zwróć uwagę, że starsze standardy C nie dopuszczały deklarowania zmiennych w środku kodu, ale tak jest czytelniej, bo
+zmienne deklarujemy, gdy stają się potrzebne.
 
 Co zwraca atoi dla nie liczb? W praktyce zero wg. POSIX - undefined. Czasem chcemy mieć nad tym kontrolę, umieć
 rozróżnić zero od błędu, wtedy używamy funkcji strtol.
 
-Argumenty programu można nadpisać w trakcie jego działania , w tym i nazwę! Może to służyć próbie ukrycia procesu i/lub
+Argumenty programu można nadpisać w trakcie jego działania, w tym i nazwę! Może to służyć próbie ukrycia procesu i/lub
 jego argumentów (np. hasła).
 
 ## Zadanie 6 - parametry wywołania programu 3
 
 Cel: Napisać program przyjmujący dowolną liczbę parametrów typu -t x i dowolną liczbę parametrów -n NAME. Parametry mogą
 wystąpić w dowolnej kolejności. Dla każdego wystąpienia parametru -n wypisujemy dokładnie x razy powitanie "Hello NAME".
-Początkowo x=1 ale kolejne wystąpienia -t mogą to zmienia
+Początkowo x=1, ale kolejne wystąpienia -t mogą to zmienia
 
 Np.: `./prog6 -n Anna -t 2 -n John -n Matt -t 1 -n Danny` wypisze
 ```
@@ -463,7 +468,7 @@ fprintf(stderr, "USAGE:%s ([-t x] -n Name) ... \n", pname);
 <em>kod do pliku <b>prog6.c</b></em>
 {{< includecode "prog6.c" >}}
 
-Sprawdź jak działa program dla niepoprawnych argumentów, lub gdy podamy argumenty pozycyjne (nie poprzedzone oznaczeniem
+Sprawdź, jak działa program dla niepoprawnych argumentów lub jeśli podamy argumenty pozycyjne (niepoprzedzone oznaczeniem
 opcji) oraz gdy nie podamy argumentów lub parametrów.
 
 W programie zmienną c (int) porównujemy ze znakami 't' i 'n' (char), to poprawne podejście w C char jest po prostu
@@ -472,13 +477,14 @@ jedno-bajtowym typem numerycznym.
 W parametrach getopt opisujemy pożądaną składnię - zazwyczaj literki opcji z opcjonalnymi przyrostkami - `:` znaczy ma
 argument, natomiast `::` znaczy, że ma opcjonalny argument.
 
-Komunikaty dla błędnych opcji " invalid option -- '?' " są generowane w samej funkcji getopt jeśli chcemy je wyłączyć
+Komunikaty dla błędnych opcji "invalid option -- '?'" są generowane w samej funkcji getopt, jeśli chcemy je wyłączyć
 ustawiamy zmienną globalną opterr na zero.
 
-Zmienne optarg i optind to kolejne zmienne globalne typu extern z biblioteki powiązane z getopt. Co zawiera pierwsza
-widać w kodzie, druga mówi ile opcji z linii wywołania do danego momentu przetworzono. Trzeba przy tym wiedzieć, że
-argumenty nie będące opcjami lub ich argumentami są w trakcie przetwarzania przesuwane na koniec linii poleceń, teraz
-już wiesz co robi ostatni warunek w kodzie powyżej - sprawdza czy nie było argumentów pozycyjnych z poza wymaganej
+Zmienne optarg i optind to kolejne zmienne globalne typu extern z biblioteki powiązane z getopt.
+Co zawiera pierwsza, widać w kodzie.
+Druga mówi, ile opcji z linii wywołania do danego momentu przetworzono.
+Trzeba przy tym wiedzieć, że argumenty niebędące opcjami lub ich argumentami są w trakcie przetwarzania przesuwane na koniec linii poleceń, teraz
+już wiesz co robi ostatni warunek w kodzie powyżej - sprawdza czy nie było argumentów pozycyjnych spoza wymaganej
 składni.
 
 Zwróć uwagę, że lepiej byłoby najpierw przeprowadzić parsowanie opcji kontrolnie a dopiero potem wykonać program, ale
@@ -492,7 +498,7 @@ rozszerzenie GNU i nie będziemy ich używać.
 
 ## Zadanie 7 - zmienne środowiskowe 1
 
-Cel: Napisać program wypisujący listę wszystkich zmiennych środowiskowyc
+Cel: Napisać program wypisujący listę wszystkich zmiennych środowiskowych
 
 Co student musi wiedzieć: 
 - man 3p environ
@@ -645,14 +651,3 @@ $ git push origin
 
 Proszę pamiętać, że za etap można uzyskać punkty, gdy jego kod znajdzie się na zdalnym repozytorium.
 Możliwość synchronizacji z serwerem zostaje utracona z końcem laboratorium.
-
-## Przed laboratorium L1
-
-Należy:
-
-- zapoznać się z [programem]({{< ref "../../syllabus" >}}), [regulaminem]({{< ref "../../zasady" >}}) i [harmonogramem]({{< ref "../../harmonogram" >}}),
-- przygotować edytor wedle własnych upodobań (lub być w stanie to szybko zrobić na początku laboratorium),
-- zapoznać się z [odpowiednim tutorialem]({{< ref "../l1/index.pl.html" >}}),
-- wykonać [przykładowe zadanie]({{< ref "../l1-example.pl.md" >}}),
-- przećwiczyć operacje wykonywane na laboratorium zerowym,
-- zapoznać się ze stronami `man` i materiałem na wejściówkę.
