@@ -26,5 +26,3 @@ Compiling the program without -fsanitize and typing a string longer than 9 chara
 Now try compiling it with sanitizers:  
 `  gcc -Wall -fsanitize=address,undefined array-problem.c -o array-problem `  
 Again try to type strings longer and shorter than 9. This time longer string caused a descriptive error message (please get familiar with those messages before the first lab). There is one inconvenience tough, the part regarding our program in stack trace (the main function) is missing the line number. We can ask compiler to emit debug info (in particular line numbers) to the output program by passing -g option: `  gcc -g -Wall -fsanitize=address,undefined array-problem.c -o array-problem `; this is also helpful when using a debugger.
-
-*Along the assignment for each lab you will be provided with a set of mandatory sanitizers for given lab. Note that enabling all the sanitizers is not possible as some of them are mutually exclusive.*

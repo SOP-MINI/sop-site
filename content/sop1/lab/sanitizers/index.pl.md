@@ -26,5 +26,3 @@ Jeśli skompilujemy ten program bez opcji -fsanitize, to podanie napisu dłuższ
 `  gcc -Wall -fsanitize=address,undefined array-problem.c -o array-problem `  
 Teraz podanie na stdin napisu dłuższego niż bufor powoduje zgłoszenie błędu (warto nauczyć się czytać te błędy przed zajęciami). Pewną niedogodnością jest fakt, że w podanym stosie wywołania programu brakuje numerów linii (załóżmy, że prawdziwe programy mają jednak więcej niż 3 linie). Informacje debugowe, m.in. numery linii, można dołączyć opcją -g kompilatora `  gcc -g -Wall -fsanitize=address,undefined array-problem.c -o array-problem `; warto też tą opcję dodać również wtedy, kiedy używamy debuggera.
 
-*Do każdego z zadań na laboratorium będzie podana lista opcji -fsanitize, którą należy użyć. Uwaga: nie można włączyć wszystkich możliwych, ponieważ część opcji jest ze sobą w konflikcie.*
-
