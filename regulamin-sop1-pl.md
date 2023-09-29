@@ -12,7 +12,7 @@ Przedmiot składa się z wykładu i laboratorium.
     - Nie ma sprawdzianów audytoryjnych (wykładowych). Treści wykładowe będą się jednak pojawiać na wejściówkach laboratoryjnych.
 
   - Laboratorium składa się z pięciu zajęć oznaczonych kolejno L0, L1, L2, L3, L4. Zajęcia odbywają się zgodnie z harmonogramem podanym na stronie przedmiotu. Na stronie przedmiotu znajdują się też materiały przygotowawcze do zajęć.
-  - Zajęcia L0 to zajęcia poświęcone na przygotowanie środowiska. W trakcie tych zajęć studenci przypominają sobie umiejętności z przedmiotu Podstawy systemu unix i konfigurują środowisko programistyczne. Wszelkie braki w konfiguracji lub tych umiejętnościach (np. brak podpowiadania nazw funkcji, podkreślania błędów w edytorze, czy brak umiejętności poruszania się po katalogach) na wszystkich kolejnych zajęciach nie są okolicznością łagodzącą przy ocenianiu. Druga część L0 ma postać warsztatów na której prowadzący wyjaśnia podstawy systemu kontroli wersji git oraz oceniania kolejnych zajęć na podstawie prostego zadania przykładowego.
+  - Zajęcia L0 to zajęcia poświęcone na przygotowanie środowiska. W trakcie tych zajęć studenci przypominają sobie umiejętności z przedmiotu Podstawy systemu unix i konfigurują środowisko programistyczne. Wszelkie braki w konfiguracji lub tych umiejętnościach (np. brak podpowiadania nazw funkcji, podkreślania błędów w edytorze, czy brak umiejętności poruszania się po katalogach) na wszystkich kolejnych zajęciach nie są okolicznością łagodzącą przy ocenianiu. Ponadto na L0 prowadzący zapoznają studentów ze sposobem zgłaszania rozwiązaniach podczas kolejnych laboratoriów na przykładzie prostego zadania.
   - Zajęcia L1, L2, L3 i L4 służą ocenie umiejętności w obszarze wskazanym w harmonogramie przedmiotu. Do każdych zajęć należy przygotować się samodzielnie, korzystając z materiałów na stronie przedmiotu i materiałów wykładowych. Każde z zajęć składa się z dwóch części:
     - wejściówka (8 minut): rozwiązywanie testu w moodle
     - zadanie programistyczne (120 minut)
@@ -38,9 +38,13 @@ Przedmiot składa się z wykładu i laboratorium.
 
 # Weryfikacja osiągnięcia efektów uczenia się
 
-Weryfikacja w trakcie laboratorium. W trakcie semestru są cztery zajęcia laboratoryjne, realizujące 4 tematy, oznaczone skrótami L1, L2, L3 i L4.
+Weryfikacja w trakcie laboratorium. W trakcie semestru jest pięć zajęć laboratoryjnych, oznaczone skrótami L0, L1, L2, L3 i L4.
 
-Metody weryfikacji efektów nauczania na laboratorium:
+## L0
+
+Na zajęciach jest udostępniane proste zadanie wstępne za które można zdobyć do 4 punktów.
+
+## L1-L4
 
 ### Wejściówka
   - Test weryfikujący wiedzę z wykładu i z materiałów przygotowawczych do laboratorium. Każda wejściówka obejmuje wszystkie wykłady poprzedzające i wszystkie poprzedzające tematy laboratorium oraz bieżący temat laboratorium.
@@ -51,13 +55,13 @@ Metody weryfikacji efektów nauczania na laboratorium:
 
 ### Zadanie programistyczne
 
-  - Za zadanie uzyskać można od 0 do 17 punktów
+  - Za zadanie uzyskać można od 0 do 16 punktów
   - Na wykonanie zadania jest 120 minut
   - Zadania laboratoryjne rozwiązywane są z użyciem systemu Arch Linux na komputerach w laboratorium. Nie jest dozwolone rozwiązywanie zadań na własnym komputerze.
   - Zadanie programistyczne jest podzielone na etapy. Punkty za każdy etap podane są w treści zadania. Etapy muszą być wykonywane w wyznaczonej kolejności. Nie wolno przechodzić do następnego etapu bez wykonania poprzednich.
   - Każdy etap jest sprawdzany i oceniany na zajęciach. Oceniana jest umiejętność korzystania z właściwych narzędzi i prawidłowa (w tym zgodna z POSIX) implementacja wymaganej funkcjonalności. Poza L3 ocenie nie podlega estetyka kodu.
-  - Prowadzący zajęcia dostarcza startowe pliki - wstępną wersję repozytorium git.
   - Po ukończeniu każdego etapu studenci przesyłają rozwiązanie na serwer przy użyciu systemu kontroli git, w sposób opisany przez prowadzącego na L0. Zgłoszenia podlegają następującym zasadom:
+    - Program musi być napisany w języku C (nie C++).
     - Rozwiązania nie można zgłosić częściej niż co minutę.
     - Dozwolona jest modyfikacja jedynie plików rozwiązania.
     - Pliki muszą być odpowiednio sformatowane - zgodnie z konfiguracją programu clang-format znajdującą się w startowym repozytorium zadania (program jest dostępny na komputerach laboratoryjnych, jego działanie jest wyjaśniane podczas L0).
@@ -68,8 +72,8 @@ Metody weryfikacji efektów nauczania na laboratorium:
 
 # Pomoce dopuszczone do użycia podczas weryfikacji osiągnięcia efektów nauczania
 
-- W trakcie rozwiązywania wejściówki **nie można** korzystać z żadnych materiałów pomocniczych. Niedozwolona jest komunikacja z innymi.
-- W czasie rozwiązywania zadań programistycznych **można** korzystać z tutoriala, własnych materiałów, rozwiązań zadań przykładowych, dokumentacji systemowej oraz Internetu jednak tak, by oceniana praca była dziełem samodzielnym - w szczególności niedozwolone jest używanie rozwiązań oparty o AI, jak chat GPT, Github Copilot i podobnych.
+  - W trakcie rozwiązywania wejściówki **nie można** korzystać z żadnych materiałów pomocniczych. Niedozwolona jest komunikacja z innymi.
+  - W czasie rozwiązywania zadań programistycznych **można** korzystać z tutoriala, własnych materiałów, rozwiązań zadań przykładowych, dokumentacji systemowej oraz Internetu jednak tak, by oceniana praca była dziełem samodzielnym - w szczególności niedozwolone jest używanie rozwiązań oparty o AI, jak chat GPT, Github Copilot i podobnych.
 
 # Zasady zaliczenia przedmiotu i wystawiania oceny końcowej
 
@@ -87,7 +91,6 @@ Metody weryfikacji efektów nauczania na laboratorium:
 # Termin i tryb ogłaszania ocen
 
 - Oceny cząstkowe
-
   - Liczba punktów uzyskana za kolejne etapy zadania laboratoryjnego jest podawana w momencie sprawdzania przez prowadzącego i zapisywana na kartce z treścią zadania
   - Liczba punktów uzyskana za wejściówkę jest wyświetlana w moodle po zakończeniu testu
   - Punkty z obu części laboratorium są umieszczane w usosie najpóźniej 24 godziny po zajęciach. Liczba punktów wpisana w usosie determinuje ocenę końcową
