@@ -41,8 +41,6 @@ Generally there is some server which holds current application code.
 With GIT every programmer has to make his/her local copy of **all** project files and history of changes.
 Such set of files is named *repository* and server is called *remote*.
 
-Intuitively you may think, that we waste time and disk space for copies.
-However, this approach has some appealing aspects.
 As a programmer you can work on your local copy without active internet connection.
 Only when you want to share your code with other you need to synchronize with remote.
 
