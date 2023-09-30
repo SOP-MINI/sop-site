@@ -41,8 +41,6 @@ Do tego celu najczęściej istnieje serwer przechowujący aktualny kod projektu.
 W przypadku GITa każdy programista będzie na swoim komputerze posiadać lokalną kopię **wszystkich** tam składowanych plików i ich historii zmian.
 Taki zestaw plików nazywamy *repozytorium*, a serwer *remotem*.
 
-Intuicyjnie wydaje się, że marnujemy przestrzeń dyskową i czas wykonując takie kopie.
-Jednak takie podejście ma dobre strony.
 Jako programista mamy możliwość pracy na lokalnej kopii bez aktywnego łącza internetowego.
 Dopiero gdy będziemy chcieli się podzielić naszym kodem, zsynchronizujemy go ze zdalnym repozytorium.
 Taką lokalną kopię nazywamy potocznie *localem*

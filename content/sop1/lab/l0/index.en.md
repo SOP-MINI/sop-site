@@ -587,7 +587,7 @@ Every pair of keys is unique to student and has to be used by only one student.
 
 First step on laboratory is copy remote repository to your local workstation with command 
 ```shell
-$ git clone ssh://gitolite@vl01/name_surname/l0pl
+$ git clone ssh://gitolite@vl01/name_surname/l0en
 ```
 
 Command creates directory with name of repository and copies files to it.
