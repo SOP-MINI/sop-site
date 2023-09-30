@@ -6,19 +6,19 @@ layout: single
 menu: sop1
 ---
 
-## GIT - przykłąd rozproszonego systemu kontroli wersji
+## GIT - przykład rozproszonego systemu kontroli wersji
 
 System kontroli wersji ma za zadanie ułatwić programistom (ale nie tylko) śledzić zmiany w plikach oraz ułatwiać przez to współpracę.
 W przypadku naszych laboratoriów ma on za zadanie uporządkować oddawane kody zadań przez studentów.
 Na laboratoriach zapoznamy się z podstawami systemu kontroli wersji GIT.
 
-## Podstawowe działanie GITa - śledzenie pliku?
+## Podstawowe działanie GITa - śledzenie pliku
 
 Wyobraźmy sobie, że dostaliśmy jakiś kod wykonany przez innego programistę.
 Naszym zadaniem jest poprawić jakiś problem w tym kodzie.
 Bez systemu kontroli wersji wykonalibyśmy kopię tego pliku i rozpoczęli edycję tej kopii.
 Kiedy zmiana byłaby gotowa i przetestowana naturalnym krokiem będzie podmiana oryginalnego pliku zmienionym plikiem.
-W taki sposób, gdy zmiana będzia błędna, nadal będzie można wrócić do oryginalnego kodu.
+W taki sposób, gdy zmiana będzie błędna, nadal można wrócić do oryginalnego kodu.
 
 Natomiast w przypadku użycia systemu kontroli wersji dostajemy identyczne zabezpieczenie i więcej.
 Gdy jakiś plik jest śledzony przez GITa, w każdej chwili można takie przywrócenie wykonać.
