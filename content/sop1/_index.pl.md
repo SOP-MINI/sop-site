@@ -17,11 +17,8 @@ date: 2022-02-10T10:00:00+01:00
 
 ### Laboratorium
 
-- Jan Karwowski *koordynator*
-	- grupy lab 3, 4
-	- konsultacje: wtorek 11:00-12:00, pok. 526
-	- email: jan.karwowski@pw.edu.pl
-- Tomasz Karwowski
-	- grupy lab 5, 6
-- Mateusz Majewski
-	- grupy lab 1, 2
+- Franciszek Jełowicki *koordynator*
+- Tomasz Herman
+- Maciej Spychała
+- Krzysztof Smogór
+- Szymon Zyguła

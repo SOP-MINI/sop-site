@@ -16,10 +16,9 @@ date: 2022-02-10T10:00:00+01:00
   - email: pawel.sobotka@pw.edu.pl
 
 ### Laboratory
-- Jan Karwowski *lab coordinator*
-	- office hours: wtorek 11:00-12:00, room 526
-	- email: jan.karwowski@pw.edu.pl
-- Weronika Głuszczak
-	- groups 1, 2
-- Kaustav Sengupta
-	- groups 3, 4
+
+- Franciszek Jełowicki *lab coordinator*
+- Tomasz Herman
+- Maciej Spychała
+- Krzysztof Smogór
+- Szymon Zyguła
