@@ -568,7 +568,7 @@ Zmienna była ustawiona tylko w programie i w powłoce w nim na chwilę wywołan
 ale po zakończeniu tych procesów się nie zachowała. 
 {{< /expand >}}
 
-### Zadanie do sprawdzenia środowiska. 
+## Zadanie do sprawdzenia środowiska. 
 
 Cel: Napisać trywialny program "hello world", skompilować go, uruchomić, spakować i przesłać na wskazane konto. 
 *Co student musi wiedzieć:*

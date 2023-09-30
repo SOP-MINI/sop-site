@@ -16,7 +16,7 @@ date: 2022-02-10T10:00:00+01:00
 
 ## Laboratory reference
 
-- not graded: [Lab0 - Introduction]({{< ref "lab/l0" >}})
+- not graded: [Lab0 - POSIX program execution environment]({{< ref "lab/l0" >}})
 - graded:
     - [Lab1 - Filesystem]({{< ref "lab/l1" >}})
     - [Lab2 - Processes and signals]({{< ref "lab/l2" >}})
