@@ -19,7 +19,7 @@ w ramach przygotowania do kolejnych zajęć. Podczas punktowanych zajęć zawsze
 od 15 do 30 minut na odpowiadanie na pytania od studentów dotyczące danego działu.
 Można też się skonsultować droga mailową lub osobiście w czasie dyżurów prowadzących laboratoria.
 
-W ramach przygotowania do kolejnych zajęć zrobimy proste ćwiczenie symulujące pracę na punktowanych laboratoriach.
+W ramach zerowych laboratoriów zrobimy proste ćwiczenie symulujące pracę na punktowanych laboratoriach.
 Zadanie będzie wymagać od ciebie znalezienia kilku błędów i rozszerzenia programu o prostą funkcjonalność.
 Dzięki temu będzie można sprawdzić, jak twoje środowisko sprawuje się w akcji.
 W przypadku znalezienia problemów będzie można je wyeliminować przed pierwszymi punktowanymi laboratoriami.
@@ -36,7 +36,7 @@ jak również pozwala nam znacznie łatwiej znaleźć odpowiedni fragment kodu),
 - podpowiadać nazwy funkcji (przydatne przy wpisywaniu dłuższych nazw),
 - dawać możliwość uruchomienia pisanego programu z debuggerem.
 
-Przykładowym edytorem, który dobrze się sprawdzi, jest Visual Studio Code (nie mylić z Visual Studio) oraz QT Creator, który jest
+Przykładowym edytorem, który dobrze się sprawdzi, jest Visual Studio Code (nie mylić z Visual Studio) oraz QT Creator, które są
 częstym wyborem ze względu na niski próg wejścia. Innymi częstymi wyborami są Emacs oraz Vim (oraz niedostępny domyślnie
 w laboratorium Neovim), które jednak cechują się wyższym progiem wejścia. Wszystkie wymienione edytory wymagają
 dodatkowej konfiguracji, którą warto przeprowadzić przed pierwszym punktowanym laboratorium. Oczywiście warto, żeby
@@ -627,7 +627,7 @@ Zachęcam jednak do przeczytania jej i przygotowania się do wykonania poniższy
 Na laboratorium każde zadanie będzie rozwiązywane w takim repozytorium.
 Dane do zdalnego dostępu zostaną podane na laboratorium.
 Twoim celem jest śledzenie zmian w repozytorium w trakcie trwania laboratorium i ich synchronizacja z serwerem.
-**Jeżeli jakiś kod nie znajdzie się na serwerze, nie będzie oceniany**.
+**Jeżeli jakiś kod nie znajdzie się na serwerze, nie będzie oceniany.**
 
 Zanim przejdziemy do pobierania kodu, trzeba uzyskać swój osobisty klucz SSH z platformy [LeON](https://leon.pw.edu.pl).
 Na stornie przedmiotu można pobrać dwa pliki: `id_ed25519` oraz `id_ed25519.pub`.
