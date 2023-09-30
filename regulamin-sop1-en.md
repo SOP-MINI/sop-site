@@ -17,7 +17,7 @@ The subject consists of a lecture and a laboratory.
 
   - L1, L2, L3 and L4 classes assess abilities in the topics given in the laboratory schedule. Students should prepare on their own for each class, using the materials on the course website and lecture materials. Each of the classes consists of three parts:
 
-     - entry test (8 minutes): solving the LEoN test
+     - entry test (8 minutes): solving the LeOn test
      - programming task (120 minutes)
   - In the exam session, there is a retake where you can improve your grades in exactly one topic (L1, L2, L3, or L4). You can retake either one part (test, program) or both. Registration for the retakes will start immediately after the last laboratory classes in the semester and will be open for **24 hours** only.
 
@@ -50,7 +50,7 @@ During L0 class students solve simple programming task for which they can score 
 
 ### Introductory test
   - Test verifying the lecture information and the preparation materials from the website. Each entry test includes material from the all preceding lectures and the all preceding laboratories as well as the current laboratory topic.
-  - Multiple-choice questions (any number of answers greater than 0 can be correct), solved on the LEoN platform.
+  - Multiple-choice questions (any number of answers greater than 0 can be correct), solved on the LeOn platform.
   - The entrance test consists of 4 questions, for each question you can get a score from the range [0, 2] points. In total, for the entire test, a maximum is 8 points.
   - The entry test is scored as follows. In each multiple-choice question there are *n* correct answers and *m* incorrect answers (each answer is either correct or incorrect). There is 2/n points for each correct answer chosen, and for each incorrect answer chosen there are -2/m points. For each question, the sum of points resulting from the marked incorrect and correct answers is awarded, as long as the sum obtained is not negative. In this case, 0 points are awarded.
   - Time limit for the test is 8 minutes.
@@ -93,7 +93,7 @@ During L0 class students solve simple programming task for which they can score 
 
   - Partial grades
     - The number of points obtained for the subsequent stages of the laboratory task is given at the time of checking by the teacher and written on a sheet with the content of the task
-    - The number of points obtained for entry is displayed in LEoN after the test is completed
+    - The number of points obtained for entry is displayed in LeOn after the test is completed
     - Points from both parts of the laboratory are placed in USOS no later than 24 hours after the class. The number of points in USOS determines the final grade
   - Final grade
     - Issued in USOS within 24 hours from the publication of the results of the last L4 laboratory in USOS

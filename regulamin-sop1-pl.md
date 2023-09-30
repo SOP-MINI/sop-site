@@ -14,7 +14,7 @@ Przedmiot składa się z wykładu i laboratorium.
   - Laboratorium składa się z pięciu zajęć oznaczonych kolejno L0, L1, L2, L3, L4. Zajęcia odbywają się zgodnie z harmonogramem podanym na stronie przedmiotu. Na stronie przedmiotu znajdują się też materiały przygotowawcze do zajęć.
   - Zajęcia L0 to zajęcia poświęcone na przygotowanie środowiska. W trakcie tych zajęć studenci przypominają sobie umiejętności z przedmiotu Podstawy systemu unix i konfigurują środowisko programistyczne. Wszelkie braki w konfiguracji lub tych umiejętnościach (np. brak podpowiadania nazw funkcji, podkreślania błędów w edytorze, czy brak umiejętności poruszania się po katalogach) na wszystkich kolejnych zajęciach nie są okolicznością łagodzącą przy ocenianiu. Ponadto na L0 prowadzący zapoznają studentów ze sposobem zgłaszania rozwiązaniach podczas kolejnych laboratoriów na przykładzie prostego zadania.
   - Zajęcia L1, L2, L3 i L4 służą ocenie umiejętności w obszarze wskazanym w harmonogramie przedmiotu. Do każdych zajęć należy przygotować się samodzielnie, korzystając z materiałów na stronie przedmiotu i materiałów wykładowych. Każde z zajęć składa się z dwóch części:
-    - wejściówka (8 minut): rozwiązywanie testu w LEoN
+    - wejściówka (8 minut): rozwiązywanie testu w LeOn
     - zadanie programistyczne (120 minut)
   - W sesji egzaminacyjnej jest organizowana poprawa, na której można poprawiać oceny uzyskane na dokładnie jednych zajęciach (L1, L2, L3, lub L4). Można poprawiać albo jedną część (wejściówkę, program) albo obie części. Zapisy na poprawy zostaną uruchomione od razu po ostatnich zajęciach laboratoryjnych w semestrze i potrwają **24 godziny**.
 
@@ -48,7 +48,7 @@ Na zajęciach jest udostępniane proste zadanie wstępne, za które można zdoby
 
 ### Wejściówka
   - Test weryfikujący wiedzę z wykładu i z materiałów przygotowawczych do laboratorium. Każda wejściówka obejmuje wszystkie wykłady poprzedzające i wszystkie poprzedzające tematy laboratorium oraz bieżący temat laboratorium.
-  - Pytania zamknięte, wielokrotnego wyboru (poprawna może być dowolna liczba odpowiedzi większa od 0), wykonywany na platformie LEoN. 
+  - Pytania zamknięte, wielokrotnego wyboru (poprawna może być dowolna liczba odpowiedzi większa od 0), wykonywany na platformie LeOn. 
   - Wejściówka składa się z 4 pytań, za każde z pytań można uzyskać wynik z przedziału [0,2] punkty. W sumie, za cały test, maksymalnie 8 punktów. 
   - Wejściówka jest punktowana w następujący sposób. W każdym pytaniu wielokrotnego wyboru jest *n* poprawnych odpowiedzi i *m* niepoprawnych odpowiedzi (każda odpowiedź jest albo poprawna, albo niepoprawna). Za każdą zaznaczoną poprawną odpowiedź jest 2/n punktów, a za każdą zaznaczoną niepoprawną odpowiedź jest -2/m punktów. Za każde pytanie przyznawana jest suma punktów wynikająca z zaznaczonych niepoprawnych i poprawnych odpowiedzi, o ile uzyskana suma nie jest ujemna. W takiej sytuacji przyznawane jest 0 punktów.
   - Wejściówka trwa 8 minut.
@@ -92,7 +92,7 @@ Na zajęciach jest udostępniane proste zadanie wstępne, za które można zdoby
 
 - Oceny cząstkowe
   - Liczba punktów uzyskana za kolejne etapy zadania laboratoryjnego jest podawana w momencie sprawdzania przez prowadzącego i zapisywana na kartce z treścią zadania
-  - Liczba punktów uzyskana za wejściówkę jest wyświetlana w LEoN po zakończeniu testu
+  - Liczba punktów uzyskana za wejściówkę jest wyświetlana w LeOn po zakończeniu testu
   - Punkty z obu części laboratorium są umieszczane w USOSie najpóźniej 24 godziny po zajęciach. Liczba punktów wpisana w USOSie determinuje ocenę końcową
 - Ocena końcowa
   - Wystawiana w USOSie w ciągu 24 godzin od opublikowania wyników ostatniego laboratorium L4 w USOSie
