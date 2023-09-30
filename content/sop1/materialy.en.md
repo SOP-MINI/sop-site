@@ -18,10 +18,10 @@ date: 2022-02-10T10:00:00+01:00
 
 - not graded: [Lab0 - Introduction]({{< ref "lab/l0" >}})
 - graded:
-    - [Lab1 - POSIX program execution environment]({{< ref "lab/l1" >}})
+    - [Lab1 - Filesystem]({{< ref "lab/l1" >}})
     - [Lab2 - Processes and signals]({{< ref "lab/l2" >}})
     - [Lab3 - Threads and mutexes]({{< ref "lab/l3" >}})
-    - [Lab4 - AIO]({{< ref "lab/l4" >}})
+    - [Lab4 - Synchronization]({{< ref "lab/l4" >}})
 
 ## Other
 

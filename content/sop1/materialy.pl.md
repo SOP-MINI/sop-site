@@ -16,12 +16,12 @@ date: 2022-02-10T10:00:00+01:00
 
 ## Opisy ćwiczeń laboratoryjnych
 
-- ćwiczenie nieoceniane: [L0 - Środowisko wykonania programu POSIX]({{< ref "lab/l0">}})
-- ćwiczenia oceniane:
-    - [L1 ]({{< ref "lab/l1">}})
+- ćwiczenie wstępne (4p): [L0 - Środowisko wykonania programu POSIX]({{< ref "lab/l0">}})
+- ćwiczenia oceniane (16p):
+    - [L1 - System plików]({{< ref "lab/l1">}})
     - [L2 - Procesy i sygnały]({{< ref "lab/l2">}})
     - [L3 - Wątki i muteksy]({{< ref "lab/l3">}})
-    - [L4 - Asynchroniczne operacje wejścia/wyjścia (3g)]({{< ref "lab/l4">}})
+    - [L4 - Synchronizacja]({{< ref "lab/l4">}})
 
 ## Inne materiały
 
