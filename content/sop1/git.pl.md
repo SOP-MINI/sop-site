@@ -6,51 +6,45 @@ layout: single
 menu: sop1
 ---
 
-## GIT - system kontroli wersji rodem z GNU Linux
+## GIT - przykłąd rozproszonego systemu kontroli wersji
 
-Taki system ma za zadanie ułatwić programistom (ale nie tylko) śledzić zmiany w plikach oraz ułatwiać przez to współpracę.
-W przypadku naszych laboratoriów ma on za zadanie uporządkować oddawane przez ciebie kody z laboratorium.
-
+System kontroli wersji ma za zadanie ułatwić programistom (ale nie tylko) śledzić zmiany w plikach oraz ułatwiać przez to współpracę.
+W przypadku naszych laboratoriów ma on za zadanie uporządkować oddawane kody zadań przez studentów.
 Na laboratoriach zapoznamy się z podstawami systemu kontroli wersji GIT.
-Powstał on przy rozwijaniu kodu jądra Linuxa i od tamtego czasu rozpowszechnił się jako jeden z najbardziej popularnych systemów tego typu.
-Mimo powierzchownego skomplikowania posiada on wiele przydatnych cech.
 
-## Podstawowe działanie GITa - co znaczy śledzić plik?
+## Podstawowe działanie GITa - śledzenie pliku?
 
 Wyobraźmy sobie, że dostaliśmy jakiś kod wykonany przez innego programistę.
 Naszym zadaniem jest poprawić jakiś problem w tym kodzie.
-Bez systemu kontroli wersji pewnie wykonalibyśmy kopię tego pliku i rozpoczęli edycję właśnie tej kopii.
-Jak już zmiana byłaby gotowa i przetestowana naturalnym krokiem będzie podmiana oryginalnego pliku tym nowym.
-W taki sposób, gdy coś popsujemy, nadal będzie można wrócić do oryginalnego kodu i zacząć od zmiany od nowa.
+Bez systemu kontroli wersji wykonalibyśmy kopię tego pliku i rozpoczęli edycję tej kopii.
+Kiedy zmiana byłaby gotowa i przetestowana naturalnym krokiem będzie podmiana oryginalnego pliku zmienionym plikiem.
+W taki sposób, gdy zmiana będzia błędna, nadal będzie można wrócić do oryginalnego kodu.
 
-Natomiast w przypadku systemu kontroli wersji dostajemy takie zabezpieczenie i więcej.
-Gdy jakiś plik jest śledzony przez GITa, to w każdej chwili można takie przywrócenie wykonać.
-Co lepsze, można zobaczyć dokładnie wykonane zmiany w postaci pliku różnicowego, potocznie zwanego *diffem*.
+Natomiast w przypadku użycia systemu kontroli wersji dostajemy identyczne zabezpieczenie i więcej.
+Gdy jakiś plik jest śledzony przez GITa, w każdej chwili można takie przywrócenie wykonać.
+Dodatkowo można zobaczyć dokładnie wykonane zmiany w postaci pliku różnicowego, potocznie zwanego *diffem*.
 Gdy zdecydujemy, że kod jest gotowy, to zatwierdzamy zmiany wykonując *commit*.
-Na tym bonusy się nie kończą.
 Przez to, jak działa wyznaczanie różnic między plikami, możemy w każdej chwili cofnąć się do poprzedniej **wersji** jednym poleceniem.
 Wszystkie nasze zmiany zostaną w historii.
 
-## Podstawowe działanie GITa - co znaczy śledzić zmiany?
+## Podstawowe działanie GITa - śledzenie zmian
 
-Teraz gdy wiemy, że GIT może śledzić zmiany na poziomie pliku przez pliki różnicowe, to zastanówmy się, co można z tym zrobić.
-Spróbujmy teraz wykonać kolejną zmianę na pliku.
-Znowu wykonamy *commit*, gdy wszystko będzie gotowe i dostajemy kolejny krok.
-Możemy tak zrobić jeszcze raz i jeszcze raz.
-Gdy mamy wiele zmian i z każdej można przejść do wcześniejszej, to można z naszego mocno zmodyfikowanego pliku wrócić do oryginalnego.
+GIT fundamentalnie przechowuje zmiany plików w postaci plików różnicowych.
+Każda zmiana na śledzonym pliku w repozytorium jest reprezentowana przez jeden taki plik.
+Pamiętając kolejność stosowania plików różnicowy, możemy uzyskać dowolny stan takiego pliku.
 Wtedy uzyskujemy całą historię zmian z jednoczesną możliwością wybrania dowolnej wersji, jeśli przyjdzie taka potrzeba.
 
-## Rozproszony system kontroli wersji - co to znaczy?
+## Rozproszony system kontroli wersji
 
 W przypadku pracy z wieloma programistami chcielibyśmy współdzielić kod, nad którym pracujemy.
-Zapewne do tego celu będzie istnieć jakiś serwer przechowujący aktualny kod projektu.
+Do tego celu najczęściej istnieje serwer przechowujący aktualny kod projektu.
 W przypadku GITa każdy programista będzie na swoim komputerze posiadać lokalną kopię **wszystkich** tam składowanych plików i ich historii zmian.
 Taki zestaw plików nazywamy *repozytorium*, a serwer *remotem*.
 
 Intuicyjnie wydaje się, że marnujemy przestrzeń dyskową i czas wykonując takie kopie.
-Jednak to było bardzo rozsądne rozwiązanie w połowie lat 90, jak i teraz.
-Jako programista mamy możliwość pracy bez aktywnego łącza internetowego na naszej lokalnej kopii.
-Dopiero gdy będziemy chcieli się podzielić naszym kodem, zsynchronizujemy się ze zdalnym repozytorium.
+Jednak takie podejście ma dobre strony.
+Jako programista mamy możliwość pracy na lokalnej kopii bez aktywnego łącza internetowego.
+Dopiero gdy będziemy chcieli się podzielić naszym kodem, zsynchronizujemy go ze zdalnym repozytorium.
 Taką lokalną kopię nazywamy potocznie *localem*
 
 ## Jak używać GITa?
@@ -142,7 +136,7 @@ $ git log
 ## Dodatkowe materiały
 
 Powyższy opis pokrywa tylko podstawowe funkcje GITa.
-Nie został tutaj poruszony tutaj temat gałęzi, łączenia zmian czy rozwiązywania konfliktów.
+Nie został tutaj poruszony temat gałęzi, łączenia zmian czy rozwiązywania konfliktów.
 W praktyce są to bardzo popularne problemy, jednak zbyt złożone do opisania tutaj.
 Ta [książka](https://git-scm.com/book/en/v2) jest bardzo dobrym źródłem do zapoznania się z wieloma funkcjami GITa.
 Polecam szczególnie rozdział drugi jako uzupełnienie tego opisu.

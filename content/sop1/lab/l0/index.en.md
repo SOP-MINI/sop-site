@@ -583,10 +583,8 @@ You have to copy it to `~/.ssh` directory.
 Every pair of keys is unique to student and has to be used by only one student.
 
 First step on laboratory is copy remote repository to your local workstation with command 
-
-TODO: Franek będzie musiał podmienić wszystkie REPO_URL na odpowiedni inny placeholder.
 ```shell
-$ git clone REPO_URL
+$ git clone ssh://gitolite@vl01/name_surname/l0pl
 ```
 
 Command creates directory with name of repository and copies files to it.
