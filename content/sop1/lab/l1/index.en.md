@@ -40,7 +40,7 @@ What you need to know:
 - man 0p dirent.h
 - man 3p fstatat (only stat and lstat)
 - man 3p errno
-- man 2 lstat (object type testing macros)
+- man 7 inode (first half of the "The file type and mode" section)
 
 <em>function in <b>prog9.c</b> file:</em>
 

@@ -38,7 +38,7 @@ Co student musi wiedzieć:
 - man 0p dirent.h
 - man 3p fstatat (tylko opis stat i lstat)
 - man 3p errno
-- man 2 lstat (opis makr testujących typ obiektu)
+- man 7 inode (pierwsza połowa sekcji "The file type and mode")
 
 <em>funkcja do pliku <b>prog9.c</b></em>
 ```c
