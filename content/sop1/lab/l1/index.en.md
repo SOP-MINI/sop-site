@@ -29,7 +29,7 @@ Introduction notes:
 
 
 
-## Task 9 - directories 1
+## Task 1 - directories 1
 
 Goal: 
 Write a program counting objects (files, links, folders and others) in current working directory
@@ -102,7 +102,7 @@ Good programmers always release resources, the open folder is a kind of resource
 descriptor in Linux, process can have limit on open descriptors. This gives you two good reasons not to forget closedir,
 code checking teacher may be counted as third one :-).
 
-## Task 10 - directories 2
+## Task 2 - directories 2
 
 Goal:
 Use function form prog9.c to write a program that will count objects in all the folders passed to the program as positional parameters.
@@ -138,7 +138,7 @@ Not all errors encountered in this program has to terminate it, what error can b
 Never ever code in this way: `printf(argv[i])`. What will be printed if somebody puts %d or other printf placeholders in
 the arguments? This applies to any string not only the one from arguments.
 
-## Task 11 - directories 3
+## Task 3 - directories 3
 
 Goal: 
 Write a program that counts all occurrences of the files, folders, symbolic links and other objects in a sub-trees rooted at locations indicated by parameters.  
@@ -174,7 +174,7 @@ account that the limit should be no less that the depth of the scanned tree othe
 before reaching the bottom of the tree. In Linux, descriptor limit is not defined but administrator can limit individual
 processes.
 
-## Task 12 - file access and operations 
+## Task 4 - file access and operations 
 
 Goal:
 Create a new file with name, permissions and size specified by parameters (-n NAME, -p OCTAL, -s SIZE). Content of the
@@ -267,7 +267,7 @@ Once closed by all the process it will be erased for good.
 
 You should call `srand` only once per process and make sure it gets unique seed, in this program time in seconds is sufficient.
 
-## Task 13 – stdout buffering
+## Task 5 – stdout buffering
 
 Note that this topic is less about operating systems and more about general C programming, 
 however we mention it for completeness as related issues were quite common in the past years.
@@ -320,7 +320,7 @@ error for everything else. For instance `grep` will output lines that contain th
 output, but if it can't open the file, it will complain on the standard error. Note that our `ERR` macro also
 outputs to standard error.
 
-## Task 14 - low level file access
+## Task 6 - low level file access
 
 Goal:
 Modify task 3 code. Parent receives SIGUSR1 form child at set interval (1st parameter) and counts them. Additionally parent process creates a file of set (2nd parameter) amount of blocks of set size (3rd parameter) with a name given as 4th parameter. The content of the file is a copy of data read from /dev/urandom. Each block must be copied separately with sizes control. After each copy operation program prints the effective amount of data transferred and the amount of received signals on the stderr.

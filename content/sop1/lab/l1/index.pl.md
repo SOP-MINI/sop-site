@@ -27,7 +27,7 @@ Uwagi wstępne:
 {{< /hint >}}
 
 
-## Zadanie 9 - katalogi 1
+## Zadanie 1 - katalogi 1
 
 Cel: Napisać program zliczający (pliki, linki, katalogi i inne obiekty) w katalogu roboczym (bez podkatalogów)
 
@@ -101,7 +101,7 @@ Dobrzy programiści zawsze zwalniają zasoby, w tym programie zasobem jest otwar
 liczy się jak otwarty plik, proces może mieć limit otwartych deskryptorów co daje nam już dwa bardzo ważne argumenty aby
 pamiętać o closedir. Trzecim powodem będzie sprawdzający kod nauczyciel :-).
 
-## Zadanie 10 - katalogi 2
+## Zadanie 2 - katalogi 2
 
 Cel: Bazując na funkcji z poprzedniego zadania napisać program, który będzie zliczał obiekty we wszystkich folderach
 podanych jako parametry pozycyjne programu
@@ -138,7 +138,7 @@ W tym programie nie wszystkie błędy muszą zakończyć się wyjściem, który 
 Nigdy i pod żadnym pozorem nie pisz `printf(argv[i])`, jeśli ktoś poda jako katalog %d to jak to wyświetli `printf`?
 To dotyczy nie tylko argumentów programu ale dowolnych ciągów znaków.
 
-## Zadanie 11 - katalogi 3
+## Zadanie 3 - katalogi 3
 
 Cel: Napisać program zliczający wystąpienia plików, katalogów, linków i innych typów dla całych poddrzew zaczynających
 się w podanych jako parametry folderach.
@@ -175,7 +175,7 @@ przeskanowanie bardzo głębokiego drzewa katalogów (głębszego niż limit) al
 mamy. W zakresie deskryptorów maksima systemowe pod Linuksem są nieokreślone, ale można procesy oddzielnie limitować na
 poziomie administracji systemem.
 
-## Zadanie 12 - operacje na plikach
+## Zadanie 4 - operacje na plikach
 
 Cel: Napisać program tworzący nowy plik o podanej parametrami nazwie (-n NAME), uprawnieniach (-p OCTAL ) i rozmiarze (
 -s SIZE). Zawartość pliku ma się składać w około 10% z losowych znaków [A-Z], resztę pliku wypełniają zera (znaki o
@@ -262,7 +262,7 @@ zainteresowane procesy będą mogły z niego korzystać. Gdy skończą plik znik
 Najlepiej w procesie wywołać srand dokładnie jeden raz z unikalnym ziarnem,w tym programie wystarczy czas podany w
 sekundach.
 
-## Zadanie 13 – buforowanie standardowego wyjścia
+## Zadanie 5 – buforowanie standardowego wyjścia
 
 Ten temat ma więcej wspólnego z ogólnym programowaniem w C niż z systemami operacyjnymi, niemniej jednak wspominamy o nim, bowiem w poprzednich latach był częstym źródłem problemów.
 
@@ -312,7 +312,7 @@ rezultatów, a do czegokolwiek innego używa się standardowego błędu. Na przy
 wystąpienia na standardowe wyjście, ale ewentualne błędy przy otwarciu pliku trafią na standardowy błąd. Nawet nasze
 makro `ERR` wypisuje błąd do strumienia standardowego błędu.
 
-## Zadanie 14 - operacje niskopoziomowe na plikach
+## Zadanie 6 - operacje niskopoziomowe na plikach
 
 Cel: Zmodyfikować program z zadania 3 tak aby proces rodzic odbierał sygnały SIGUSR1 wysyłane co zadany czas (parametr 1) i zliczał je.  Dodatkowo proces główny tworzył plik o nazwie podanej jako parametr 4 o zadanej ilości bloków o zadanym rozmiarze (parametry 2 i 3). Zawartość pliku ma pochodzić z /dev/urandom. Każdy blok kopiujemy osobno, kontrolując rozmiary. Po skopiowaniu bloku należy podać na stderr realną ilość przepisanych bloków oraz stan liczników sygnałów.
 Co student musi wiedzieć: 
