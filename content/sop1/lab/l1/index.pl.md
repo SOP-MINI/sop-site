@@ -40,40 +40,8 @@ Co student musi wiedzieć:
 - man 3p errno
 - man 7 inode (pierwsza połowa sekcji "The file type and mode")
 
-<em>funkcja do pliku <b>prog9.c</b></em>
-```c
-void scan_dir()
-{
-DIR *dirp;
-struct dirent *dp;
-struct stat filestat;
-int dirs = 0, files = 0, links = 0, other = 0;
-if (NULL == (dirp = opendir(".")))
-ERR("opendir");
-do {
-errno = 0;
-if ((dp = readdir(dirp)) != NULL) {
-if (lstat(dp->d_name, &filestat))
-ERR("lstat");
-if (S_ISDIR(filestat.st_mode))
-dirs++;
-else if (S_ISREG(filestat.st_mode))
-files++;
-else if (S_ISLNK(filestat.st_mode))
-links++;
-else
-other++;
-}
-} while (dp != NULL);
-
-	if (errno != 0)
-		ERR("readdir");
-	if (closedir(dirp))
-		ERR("closedir");
-	printf("Files: %d, Dirs: %d, Links: %d, Other: %d\n", files, dirs, links, other);
-
-}
-```
+<em>kod do pliku <b>prog9.c</b></em>
+{{< includecode "prog10.c" >}}
 
 Uruchom ten program w katalogu w którym masz jakieś pliki, może być ten w którym wykonujesz ten tutorial, ważne aby nie było w nim katalogów, czy wyniki zgadzają się z tym czego oczekujemy tj. zero katalogów, trochę plików?
 {{< expand "Odpowiedź" >}} 
