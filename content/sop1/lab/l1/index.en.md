@@ -9,8 +9,8 @@ weight: 20
 {{< hint info >}}
 Introduction notes:
 
-- This tutorial is fairly easy and rather long, next ones will be harder and shorter
-- Quick look at this material will not suffice, you should compile and run all the programs, check how they work, read
+- This tutorial is fairly asy and rather long, next ones will be harder and shorter
+- A quick look at this material will not suffice, you should compile and run all the programs, check how they work, read
   additional materials like man pages. As you read the material please do all the exercises and questions. At the end
   you will find sample task similar to the one you will do during the labs, please do it at home.
 - You will find additional information in yellow sections, questions and tasks in blue ones. Under the question you will
@@ -194,7 +194,7 @@ What you need to know:
 <em>code for <b>prog12.c</b> file:</em>
 {{< includecode "prog12.c" >}}
 
-What bitmap is created with: `~perms&0777` ? 
+What bitmask is created with: `~perms&0777` ? 
 {{< expand "Answer" >}} 
 Reverted permission bits cut to 9 least significant bits. If you do not know how it works then learn C bit operations.
 {{< /expand >}}
@@ -321,135 +321,49 @@ error for everything else. For instance `grep` will output lines that contain th
 output, but if it can't open the file, it will complain on the standard error. Note that our `ERR` macro also
 outputs to standard error.
 
-## Task 6 - low level file access
+## Task 6 - low-level file access
 
-Goal:
-Modify task 3 code. Parent receives SIGUSR1 form child at set interval (1st parameter) and counts them. Additionally parent process creates a file of set (2nd parameter) amount of blocks of set size (3rd parameter) with a name given as 4th parameter. The content of the file is a copy of data read from /dev/urandom. Each block must be copied separately with sizes control. After each copy operation program prints the effective amount of data transferred and the amount of received signals on the stderr.
+Write a simple file-copying program.
+It should accept two file paths as arguments, and copy the file from the first path to the second one.
+
+This time to implement reading and writing we will use low-level functions, i.e. ones which are not defined by the standard C library, but which are exposed by the operating system itself. They are trickier to use, but are more universal. You can use them for e.g. network communications, which we will consider in the next semester.
+
 <em>What you need to know:</em> 
 - man 3p open
 - man 3p close
 - man 3p read
 - man 3p write
-- man 4 urandom
 - man 3p mknod (only open new file permissions constants)
 - macro TEMP_FAILURE_RETRY description <a href="http://www.gnu.org/software/libc/manual/html_node/Interrupted-Primitives.html">here</a>
 
-{{< hint info >}}
-This task has two stages.
-{{< /hint >}}
-
-<em>solution 1st stage, parts of <b>prog16a.c</b>:</em>
-{{< includecode "prog16a.c" >}}
-
-Do remember that you can read good quality really random bytes from /dev/random file but the amount is limited or read
-unlimited amount of data from /dev/urandom but these are pseudo random bytes.
-
-You should see the following flaws if you run the program with 1 20 40 out.txt params:
-
-Coping of blocks shorter than 40Mb, in my case it was at most 33554431, it is due to signal interruption DURING the IO
-operation
-
-fprintf: Interrupted system call - function interrupted by signal handling BEFORE it did anything
-
-Similar messages for open and close - it may be hard to observe in this program but it is possible and described by
-POSIX documentation.
-
-How to get rid of those flows is explained in the 2nd stage.
-
-If there is memory allocation in your code there MUST also be memory release! Always.
-
-Permissions passed to open function can also be expressed with predefined constants (man 3p mknod). As octal permission
-representation is well recognized by programmers and administrators it can also be noted in this way and will not be
-considered as "magic number" style mistake. It is fairly easy to trace those constants in the code.
-
-Obviously the parent counts less signals than child sends, as summing runs inside the handler we can only blame merging for it. Can you tell why signal merging is so strong in this code?
-{{< expand "Answer" >}} In this architecture (GNU/Linux) CPU planer blocks signals during IO operations (to some size as we can see) and  during IO signals have more time to merge. {{< /expand >}}
-
-What for the SIGUSR1 is sent to the process group at the end of the parent process?
-{{< expand "Answer" >}} To terminate the child. {{< /expand >}}
-
-How come it works? SIGUSR1 handling is inherited from the parent?
-{{< expand "Answer" >}} Child first action is to restore default signal disposition - killing of the receiver. {{< /expand >}}
-
-Why parent does not kill itself with this signal?
-{{< expand "Answer" >}} It sets the handler for SIGUSR1 before it sends it to the group. {{< /expand >}}
-
-Can this strategy fail?
-{{< expand "Answer" >}} Yes, if parent process finishes it's job before child is able to even start the code and reset SIGUSR1 disposition. {{< /expand >}}
-
-Can you improve it and at the same time not kill the parent with the signal from a child?
-{{< expand "Answer" >}} send SIGUSR2 to the child. {{< /expand >}} 
-
-Is this child (children) termination strategy  easy and correct at the same time in all possible programs?
-{{< expand "Answer" >}} Only if child processe does not have resources to release, if it has something to release you must add proper signal handling and this may be complicated. {{< /expand >}}
-
-Why to check if a pointer to newly allocated memory is not null?
-{{< expand "Answer" >}} Operating system may not be able to grant your program additional memory, in this case it reports the error with the NULL. You must be prepared for it. The lack of this check is a common students' mistake. {{< /expand >}}
-
-Can you turn the allocated buffer into automatic variable and avoid the effort of allocating and releasing the memory?
-{{< expand "Answer" >}} I don't know about OS architecture that uses stacks large enough to accommodate 40MB, typical stack has a few MB at most. For smaller buffers (a few KB) it can work. {{< /expand >}}  
-
-Why permissions of a newly created file are supposed to be full (0777)? Are they really full?
-{{< expand "Answer" >}} umask will reduce the permissions, if no set  permissions are required it is a good idea to allow the umask to regulate the effective rights {{< /expand >}}
-
-<em>solution 2nd stage, parts of <b>prog16b.c</b>:</em>
-{{< includecode "prog16b.c" >}}
-
-Run it with the same parameters as before - flaws are gone now.
+<em>code for <b>prog14.c</b> file:</em>
+{{< includecode "prog14.c" >}}
 
 For a program to see `TEMP_FAILURE_RETRY` macro you must first define `GNU_SOURCE` and then include header
-file `unistd.h`.
+file `unistd.h`. You don't have to understand it fully for now, it will get more important during the next laboratory when we tackle signals.
 
-What error code  EINTR represents?
-{{< expand "Answer" >}} This is not an error, it is a way for OS to inform the program that the signal handler has been invoked {{< /expand >}}
+Why are `bulk_read` and `bulk_write` functions used in the above program?
+Would not it suffice to just call `read` or `write`?
+{{< expand "Answer" >}}
+According to the specification, `read` and `write` functions can return before reading/writing the amount of data the caller asked for.
+You will learn more about this aspect in the tutorial for the next laboratory.
+In theory this does not matter in this task (we are not using signals), but getting used to this pattern now is a recommended idea.
+{{< /expand >}}
 
-How should you react to EINTR?
-{{< expand "Answer" >}} Unlike real errors do not exit the program, in most cases  to recover the problem simply restart the interrupted function with the same set of parameters as in initial call. {{< /expand >}}
+Could the above program use C library functions instead of low-level IO? (`fopen`, `fprintf`, ...)
+{{< expand "Answer" >}}
+Yes, everything done in this program could be achieved using functions introduced earlier.
+{{< /expand >}}
 
-At what stage functions are interrupted if EINTR is reported
-{{< expand "Answer" >}} Only before they start doing their job - in waiting stage. This means that you can safely restart with the same arguments all the functions used in OPS tutorials except "connect" (OPS2 sockets) {{< /expand >}} 
+Can you write data to a descriptor returned by `open` using `fprintf`?
+{{< expand "Answer" >}}
+No! `fprintf`, `fgets`, `fscanf` etc. function accept a variable of type `FILE*` as their argument, a descriptor on the other hand is just a number of type `int` used by the operating system to identify an open file.
+{{< /expand >}}
 
-What are other types of interruption signal handler can cause?
-{{< expand "Answer" >}} IO transfer can be interrupted in the middle, this case is not reported with EINTR. Sleep and nanosleep similar. In both cases restarting can not reuse the same parameters, it gets complicated. {{< /expand >}}
-
-How do you know what function cat report EINTR?
-{{< expand "Answer" >}}  Read man pages, error sections. It easy to guess those function must wait before they do their job. {{< /expand >}}
-
-Analyze how bulk_read and bulk_write work. You should know what cases are recognized in those functions, what types of interruption they can handle, how to recognize EOF on the descriptor. It will be discussed during Q&amp;A session but first try on your own, it is a very good exercise.
-
-Both bulk_ functions can be useful not only on signals but also to "glue" IO transfers where data comes from not
-continuous data sources like pipe/fifo and the socket - it wile be covered by following tutorials.
-
-Not only read/write can be interrupted in the described way, the problem applies to the related pairs like fread/fwrite
-and send/recv.
-
-As you know SA_RESTART flag can cause automatic restarts on delivery of a signal if this flag is set in the handler, it
-may not be apparent but this method has a lot of shortcomings:
-
-You must control all the signal handlers used in the code, they all must be set with this flag, if one does not use this
-flag then you must handle EINTR as usual. It is easy to forget about this requirement if you extend/reuse the older
-code.
-
-If you try to make some library functions (like bulk_read and write) you can not assume anything about the signals in
-the caller code.
-
-It is hard to reuse a code depending on SA_RESTART flag, it can only be transferred to the similar strict handler
-control code.
-
-Sometimes you wish to know about interruption ASAP to react quickly. Sigsuspend would not work if you use this flag!
-
-Why do we not react on other (apart from EINTR) errors of fprintf? If program can not write on stderr (most likely
-screen) then it cannot report errors.
-
-Really big (f)printfs can get interrupted in the middle of the process (like write). Then it is difficult to restart the
-process especially if formatting is complicated. Avoid using printf where restarting would be critical (most cases
-except for the screen output) and the volume of transferred data is significant, use write instead.
-
-
-As an exercise do <a href="{{< ref "../l1-example" >}}">this</a> task. 
-It was used in previous years in a bit different labs timing. 
-It is 60 minutes task and if you can do it in this time it means you are prepared for the lab. 
-In a new timing there is more time for the task and it will be slightly larger.
+As an exercise do <a href="{{< ref "../l1-example" >}}">this</a> task.
+It was used in previous years in a bit different labs timing.
+It is a 60 minutes task and if you can do it in this time it means you are prepared for the lab.
+Remember that during the lab you will be given 2 hours to solve a task, so expect it to be more demanding.
 
 ## Source codes presented in this tutorial
 

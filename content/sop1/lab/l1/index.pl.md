@@ -8,7 +8,6 @@ weight: 20
 
 {{< hint info >}}
 Uwagi wstępne:
-- To jest mega łatwy tutorial, ale za to długi, kolejne będą coraz trudniejsze i krótsze
 - Szybkie przejrzenie tutoriala prawdopodobnie nic nie pomoże, należy samodzielnie uruchomić programy, sprawdzić jak
   działają, poczytać materiały dodatkowe takie jak strony man. W trakcie czytania sugeruję wykonywać ćwiczenia a na
   koniec przykładowe zadanie.
@@ -315,131 +314,46 @@ makro `ERR` wypisuje błąd do strumienia standardowego błędu.
 
 ## Zadanie 6 - operacje niskopoziomowe na plikach
 
-Cel: Zmodyfikować program z zadania 3 tak aby proces rodzic odbierał sygnały SIGUSR1 wysyłane co zadany czas (parametr 1) i zliczał je.  Dodatkowo proces główny tworzył plik o nazwie podanej jako parametr 4 o zadanej ilości bloków o zadanym rozmiarze (parametry 2 i 3). Zawartość pliku ma pochodzić z /dev/urandom. Każdy blok kopiujemy osobno, kontrolując rozmiary. Po skopiowaniu bloku należy podać na stderr realną ilość przepisanych bloków oraz stan liczników sygnałów.
+Napisz prosty program kopiujący pliki.
+Powinien akceptować jako swoje argumenty dwie ścieżki i skopiować plik z pierwszej na drugą.
+
+Tym razem do realizacji odczytu i zapisu plików użyjemy funkcji niskopoziomowych, t.j. takich, których nie definiuje biblioteka standardowa C, a które udostępnia sam system operacyjny. Są one trudniejsze w użyciu, ale są też bardziej uniwersalne. Można przy ich pomocy np. wysyłać pakiety przez sieć, czym zajmiemy się w przyszłym semestrze.
+
 Co student musi wiedzieć: 
 - man 3p open
 - man 3p close
 - man 3p read
 - man 3p write
-- man 4 urandom
 - man 3p mknod (tylko stałe opisujące uprawnienia do open)
 - opis makra TEMP_FAILURE_RETRY <a href="http://www.gnu.org/software/libc/manual/html_node/Interrupted-Primitives.html">tutaj</a>
 
-{{< hint info >}}
-Tym razem rozwiązanie jest podzielone na 2 możliwe do uruchomienia etapy.
-{{< /hint >}}
-
-<em>rozwiązanie 1 etap, plik <b>prog16a.c</b>:</em>
-{{< includecode "prog16a.c" >}}
-
-Pamiętaj, z pliku /dev/random możesz pobrać na prawdę losowe bajty ale w małych ilościach, z /dev/urandom odwrotnie,
-pseudo losowe liczby za to w dowolnych ilościach.
-
-Powinieneś obserwować następujące problemy podczas uruchamiania z parametrami 1 20 40 out.txt :
-
-Kopiowanie krótszych bloków niż zadano, na moim laptopie nigdy nie przekraczam 33554431 a powinno być 40MB, ale
-pojawiają się też i krótsze, powód to przerwanie odczytu (W TRAKCIE) obsługą sygnału
-
-fprintf: Interrupted system call - przerwanie funkcją obsługi sygnału funkcji fprintf ZANIM ta coś wyświetli
-
-Analogiczne komunikaty dla open i close - może to być trudno zaobserwować w tym programie ale jest to możliwe wg. POSIX
-
-Jak sobie z tymi efektami radzić pokazujemy w następnym etapie.
-
-Zawsze gdy w poprawnym programie pojawia się alokacja pamięci musi być też jej zwalnianie!
-
-Uprawnienia podawane w funkcji open mogą być także podane przy użyciu stałych (man 3p mknod), wyjątkowo ze względu na
-bardzo silne zakorzenienie notacji oktalnej u programistów i administratorów oraz na fakt, że łatwo takie liczby w
-kodzie wyszukać nie uznajemy tego za błąd stylu tzw. "magic numbers".
-
-Widać, że zliczamy w rodzicu mniej sygnałów niż wysyła potomek, ponieważ sumowanie odbywa się bezpośrednio w nieblokowanej obsłudze sygnału to łatwo się domyślić, że w grę wchodzi sklejanie się sygnałów, pytanie czemu w tym programie to sklejanie jest aż tak silne?
-{{< expand "Odpowiedź" >}}  w tej architekturze (GNU/Linux) planista procesora blokuje uruchomienie obsługi sygnału podczas większych operacji IO, w tym czasie sygnały się sklejają. {{< /expand >}}
-
-W jakim celu proces rodzic na zakończenie wysyła do całej grupy SIGUSR1?
-{{< expand "Odpowiedź" >}} Aby zakończyć proces potomny. {{< /expand >}}
-
-Jak proces potomny może się zakończyć po nadejściu SIGUSR1 skoro dziedziczy obsługę tego sygnału?
-{{< expand "Odpowiedź" >}} Zaraz po starcie potomka przywracana jest domyślna reakcja na ten sygnał, która właśnie zapewnia zabicie procesu. {{< /expand >}}
-
-Czemu proces rodzic nie zabija się sam tym sygnałem?
-{{< expand "Odpowiedź" >}} Ma włączoną obsługę tego sygnału zanim wyśle sygnał do grupy. {{< /expand >}}
-
-Czy taka strategia może się  nie powieść?
-{{< expand "Odpowiedź" >}} Tak, jeśli proces rodzic upora się ze swoim zadaniem zanim proces potomny zmieni dyspozycję odnośnie SIGUSR1 na domyślną. {{< /expand >}}
-
-Czy można to jakoś poprawić? Tzn. proces rodzic zawsze zabije potomka ale jednocześnie sam nie narazi się na przedwczesną śmierć?
-{{< expand "Odpowiedź" >}} Wyślij do potomka SIGUSR2. {{< /expand >}} 
-
-Czy taka strategia zakończenia potomka zawsze jest poprawna i  łatwa do przeprowadzenia?
-{{< expand "Odpowiedź" >}} Tylko jeśli proces zabijany nie posiada zasobów, jeśli by takowe posiadał to musisz dodać obsługę sygnału kończącego co nie musi być  łatwe. {{< /expand >}}
-
-Czemu po wywołaniu alokacji pamięci sprawdzamy przydzielony wskaźnik czy aby nie jest NULL? 
-{{< expand "Odpowiedź" >}} System może nie móc nam przydzielić więcej pamięci, musimy być na to przygotowani. Brak tego sprawdzania jest bardzo częstym błędem w pracach studentów. {{< /expand >}}
-
-Czy nie dałoby się tego bufora uczynić zmienną automatyczną i uniknąć kodu związanego z alokacją i zwalnianiem?
-{{< expand "Odpowiedź" >}} Nie ma w znanych mi architekturach tak dużych stosów aby można było  na nich umieszczać tak duże zmienne (40MB dla przykładowych parametrów), zazwyczaj stos ma wymiar do kilku megabajtów, gdyby  nasz bufor był mały (kilka KB) to moglibyśmy tak zrobić. {{< /expand >}}  
-
-Czemu uprawnienia do nowego pliku są  pełne (0777)? 
-{{< expand "Odpowiedź" >}} umask zredukuje uprawnienia, jeśli nie chcemy mieć konkretnych ustawień to jest to dobra strategia {{< /expand >}}
-
-<em>rozwiązanie drugi etap, plik <b>prog16b.c</b>:</em>
-{{< includecode "prog16b.c" >}}
-
-Uruchamiamy jak poprzednio - błędy znikają.
+<em>kod do pliku <b>prog14.c</b></em>
+{{< includecode "prog14.c" >}}
 
 Aby dostępne było makro `TEMP_FAILURE_RETRY` trzeba najpierw zdefiniować `GNU_SOURCE` a następnie dołączyć plik
-nagłówkowy `unistd.h`.
+nagłówkowy `unistd.h`. Nie musisz jeszcze w pełni rozumieć działania tego makra, będzie on ważniejsze w trakcie kolejnego laboratorium gdy zajmiemy się sygnałami.
 
-Co to jest błąd EINTR?
-{{< expand "Odpowiedź" >}} To nie jest błąd, to tylko informacja o przerwaniu danej funkcji poprzez funkcję obsługi sygnału {{< /expand >}}
+Dlaczego w powyższym programie używane są funkcje `bulk_read` i `bulk_write`?
+Czy nie wystarczyłoby po prostu użyć `read` i `write`
+{{< expand "Answer" >}}
+Zgodnie ze specyfikacją funkcje `read` i `write` mogą zwrócić zanim ilość danych której zażądał użytkownik zostanie odczytana/zapisana.
+Więcej o tym zachowaniu dowiesz się w tutorialu do kolejnego laboratorium.
+Teoretycznie w tym zadaniu nie ma to znaczenia (ponieważ nie używamy sygnałów), ale dobrze się do tego przyzwyczaić już teraz.
+{{< /expand >}}
 
-Jaka jest poprawna reakcja na ten błąd?
-{{< expand "Odpowiedź" >}} Nie jest to wyjście z programu, prawie zawsze jest to restart funkcji z tymi samymi parametrami jakie były podane przy pierwszym wywołaniu. {{< /expand >}}
+Czy powyższy program mógłby być zaimplementowany funkcjami bibliotecznymi z C zamiast niskopoziomowym IO? (`fopen`, `fprintf`, ...)
+{{< expand "Answer" >}}
+Tak, w tym programie nie ma niczego co nie pozwala użyć wcześniej pokazanych funkcji.
+{{< /expand >}}
 
-Kiedy dokładnie te funkcje są przerywane?
-{{< expand "Odpowiedź" >}} EINTR oznacza przerwanie zanim funkcja coś zrobi! Można zatem bez obaw restartować, za jedynym używanym tu wyjątkiem funkcji przyłączania gniazda "connect" (SOP2) {{< /expand >}} 
-
-Jakie inne przerwania w programie może spowodować funkcja obsługi sygnału?
-{{< expand "Odpowiedź" >}} Może przerwać operacje IO lub spanie, nie jest to raportowane przez EINTR, w obu przypadkach reakcja na takie zdarzenie nie jest prosta.  {{< /expand >}}
-
-Skąd wiemy, które funkcje mogą być przerwane zanim coś osiągną (EINTR)?
-{{< expand "Odpowiedź" >}} Strony man pages, dział o zwracanych błędach. Łatwo zgadnąć, że to te funkcje, które mogą/muszą czekać zanim coś zrobią. {{< /expand >}}
-
-Jako ważne ćwiczenie przeanalizuj jak działa bulk_read i bulk_write. Musisz rozumieć czemu uwzględniają tak dużo przypadków, jakie to przypadki, kiedy operacja IO może być przerwana, jak rozpoznać EOF. To na pewno będzie omawiane na zajęciach przed testem, ale najpierw sam/sama spróbuj to "rozgryźć".
-
-Obie funkcje bulk_ mogą być pomocne nie tylko gdy chodzi o ochronę przed sygnałami lub sklejanie dużych transferów I/O,
-ale także tam gdzie dane nie są dostępne w sposób ciągły - pipe/fifo/gniazda które poznamy nieco później.
-
-Podobnie jak read/write zachowują się wszystkie funkcje pokrewne takie jak fread/fwrite czy send/recv
-
-Warto sobie uświadomić czemu użycie flagi SA_RESTART podczas instalowania funkcji obsługi sygnału nie rozwiązuje nam
-problemu z EINTR:
-
-Z góry musimy wiedzieć jakie sygnały będą obsługiwane w naszym programie i wszystkie one muszą być włączone z tą flagą,
-wystarczy jeden bez tej niej i problem EINTR powraca. Łatwo o taki błąd jeśli powrócimy do starszego kodu, łatwo
-zapomnieć o tym wymogu.
-
-Jeśli chcemy napisać sobie funkcję biblioteczną (np. bulk_read) to nie możemy nic zakładać o obsłudze sygnałów w
-programie używającym naszej biblioteki.
-
-Nie możemy łatwo przenieść takiego kodu, w programie docelowym musiałaby być dokładnie taka sama obsługa sygnałów.
-
-Czasem zależy nam na tym, aby właśnie być informowanym o przerwaniu, jaskrawym przykładem jest funkcja sigsuspend, która
-z tą flagą traci sens!
-
-Po wywołaniu fprintf nie sprawdzamy błędów innych niż EINTR, czemu? Jeśli nie możemy pisać na stderr (zapewne ekran) to
-i tak nie zaraportujemy błędu.
-
-Zwróć uwagę, że naprawdę duże (f)printf'y mogą być przerwane także w trakcie wypisywania! Trudno będzie coś mądrego z
-tym zrobić, zwłaszcza jeśli do tego wypisywania używamy skomplikowanych formatów. Co prawda funkcja zwróci ile znaków
-wypisała ale jak to potem zrestartować? Zazwyczaj nie łatwo jest nam policzyć ile znaków powinno być wypisane, tym
-bardziej nie mamy jak wyznaczyć od którego momentu trzeba wznowić wypisywanie. Dlatego funkcji tej rodziny unikamy tam
-gdzie restartowanie będzie krytyczne i musimy wypisać dużo danych. Tam gdzie błąd braku restartu nie jest krytyczny (
-wypisywanie na ekran) lub gdy ilość danych jest mała tam nie ma tego problemu.
+Czy do deskryptora zwróconego z `open` można zapisać dane przez `fprintf`?
+{{< expand "Answer" >}}
+Nie! Funkcje `fprintf`, `fgets`, `fscanf` itd. przyjmują jako argument zmienną typu `FILE*`, deskryptor jest natomiast pojedynczą liczbą `int` używaną przez system operacyjny do identyfikacji otwartego pliku.
+{{< /expand >}}
 
 Wykonaj przykładowe <a href="{{< ref "../l1-example" >}}">ćwiczenie</a> z poprzednich lat. To zadanie szacuję na 60
 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a do zajęć. Pamiętaj, że w aktualnym
-układzie zajęć będzie dane zadnie na nieco ponad godzinę, więc trochę bardziej pracochłonne.
+układzie zajęć będzie dane zadnie na dwie godziny, będzie więc bardziej pracochłonne.
 
 ## Kody źródłowe z treści tutoriala
 {{% codeattachments %}}
