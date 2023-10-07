@@ -5,7 +5,7 @@ date: 2022-02-10T10:00:00+01:00
 
 ## Lecture
 
-Thurdsays, 8:15 - 10:00, room 328
+Thurdsays, 8:15 - 10:00, room 103
 
 | Date       | Topic                                                        |
 |------------| ------------------------------------------------------------ |
@@ -19,7 +19,7 @@ Thurdsays, 8:15 - 10:00, room 328
 
 ## Laboratories
 
-Mondays, 2:15-4:30pm
+Thurdsays, 2:15-4:30pm
 
 | Date                | Topic                                                          |
 | ----------          | -----------------------------------                            |
@@ -30,4 +30,4 @@ Mondays, 2:15-4:30pm
 | 12.12.2023          | [L4 Synchronization]({{< ref "lab/l4" >}})                     |
 | 15.12.2023          | **7:00pm** retake signup closes (in LeON)                      |
 |  9.01.2024          | L5 Retakes                                                     |
-
+| 16.01.2024          | L5 Retakes part 2 (if neccessary)                              |

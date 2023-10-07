@@ -5,7 +5,7 @@ date: 2022-02-10T10:00:00+01:00
 
 ## Wykłady
 
-Wtorki, godz. 16:15 - 18:00, s. 328
+Wtorki, godz. 16:15 - 18:00, s. 103
 
 | Data       | Tytuł                                                        |
 |------------| ------------------------------------------------------------ |
@@ -30,5 +30,6 @@ Wtorki, godz. 14:15 - 16:30
 | 19.12.2023                | [L4 Synchronizacja]({{< ref "lab/l4" >}})                      |
 | 22.12.2023                | **19:00** -- zamknięcie zapisów na poprawy w LeON              |
 |  9.01.2024                | L5 Poprawy                                                     |
+| 16.01.2024                | L5 Poprawy druga część (jeśli zajdzie potrzeba)                |
 
 
