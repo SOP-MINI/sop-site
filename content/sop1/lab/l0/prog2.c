@@ -6,10 +6,10 @@
 
 int main(int argc, char **argv)
 {
-	char name[22];
-	scanf("%21s", name);
-	if (strlen(name) > 20)
-		ERR("Name too long");
-	printf("Hello %s\n", name);
-	return EXIT_SUCCESS;
+    char name[22];
+    scanf("%21s", name);
+    if (strlen(name) > 20)
+        ERR("Name too long");
+    printf("Hello %s\n", name);
+    return EXIT_SUCCESS;
 }

@@ -15,34 +15,37 @@
 #define _LONG_
 
 #ifdef _LONG_
-struct two_words {
-	long a, b;
+struct two_words
+{
+    long a, b;
 } mem;
 #else
-struct two_words {
-	int a, b;
+struct two_words
+{
+    int a, b;
 } mem;
 #endif
 
 void handler(int signum)
 {
 #ifdef _LONG_
-	printf("%ld,%ld\n", mem.a, mem.b);
+    printf("%ld,%ld\n", mem.a, mem.b);
 #else
-	printf("%d,%d\n", mem.a, mem.b);
+    printf("%d,%d\n", mem.a, mem.b);
 #endif
-	alarm(1);
+    alarm(1);
 }
 
 int main(void)
 {
-	static struct two_words zeros = { 0, 0 }, ones = { 1, 1 };
-	signal(SIGALRM, handler);
-	mem = zeros;
-	alarm(1);
-	while (1) {
-		mem = zeros;
-		mem = ones;
-	}
-	return 0;
+    static struct two_words zeros = {0, 0}, ones = {1, 1};
+    signal(SIGALRM, handler);
+    mem = zeros;
+    alarm(1);
+    while (1)
+    {
+        mem = zeros;
+        mem = ones;
+    }
+    return 0;
 }
