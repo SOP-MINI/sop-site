@@ -9,7 +9,6 @@ weight: 20
 {{< hint info >}}
 Introduction notes:
 
-- This tutorial is fairly asy and rather long, next ones will be harder and shorter
 - A quick look at this material will not suffice, you should compile and run all the programs, check how they work, read
   additional materials like man pages. As you read the material please do all the exercises and questions. At the end
   you will find sample task similar to the one you will do during the labs, please do it at home.
