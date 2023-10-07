@@ -325,9 +325,6 @@ Why permissions of a newly created file are supposed to be full (0777)? Are they
 
 Run it with the same parameters as before - flaws are gone now.
 
-For a program to see `TEMP_FAILURE_RETRY` macro you must first define `GNU_SOURCE` and then include header
-file `unistd.h`.
-
 What error code  EINTR represents?
 {{< expand "Answer" >}} This is not an error, it is a way for OS to inform the program that the signal handler has been invoked {{< /expand >}}
 
@@ -342,6 +339,8 @@ What are other types of interruption signal handler can cause?
 
 How do you know what function cat report EINTR?
 {{< expand "Answer" >}}  Read man pages, error sections. It easy to guess those function must wait before they do their job. {{< /expand >}}
+
+Analyze how bulk_read and bulk_write work. You should know what cases are recognized in those functions, what types of interruption they can handle, how to recognize EOF on the descriptor.
 
 Both bulk_ functions can be useful not only on signals but also to "glue" IO transfers where data comes from not
 continuous data sources like pipe/fifo and the socket - it wile be covered by following tutorials.

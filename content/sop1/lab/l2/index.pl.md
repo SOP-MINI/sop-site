@@ -311,6 +311,8 @@ Jakie inne przerwania w programie może spowodować funkcja obsługi sygnału?
 Skąd wiemy, które funkcje mogą być przerwane zanim coś osiągną (EINTR)?
 {{< expand "Odpowiedź" >}} Strony man pages, dział o zwracanych błędach. Łatwo zgadnąć, że to te funkcje, które mogą/muszą czekać zanim coś zrobią. {{< /expand >}}
 
+Jako ważne ćwiczenie przeanalizuj jak działa bulk_read i bulk_write. Musisz rozumieć czemu uwzględniają tak dużo przypadków, jakie to przypadki, kiedy operacja IO może być przerwana, jak rozpoznać EOF.
+
 Obie funkcje bulk_ mogą być pomocne nie tylko gdy chodzi o ochronę przed sygnałami lub sklejanie dużych transferów I/O,
 ale także tam gdzie dane nie są dostępne w sposób ciągły - pipe/fifo/gniazda które poznamy nieco później.
 
