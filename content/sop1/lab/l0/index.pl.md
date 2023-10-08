@@ -568,9 +568,9 @@ Zmienna była ustawiona tylko w programie i w powłoce w nim na chwilę wywołan
 ale po zakończeniu tych procesów się nie zachowała. 
 {{< /expand >}}
 
-## Zadanie 9 - obsługa błedów
+## Zadanie 9 - obsługa błędów
 
-Cel: zmodyfikować program prog7.c, aby Dodał zmienne środowiskowe podane przez użytkownika i dopiero wtedy wypisał je wszystkie.
+Cel: zmodyfikować program prog7.c, aby dodał zmienne środowiskowe podane przez użytkownika i dopiero wtedy wypisał je wszystkie.
 
 Co student musi wiedzieć: 
 - man 3p errno
@@ -588,7 +588,7 @@ $ ./prog9 VA=R1 VAL1
 
 W drugim wypadku program powinien zakończyć się błędem.
 Po zapoznaniu się z dokumentacją funkcji `setenv` dowiemy się, że zmienne środowiskowe nie mogą mieć w swojej nazwie znaku '='.
-Wtedy funkcja ustawia `errno` na kod błędu `EINVAL`.
+Wtedy funkcja zwraca `-1` i ustawia `errno` na kod błędu `EINVAL`.
 
 Funkcje systemowe poza zwracaniem specjalnego wyniku, który oznacza błąd, często ustawiają specjalną zmienną `errno` z kodem błędu.
 Pozwala to na ustalenie konkretnej przyczyny nieudanego wykonania funkcji.
@@ -600,7 +600,7 @@ W dokumentacji funkcji systemowych zawsze jest sekcja **ERRORS**.
 Zachęcam do zapoznania się z błędami poznanych już przez ciebie funkcji systemowych.
 Zastanów się, czy każde zakończenie się funkcji błędem musi oznaczać zakończenie programu.
 
-Jak co się stanie, gdy wywołamy program tylko z jednym argumentem? 
+Co się stanie, gdy wywołamy program tylko z jednym argumentem? 
 {{< expand "Odpowiedź" >}}  
 Program powinien od razu się zakończyć wywołując funkcje `usage`.
 Nie możemy ustawić zmiennej środowiskowej, kiedy nie znamy jej wartości.
@@ -614,7 +614,7 @@ Można wyczytać w dokumentacji `setenv`, że przy wykonaniu modyfikuje powyższ
 
 ## Zadanie do sprawdzenia środowiska. 
 
-Cel: Napisać trywialny program "hello world", skompilować go, uruchomić, spakować i przesłać na wskazane konto. 
+Cel: Napisać trywialny program "hello world", skompilować go i uruchomić
 *Co student musi wiedzieć:*
 - znać dowolne środowisko programisty w systemie Linux
 - znać podstawowe flagi polecenia `gcc`
@@ -708,3 +708,6 @@ Aby rozwiązanie zostało przyjęte przez serwer musi spełniać następujące w
 - Rozwiązanie powinno się kompilować bez błędów przy użyciu makefile zawartego w repozytorium
 
 W przypadku niespełnienia którego z warunków serwer odrzuci rozwiązanie z odpowiednim komunikatem. Należy poprawić swój kod, zrobić commit i ponownie wykonać push. Serwer pozwala wykonać jeden push na minutę.
+
+## Kody źródłowe z treści tutoriala
+{{% codeattachments %}}
