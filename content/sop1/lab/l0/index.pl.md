@@ -568,6 +568,50 @@ Zmienna była ustawiona tylko w programie i w powłoce w nim na chwilę wywołan
 ale po zakończeniu tych procesów się nie zachowała. 
 {{< /expand >}}
 
+## Zadanie 9 - obsługa błedów
+
+Cel: zmodyfikować program prog7.c, aby Dodał zmienne środowiskowe podane przez użytkownika i dopiero wtedy wypisał je wszystkie.
+
+Co student musi wiedzieć: 
+- man 3p errno
+
+<em>kod do pliku <b>prog9.c</b></em>
+{{< includecode "prog9.c" >}}
+
+Skompiluj i wykonaj program na dwa sposoby:
+```shell
+$ ./prog9 VAR1 VAL1
+``` 
+```shell
+$ ./prog9 VA=R1 VAL1
+``` 
+
+W drugim wypadku program powinien zakończyć się błędem.
+Po zapoznaniu się z dokumentacją funkcji `setenv` dowiemy się, że zmienne środowiskowe nie mogą mieć w swojej nazwie znaku '='.
+Wtedy funkcja ustawia `errno` na kod błędu `EINVAL`.
+
+Funkcje systemowe poza zwracaniem specjalnego wyniku, który oznacza błąd, często ustawiają specjalną zmienną `errno` z kodem błędu.
+Pozwala to na ustalenie konkretnej przyczyny nieudanego wykonania funkcji.
+Często wiedząc, co w przypadku danej funkcji oznacza kod błędu, możemy podjąć specjalne akcje.
+W przykładzie jest to wypisanie innego kodu błędu.
+Są jednak przypadki, gdzie zakończenie się funkcji z błędem nie powinno zakończyć działania programu.
+
+W dokumentacji funkcji systemowych zawsze jest sekcja **ERRORS**.
+Zachęcam do zapoznania się z błędami poznanych już przez ciebie funkcji systemowych.
+Zastanów się, czy każde zakończenie się funkcji błędem musi oznaczać zakończenie programu.
+
+Jak co się stanie, gdy wywołamy program tylko z jednym argumentem? 
+{{< expand "Odpowiedź" >}}  
+Program powinien od razu się zakończyć wywołując funkcje `usage`.
+Nie możemy ustawić zmiennej środowiskowej, kiedy nie znamy jej wartości.
+{{< /expand >}}
+
+Dlaczego dodane przez nas zmienne środowiskowe są wypisywane ostatnią pętlą w programie?
+{{< expand "Odpowiedź" >}}  
+Manipulacja zmiennymi środowiskowymi to tak naprawdę zmiana `char **environ`.
+Można wyczytać w dokumentacji `setenv`, że przy wykonaniu modyfikuje powyższą zmienną.
+{{< /expand >}}
+
 ## Zadanie do sprawdzenia środowiska. 
 
 Cel: Napisać trywialny program "hello world", skompilować go, uruchomić, spakować i przesłać na wskazane konto. 
