@@ -517,11 +517,53 @@ The variable was set in the program process and, for a brief moment, in the shel
 After those processes have ended the variable vanished with them.
 {{< /expand >}}
 
+## Task 9 - error handling
+
+Goal: Modify program prog7.c to add append new environmental variables passed by user and then list all them all.
+
+What you need to know:
+- man 3p errno
+
+<em>code for <b>prog9.c</b> file:</em>
+{{< includecode "prog9.c" >}}
+
+Compile and run program in two ways:
+```shell
+$ ./prog9 VAR1 VAL1
+``` 
+```shell
+$ ./prog9 VA=R1 VAL1
+``` 
+
+Second run should finish with error.
+After reading `setenv` man page we can read, that environmental variable name cannot contain '=' sign.
+In this case function return `-1` and sets `errno` to `EINVAL` error code.
+
+It is common behaviour that system functions on error return special value and sets special variable `errno` with error code.
+It helps to find out what gone wrong during function call.
+When we know what this error code means in case of concrete function we can handle it specially.
+In sample code finishes with special error description.
+There are also cases when system function returning error shouldn't finish whole program.
+
+In every man page of system function there is **ERRORS** section. 
+I encourage you to read those section at all system function from this tutorial.
+Consider what error codes shouldn't lead to finishing program.
+
+What would happen, when we run program with only one argument?
+{{< expand "Answer" >}}  
+Program should finish at the beginning calling `usage` function.
+We cannot set environmental variable when we don't know its value.
+{{< /expand >}}
+
+Why variables added by code are listed inside last loop?
+{{< expand "Answer" >}} 
+Modifying environmental variables it's just editing `char **environ` variable.
+We can read in `man 3p setenv` that calling it modifies above variable.
+{{< /expand >}}
 
 ## The task for IDE testing
 
-Goal: Write a trivial program "hello world", compile it, run it, compress the source and copy to the required
-destination.
+Goal: Write a trivial program "hello world", compile and run it.
 
 *What student has to know:*
 - know one of available (in our labs) programmers environment for Linux
