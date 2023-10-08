@@ -358,7 +358,7 @@ No! `fprintf`, `fgets`, `fscanf` etc. function accept a variable of type `FILE*`
 
 As an exercise do <a href="{{< ref "../l1-example" >}}">this</a> task.
 It was used in previous years in a bit different labs timing.
-It is a 60 minutes task and if you can do it in this time it means you are prepared for the lab.
+It is a 75 minutes task and if you can do it in this time it means you are prepared for the lab.
 Remember that during the lab you will be given 2 hours to solve a task, so expect it to be more demanding.
 
 ## Source codes presented in this tutorial
