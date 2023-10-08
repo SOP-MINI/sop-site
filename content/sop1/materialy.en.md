@@ -6,13 +6,12 @@ date: 2022-02-10T10:00:00+01:00
 ## Lecture reference
 
 - [Lec1 - Introduction. Computer and operating systems.]({{< ref "wyk/w1" >}})
-- [Lec2 - Processes.]({{< ref "wyk/w2" >}})
-- [Lec3 - File system and its interface. Stream-based I/O.]({{< ref "wyk/w3" >}})
-- [Lec4 - POSIX signals.]({{< ref "wyk/w4" >}})
-- [Lec5 - Low-level input/output operations.]({{< ref "wyk/w5" >}})
+- [Lec2 - File system and its interface. Stream-based I/O.]({{< ref "wyk/w2" >}})
+- [Lec3 - Low-level input/output operations.]({{< ref "wyk/w3" >}})
+- [Lec4 - Processes.]({{< ref "wyk/w4" >}})
+- [Lec5 - POSIX signals.]({{< ref "wyk/w5" >}})
 - [Lec6 - Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})
-- [Lec7 - Asynchronous input/output.]({{< ref "wyk/w7" >}})
-- [Lec8 - Management of threads and processes.]({{< ref "wyk/w8" >}})
+- Lec7 - Synchronization.
 
 ## Laboratory reference
 

@@ -4,7 +4,7 @@ date: 2022-02-05T18:00:18+01:00
 weight: 10
 ---
 
-# Wykład 1 - Systemy operacyjne i komputerowe
+# Systemy operacyjne i komputerowe
 
 ## Zakres materiału
 

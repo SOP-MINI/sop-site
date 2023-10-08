@@ -1,7 +1,7 @@
 ---
 title: "Asynchroniczne I/O"
 date: 2022-02-05T18:02:42+01:00
-weight: 70
+bookHidden: true
 ---
 
 # Wykład 7 - Asynchroniczne operacje wejścia/wyjścia

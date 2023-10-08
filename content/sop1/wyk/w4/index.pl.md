@@ -1,36 +1,32 @@
 ---
-title: "Sygnały"
-date: 2022-02-05T18:02:32+01:00
+title: "Procesy"
+date: 2022-02-05T18:02:21+01:00
 weight: 40
 ---
 
-# Wykład 5 - Sygnały POSIX
+# Procesy
 
-## Zakres wykładu
+## Zakres materiału
 
-  - Koncepcja sygnału POSIX.
-  - Przyczyny sygnałów: wyjątki sprzętowe, czynności wykonywane przez procesy
-  - Cele sygnałów: określony wątek, proces lub grupa procesów.
-  - Najczęściej wykorzystywane sygnały UNIX.
-  - Reakcje na sygnały:
-      - doręczenie (*signal delivery*):
-          - ignorowanie sygnału
-          - wykonanie funkcji obsługi zdefiniowanej przez użytkownika.
-          - wykonanie czynności domyślnej (exit, core dump+exit, continue, stop)
-      - przyjęcie (*signal acceptance*: `sigwait()`
-  - Programowa generacja sygnału: `kill()`, `alarm()`,...
-  - Ustanawianie funkcji obsługi zdefiniowanej przez użytkownika: `sigaction()`
-  - Koncepcja maski sygnałów i blokowanie sygnałów: `sigprocmask()`, `sigpending()`
-  - Reakcja na wielokrotne wystąpienie sygnałów.
-  - Atrybuty `volatile sig_atomic_t` a obsługa sygnałów.
-  - Efekty uboczne doręczania sygnałów:
-      - przedwczesne kończenie "długich" funkcji systemowych (z `errno==EINTR`) ; makro `TEMP_FAILURE_RETRY` .
-      - nieprzewidywalne zachowanie funkcji ze stanem (*non-reentrant*); funkcje odporne na asynchroniczną obsługę sygnałów (`async-safe functions`).
-  - Oczekiwanie na sygnały: `pause()`, `sigsuspend()`, `sigwait()`.
-  - Sygnały generowane przez terminal. `stty`.
+- Koncepcja procesu. Modele procesu: UNIX (POSIX), MSWin (Win32).
+- Graf stanów procesu
+- Blok Kontrolny Procesu. Kontekst procesu. Przełączanie CPU pomiędzy procesami.
+- Kolejki planowania procesów. Planiści: krótkoterminowy, długoterminowy, średnioterminowy.
+- Tworzenie procesów. Modele: POSIX, Win32.
+- Kończenie procesów. POSIX: rola wait(), sierota, zombie.
+- Procesy współpracujące. Modele komunikacji międzyprocesowej. Rola synchronizacji procesów.
+- Środowisko wykonania procesu POSIX: zmienne środowiskowe, 3 początkowe strumienie (stdin, stdout, stderr). Moduł
+  startowy (crt0)
+- Cykl życia procesu POSIX
+- Dziedziczenie przy wywołaniu funkcji systemowych `fork` i `exec`.
+- Funkcje standardowej biblioteki języka C opakowujące wywołania funkcji systemowej `exec`.
+- Identyfikatory związane z procesem: PID, GID, real/effective ID. `setuid/setgid`.
+- Grupy procesów.
+- Tworzenie procesu powłoki zgłoszeniowej (*login shell*).
 
 ## Materiały
 
-1.  Slajdy: [POSIX\_signals.pdf]({{< resource "POSIX_signals_7.pdf" >}})
-2.  Dodatkowa lektura: The GNU C library documentation: [Signal Handling (24.1-24.8)](https://www.gnu.org/software/libc/manual/html_node/Signal-Handling.html#Signal-Handling)
-3.  Przykładowy kod omawiany na wykładzie: [nonatomic.c]({{< resource "nonatomic.c" >}}), [sig1sleep.c]({{< resource "sig1sleep.c" >}}), [sig1wait.c]({{< resource "sig1wait.c" >}}), [timeout.c]({{< resource "timeout.c" >}})
+1. Podręcznik: rozdz. 4 (Procesy).
+2. Slajdy: [Procesy.pdf]({{< resource "Procesy_0.pdf" >}}), [Procesy\_POSIX.pdf]({{< resource "Procesy_POSIX_5.pdf" >}})
+3. Rozdział 26 dokumentacji "GNU C
+   library": [Processes](http://www.gnu.org/software/libc/manual/html_node/Processes.html#Processes)

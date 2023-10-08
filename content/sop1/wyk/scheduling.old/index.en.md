@@ -1,7 +1,7 @@
 ---
 title: "Scheduler"
 date: 2022-02-05T22:35:50+01:00
-weight: 80
+bookHidden: true
 ---
 
 # Lecture 8 - CPU Scheduling

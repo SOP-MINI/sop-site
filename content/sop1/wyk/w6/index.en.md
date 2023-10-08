@@ -4,7 +4,7 @@ date: 2022-02-05T22:35:46+01:00
 weight: 60
 ---
 
-# Lecture 6 - Threads, P-threads and mutexes
+# Threads, P-threads and mutexes
 
 ## Scope
 

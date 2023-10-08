@@ -4,7 +4,7 @@ date: 2022-02-05T22:35:24+01:00
 weight: 10
 ---
 
-# Lecture 1 - Operating and computer systems
+# Operating and computer systems
 
 ## Scope
 

@@ -1,32 +1,30 @@
 ---
-title: "Procesy"
-date: 2022-02-05T18:02:21+01:00
+title: "System plików"
+date: 2022-02-05T18:02:26+01:00
 weight: 20
 ---
 
-# Wykład 2 - Procesy
+# Interfejs systemu plików i strumieniowe wejście/wyjście
 
-## Zakres materiału
+## Zakres wykładu
 
-- Koncepcja procesu. Modele procesu: UNIX (POSIX), MSWin (Win32).
-- Graf stanów procesu
-- Blok Kontrolny Procesu. Kontekst procesu. Przełączanie CPU pomiędzy procesami.
-- Kolejki planowania procesów. Planiści: krótkoterminowy, długoterminowy, średnioterminowy.
-- Tworzenie procesów. Modele: POSIX, Win32.
-- Kończenie procesów. POSIX: rola wait(), sierota, zombie.
-- Procesy współpracujące. Modele komunikacji międzyprocesowej. Rola synchronizacji procesów.
-- Środowisko wykonania procesu POSIX: zmienne środowiskowe, 3 początkowe strumienie (stdin, stdout, stderr). Moduł
-  startowy (crt0)
-- Cykl życia procesu POSIX
-- Dziedziczenie przy wywołaniu funkcji systemowych `fork` i `exec`.
-- Funkcje standardowej biblioteki języka C opakowujące wywołania funkcji systemowej `exec`.
-- Identyfikatory związane z procesem: PID, GID, real/effective ID. `setuid/setgid`.
-- Grupy procesów.
-- Tworzenie procesu powłoki zgłoszeniowej (*login shell*).
+  - Koncepcja pliku. Struktury, atrybuty i podstawowe operacje na pliku.
+  - Otwieranie pliku. Sesja pliku. Blokada pliku.
+  - Tryby dostępu do pliku: sekwencyjny, bezpośredni (random access), indeksowy.
+  - Organizacja systemu plików: partycje, katalagi, formatowanie.
+  - Organizacja katalogów: cele i implementacje: jedno- i dwupoziomowa, drzewiasta, struktura grafu acyklicznego bądź dowolnego grafu.
+  - Montaż systemu plików.
+  - Współdzielenie dostępu do pliku: koncepcja, semantyka, ochrona.
+  - Strumienie a deskryptory dostępu do pliku.
+  - Buforowanie strumieni.
+  - Otwieranie/zamykanie strumieni. Wykrywanie/kasowanie znaczników końca danych (EOF) i błędów.
+  - Pozycjonowanie w strumieniu i operacje odczytu/zapisu.
+  - Katalogi POSIX: koncepcja, katalog bieżący i główny procesu.
+  - Strumień katalogu i operacje na nim.
 
 ## Materiały
 
-1. Podręcznik: rozdz. 4 (Procesy).
-2. Slajdy: [Procesy.pdf]({{< resource "Procesy_0.pdf" >}}), [Procesy\_POSIX.pdf]({{< resource "Procesy_POSIX_5.pdf" >}})
-3. Rozdział 26 dokumentacji "GNU C
-   library": [Processes](http://www.gnu.org/software/libc/manual/html_node/Processes.html#Processes)
+1.  Podręcznik: rozdział 11 (Interfejs systemu plików).
+2.  Slajdy: [FS\_interfejs.pdf]({{< resource "FS_interfejs.pdf" >}}), [IO\_1.pdf]({{< resource "IO_1_14.pdf" >}})
+3.  Dodatkowa lektura: The GNU C library documentation: [Input/output concepts](https://www.gnu.org/software/libc/manual/html_node/I_002fO-Concepts.html#I_002fO-Concepts)
+4.  Fragmenty standardu "POSIX IEEE Std 1003.1 2017" - [definicje]({{< resource "POSIX_excerpts.pdf" >}}) pojęć związanych z procesami

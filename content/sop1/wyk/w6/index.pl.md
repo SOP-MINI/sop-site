@@ -4,7 +4,7 @@ date: 2022-02-05T18:02:35+01:00
 weight: 60
 ---
 
-# Wykład 6 - Wątki, P-wątki i muteksy
+# Wątki, P-wątki i muteksy
 
 ## Zakres wykładu
 

@@ -1,7 +1,7 @@
 ---
 title: "Przydział CPU"
 date: 2022-02-05T18:02:38+01:00
-weight: 80
+bookHidden: true
 ---
 
 # Wykład 8 - Planowanie przydziału czasu CPU

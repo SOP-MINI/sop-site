@@ -1,7 +1,7 @@
 ---
 title: "Asynchronous I/O"
 date: 2022-02-05T22:35:56+01:00
-weight: 70
+bookHidden: true
 ---
 
 # Lecture 8 - Asynchronous input/output

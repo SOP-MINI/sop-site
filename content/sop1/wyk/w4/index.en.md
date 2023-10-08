@@ -1,36 +1,29 @@
 ---
-title: "Signals"
-date: 2022-02-05T22:35:41+01:00
+title: "Processes"
+date: 2022-02-05T22:35:27+01:00
 weight: 40
 ---
 
-# Lecture 5 - POSIX signals
+# Processes
 
 ## Scope
 
-  - POSIX signal concept.
-  - Signal sources: hardware exceptions, actions by processes
-  - Signal targets: specific thread, process or process group.
-  - Common UNIX signals
-  - Actions to be taken in response to signals:
-      - signal delivery:
-          - signal ignoring
-          - running user-defined handler
-          - executing a system action (exit, core dump+exit, continue, stop)
-      - signal acceptance: `sigwait()`
-  - Programmatic signal generation: `kill()`, `alarm()`,...
-  - Setting up user-defined signal handling: `sigaction()`
-  - Signal mask concept and signal blocking: `sigprocmask()`, `sigpending()`
-  - Actions to be taken in case of multiple occurences of signals.
-  - `volatile sig_atomic_t` type and signal handling.
-  - Possible side effects of asynchronous signal delivery:
-      - premature exit of "long" system functions (with `errno==EINTR`) and `TEMP_FAILURE_RETRY` macro.
-      - unpredicted behaviour of non-reentrant functions; async-safe functions.
-  - Waiting for a signal: `pause()`, `sigsuspend()`, `sigwait()`.
-  - Terminal generated signals. `stty`
+- Process concept. Process models: UNIX (POSIX), MSWin (Win32).
+- Diagram of process state.
+- Process Control Block. Process context. Switching CPU between processes.
+- Scheduling Queues. Schedulers: short-term, long-term, medium-term.
+- Process creation: Models: POSIX, Win32.
+- Process termination. POSIX: role of wait(), orphan, zombie.
+- Run-time POSIX process environment: environment variables, 3 initial streams (stdin, stdout, stderr). The startup module (`crt0`)
+- POSIX process life-cycle
+- Inheritance across `fork` and `exec` system calls
+- C library function packaging of the `exec` system call.
+- Process ids: PID, GID, real/effective ids. setuid/setgid.
+- Process groups
+- Login shell process creation.
 
 ## Reference
 
-1.  Slides: [POSIX\_signals.pdf]({{< resource "POSIX_signals_6.pdf" >}})
-2.  Extra reading: The GNU C library documentation: [Signal Handling (24.1-24.8)](https://www.gnu.org/software/libc/manual/html_node/Signal-Handling.html#Signal-Handling)
-3.  Exemplary lecture code: [nonatomic.c]({{< resource "nonatomic.c" >}}), [sig1sleep.c]({{< resource "sig1sleep.c" >}}), [sig1wait.c]({{< resource "sig1wait.c" >}}), [timeout.c]({{< resource "timeout.c" >}})
+1. Textbook (8th-10th ed.): chapter 3 (Process Concept, 3.1-3.4).
+2. Slides: [Processes.pdf]({{< resource "Processes_0.pdf" >}}), [POSIX\_processes.pdf]({{< resource "POSIX-processes_5.pdf" >}})
+3. Section 26 of the GNU C library documentation: [Processes](http://www.gnu.org/software/libc/manual/html_node/Processes.html#Processes)
