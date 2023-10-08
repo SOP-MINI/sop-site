@@ -36,7 +36,7 @@ What you need to know:
 - man 3p readdir
 - man 0p dirent.h
 - man 3p fstatat (only stat and lstat)
-- man 3p 'stat(3type)'
+- man sys_stat.h
 - man 7 inode (first half of the "The file type and mode" section)
 
 <em>code in <b>prog9.c</b> file:</em>

@@ -36,7 +36,7 @@ Co student musi wiedzieć:
 - man 3p readdir
 - man 0p dirent.h
 - man 3p fstatat (tylko opis stat i lstat)
-- man 3p 'stat(3type)'
+- man sys_stat.h
 - man 7 inode (pierwsza połowa sekcji "The file type and mode")
 
 <em>kod do pliku <b>prog9.c</b></em>
