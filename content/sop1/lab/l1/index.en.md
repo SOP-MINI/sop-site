@@ -8,7 +8,6 @@ weight: 20
 
 {{< hint info >}}
 Introduction notes:
-
 - A quick look at this material will not suffice, you should compile and run all the programs, check how they work, read
   additional materials like man pages. As you read the material please do all the exercises and questions. At the end
   you will find sample task similar to the one you will do during the labs, please do it at home.
@@ -27,11 +26,10 @@ Introduction notes:
 {{< /hint >}}
 
 
-
 ## Task 1 - directories 1
 
-Goal: 
-Write a program counting objects (files, links, folders and others) in current working directory
+Goal: Write a program counting objects (files, links, folders and others) in current working directory
+
 What you need to know:
 - man 3p fdopendir (only opendir)
 - man 3p closedir
@@ -39,7 +37,6 @@ What you need to know:
 - man 0p dirent.h
 - man 3p fstatat (only stat and lstat)
 - man 3p 'stat(3type)'
-- man 3p errno
 - man 7 inode (first half of the "The file type and mode" section)
 
 <em>code in <b>prog9.c</b> file:</em>
