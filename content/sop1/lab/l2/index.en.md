@@ -341,6 +341,8 @@ How do you know what function cat report EINTR?
 {{< expand "Answer" >}}  Read man pages, error sections. It easy to guess those function must wait before they do their job. {{< /expand >}}
 
 Analyze how bulk_read and bulk_write work. You should know what cases are recognized in those functions, what types of interruption they can handle, how to recognize EOF on the descriptor.
+Unlike during L1 lab, during L2 and following labs you have to use these functions (or similar ones) when calling `read` or `write` (because we use signals now).
+If you do not use them, you wont get points for your solution.
 
 Both bulk_ functions can be useful not only on signals but also to "glue" IO transfers where data comes from not
 continuous data sources like pipe/fifo and the socket - it wile be covered by following tutorials.
