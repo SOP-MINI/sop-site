@@ -15,8 +15,7 @@ Przeczytaj proszę informacje podane w działach [GIT]({{< ref "../../git">}}), 
 Zerknij też na materiały [pomocnicze]({{< ref "../../materialy" >}}).
 
 W dziale z [materiałami]({{< ref "../../materialy" >}}) znajdziesz tutoriale do samodzielnego wykonania
-w ramach przygotowania do kolejnych zajęć. Podczas punktowanych zajęć zawsze poświęcamy
-od 15 do 30 minut na odpowiadanie na pytania od studentów dotyczące danego działu.
+w ramach przygotowania do kolejnych zajęć.
 Można też się skonsultować droga mailową lub osobiście w czasie dyżurów prowadzących laboratoria.
 
 W ramach zerowych laboratoriów zrobimy proste ćwiczenie symulujące pracę na punktowanych laboratoriach.

@@ -10,7 +10,7 @@ weight: 10
 
 This laboratory does not require any preparation, its aim is to explain all the rules and answer all the question about graded labs and the classes schedule. Please carefully read everything about [GIT]({{< ref "../../git">}}), [syllabus]({{< ref "../../syllabus" >}}), [grading]({{< ref "../../zasady" >}}) and [schedule]({{< ref "../../harmonogram" >}}). Also have a look at the [reference]({{< ref "../../materialy" >}}).
 
-On [reference]({{< ref "../../materialy" >}}) page you can find self preparation tutorials, you should do them at home before the graded labs. During the graded lab you will have the chance to ask questions about material you studied (usually 15-20 minutes at the beginning of the lab is devoted for this), but we assume you are already familiar with it. The aim of graded lab is to test how well you studied the topic at home. You can ask questions about the course topics via email at any time.
+On [reference]({{< ref "../../materialy" >}}) page you can find self preparation tutorials, you should do them at home before the graded labs. The aim of graded lab is to test how well you studied the topic at home. You can ask questions about the course topics via email at any time.
 
 During the zeroth laboratory you will have to do the simple task to simulate real tasks from further laboratories.
 You will receive half-finished code with some bugs. You will have to find those errors and finish its functionalities.
