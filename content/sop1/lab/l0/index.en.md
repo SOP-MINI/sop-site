@@ -672,17 +672,17 @@ To synchronize your code with server you have to run command
 $ git push
 ```
 
-Please remember about sending your code to server as soon as possible.
-Access to server will be closed when laboratory finishes.
+Please remember to send your code to the server as soon as possible.
+Access to the server will be closed when the laboratory finishes.
 Code can be graded if and only if it will be sent to this server.
 
-Solution will be accepted by server if and only if:
-- Only solution files (`.c`) were modified - if you modify any other files, e.g., makefile, commit will be rejected
-- Solution files are correctly formatted. In repository there is configuration file `.clang-format` for `clang-format` program which is installed in system. It allows to format source files - use `clang-format -i <filename.c>`. Many IDEs allow automatic formatinng on save
+The solution will be accepted by the server if and only if:
+- Only solution files (`.c`) were modified - if you change any other files, e.g., makefile, commit will be rejected
+- Solution files are correctly formatted. In the repository, there is a configuration file `.clang-format` for `clang-format` program, which is installed in the system. It allows to format source files - use `clang-format -i <filename.c>`. Many IDEs allow automatic formatting on save
 - Solution is not too long - 600 lines by default, it should be more than sufficient for lab task
-- Solution can be compiled without any warnings using makefile from repository
+- Solution can be compiled without any warnings using makefile from the repository
 
-If one of rules is not met the server will reject solution with reject message. In that case you need to fix your code, create new commit and push it. The server allows one push every one minute.
+If one of the rules is not met the server will reject the solution with a reject message. In that case, you need to fix your code, create a new commit, and push it. The server allows one push every minute.
 
 
 ## Source codes presented in this tutorial
