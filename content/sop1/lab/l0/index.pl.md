@@ -674,9 +674,10 @@ Twoim celem jest śledzenie zmian w repozytorium w trakcie trwania laboratorium 
 Zanim przejdziemy do pobierania kodu, trzeba uzyskać swój osobisty klucz SSH z platformy [LeON](https://leon.pw.edu.pl).
 W dziale *klucze ssh* należy pobrać dwa pliki: `id_ed25519` oraz `id_ed25519.pub` oraz przekopiować je do folderu `~/.ssh`.
 Plik `id_ed25519` jest *kluczem prywatnym* - to znaczy że może być użyty do uwierzytelnienia wobec serwera znającego klucz publiczny (oraz do wielu innych rzeczy, jak szyfrowanie, podpisy cyfrowe i inne).
-Każdy klucz jest unikatowy i - zgodnie z nazwą - prywatny, tzn. działa jak hasło. Nie powinno się go udostępniać, ponieważ, podobnie jak z hasłem - jeżeli inna osoba wejdzie w jego posiadanie jest w stanie się pod nas podszyć i np. skasować nasze rozwiązanie z serwera.
-
-W plikach na LeONie znajduje się również pusty plik postaci `imię_nazwisko.txt` - `imię_nazwisko` jest loginem na serwerze gita.
+Każdy klucz jest unikatowy i - zgodnie z nazwą - prywatny, tzn. działa jak hasło. Nie powinno się go udostępniać, ponieważ, podobnie jak z hasłem - jeżeli inna osoba wejdzie w jego posiadanie jest w stanie się pod nas podszyć i np. skasować nasze rozwiązanie z serwera. Zmień uprawnienia poleceniem:
+```shell
+chmod 600 ~/.ssh/id_ed25519
+```
 
 Pierwszym krokiem będzie wykonanie kopii zdalnego repozytorium na swoją stację roboczą poleceniem
 

@@ -651,6 +651,11 @@ On the OPS page you can download two files: `id_ed25519` and `id_ed25519.pub`.
 You have to copy it to `~/.ssh` directory.
 Every pair of keys is unique to student and has to be used by only one student.
 
+Because private key is secret it shouldn't be readable to other users. You need to change permissions:
+```shell
+chmod 600 ~/.ssh/id_ed25519
+```
+
 First step on laboratory is copy remote repository to your local workstation with command 
 ```shell
 $ git clone ssh://gitolite@vl01/l0en/name_surname
@@ -664,12 +669,20 @@ When you finish one stage, you should commit your change to repository.
 To synchronize your code with server you have to run command 
 
 ```shell
-$ git push origin
+$ git push
 ```
 
 Please remember about sending your code to server as soon as possible.
 Access to server will be closed when laboratory finishes.
 Code can be graded if and only if it will be sent to this server.
+
+Solution will be accepted by server if and only if:
+- Only solution files (`.c`) were modified - if you modify any other files, e.g., makefile, commit will be rejected
+- Solution files are correctly formatted. In repository there is configuration file `.clang-format` for `clang-format` program which is installed in system. It allows to format source files - use `clang-format -i <filename.c>`. Many IDEs allow automatic formatinng on save
+- Solution is not too long - 600 lines by default, it should be more than sufficient for lab task
+- Solution can be compiled without any warnings using makefile from repository
+
+If one of rules is not met the server will reject solution with reject message. In that case you need to fix your code, create new commit and push it. The server allows one push every one minute.
 
 
 ## Source codes presented in this tutorial
