@@ -651,7 +651,7 @@ On the OPS page you can download two files: `id_ed25519` and `id_ed25519.pub`.
 You have to copy it to `~/.ssh` directory.
 Every pair of keys is unique to student and has to be used by only one student.
 
-Because private key is secret it shouldn't be readable to other users. You need to change permissions:
+Because the private key is secret, it shouldn't be readable to other users. You need to change permissions:
 ```shell
 chmod 600 ~/.ssh/id_ed25519
 ```
