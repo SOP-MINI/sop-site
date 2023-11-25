@@ -34,3 +34,17 @@ Why sem_trywait is used not just sem_wait before the new thread is created? What
 
 What limits the concurrent alarms to 5?
 {{< expand "Answer" >}} Semaphore, see the questions above. {{< /expand >}}
+
+## Threads pool - conditional variables
+Original author: **Jerzy Bartuszek**
+
+Write a simple program that reads from "/dev/urandom" and writes its content 
+to files. Every time user presses enter, the program reads random bytes and 
+saves it in a file. The program is a multi-threaded application - each request 
+is being handled in a separate thread. Each thread saves random bytes to its own file.
+Program creates THREADS_NUM threads in advance and keeps idle threads in a
+thread pool. After receiving SIGINT server stops accepting user input
+and terminates its execution after handling all current requests.
+
+<em>solution <b>prog22.c</b>:</em>
+{{< includecode "prog22.c" >}}
