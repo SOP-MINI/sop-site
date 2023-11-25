@@ -6,6 +6,18 @@ weight: 50
 
 # Tutorial 4 - Synchronization
 
+{{< hint info >}}
+Introduction notes:
+
+- Quick look at this material will not suffice, you should compile and run all the programs, check how they work, read additional materials like man pages. As you read the material please do all the exercises and questions. At the end you will find sample task similar to the one you will do during the labs, please do it at home.
+- You will find additional information in yellow sections, questions and tasks in blue ones. Under the question you will find the answer, to see it you have to click. Please try to answer on you own before checking. 
+- Full programs' codes are placed as attachments at the bottom of this page. On this page only vital parts of the code are displayed
+- Codes, information and tasks are organized in logical sequence, in order to fully understand it you should follow this sequence. Sometimes former task makes context for the next one and it is harder to comprehend it without the study of previous parts.  
+- Most of exercises require command line to practice, I usually assume that all the files are placed in the current working folder and that we do not need to add path parts to file names. 
+- Quite often you will find $ sign placed before commands you should run in the shell, obviously you do not need to rewrite this sight to command line, I put it there to remind you that it is a command to execute.
+- What you learn and practice in this tutorial will be required for the next ones. If you have a problem with this material after the graded lab you can still ask teachers for help.
+{{< /hint >}}
+
 ## The alarm - Semaphores
 
 Write a multi-threaded timer program. User inputs
@@ -70,7 +82,7 @@ Can we use conditional variable without any condition at all?
 {{< expand "Answer" >}} Yes. it will become a pool of threads waiting for wakening as you need. {{< /expand >}}
 
 Conditional variable must have a mutex, what is protected by it?
-{{< expand "Answer" >}} Mutex protects the access to the elements (variables,files) used in the variable condition so it remains unchanged when the code tests the condition. You must acquire the mutext prior to changing the state of those elements and prior to condition testing. {{< /expand >}}
+{{< expand "Answer" >}} Mutex protects the access to the elements (variables,files) used in the variable condition so it remains unchanged when the code tests the condition. You must acquire the mutex prior to changing the state of those elements and prior to condition testing. {{< /expand >}}
 
 Can one mutex protect multiple conditional variables?<br>
 {{< expand "Answer" >}} It can, but please consider the efficiency and parallelism of your code, it will be lowered. {{< /expand >}}
@@ -86,3 +98,7 @@ Who should check for the condition to be true? The thread that wakes or maybe th
 
 What is cleanup handler in working thread used for?
 {{< expand "Answer" >}} It is essential not to end the working thread without releasing the mutext that blocks the conditional (it would freeze entire program) . This handler releases the mutex in case of emergency exit. {{< /expand >}}
+
+## Source codes presented in this tutorial
+
+{{% codeattachments %}}
