@@ -26,7 +26,7 @@ It is worth of your time to analyze the above code in aspects not covered here (
 Why it is necessary to allocate memory before we start the thread, can this be avoided?
 {{< expand "Answer" >}} One common structure is not enough as each thread has to have its own, you can have an array of structures (FS_NUM sized) but then you need to  manage this array in the way you manage memory so it is easier to allocate a structure on a heap. Naturally this memory has to be released somewhere, in this case, in the thread itself. {{< /expand >}}
 
-<li>What is the semaphore used for?</br>
+What is the semaphore used for?
 {{< expand "Answer" >}} It keeps the count of threads that can still be started without exceeding  FS_NUM. Initially its value is set to 5 and before creating next thread it must be decreased by one. Zero value blocks the creation of the threads. Before the thread terminates it increases the semaphore by one. {{< /expand >}}
 
 Why sem_trywait is used not just sem_wait before the new thread is created? What if we use sem_wait instead?
@@ -48,3 +48,41 @@ and terminates its execution after handling all current requests.
 
 <em>solution <b>prog22.c</b>:</em>
 {{< includecode "prog22.c" >}}
+
+It is worth of your time to analyze the above code in aspects not covered here (thread, mutex), please do it as an exercise.
+
+Can a condition of conditional variable be based on regular variable value?
+{{< expand "Answer" >}} Yes. {{< /expand >}}
+
+Can a condition of conditional variable be based on a combination of regular variables' values?
+{{< expand "Answer" >}} Yes. {{< /expand >}}
+
+Can a condition of conditional variable be based on file content?
+{{< expand "Answer" >}} Yes. {{< /expand >}}
+
+Can a condition of conditional variable be based on file existence?
+{{{< expand "Answer" >}} Yes. {{< /expand >}}
+
+What are the limitations for the condition of conditional variable?
+{{< expand "Answer" >}} Everything you can code that will return true or false, coder imagination defines the limit. {{< /expand >}}
+
+Can we use conditional variable without any condition at all?
+{{< expand "Answer" >}} Yes. it will become a pool of threads waiting for wakening as you need. {{< /expand >}}
+
+Conditional variable must have a mutex, what is protected by it?
+{{< expand "Answer" >}} Mutex protects the access to the elements (variables,files) used in the variable condition so it remains unchanged when the code tests the condition. You must acquire the mutext prior to changing the state of those elements and prior to condition testing. {{< /expand >}}
+
+Can one mutex protect multiple conditional variables?<br>
+{{< expand "Answer" >}} It can, but please consider the efficiency and parallelism of your code, it will be lowered. {{< /expand >}}
+
+What are the parts of the condition for the conditional variable in the above code?
+{{< expand "Answer" >}} The condition is solely based on the variable called "condition", all threads have access to this variable via pointers. {{< /expand >}}
+
+How does the conditional variable works in this program?
+{{< expand "Answer" >}} When main thread accepts a new connection it sets the "condition" variable to 1 and wakes one of waiting (waiting for the condition) threads. The thread that wakes, checks for "condition==1" and if it is true it handles the connection. {{< /expand >}}
+
+Who should check for the condition to be true? The thread that wakes or maybe the one that is being wakened?
+{{< expand "Answer" >}} The condition must be always checked by the thread being wakened. Even if the one that wakes checked it before it could have changed in meantime as the mutex was released and could have been acquired by some other thread to invalidate the condition! Generally it is better if the condition is checked also before signaling but sometimes it is not possible as wakening thread may not have access to all the condition components. {{< /expand >}}
+
+What is cleanup handler in working thread used for?
+{{< expand "Answer" >}} It is essential not to end the working thread without releasing the mutext that blocks the conditional (it would freeze entire program) . This handler releases the mutex in case of emergency exit. {{< /expand >}}
