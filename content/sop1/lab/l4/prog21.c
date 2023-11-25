@@ -1,25 +1,3 @@
----
-title: "L4 - Synchronization"
-date: 2022-02-07T19:57:36+01:00
-weight: 50
----
-
-# Tutorial 4 - Synchronization
-
-## The alarm - Semaphores
-
-Write a multi-threaded timer program. User inputs
-number of seconds it needs to be counted to the program and awaits response. 
-Program starts separate thread for each new request. The thread sleeps
-for given time and outputs "Wake up" response. Then the thread exits.
-
-Program has a limit of 5 concurrent threads. If it receives more
-requests, it outputs immediate response "Only 5 alarms can be set at the time".
-
-Limit on concurrent threads can be imposed with POSIX semaphore.
-
-<em>solution <b>prog21.c</b>:</em>
-{{< highlight c >}}
 #define _GNU_SOURCE
 #include <errno.h>
 #include <netinet/in.h>
@@ -86,13 +64,13 @@ void doWork()
                 continue;
             ERR("fgets:");
         }
-
+        
         time = atoi(input);
         if(time < 0) {
             fputs("Incorrect time specified", stderr);
             continue;
         }
-
+        
         if (TEMP_FAILURE_RETRY(sem_trywait(&semaphore)) == -1)
         {
             switch (errno)
@@ -104,7 +82,7 @@ void doWork()
             }
             ERR("sem_trywait");
         }
-
+        
         if ((args = (struct arguments *)malloc(sizeof(struct arguments))) == NULL)
             ERR("malloc:");
         args->time = time;
@@ -124,4 +102,3 @@ int main(int argc, char **argv)
     fprintf(stderr, "Program has terminated.\n");
     return EXIT_SUCCESS;
 }
-{{< / highlight >}}
