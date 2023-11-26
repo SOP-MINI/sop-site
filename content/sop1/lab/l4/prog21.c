@@ -66,7 +66,7 @@ void doWork()
         }
         
         time = atoi(input);
-        if(time < 0) {
+        if(time <= 0) {
             fputs("Incorrect time specified", stderr);
             continue;
         }

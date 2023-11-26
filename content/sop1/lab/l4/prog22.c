@@ -12,8 +12,8 @@
 
 #define ERR(source) (perror(source), fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), exit(EXIT_FAILURE))
 
-#define BUFFERSIZE 1024
-#define READCHUNKS 16
+#define BUFFERSIZE 256
+#define READCHUNKS 4
 #define THREAD_NUM 3
 volatile sig_atomic_t work = 1;
 
