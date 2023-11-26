@@ -99,6 +99,15 @@ Who should check for the condition to be true? The thread that wakes or maybe th
 What is cleanup handler in working thread used for?
 {{< expand "Answer" >}} It is essential not to end the working thread without releasing the mutext that blocks the conditional (it would freeze entire program) . This handler releases the mutex in case of emergency exit. {{< /expand >}}
 
+## Dice game - barrier
+
+Simulate a following dice game:
+Each participant rolls a standard six-sided die simultaneously in 10 rounds. After everyone rolled one of the players concludes the round and assigns scores. The player with the highest roll in a given round is awarded one point. In the event of a tie for the highest roll, all tied players receive a point. The game concludes after 10 rounds, and the winner is determined by the player with the highest accumulated points.
+Represent each player with a thread and use barrier for game synchronization.
+
+<em>solution <b>prog23.c</b>:</em>
+{{< includecode "prog23.c" >}}
+
 ## Source codes presented in this tutorial
 
 {{% codeattachments %}}
