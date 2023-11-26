@@ -84,14 +84,14 @@ Can we use conditional variable without any condition at all?
 Conditional variable must have a mutex, what is protected by it?
 {{< expand "Answer" >}} Mutex protects the access to the elements (variables,files) used in the variable condition so it remains unchanged when the code tests the condition. You must acquire the mutex prior to changing the state of those elements and prior to condition testing. {{< /expand >}}
 
-Can one mutex protect multiple conditional variables?<br>
+Can one mutex protect multiple conditional variables?
 {{< expand "Answer" >}} It can, but please consider the efficiency and parallelism of your code, it will be lowered. {{< /expand >}}
 
 What are the parts of the condition for the conditional variable in the above code?
 {{< expand "Answer" >}} The condition is solely based on the variable called "condition", all threads have access to this variable via pointers. {{< /expand >}}
 
 How does the conditional variable works in this program?
-{{< expand "Answer" >}} When main thread accepts a new connection it sets the "condition" variable to 1 and wakes one of waiting (waiting for the condition) threads. The thread that wakes, checks for "condition==1" and if it is true it handles the connection. {{< /expand >}}
+{{< expand "Answer" >}} When main thread accepts a new request it sets the "condition" variable to 1 and wakes one of waiting (waiting for the condition) threads. The thread that wakes, checks for "condition==1" and if it is true it handles the request. {{< /expand >}}
 
 Who should check for the condition to be true? The thread that wakes or maybe the one that is being wakened?
 {{< expand "Answer" >}} The condition must be always checked by the thread being wakened. Even if the one that wakes checked it before it could have changed in meantime as the mutex was released and could have been acquired by some other thread to invalidate the condition! Generally it is better if the condition is checked also before signaling but sometimes it is not possible as wakening thread may not have access to all the condition components. {{< /expand >}}
