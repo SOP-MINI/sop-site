@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -26,9 +25,9 @@ typedef struct
     pthread_mutex_t *mutex;
 } thread_arg;
 
-void siginthandler(int sig) { work = 0; }
+void sigint_handler(int sig) { work = 0; }
 
-void sethandler(void (*f)(int), int sigNo)
+void set_handler(void (*f)(int), int sigNo)
 {
     struct sigaction act;
     memset(&act, 0x00, sizeof(struct sigaction));
@@ -100,7 +99,7 @@ void read_random(int thread_id)
         ERR("close");
 }
 
-void *threadfunc(void *arg)
+void *thread_func(void *arg)
 {
     thread_arg targ;
     memcpy(&targ, arg, sizeof(targ));
@@ -134,12 +133,12 @@ void init(pthread_t *thread, thread_arg *targ, pthread_cond_t *cond, pthread_mut
         targ[i].mutex = mutex;
         targ[i].idlethreads = idlethreads;
         targ[i].condition = condition;
-        if (pthread_create(&thread[i], NULL, threadfunc, (void *)&targ[i]) != 0)
+        if (pthread_create(&thread[i], NULL, thread_func, (void *) &targ[i]) != 0)
             ERR("pthread_create");
     }
 }
 
-void dowork(pthread_cond_t *cond, pthread_mutex_t *mutex, const int *idlethreads, int *condition)
+void do_work(pthread_cond_t *cond, pthread_mutex_t *mutex, const int *idlethreads, int *condition)
 {
     char buffer[BUFFERSIZE];
     while (work)
@@ -179,9 +178,9 @@ int main(int argc, char **argv)
     thread_arg targ[THREAD_NUM];
     pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-    sethandler(siginthandler, SIGINT);
+    set_handler(sigint_handler, SIGINT);
     init(thread, targ, &cond, &mutex, &idlethreads, &condition);
-    dowork(&cond, &mutex, &idlethreads, &condition);
+    do_work(&cond, &mutex, &idlethreads, &condition);
     if (pthread_cond_broadcast(&cond) != 0)
         ERR("pthread_cond_broadcast");
     for (i = 0; i < THREAD_NUM; i++)

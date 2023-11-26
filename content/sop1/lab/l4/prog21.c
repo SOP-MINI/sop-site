@@ -13,11 +13,11 @@
 
 #define FS_NUM 5
 #define MAX_INPUT 120
-volatile sig_atomic_t do_work = 1;
+volatile sig_atomic_t work = 1;
 
-void sigint_handler(int sig) { do_work = 0; }
+void sigint_handler(int sig) { work = 0; }
 
-int sethandler(void (*f)(int), int sigNo)
+int set_handler(void (*f)(int), int sigNo)
 {
     struct sigaction act;
     memset(&act, 0, sizeof(struct sigaction));
@@ -47,7 +47,7 @@ void *thread_func(void *arg)
     return NULL;
 }
 
-void doWork()
+void do_work()
 {
     int32_t time;
     pthread_t thread;
@@ -56,7 +56,7 @@ void doWork()
     sem_t semaphore;
     if (sem_init(&semaphore, 0, FS_NUM) != 0)
         ERR("sem_init");
-    while (do_work)
+    while (work)
     {
         puts("Please enter the number of seconds for the alarm delay:");
         if(fgets(input, MAX_INPUT, stdin) == NULL) {
@@ -96,9 +96,9 @@ void doWork()
 
 int main(int argc, char **argv)
 {
-    if (sethandler(sigint_handler, SIGINT))
+    if (set_handler(sigint_handler, SIGINT))
         ERR("Seting SIGINT:");
-    doWork();
+    do_work();
     fprintf(stderr, "Program has terminated.\n");
     return EXIT_SUCCESS;
 }
