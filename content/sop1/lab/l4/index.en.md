@@ -102,11 +102,20 @@ What is cleanup handler in working thread used for?
 ## Dice game - barrier
 
 Simulate a following dice game:
-Each participant rolls a standard six-sided die simultaneously in 10 rounds. After everyone rolled one of the players concludes the round and assigns scores. The player with the highest roll in a given round is awarded one point. In the event of a tie for the highest roll, all tied players receive a point. The game concludes after 10 rounds, and the winner is determined by the player with the highest accumulated points.
-Represent each player with a thread and use barrier for game synchronization.
+Each participant rolls a standard six-sided die simultaneously in 10 rounds. After each player rolled, one of the players concludes the round and assigns scores. The player with the highest roll in a given round is awarded one point. In the event of a tie for the highest roll, all tied players receive a point. The game concludes after 10 rounds, and the winner is determined by the player with the highest accumulated points.
+Represent each player by a thread and use a barrier for the game synchronization.
 
 <em>solution <b>prog23.c</b>:</em>
 {{< includecode "prog23.c" >}}
+
+How does the barrier works in this program?
+{{< expand "Answer" >}} It is used to synchronize the threads at two key points within the thread function. The barrier ensures that all participating threads reach a specific point in their execution before allowing any of them to proceed. The barrier is initialized with a count of PLAYER_COUNT, which means it will block until PLAYER_COUNT threads have called pthread_barrier_wait. {{< /expand >}}
+
+Which parts of the thread function are called concurrently?
+{{< expand "Answer" >}} Each thread independently rolls a six-sided die, and the results are stored in the args->rolls array. This part of the code runs concurrently for all threads. {{< /expand >}}
+
+How is the one player thread selected to conclude the round?
+{{< expand "Answer" >}} The pthread_barrier_wait function returns PTHREAD_BARRIER_SERIAL_THREAD only for one thread (standard does not specify which one), and 0 for other threads. This mechanism ensures that the action is performed by a single thread in each round, preventing multiple threads from concurrently executing the same code that should only be executed once. {{< /expand >}}
 
 ## Source codes presented in this tutorial
 
