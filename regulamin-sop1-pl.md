@@ -10,13 +10,12 @@ Przedmiot składa się z wykładu i laboratorium.
     - Kurs składa się z 15 godzin wykładowych w 2-godzinnych blokach. Ostatni wykład trwa 1 godzinę. Zajęcia odbywają się zgodnie z harmonogramem podanym na stronie przedmiotu.
     - Na stronie przedmiotu znajdują się omawiane materiały wykładowe.
     - Nie ma sprawdzianów audytoryjnych (wykładowych). Treści wykładowe będą się jednak pojawiać na wejściówkach laboratoryjnych.
-
   - Laboratorium składa się z pięciu zajęć oznaczonych kolejno L0, L1, L2, L3, L4. Zajęcia odbywają się zgodnie z harmonogramem podanym na stronie przedmiotu. Na stronie przedmiotu znajdują się też materiały przygotowawcze do zajęć.
   - Zajęcia L0 to zajęcia poświęcone na przygotowanie środowiska. W trakcie tych zajęć studenci przypominają sobie umiejętności z przedmiotu Podstawy systemu unix i konfigurują środowisko programistyczne. Wszelkie braki w konfiguracji lub tych umiejętnościach (np. brak podpowiadania nazw funkcji, podkreślania błędów w edytorze, czy brak umiejętności poruszania się po katalogach) na wszystkich kolejnych zajęciach nie są okolicznością łagodzącą przy ocenianiu. Ponadto na L0 prowadzący zapoznają studentów ze sposobem zgłaszania rozwiązaniach podczas kolejnych laboratoriów na przykładzie prostego zadania.
   - Zajęcia L1, L2, L3 i L4 służą ocenie umiejętności w obszarze wskazanym w harmonogramie przedmiotu. Do każdych zajęć należy przygotować się samodzielnie, korzystając z materiałów na stronie przedmiotu i materiałów wykładowych. Każde z zajęć składa się z dwóch części:
     - wejściówka (8 minut): rozwiązywanie testu w LeOn
     - zadanie programistyczne (120 minut)
-  - W sesji egzaminacyjnej jest organizowana poprawa, na której można poprawiać oceny uzyskane na dokładnie jednych zajęciach (L1, L2, L3, lub L4). Można poprawiać albo jedną część (wejściówkę, program) albo obie części. Zapisy na poprawy zostaną uruchomione od razu po ostatnich zajęciach laboratoryjnych w semestrze i potrwają **24 godziny**.
+  - Na końcu semestru organizowana jest poprawa, na której można poprawiać oceny uzyskane na dokładnie jednych zajęciach (L1, L2, L3, lub L4). Można poprawiać albo jedną część (wejściówkę, program) albo obie części. Zapisy na poprawy zostaną uruchomione od razu po ostatnich zajęciach laboratoryjnych w semestrze i potrwają **24 godziny**.
 
 
 # Materiały do przedmiotu
@@ -49,17 +48,17 @@ Na zajęciach jest udostępniane proste zadanie wstępne, za które można zdoby
 ### Wejściówka
   - Test weryfikujący wiedzę z wykładu i z materiałów przygotowawczych do laboratorium. Każda wejściówka obejmuje wszystkie wykłady poprzedzające i wszystkie poprzedzające tematy laboratorium oraz bieżący temat laboratorium.
   - Pytania zamknięte, wielokrotnego wyboru (poprawna może być dowolna liczba odpowiedzi większa od 0), wykonywany na platformie LeOn. 
-  - Wejściówka składa się z 4 pytań, za każde z pytań można uzyskać wynik z przedziału [0,2] punkty. W sumie, za cały test, maksymalnie 8 punktów. 
-  - Wejściówka jest punktowana w następujący sposób. W każdym pytaniu wielokrotnego wyboru jest *n* poprawnych odpowiedzi i *m* niepoprawnych odpowiedzi (każda odpowiedź jest albo poprawna, albo niepoprawna). Za każdą zaznaczoną poprawną odpowiedź jest 2/n punktów, a za każdą zaznaczoną niepoprawną odpowiedź jest -2/m punktów. Za każde pytanie przyznawana jest suma punktów wynikająca z zaznaczonych niepoprawnych i poprawnych odpowiedzi, o ile uzyskana suma nie jest ujemna. W takiej sytuacji przyznawane jest 0 punktów.
+  - Wejściówka składa się z 4 pytań, za każde z pytań można uzyskać wynik z przedziału [0,1] punktu. W sumie, za cały test, maksymalnie 4 punkty. 
+  - Wejściówka jest punktowana w następujący sposób. W każdym pytaniu wielokrotnego wyboru jest *n* poprawnych odpowiedzi i *m* niepoprawnych odpowiedzi (każda odpowiedź jest albo poprawna, albo niepoprawna). Za każdą zaznaczoną poprawną odpowiedź jest 1/n punktów, a za każdą zaznaczoną niepoprawną odpowiedź jest -1/m punktów. Za każde pytanie przyznawana jest suma punktów wynikająca z zaznaczonych niepoprawnych i poprawnych odpowiedzi, o ile uzyskana suma nie jest ujemna. W takiej sytuacji przyznawane jest 0 punktów.
   - Wejściówka trwa 8 minut.
 
 ### Zadanie programistyczne
 
-  - Za zadanie uzyskać można od 0 do 16 punktów
+  - Za zadanie uzyskać można od 0 do 20 punktów
   - Na wykonanie zadania jest 120 minut
   - Zadania laboratoryjne rozwiązywane są z użyciem systemu Arch Linux na komputerach w laboratorium. Nie jest dozwolone rozwiązywanie zadań na własnym komputerze.
   - Zadanie programistyczne jest podzielone na etapy. Punkty za każdy etap podane są w treści zadania. Etapy muszą być wykonywane w wyznaczonej kolejności. Nie wolno przechodzić do następnego etapu bez wykonania poprzednich.
-  - Każdy etap jest sprawdzany i oceniany na zajęciach. Oceniana jest umiejętność korzystania z właściwych narzędzi i prawidłowa (w tym zgodna z POSIX) implementacja wymaganej funkcjonalności. Poza L3 ocenie nie podlega estetyka kodu.
+  - Każdy etap jest sprawdzany i oceniany na zajęciach. Oceniana jest umiejętność korzystania z właściwych narzędzi i prawidłowa (w tym zgodna z POSIX) implementacja wymaganej funkcjonalności.
   - Po ukończeniu każdego etapu studenci przesyłają rozwiązanie na serwer przy użyciu systemu kontroli git, w sposób opisany przez prowadzącego na L0. Zgłoszenia podlegają następującym zasadom:
     - Program musi być napisany w języku C (nie C++).
     - Rozwiązania nie można zgłosić częściej niż co minutę.
@@ -67,7 +66,6 @@ Na zajęciach jest udostępniane proste zadanie wstępne, za które można zdoby
     - Pliki muszą być odpowiednio sformatowane - zgodnie z konfiguracją programu clang-format znajdującą się w startowym repozytorium zadania (program jest dostępny na komputerach laboratoryjnych, jego działanie jest wyjaśniane podczas L0).
     - Program przy kompilacji przy użyciu pliku makefile zawartego w repozytorium nie powinien zwracać żadnych błędów.
      Jeżeli rozwiązanie nie spełnia któregoś z warunków, jest odrzucane, a student dostaje informację zwrotną o zaistniałym problemie. Przesłanie rozwiązania na serwer jest warunkiem wstępnym oceny danego etapu, rozwiązania nieprzesłane nie podlegają ocenie.
-  - Rozwiązanie zadania L3 będzie również ocenione pod względem estetyki kodu. Ocena będzie wykonana po zajęciach. Za problemy w kodzie otrzymuje się punkty karne, które są odejmowane od punktów uzyskanych na zajęciach. Można stracić do 10 punktów, jednak nie więcej niż liczba punktów uzyskanych na zajęciach.
 
 
 # Pomoce dopuszczone do użycia podczas weryfikacji osiągnięcia efektów nauczania
@@ -77,26 +75,26 @@ Na zajęciach jest udostępniane proste zadanie wstępne, za które można zdoby
 
 # Zasady zaliczenia przedmiotu i wystawiania oceny końcowej
 
- - Do zaliczenia przedmiotu koniecznie jest uzyskanie w sumie przynajmniej 50 punktów (na 100 możliwych), z zastrzeżeniem dopuszczalnej liczby nieobecności.
- - Ocena z poprawy zastępuje ocenę z poprawianych zajęć.
- - **Ocena końcowa z przedmiotu** wynika z sumy punktów uzyskanych przez studenta z laboratorium:
-   - Ocena 5.0 - wynik w przedziale [90, 100]
-   - Ocena 4.5 - wynik w przedziale [80, 90)
-   - Ocena 4.0 - wynik w przedziale [70, 80)
-   - Ocena 3.5 - wynik w przedziale [60, 70)
-   - Ocena 3.0 - wynik w przedziale [50, 60)
-   - Ocena 2.0 - wynik w przedziale [0, 50)
+  - Do zaliczenia przedmiotu koniecznie jest uzyskanie w sumie przynajmniej 50 punktów (na 100 możliwych), z zastrzeżeniem dopuszczalnej liczby nieobecności.
+  - Ocena z poprawy zastępuje ocenę z poprawianych zajęć.
+  - **Ocena końcowa z przedmiotu** wynika z sumy punktów uzyskanych przez studenta z laboratorium:
+    - Ocena 5.0 - wynik w przedziale [90, 100]
+    - Ocena 4.5 - wynik w przedziale [80, 90)
+    - Ocena 4.0 - wynik w przedziale [70, 80)
+    - Ocena 3.5 - wynik w przedziale [60, 70)
+    - Ocena 3.0 - wynik w przedziale [50, 60)
+    - Ocena 2.0 - wynik w przedziale [0, 50)
 
 
 # Termin i tryb ogłaszania ocen
 
-- Oceny cząstkowe
-  - Liczba punktów uzyskana za kolejne etapy zadania laboratoryjnego jest podawana w momencie sprawdzania przez prowadzącego i zapisywana na kartce z treścią zadania
-  - Liczba punktów uzyskana za wejściówkę jest wyświetlana w LeOn po zakończeniu testu
-  - Punkty z obu części laboratorium są umieszczane w USOSie najpóźniej 24 godziny po zajęciach. Liczba punktów wpisana w USOSie determinuje ocenę końcową
-- Ocena końcowa
-  - Wystawiana w USOSie w ciągu 24 godzin od opublikowania wyników ostatniego laboratorium L4 w USOSie
-  - Korygowana w trakcie sesji egzaminacyjnej w ciągu 24 godzin od opublikowania wyników laboratorium poprawkowego w USOSie
+  - Oceny cząstkowe
+    - Liczba punktów uzyskana za kolejne etapy zadania laboratoryjnego jest podawana w momencie sprawdzania przez prowadzącego i zapisywana na kartce z treścią zadania
+    - Liczba punktów uzyskana za wejściówkę jest wyświetlana w LeOn po zakończeniu testu
+    - Punkty z obu części laboratorium są umieszczane w USOSie najpóźniej 24 godziny po zajęciach. Liczba punktów wpisana w USOSie determinuje ocenę końcową
+  - Ocena końcowa
+    - Wystawiana w USOSie w ciągu 24 godzin od opublikowania wyników ostatniego laboratorium L4 w USOSie
+    - Korygowana w trakcie sesji egzaminacyjnej w ciągu 24 godzin od opublikowania wyników laboratorium poprawkowego w USOSie
 
 
 # Zasady powtarzania zajęć z powodu niezaliczenia przedmiotu

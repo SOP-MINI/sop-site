@@ -1,6 +1,6 @@
 # Purpose of course
 
-The first goal of the *Operating Systems I* course is to familiarize students with basics of operating system operation and design. The second goal is to develop student skills in correct application of system functions to design and implementation of simple multiprocess/multi-thread applications which communicate using standard input/output channels and files.
+The first goal of the *Operating Systems 1* course is to familiarize students with basics of operating system operation and design. The second goal is to develop student skills in correct application of system functions to design and implementation of simple multiprocess/multi-thread applications which communicate using standard input/output channels and files.
 
 # Conducting classes
 
@@ -10,16 +10,12 @@ The subject consists of a lecture and a laboratory.
     - The course consists of 15 lecture hours in 2-hour blocks. The last lecture is 1 hour long. Lectures take place according to the schedule provided on the course website.
     - The lecture materials are available on the course website.
     - There are no lecture tests. The lecture content will, however, appear in the introductory tests during the laboratory.
-
   - The laboratory consists of five classes denoted as L0, L1, L2, L3, L4. The laboratory classes take place according to the schedule provided on the course website. The course website also includes preparation materials for classes.
-
   - L0 class is devoted to the preparation of the environment. During this class, students have to recall the skills of the Unix Fundamentals course and to configure the development environment. Any deficiencies in the configuration or skills (e.g., lack of intellisense, underlining errors in the editor or poor ability to navigate through directories) in all subsequent classes will not be an excuse for poor grades and cannot be used as an excuse for less strict grading. Moreover, during L0 students will be familiarized with solution submission system used during following classes.
-
   - L1, L2, L3 and L4 classes assess abilities in the topics given in the laboratory schedule. Students should prepare on their own for each class, using the materials on the course website and lecture materials. Each of the classes consists of three parts:
-
-     - entry test (8 minutes): solving the LeOn test
-     - programming task (120 minutes)
-  - In the exam session, there is a retake where you can improve your grades in exactly one topic (L1, L2, L3, or L4). You can retake either one part (test, program) or both. Registration for the retakes will start immediately after the last laboratory classes in the semester and will be open for **24 hours** only.
+    - entry test (8 minutes): solving the LeOn test
+    - programming task (120 minutes)
+  - At the end of the semester, there is a retake where students can improve their grades in exactly one topic (L1, L2, L3, or L4). Student can retake either one part (test, program) or both. Registration for the retakes will start immediately after the last laboratory classes in the semester and will be open for **24 hours** only.
 
 
 # Course materials
@@ -51,15 +47,15 @@ During L0 class students solve simple programming task for which they can score 
 ### Introductory test
   - Test verifying the lecture information and the preparation materials from the website. Each entry test includes material from the all preceding lectures and the all preceding laboratories as well as the current laboratory topic.
   - Multiple-choice questions (any number of answers greater than 0 can be correct), solved on the LeOn platform.
-  - The entrance test consists of 4 questions, for each question you can get a score from the range [0, 2] points. In total, for the entire test, a maximum is 8 points.
-  - The entry test is scored as follows. In each multiple-choice question there are *n* correct answers and *m* incorrect answers (each answer is either correct or incorrect). There is 2/n points for each correct answer chosen, and for each incorrect answer chosen there are -2/m points. For each question, the sum of points resulting from the marked incorrect and correct answers is awarded, as long as the sum obtained is not negative. In this case, 0 points are awarded.
+  - The entrance test consists of 4 questions, for each question student can get a score from the range [0, 1] points. In total, for the entire test, a maximum is 4 points
+  - The entry test is scored as follows. In each multiple-choice question there are *n* correct answers and *m* incorrect answers (each answer is either correct or incorrect). There is 1/n points for each correct answer chosen, and for each incorrect answer chosen there are -1/m points. For each question, the sum of points resulting from the marked incorrect and correct answers is awarded, as long as the sum obtained is not negative. In this case, 0 points are awarded.
   - Time limit for the test is 8 minutes.
 
 ### Programming task
 
-   - 0 to 16 points to get for each topic
+   - 0 to 20 points to get for each topic
    - Allotted time: 120 minutes
-   - Laboratory tasks are solved using the Arch Linux system on the computers in the laboratory. It is not allowed to show solutions on your own computer.
+   - Laboratory tasks are solved using the Arch Linux system on the computers in the laboratory. It is not allowed to show solutions on student's own computer.
    - A programming task is divided into stages. Amount of points for each stage in provided within the task description. The stages must be performed in the prescribed order. It is not allowed to proceed to the next stage without completing the predecessors.
    - Each stage is checked and graded during the class. Use of proper tools and POSIX API, correct implementation and functional correctness are graded. Code style is not (except Lab3).
    - After finishing each stage students send solution to the server using git version control system as described during L0. Submissions must obey following rules:
@@ -69,7 +65,6 @@ During L0 class students solve simple programming task for which they can score 
     - Solution files must be formatted according to clang-format configuration provided with task. Clang-format program is installed on computers in the laboratory and its usage will be explained during L0.
     - Solution program must compile using makefile from task repository.
     If solution does not follow one of the rules it will be automatically rejected and student get information about problem. Sending solution to the server is necessary for grading - solution not sent to server will be not graded. 
-  - The uploaded solution of **L3** will be additionally graded in terms of code quality and aesthetics. This will be checked after the lab. For the problems you will receive up to 10 (but no more than number of points from the lab) penalty points that will be subtracted from the base result of L3.
 
 # Aids acceptable for use in verifying achievement of learning outcomes
 
