@@ -57,7 +57,7 @@ During L0 class students solve simple programming task for which they can score 
    - Allotted time: 120 minutes
    - Laboratory tasks are solved using the Arch Linux system on the computers in the laboratory. It is not allowed to show solutions on student's own computer.
    - A programming task is divided into stages. Amount of points for each stage in provided within the task description. The stages must be performed in the prescribed order. It is not allowed to proceed to the next stage without completing the predecessors.
-   - Each stage is checked and graded during the class. Use of proper tools and POSIX API, correct implementation and functional correctness are graded. Code style is not (except Lab3).
+   - Each stage is checked and graded during the class. Use of proper tools and POSIX API, correct implementation and functional correctness are graded.
    - After finishing each stage students send solution to the server using git version control system as described during L0. Submissions must obey following rules:
     - The task must be coded in *C* (not C++).
     - Submission may be sent only once one minute.

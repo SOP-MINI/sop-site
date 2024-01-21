@@ -65,7 +65,7 @@ W trakcie semestru są dwa sprawdziany wykładowe.
   - Zadania laboratoryjne rozwiązywane są z użyciem systemu Arch Linux na komputerach w laboratorium. Nie jest dozwolone rozwiązywanie zadań na własnym komputerze.
   - Zadanie programistyczne jest podzielone na etapy. Punkty za każdy etap podane są w treści zadania. Etapy muszą być wykonywane w wyznaczonej kolejności. Nie wolno przechodzić do następnego etapu bez wykonania poprzednich.
   - Każdy etap jest sprawdzany i oceniany na zajęciach. Oceniana jest umiejętność korzystania z właściwych narzędzi i prawidłowa (w tym zgodna z POSIX) implementacja wymaganej funkcjonalności.
-  - Po ukończeniu każdego etapu studenci przesyłają rozwiązanie na serwer przy użyciu systemu kontroli git, w sposób opisany przez prowadzącego na L0. Zgłoszenia podlegają następującym zasadom:
+  - Po ukończeniu każdego etapu studenci przesyłają rozwiązanie na serwer przy użyciu systemu kontroli git. Zgłoszenia podlegają następującym zasadom:
     - Program musi być napisany w języku C (nie C++).
     - Rozwiązania nie można zgłosić częściej niż co minutę.
     - Dozwolona jest modyfikacja jedynie plików rozwiązania.
