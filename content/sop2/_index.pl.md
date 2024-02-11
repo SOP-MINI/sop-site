@@ -15,10 +15,9 @@ date: 2022-02-10T10:00:00+01:00
 
 ### Laboratorium
 
-- *Koordynator laboratorium:* Jan Karwowski
-  - email: jan.karwowski@pw.edu.pl
-  - uwaga: zwykle nie czytam wiadomości na teamsach
-- Gr 1, gr 2:
-- Gr 3, gr 4: 
-- Gr 5, gr 6: 
+- Franciszek Jełowicki *koordynator*
+- Tomasz Herman
+- Maciej Spychała
+- Krzysztof Smogór
+- Szymon Zyguła
 

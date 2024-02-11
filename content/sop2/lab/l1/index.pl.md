@@ -8,7 +8,7 @@ weight: 10
 
 {{< hint info >}}
 Uwagi wstępne:
-- Obowiązują wszystkie materiały z SOP1, szczególnie tutoriale L1,L2 i L3!
+- Obowiązują wszystkie materiały z SOP1!
 - Szybkie przejrzenie tutoriala prawdopodobnie nic nie pomoże, należy samodzielnie uruchomić programy, sprawdzić jak działają, poczytać materiały dodatkowe takie jak strony man. W trakcie czytania sugeruję wykonywać ćwiczenia a na koniec przykładowe zadanie.
 - Na żółtych polach podaję dodatkowe informacje, niebieskie zawierają pytania i ćwiczenia. Pod pytaniami znajdują się odpowiedzi, które staną się widoczne dopiero po kliknięciu. Proszę najpierw spróbować sobie odpowiedzieć na pytanie samemu a dopiero potem sprawdzać odpowiedź.
 - Pełne kody do zajęć znajdują się w załącznikach na dole strony. W tekście są tylko te linie kodu, które są konieczne do zrozumienia problemu.
@@ -26,6 +26,8 @@ Uwagi wstępne:
 - `PIPE_BUF` na Linuxie to 4kb
 - W POSIXie `PIPE_BUF` to co najmniej 512 bajtów.
 {{< /hint >}}
+
+## Pytania kontrolne
 
 1. Czy w sytuacji połączenia jednego procesu piszącego z jednym czytającym też trzeba przesyłać dane w paczkach nie przekraczających `PIPE_BUF`?  
 {{< answer >}} Nie ma takiej konieczności, nie występuje w tym, wariancie problem konkurowania o możliwość zapisu. {{< /answer >}}
@@ -249,7 +251,7 @@ Rozwiązanie **prog22b.c**:
 13. Czy obsługa SIGCHLD w tym programie jest niezbędna  
 {{< answer >}} Jej brak nie zepsuje działania co zadowoli słabszego programistę ale powstaną zombi czego dobry programista wolałby uniknąć. {{< /answer >}}
 
-Wykonaj przykładowe [ćwiczenie]({{< ref "../l1-example" >}}) z poprzednich lat. To zadanie szacuję na 60 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a do zajęć. Pamiętaj, że w aktualnym układzie zajęć będzie dane zadnie na około 1,5 godziny, więc trochę bardziej pracochłonne.
+Wykonaj przykładowe [ćwiczenie]({{< ref "../l1-example" >}}) z poprzednich lat. To zadanie szacuję na 60 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a do zajęć.
 
 ## Kody źródłowe z treści tutoriala
 

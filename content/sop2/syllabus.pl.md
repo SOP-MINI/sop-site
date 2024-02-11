@@ -5,8 +5,8 @@ date: 2022-02-10T10:00:00+01:00
 
  - Wykład: 30h
  - Laboratorium: 15h
- - Ćwiczenia: none
- - Projekt: none
+ - Ćwiczenia: brak
+ - Projekt: brak
  - ECTS: 3
 
 ## Cele przedmiotu

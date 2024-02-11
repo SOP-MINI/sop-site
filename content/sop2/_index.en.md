@@ -15,9 +15,8 @@ date: 2022-02-10T10:00:00+01:00
 
 ### Laboratory
 
-- *Lab coordinator:* Jan Karwowski
-  - email: jan.karwowski@pw.edu.pl
-  - note: usually I don't read messages on teams
-- Gr 1, gr 2: 
-- Gr 3, gr 4: 
-- Gr 5: 
+- Franciszek Jełowicki *lab coordinator*
+- Tomasz Herman
+- Maciej Spychała
+- Krzysztof Smogór
+- Szymon Zyguła

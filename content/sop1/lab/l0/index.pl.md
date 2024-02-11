@@ -10,7 +10,7 @@ weight: 10
 
 Pierwsze zajęcia wymagają od ciebie pewnego przygotowania, jednak głównie 
 mają służyć wyjaśnieniu wszelkich wątpliwości co do zasad prowadzenia zajęć i konfiguracji środowiska na dalsze laboratoria.
-Przeczytaj proszę informacje podane w działach [GIT]({{< ref "../../git">}}), [program]({{< ref "../../syllabus" >}}),
+Przeczytaj proszę informacje podane w działach [GIT]({{< ref "../../../git">}}), [program]({{< ref "../../syllabus" >}}),
 [regulamin]({{< ref "../../zasady" >}}) i [harmonogram]({{< ref "../../harmonogram" >}}).
 Zerknij też na materiały [pomocnicze]({{< ref "../../materialy" >}}).
 
@@ -661,7 +661,7 @@ parametr `-o` ma argument — ścieżkę do wynikowego programu.
 {{< hint info >}}
 
 Tą sekcję należy wykonać w sali na laboratorium L0.
-Przed przejściem przez tą sekcję trzeba zapoznać się z opisem użycia [GITa]({{< ref "../../git" >}})
+Przed przejściem przez tą sekcję trzeba zapoznać się z opisem użycia [GITa]({{< ref "../../../git" >}})
 Wymaga ona dostępu do serwera działającego tylko w trakcie trwania laboratorium.
 Zachęcam jednak do przeczytania jej i przygotowania się do wykonania poniższych kroków.
 

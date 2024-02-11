@@ -3,6 +3,8 @@ title: "Harmonogram"
 date: 2023-02-14T10:00:00+01:00
 ---
 
+Semestr letni 2022/2023
+
 ## Wykłady
 
 Czwartki, g. 8:15 - 10:00, s. 107

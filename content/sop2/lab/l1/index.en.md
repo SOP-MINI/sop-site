@@ -8,7 +8,7 @@ weight: 10
 
 {{< hint info >}}
 Introduction notes:
-- All materials from OPS1 are still obligatory, especially tutorials L1,L2 i L3!
+- All materials from OPS1 are still obligatory!
 - Quick look at this material will not suffice, you should compile and run all the programs, check how they work, read additional materials like man pages. As you read the material please do all the exercises and questions. At the end you will find sample task similar to the one you will do during the labs, please do it at home.
 - You will find additional information in yellow sections, questions and tasks in blue ones. Under the question you will find the answer, to see it you have to click. Please try to answer on you own before checking. 
 - Full programs' codes are placed as attachments at the bottom of this page. On this page only vital parts of the code are displayed
@@ -26,6 +26,8 @@ Introduction notes:
 - PIPE_BUF on  Linux equals to 4kb
 - According to  POSIX, PIPE_BUF has to be at least 512 bytes.
 {{< /hint >}}
+
+## Questions
 
 Do you need to divide the communication into PIPE_BUF parts in case of one to one connection i.e.  one process writes and one reads?
 {{< answer >}} There is no need to do it, there is no competition over the link, no interference from other processeses.  {{< /answer >}}
@@ -238,7 +240,7 @@ Solution **prog22b.c**:
 - Is SIGCHLD handler absolutely necessary in this code?
 {{< answer >}} It won't break the logic, but without it zombi will linger and that is something a good programmer would not accept. {{< /answer >}}
 
-As an exercise do <a href="{{< ref "../l1-example" >}}">this</a> task. It was used in previous years in a bit different labs timing. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab. In a new timing there is more time for the task and it will be slightly larger.
+As an exercise do <a href="{{< ref "../l1-example" >}}">this</a> task. It was used in previous years in a bit different labs timing. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab.
 
 ## Source codes presented in this tutorial
 
