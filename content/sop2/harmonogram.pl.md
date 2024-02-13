@@ -3,7 +3,7 @@ title: "Harmonogram"
 date: 2023-02-14T10:00:00+01:00
 ---
 
-Semestr letni 2022/2023
+Semestr letni 2023/2024
 
 ## Wykłady
 
@@ -29,18 +29,14 @@ Czwartki, g. 8:15 - 10:00, s. 107
 
 ## Laboratorium
 
-Poniedziałki, g. 14:15 - 17:00
+Czwartki, 14:15 - 16:30
 
-| Data  | Tytuł                                                                     | Grupy USOS       |
-|-------|---------------------------------------------------------------------------|------------------|
-| 20.03 | [L1 FIFO/pipe]({{< ref "lab/l1" >}})                                      | LAB1, LAB3, LAB5 |
-| 27.03 | [L1 FIFO/pipe]({{< ref "lab/l1" >}})                                      | LAB2, LAB4, LAB6 |
-| 03.04 | [L2 Kolejki POSIX]({{< ref "lab/l2" >}})                                  | LAB1, LAB3, LAB5 |
-| 17.04 | [L2 Kolejki POSIX]({{< ref "lab/l2" >}})                                  | LAB2, LAB4, LAB6 |
-| 08.05 | [L3 Gniazda pselect]({{< ref "lab/l3" >}})                                | LAB1, LAB3, LAB5 |
-| 15.05 | [L3 Gniazda pselect]({{< ref "lab/l3" >}})                                | LAB2, LAB4, LAB6 |
-| 22.05 | [L4 Gniazda, wątki, pamięć wspólna, synchronizacja]({{< ref "lab/l4" >}}) | LAB1, LAB3, LAB5 |
-| 29.05 | [L4 Gniazda, wątki, pamięć wspólna, synchronizacja]({{< ref "lab/l4" >}}) | LAB2, LAB4, LAB6 |
-| 30.05 | 17:00 -- zamknięcie zapisów na poprawy w moodle                           | Wszystkie grupy  |
-| 05.06 | L5 Poprawy                                                                | Wszystkie grupy  |
-| 12.06 | L5 Poprawy                                                                | Wszystkie grupy  |
+| Data  | Tytuł                                                                     |
+|-------|---------------------------------------------------------------------------|
+|  7.03 | [L1 FIFO/pipe]({{< ref "lab/l1" >}})                                      |
+| 21.03 | [L2 Kolejki POSIX]({{< ref "lab/l2" >}})                                  |
+|  4.04 | L3 Gniazda pselect                                                        |
+| 18.04 | L4 Gniazda, wątki, pamięć wspólna, synchronizacja                         |
+| 22.04 | 23:59 -- zamknięcie zapisów na poprawy w LeON                             |
+|  9.05 | Poprawy?                                                                  |
+| 16.05 | Poprawy?                                                                  |
