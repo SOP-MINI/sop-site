@@ -24,10 +24,10 @@ date: 2022-02-10T10:00:00+01:00
 
 ## Laboratory reference
 
-- [Lab 1 FIFO/pipe (3h)]({{< ref "lab/l1" >}})
-- [Lab 2 POSIX queues (3h)]({{< ref "lab/l2" >}})
-- [Lab 3 Network sockets, pselect (3h)]({{< ref "lab/l3" >}})
-- [Lab 4 Sockets, threads, shared memory, synchronization (3h)]({{< ref "lab/l4" >}})
+- [Lab 1 FIFO/pipe ]({{< ref "lab/l1" >}})
+- [Lab 2 POSIX queues ]({{< ref "lab/l2" >}})
+- Lab 3 Network sockets, pselect
+- Lab 4 Sockets, threads, shared memory, synchronization
 
 ## Other links
 

@@ -24,10 +24,10 @@ date: 2022-02-10T10:00:00+01:00
 
 ## Opisy ćwiczeń laboratoryjnych
 
-- [L1 FIFO/pipe (3g)]({{< ref "lab/l1" >}})
-- [L2 kolejki POSIX (3g)]({{< ref "lab/l2" >}})
-- [L3 Gniazda pselect (3g)]({{< ref "lab/l3" >}})
-- [L4  Gniazda, wątki, pamięć wspólna, synchronizacja (3g)]({{< ref "lab/l4" >}})
+- [L1 FIFO/pipe]({{< ref "lab/l1" >}})
+- [L2 kolejki POSIX]({{< ref "lab/l2" >}})
+- L3 Gniazda pselect
+- L4  Gniazda, wątki, pamięć wspólna, synchronizacja
 
 ## Inne materiały
 
