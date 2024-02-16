@@ -8,10 +8,6 @@ weight: 40
 
 <a href="{{< ref "../l3-test" >}}">A list of requirements for the introductory test</a>
 
-{{< hint warning >}}
-{{< codegrading >}}
-{{< /hint >}}
-
 {{< hint info >}}
 Introduction notes:
 

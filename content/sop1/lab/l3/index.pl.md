@@ -6,10 +6,6 @@ weight: 40
 
 # Tutorial 3 - Wątki, mutexy i sygnały
 
-{{< hint warning >}}
-{{< codegrading >}}
-{{< /hint >}}
-
 {{< hint info >}}
 Uwagi wstępne:
 
