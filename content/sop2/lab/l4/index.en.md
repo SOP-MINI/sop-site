@@ -1,5 +1,5 @@
 ---
-title: "L4 - sockets and poll"
+title: "L4 - sockets and select"
 date: 2022-02-01. 1. :51. 45+01. 00
 weight: 30
 ---
@@ -268,7 +268,7 @@ Analyze how 5 connection limit works, pay attention how "free" member in the con
 
 ## Sample task
 
-As an exercise do [this]({{< ref "../l3-example" >}}) task. It was used in previous years in a bit different labs timing. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab. In a new timing there is more time for the task and it will be slightly larger.
+As an exercise do [this]({{< ref "../l4-example" >}}) task. It was used in previous years in a bit different labs timing. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab. In a new timing there is more time for the task and it will be slightly larger.
 
 
 ## Source codes presented in this tutorial

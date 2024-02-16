@@ -1,16 +1,33 @@
 ---
-title: "Zadanie testowe z tematu: gniazda, wątki, pamięć wspólna, synchronizacja"
+title: "Task on network"
 date: 2022-02-01T19:36:27+01:00
 bookHidden: true
 ---
 
+
+
 ## Treść
 
-Serwer przyjmuje połączenia TCP od klientów (telnet) i tworzy (lub przydziela z puli) dla każdego połączenia oddzielny wątek. Wątek ten od razu po utworzeniu rozpoczyna wysyłanie do swojego klienta komunikatów kontrolnych co 1 sek. W momencie gdy do serwera będzie podłączonych dokładnie 3 klientów, serwer ma wstrzymać przyjmowanie kolejnych połączeń a wątki robocze przerywają wysyłanie komunikatów kontrolnych, program przechodzi w tryb „literowania”. Pierwszy z klientów (można ich dowolnie uszeregować) ma dostać literę A, na którą ma odpisać B, drugi gdy pierwszy już odpisze dostanie B, na która powinien odpowiedzieć C itd. aż do ostatniego klienta. Naraz tylko jeden klient działa, reszta czeka. Jeśli klient zwróci niepoprawną literę to należy ponowić pytanie (i tak aż do skutku). Gdy ostatni z klientów odpowie poprawnie wszystkie wątki mają zerwać połączenie z klientem (zakończyć się lub wrócić do puli) a serwer powrócić do przyjmowania kolejnych połączeń. Serwer działa aż do SIGINT, który to kończy cały serwer natychmiast. Jeśli klient rozłączy się podczas fazy oczekiwania na 3 to nie powinno to zaburzyć działania programu, jeśli rozłączy się podczas fazy przepisywania liter to serwer ma go pominąć podczas literowania. 
+
+Serwer TCP przyjmuje połączenia od klientów, każdy z klientów wypisuje swój pid, podłącza się do serwera i wysyła swój PID jako tekst. Serwer odsyła klientowy sumę cyfr jego PIDu jako int16_t. Klient wypisuje otrzymany wynik i się kończy. Serwer akceptuje połączenie do czasu otrzymania sygnału SIGINT. Po otrzymaniu tego wypisuje najwyższy otrzymany wynik i się kończy.
+
+## Przykład
+
+```
+./server 2000&
+./client localhost 2000
+PID=1244
+SUM=11
+./client localhost 2000
+PID=1245
+SUM=12
+killall -s SIGINT server
+HIGH SUM=12
+```
 
 ## Etapy
 
-1. (5p) Serwer przyjmuje połączenia od klienta (telnetu), tworzy lub przydziela wątek i wysyła jeden komunikat kontrolny po czym rozłącza klienta a wątek się kończy lub wraca do puli. Serwer działa aż do SIGINT.
-2. (3p) Połączone wątki wysyłają komunikaty kontrolne co wyznaczony czas , gdy będzie ich 3 rozłączają klientów
-3. (6p) Serwer przechodzi w tryb literowania gdy zbierze się 3 klientów
-4. (3p) Program prawidłowo reaguje na zerwanie połączenia z klientem
+1. Serwer akceptuje tylko jedno połączenie, odczytuje dane od klienta i wypisuje. Klient po wysłaniu danych się kończy.
+2. Serwer akceptuje wiele połączeń, liczy i odsyła wyniki do klienta, klient wypisuje wynik.
+3. Serwer reaguje na SIGINT
+4. Wszystkie możliwości zerwania połączenie są odpowiednio sprawdzane i osługiwane.
