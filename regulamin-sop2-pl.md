@@ -81,7 +81,7 @@ W trakcie semestru są dwa sprawdziany wykładowe.
 
 # Zasady zaliczenia przedmiotu i wystawiania oceny końcowej
 
-  - Do zaliczenia przedmiotu koniecznie jest uzyskanie w sumie przynajmniej 100 punktów (na 200 możliwych), z zastrzeżeniem dopuszczalnej liczby nieobecności na laboratorium.
+  - Do zaliczenia przedmiotu koniecznie jest uzyskanie w sumie przynajmniej 100 punktów (na 200 możliwych), z zastrzeżeniem dopuszczalnej liczby nieobecności na laboratorium. Wymagane jest uzyskanie co najmniej 50 punktów z części wykładowej i 50 punktów z części laboratoryjnej.
   - Ocena z poprawy zastępuje ocenę z poprawianych zajęć.
   - **Ocena końcowa z przedmiotu** wynika z sumy punktów uzyskanych przez studenta z laboratorium i wykładu:
     - Ocena 5.0 - wynik w przedziale [180, 200]

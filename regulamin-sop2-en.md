@@ -80,7 +80,7 @@ There are two lecture tests during the semester.
 
 # The rules for passing the course and for calculating the final grade
 
- - To pass the course, it is necessary to obtain a total of at least 100 points (out of 200 possible), and to attend the number of classes required in the Attendance section.
+ - To pass the course, it is necessary to obtain a total of at least 100 points (out of 200 possible), and to attend the number of classes required in the Attendance section. At least 50 points from the lecture part and 50 points from the laboratory part is required
  - The points from the retake always replace the result scored previously
  - **The final course grade** is based on total points acquired by student during the labs and lectures:
    - Grade 5.0 - total in range [180, 200]
