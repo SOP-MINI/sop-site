@@ -1,17 +1,4 @@
-#define _GNU_SOURCE
-#include <errno.h>
-#include <netdb.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/un.h>
-#include <unistd.h>
-
-#define ERR(source) (perror(source), fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), exit(EXIT_FAILURE))
+#include "l4_common.h"
 
 int make_socket(char *name, struct sockaddr_un *addr)
 {
@@ -37,40 +24,6 @@ int connect_socket(char *name)
 }
 
 void usage(char *name) { fprintf(stderr, "USAGE: %s socket operand1 operand2 operation \n", name); }
-
-ssize_t bulk_read(int fd, char *buf, size_t count)
-{
-    int c;
-    size_t len = 0;
-    do
-    {
-        c = TEMP_FAILURE_RETRY(read(fd, buf, count));
-        if (c < 0)
-            return c;
-        if (0 == c)
-            return len;
-        buf += c;
-        len += c;
-        count -= c;
-    } while (count > 0);
-    return len;
-}
-
-ssize_t bulk_write(int fd, char *buf, size_t count)
-{
-    int c;
-    size_t len = 0;
-    do
-    {
-        c = TEMP_FAILURE_RETRY(write(fd, buf, count));
-        if (c < 0)
-            return c;
-        buf += c;
-        len += c;
-        count -= c;
-    } while (count > 0);
-    return len;
-}
 
 void prepare_request(char **argv, int32_t data[5])
 {

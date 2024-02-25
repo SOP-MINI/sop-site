@@ -1,34 +1,9 @@
-#define _GNU_SOURCE
-#include <errno.h>
-#include <fcntl.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <unistd.h>
-
-#define ERR(source) (perror(source), fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), exit(EXIT_FAILURE))
+#include "l4_common.h"
 
 #define MAXBUF 576
 volatile sig_atomic_t last_signal = 0;
 
 void sigalrm_handler(int sig) { last_signal = sig; }
-
-int sethandler(void (*f)(int), int sigNo)
-{
-    struct sigaction act;
-    memset(&act, 0, sizeof(struct sigaction));
-    act.sa_handler = f;
-    if (-1 == sigaction(sigNo, &act, NULL))
-        return -1;
-    return 0;
-}
 
 int make_socket(void)
 {
@@ -37,41 +12,6 @@ int make_socket(void)
     if (sock < 0)
         ERR("socket");
     return sock;
-}
-
-struct sockaddr_in make_address(char *address, char *port)
-{
-    int ret;
-    struct sockaddr_in addr;
-    struct addrinfo *result;
-    struct addrinfo hints = {};
-    hints.ai_family = AF_INET;
-    if ((ret = getaddrinfo(address, port, &hints, &result)))
-    {
-        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret));
-        exit(EXIT_FAILURE);
-    }
-    addr = *(struct sockaddr_in *)(result->ai_addr);
-    freeaddrinfo(result);
-    return addr;
-}
-
-ssize_t bulk_read(int fd, char *buf, size_t count)
-{
-    int c;
-    size_t len = 0;
-    do
-    {
-        c = TEMP_FAILURE_RETRY(read(fd, buf, count));
-        if (c < 0)
-            return c;
-        if (0 == c)
-            return len;
-        buf += c;
-        len += c;
-        count -= c;
-    } while (count > 0);
-    return len;
 }
 
 void usage(char *name) { fprintf(stderr, "USAGE: %s domain port file \n", name); }
@@ -120,8 +60,8 @@ void doClient(int fd, struct sockaddr_in addr, int file)
         {
             counter++;
             sendAndConfirm(fd, addr, buf, buf2, MAXBUF);
-        } while (*((int32_t *)buf2) != htonl(chunkNo) && counter <= 5);
-        if (*((int32_t *)buf2) != htonl(chunkNo) && counter > 5)
+        } while (*((int32_t *)buf2) != (int32_t)htonl(chunkNo) && counter <= 5);
+        if (*((int32_t *)buf2) != (int32_t)htonl(chunkNo) && counter > 5)
             break;
     } while (size == MAXBUF - offset);
 }

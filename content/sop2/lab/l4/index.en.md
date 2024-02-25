@@ -74,9 +74,11 @@ man 3p listen
 man 3p connect
 man 3p accept
 man 2 epoll_create
+man 2 epoll_ctl
 man 2 epoll_wait
 ```
 
+Pay closer attention at Q&A in `man 7 epoll`. It is well prepared so we will not repeat it here.
 
 Solution `prog23a_s.c`:
 {{< includecode "prog23a_s.c" >}}

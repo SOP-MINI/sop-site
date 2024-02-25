@@ -53,7 +53,7 @@ Należy napisać 2 programy klientów, po jednym dla każdego typu połączenia,
 Jeśli wyliczenie się uda należy wyświetlić wynik. 
 Wszystkie 3 programy można przerwać C-c, nie wolno po sobie zostawiać pliku połączenia lokalnego.
 		
-### Etap 1
+### Rozwiązanie
 
 Cel:
 
@@ -71,9 +71,11 @@ man 3p listen
 man 3p connect
 man 3p accept
 man 2 epoll_create
+man 2 epoll_ctl
 man 2 epoll_wait
 ```
 
+Zwróć uwagę zwłaszcza na sekcję Q&A w `man 7 epoll`. Ponieważ jest bardzo dobrze przygotowana, nie będziemy jej tutaj powtarzać.
 
 rozwiązanie `prog23a_s.c`:
 {{< includecode "prog23a_s.c" >}}
