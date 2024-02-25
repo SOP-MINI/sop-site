@@ -246,3 +246,10 @@ As an exercise do [this]({{< ref "../l4-example" >}}) task. It was used in previ
 ## Source codes presented in this tutorial
 
 {{% codeattachments %}}
+
+## Other references
+
+ - <http://cs341.cs.illinois.edu/coursebook/Networking#layer-4-tcp-and-client>
+ - <http://cs341.cs.illinois.edu/coursebook/Networking#layer-4-tcp-server>
+ - <http://cs341.cs.illinois.edu/coursebook/Networking#non-blocking-io>
+ 

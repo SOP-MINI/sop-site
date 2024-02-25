@@ -258,3 +258,10 @@ Wykonaj przykładowe [ćwiczenie]({{< ref "../l4-example">}}") z poprzednich lat
 
 ## Kody źródłowe z treści tutoriala
 {{% codeattachments %}}
+
+## Materiały dodatkowe
+
+ - <http://cs341.cs.illinois.edu/coursebook/Networking#layer-4-tcp-and-client>
+ - <http://cs341.cs.illinois.edu/coursebook/Networking#layer-4-tcp-server>
+ - <http://cs341.cs.illinois.edu/coursebook/Networking#non-blocking-io>
+ 
