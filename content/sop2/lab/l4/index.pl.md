@@ -4,13 +4,16 @@ date: 2022-02-01T19:51:45+01:00
 weight: 30
 ---
 
+{{< hint warning >}}
+W tym tutorialu do czekania na wielu deskryptorach używamy funkcji z rodziny `epoll`, które nie są częścią standardu POSIX, ale rozszerzeniem Linuxa. Przy pisaniu kodu przenośnego między systemami należy użyć funkcji z rodziny `select` lub `poll`, które jednak cechują się gorszą wydajnością a ich użycie jest mniej wygodne. 
+{{< /hint >}}
+
 Uwagi wstępne:
 
 1. W trakcie tych zajęć przydatny jest [program netcat]({{< ref "../netcat" >}})
 1. Obowiązują wszystkie materiały z SOP1 i SOP2 jakie były do tej pory, szczególnie ważne są te dotyczące wątków i procesów!
 1. Szybkie przejrzenie tutoriala prawdopodobnie nic nie pomoże, należy samodzielnie uruchomić programy, sprawdzić jak działają, poczytać materiały dodatkowe takie jak strony man. W trakcie czytania sugeruję wykonywać ćwiczenia a na koniec przykładowe zadanie.
 1. Na żółtych polach podaję dodatkowe informacje, niebieskie zawierają pytania i ćwiczenia. Pod pytaniami znajdują się odpowiedzi, które staną się widoczne dopiero po kliknięciu. Proszę najpierw spróbować sobie odpowiedzieć na pytanie samemu a dopiero potem sprawdzać odpowiedź.
-1. Pełne kody do zajęć znajdują się w załącznikach na dole strony. W tekście są tylko te linie kodu, które są konieczne do zrozumienia problemu.
 1. Materiały i ćwiczenia są ułożone w pewną logiczną całość, czasem do wykonania ćwiczenia konieczny jest stan osiągnięty poprzednim ćwiczeniem dlatego zalecam wykonywanie ćwiczeń w miarę przyswajania materiału.
 1. Większość ćwiczeń wymaga użycia konsoli poleceń, zazwyczaj zakładam, ze pracujemy w jednym i tym samym katalogu roboczym więc wszystkie potrzebne pliki są "pod ręką" tzn. nie ma potrzeby podawania ścieżek dostępu.
 1. Czasem podaję znak $ aby podkreślić, że chodzi o polecenie konsolowe, nie piszemy go jednak w konsoli np.: piszę "$make" w konsoli wpisujemy samo "make".

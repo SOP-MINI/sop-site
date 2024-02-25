@@ -4,13 +4,16 @@ date: 2022-02-01. 1. :51. 45+01. 00
 weight: 30
 ---
 
+{{< hint warning >}}
+In this tutorial we use `epoll` functions family to wait on multiple descriptors. `epoll` is not a part of POSIX, but Linux extension. If you want to write portable code, you should look at `select` or `poll` functions - which are standarized, but have worse performance and are less convenient to use.
+{{< /hint >}}
+
 Introduction notes:
 
 1. It's worth to familiarize with [netcat]({{< ref "../netcat" >}}) befaore the lab
 1. All materials from OPS1. OPS2 are still obligatory, especially tutorials on threads and processes!
 1. Quick look at this material will not suffice, you should compile and run all the programs, check how they work, read additional materials like man pages. As you read the material please do all the exercises and questions. At the end you will find sample task similar to the one you will do during the labs, please do it at home.
 1. You will find additional information in yellow sections, questions and tasks in blue ones. Under the question you will find the answer, to see it you have to click. Please try to answer on you own before checking. 
-1. Full programs' codes are placed as attachments at the bottom of this page. On this page only vital parts of the code are displayed
 1. Codes, information and tasks are organized in logical sequence, in order to fully understand it you should follow this sequence. Sometimes former task makes context for the next one and it is harder to comprehend it without the study of previous parts.  
 1. Most of exercises require command line to practice, I usually assume that all the files are placed in the current working folder and that we do not need to add path parts to file names. 
 1. Quite often you will find $ sign placed before commands you should run in the shell, obviously you do not need to rewrite this sight to command line, I put it there to remind you that it is a command to execute.
