@@ -1,4 +1,7 @@
 <ul>
+{{ range .Page.Resources.Match "*.h" }}
+<li><a href="{{ .RelPermalink }}">{{.Name}}</a></li>
+{{ end }}
 {{ range .Page.Resources.Match "*.c" }}
 <li><a href="{{ .RelPermalink }}">{{.Name}}</a></li>
 {{ end }}

@@ -23,7 +23,7 @@ Introduction notes:
 1. Integer types in C language do not have standardized  size. They can have different size depending on the architecture or even the compiler. To avoid the problems it is safer to use size defined types like int32_t or uint1. _t.
 1. Sending a structure over the network can cause problems too. It is related to the way compilers layout the structure fields in the memory. On some architectures it is faster to read the memory bytes at addresses divisible by 8 on other by 1. ,32 or other divider. Compiler tries to speed up the access by placing all the fields on fast addresses and it means gaps of unknown size between the members. If those gaps differ then after binary transfer the structure will not be usable. To avoid this, you must be able to tell the compiler to "pack" the structure - remove the gaps, but it can not be achieved in a portable way within the code. To avoid the problem you can send the structure member by member.
 
-## task on local + TCP sockets
+## Task on local + TCP sockets
 Write simple integer calculator server. Data send to server consists of:
 - operand 1
 - operand 2
@@ -55,19 +55,15 @@ Write 2 types of client, one for each connection type, those clients shall take 
 On success client displays the result on the screen.
 All above programs can be interrupted with C-c, server may NOT leave local socket file not deleted in such a case.
 		
-### Stage 1
-
-Goal:
-
-- Server handles local connections
-- Local connection client
+### Solution
 
 What you must know:
 
 ```
 man 7 socket
-man 7 unix
 man 7 epoll
+man 7 unix
+man 7 tcp
 man 3p socket
 man 3p bind
 man 3p listen
@@ -76,28 +72,47 @@ man 3p accept
 man 2 epoll_create
 man 2 epoll_ctl
 man 2 epoll_wait
+man 3p freeaddrinfo (obie funkcje, getaddrinfo też)
+man 3p gai_strerror
 ```
 
 Pay closer attention at Q&A in `man 7 epoll`. It is well prepared so we will not repeat it here.
 
-Solution `prog23a_s.c`:
-{{< includecode "prog23a_s.c" >}}
 
-Solution `prog23_local.c`:
-{{< includecode "prog23_local.c" >}}
+Common library for all sources in this tutorial:
+{{< includecode "l4_common.h" >}}
 
-How to run the code:
+server `l4-1_server.c`:
+{{< includecode "l4-1_server.c" >}}
+local client `l4-1_client_local.c`:
+{{< includecode "l4-1_client_local.c" >}}
+TCP client `l4-1_client_tcp.c`:
+{{< includecode "l4-1_client_tcp.c" >}}
+
+To run the code:
 ```
-$ ./prog23a_s a 2000&
-$ ./prog23_local a 2 1. +
-$ ./prog23_local a 2 1. '*'
-$ ./prog23_local a 2 0 /
-$ killall -s SIGINT prog23a_s
+$ ./l4-1_server a 2000&
+$ ./l4-1_client_local a 2 1 +
+$ ./l4-1_client_local a 2 1 '*'
+$ ./l4-1_client_local a 2 0 /
+$ ./l4-1_client_tcp localhost 2000 234 17  /
+
+$ killall -s `SIGINT` prog23a_s
+
 ```
 
-Please notice that functions make_socket, bind_socket, connect_socket  and add_new_client are perfect candidates for a separate library that may be reused for other solutions. The purpose of those functions should be obvious and the network connection schema was elaborated during the lecture
+In pairs check each other host name (it is in command line, eg. p21. 03), each of you starts the server and then establish a connection with a neighbor:
 
-You may be curious why the constant BACKLOG is set for 4, why not 5,7 or 9? In practice  any small number  would fit here, this value is merely a hint for the operating system. This program will not deal with a large amount of network traffic and it handles connections very promptly so the queue of waiting connections will never be long. When you expect a heavier traffic in your program please test larger values and find the smallest one that suits your needs. Unfortunately this value will be different on different operating systems.
+```
+$ ./l4-1_server a 2000 &
+$ ./l4-1_client_tcp p21804 2000  2 2  +
+...
+$ killall -s SIGINT prog23b_s
+```
+
+In this solution (and also in the next example) all sources uses common library to avoid implementing functions like `bulk_read` all times.
+
+You may be curious why the constant BACKLOG is set for 3, why not 5,7 or 9? In practice  any small number  would fit here, this value is merely a hint for the operating system. This program will not deal with a large amount of network traffic and it handles connections very promptly so the queue of waiting connections will never be long. When you expect a heavier traffic in your program please test larger values and find the smallest one that suits your needs. Unfortunately this value will be different on different operating systems.
 
 In this code macro SUN_LEN is used. Why not to use sizeof instead? Both approaches work correctly. You should know, that the sizeof will return slightly larger size than the macro due to the count method. Unlike sizeof, the macro does not count the gap between the members of the address structure. The implementation expects the smaller value of those two but as the address is just a zero delimited string the larger size value has no effect on the address itself. What should you choose? In this tutorial sizes are calculated with the macro SUN_LEN as the standard demands. In this way we save a few bytes of the memory reserved for the address at the cost of a few CPU cycles more to count the size properly. If you decide that CPU has more priority over memory you can choose to use sizeof it will not be considered as an error.
 
@@ -113,25 +128,22 @@ You may ask why macros ntohl and htonl are in use as the connection is local and
 
 In this code, function bulk_read is used, it is important to know how this function will work in case of nonblocking descriptor. If data is not available it will return immediately with EAGAIN error. Is this the case in this code? Is the descriptor in not blocking mode? Newly created descriptor returned by accept function does not have to inherit the flags! In case of Linux flags are in deed not inherited so as far as Linux is used not blocking mode of the descriptor does not interfere with be bulk_read. In fact it wold not cause problems also on the platforms that inherit the  not blocking flag due to the fact that we call bulk_read after we learn that the data is already available.
 
-
+You are obliged to use getaddrinfo function, the older gethostbyname function is described as obsolete in the man page and can not be used in your solutions.
 
 How can you check on the socket file after you started the server?
 {{< answer >}} $ls -l a  {{< /answer >}}
 
-What is the role of pselect call in this program?
+What is the role of `epoll_pwait` call in this program?
 {{< answer >}} This is the point the program waits for data input from the descriptors and at the same time waits for SIGINT signal delivery {{< /answer >}}
 
-Can we replace pselect with select?
+Can we replace `epoll_pwait` with `epoll_wait`?
 {{< answer >}} Yes, but it is not worth the effort as then proper SIGINT handling would be much more code demanding {{< /answer >}}
 
-As we wait only on one descriptor it may be worth considering to remove pselect entirely, does it ?</br>
-{{< answer >}} Again, it is not worth the effort as we still need to handle the SIGINT (see the above answer) and in the next stage we will handle two sockets at the same time {{< /answer >}}
-
 Why network listening socket is in non blocking mode? 
-{{< answer >}} With this descriptor in blocking mode it is possible to block the program on "accept" call. Consider the scenario of the client trying to connect and then unexpectedly vanishing from the network. It may happen that pselect will report the socket to be ready for a connection but after the call the new client will disappear and at the time of accept call there will be no one to connect. The program will simply block on the accept until another client arrives. The not blocking mode prevents this situation. {{< /answer >}}
+{{< answer >}} With this descriptor in blocking mode it is possible to block the program on "accept" call. Consider the scenario of the client trying to connect and then unexpectedly vanishing from the network. It may happen that `epoll_pwait` will report the socket to be ready for a connection but after the call the new client will disappear and at the time of accept call there will be no one to connect. The program will simply block on the accept until another client arrives. The not blocking mode prevents this situation. {{< /answer >}}
 
 Why program uses int32_t (stdint.h) instead of plain int? 
-{{< answer >}} Due to various sizes of the int on different architecture. It will be important in the second stage of the program. {{< /answer >}}
+{{< answer >}} Due to various sizes of the int on different architecture. {{< /answer >}}
 
 Why SIGPIPE is ignored in the server?
 {{< answer >}} It is generally easier to handle the broken pipe condition by checking for EPIPE error rather than handling the SIGPIPE signal when the reaction tho the disconnection is not critical - server only closes the current connection and continues to serve other clients. {{< /answer >}}
@@ -142,46 +154,6 @@ Why bulk_read nad bulk_write are used in the program? SIGINT is terminating the 
 What is the purpose of the unlink in the server code?
 {{< answer >}} It removes the local socket the same way it removes a file or a fifo - clean up function. {{< /answer >}}
 
-
-
-		
-### Stage 2
-
-Goal:
-
-- Server handles TCP connections
-- TCP client
-
-What you must know:
-```
-man 7 tcp
-man 3p freeaddrinfo (both functions, getaddrinfo too)
-man 3p gai_strerror
-```
-
-
-Solution `prog23b_s.c`:
-{{< includecode "prog23b_s.c" >}}
-
-Solution `prog23_tcp.c`:
-{{< includecode "prog23_tcp.c" >}}
-
-How to run:
-```
-$ ./prog23_tcp localhost 2000 234 1.   /
-$ ./prog23_local a 2 1. '*'
-$ killall -s SIGINT prog23b_s
-</pre>In pairs check each other host name (it is in command line, eg. p21. 03), each of you starts the server and then establish a connection with a neighbor:<pre>
-$ ./prog23b_s a 2000 &
-$ ./prog23_tcp p21. 04 2000  2 2  +
-...
-$ killall -s SIGINT prog23b_s
-```
-
-Please notice that functions make_socket, bind_local_socket, bind_tcp_socket are mostly TCP extended variants of previous functions, I recommend them to your network library. Client functions make_socket and make_address are also worth including.
-
-You are obliged to use getaddrinfo function, the older gethostbyname function is described as obsolete in the man page and can not be used in your solutions.
-
 What is the purpose of socket option SO_REUSEADDR? 
 {{< answer >}} This option allows you to quickly bind to the same port on the server if the program run a moment ago. It is essential for testing when you encounter a bug, quickly correct it and then want to run the program again. Without this option system will block binding to the port for a few minutes. {{< /answer >}}
 
@@ -191,11 +163,7 @@ Does the above socket option mean that the packets from previous connection can 
 Why the address INADDR_ANY is used for the server, what is the value of this constant?</br>
 {{< answer >}} This is a special address, the value is  0.0.0.0. It means any address. It is used as local address of the server in place of  real IP of the server (server can have more that one IP). It does not mean the program will be caching all the Internet connections! If the connection is directed (routed) to our server then we do not care what IP address client used, if ports match then connection is handled without IP matching. Very popular and convenient solution. {{< /answer >}}
 
-Please check how the pselect call is extended to handle the second socket. Please notice that adding TCP required only a new set of connection establishing functions, once the connection works the same code is used as in stage one.
-
-TCP client code and local client code are very similar, integrate those two types of client into one program with parameter swich (-p local|tcp)
-
-
+TCP client code and local client code are very similar, as a exercise integrate those two types of client into one program with parameter swich (-p local|tcp)
 
 		
 ## Task 2 - UDP
