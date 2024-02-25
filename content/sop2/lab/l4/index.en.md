@@ -1,5 +1,5 @@
 ---
-title: "L4 - sockets and select"
+title: "L4 - sockets and epoll"
 date: 2022-02-01. 1. :51. 45+01. 00
 weight: 30
 ---
@@ -67,12 +67,14 @@ What you must know:
 ```
 man 7 socket
 man 7 unix
+man 7 epoll
 man 3p socket
 man 3p bind
 man 3p listen
 man 3p connect
 man 3p accept
-man 3p pselect
+man 2 epoll_create
+man 2 epoll_wait
 ```
 
 
@@ -97,7 +99,7 @@ You may be curious why the constant BACKLOG is set for 4, why not 5,7 or 9? In p
 
 In this code macro SUN_LEN is used. Why not to use sizeof instead? Both approaches work correctly. You should know, that the sizeof will return slightly larger size than the macro due to the count method. Unlike sizeof, the macro does not count the gap between the members of the address structure. The implementation expects the smaller value of those two but as the address is just a zero delimited string the larger size value has no effect on the address itself. What should you choose? In this tutorial sizes are calculated with the macro SUN_LEN as the standard demands. In this way we save a few bytes of the memory reserved for the address at the cost of a few CPU cycles more to count the size properly. If you decide that CPU has more priority over memory you can choose to use sizeof it will not be considered as an error.
 
-You probably found the code after connect function call quite unexpected. It is due to the fact that POSIX standard states that if network connecting gets interrupted it must continue asynchronously to the main code! It is quite logical if you remember that connecting engages two processes usually on different computers. If signal handling function interrupts the connect you can not restart as usual (no TEMP_FAILURE_RETRY this time), it will result in EALREADY error. Instead you may wait until connection is operational. How do we learn that the connection is ready? The socket descriptor will be available for writing. It is enough to call select as in the example to wait for that condition.  What if connection fails? The select would return a success, you can write to the descriptor, but it would result in an error due to so called pending network errors. To check for such a type of errors without writing to the descriptor you can use getsockopt with the constants used in the above example. 
+POSIX standard states that if network connecting gets interrupted it must continue asynchronously to the main code. It is quite logical if you remember that connecting engages two processes usually on different computers. If signal handling function interrupts the connect you can not restart as usual (using `TEMP_FAILURE_RETRY`), it will result in EALREADY error. In our client code we do not handle signals, but how it can be done? You need to check if `connect` was interrupted (`errno==EINTR`) and then use `select`, `poll`, or `epoll*` until socket will be ready to write.
 
 As we always have to  implement asynchronous waiting for connect, it may be reasonable not to waste the time on the connection and plan some code to run in the meantime, we can set the socket into nonblocking and have the connecting done in the background even if connect is not interrupted.
 
@@ -131,9 +133,6 @@ Why program uses int32_t (stdint.h) instead of plain int?
 
 Why SIGPIPE is ignored in the server?
 {{< answer >}} It is generally easier to handle the broken pipe condition by checking for EPIPE error rather than handling the SIGPIPE signal when the reaction tho the disconnection is not critical - server only closes the current connection and continues to serve other clients. {{< /answer >}}
-
-Do we have to ignore SIGPIPE in the client?
-{{< answer >}} In case of the client the reaction to the disconnection is critical and the way we deal with it is not so important. Ignoring of SIGPIPE can be omitted then the program will be terminated by signal instead of reporting EPIPE error as it is implemented above. {{< /answer >}}
 
 Why bulk_read nad bulk_write are used in the program? SIGINT is terminating the program thus interruption of read and write should not be a problem.
 {{< answer >}} For the same reason TEMP_FAILURE_RETRY is so common in the code - portability of this code to your solution, with bulk_read/write the code is interruption proof. {{< /answer >}}

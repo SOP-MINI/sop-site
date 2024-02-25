@@ -1,5 +1,5 @@
 ---
-title: "L4 - gniazda sieciowe i select"
+title: "L4 - gniazda sieciowe i epoll"
 date: 2022-02-01T19:51:45+01:00
 weight: 30
 ---
@@ -64,12 +64,14 @@ Co student musi wiedzieć:
 ```
 man 7 socket
 man 7 unix
+man 7 epoll
 man 3p socket
 man 3p bind
 man 3p listen
 man 3p connect
 man 3p accept
-man 3p pselect
+man 2 epoll_create
+man 2 epoll_wait
 ```
 
 
@@ -92,7 +94,7 @@ Może zastanawiać czemu stała `BACKLOG` jest ustalona na 4 a nie 5, 7 czy 9? T
 
 W programie używamy makra `SUN_LEN`, czemu nie sizeof? Oba rozwiązania działają poprawnie. Warto wiedzieć, że użycie zwykłego sizeof zwróci większy rozmiar niż makro a to dlatego, że rozmiar liczony przez makro to suma pól struktury (czyli typ i string) a rozmiar podany przez sizeof dodaje jeszcze kilka bajtów przerwy pomiędzy tymi polami. Implementacja oczekuje mniejszej z tych dwóch wartości ale podanie większej nic nie zepsuje ponieważ sam adres jest w postaci ciągu znaków zakończonego zerem. Co zatem wybrać? W materiałach wybieramy zgodność ze standardem czyli makro zatem oszczędzamy te kilka bajtów kosztem nieco dłuższego wyliczania rozmiaru. Jeśli użyjesz sizeof to nie będzie to traktowane jako błąd.
 
-Dość nietypowy kod po wywołaniu funkcji connect wynika z faktu, że standard POSIX mówi, że nawiązanie połączenia sieciowego nie może być przerwane (co jest dość logiczne ponieważ biorą w nim udział dwie strony). Zatem jeśli funkcja obsług sygnału przerwie connect to tak naprawdę jego nawiązywanie nadal trwa asynchronicznie względem głównego kodu. Próba restartu funkcji np. makrem `TEMP_FAILURE_RETRY` nie jest już możliwa (spowoduje błąd `EALREADY`). Pozostaje nam jedynie poczekać aż połączenie będzie nawiązane, ale jak się o tym dowiemy? Deskryptor gniazda będzie w stanie zaakceptować zapis. Zatem przy pomocy funkcji select czekamy na możliwość zapisu do gniazda aby wiedzieć że połączenie jest otwarte. Co jeśli połączenie się nie uda? Select się zakończy a o błędach połączenia dowiemy się dzięki wywołaniu funkcji getsockopt, która z podanymi w kodzie stałymi zwraca tzw. network pending errors, czyli właśnie informację o ewentualnej porażce. Bez tego sprawdzenia, o błędzie dowiedzielibyśmy się  dopiero podczas próby komunikacji przez to gniazdo sieciowe.
+Standard POSIX mówi, że nawiązanie połączenia sieciowego nie może być przerwane (co jest dość logiczne ponieważ biorą w nim udział dwie strony). Zatem jeśli funkcja obsług sygnału przerwie `connect` to tak naprawdę jego nawiązywanie nadal trwa asynchronicznie względem głównego kodu. Próba restartu funkcji np. makrem `TEMP_FAILURE_RETRY` nie jest już możliwa (spowoduje błąd `EALREADY`). W kodzie naszego klienta nie obsługujemy sygnałów, co jednak, gdybyśmy to robili? Należy sprawdzić, czy `errno` jest równe `EINTR` i w takim wypadku użyć funkcji `select`, `poll` albo `epoll*` żeby poczekać aż będzie możliwy zapis.
 
 Można od razy zażyczyć sobie asynchronicznego połączenia, wystarczy przed wywołaniem connect ustawić na deskryptorze gniazda flagę `O_NONBLOC`. Nawiązywanie połączenia jest dość czasochłonne i jest to sposób aby w czasie oczekiwania program mógł coś wykonać.
 
@@ -124,9 +126,6 @@ Czemu użyto `int32_t` (stdint.h) a nie zwykły int?
 
 Czemu ignorujemy `SIGPIPE` w serwerze?
 {{< answer >}} Łatwiej obsłużyć błąd `EPIPE` niż sygnał, zwłaszcza, że informacja o przedwczesnym zakończeniu się klienta nie może prowadzić do zamknięcia serwera. {{< /answer >}}
-
-Czy musimy ignorować `SIGPIPE` w kliencie ? 
-{{< answer >}} Nie, robimy to "na zapas", błąd `EPIPE` w kliencie i tak traktujemy jako krytyczny, klient bez serwera nie może działać dalej zatem gdyby nie ignorować `SIGPIPE` program kończyłby się i tak tylko że zabity sygnałem. {{< /answer >}}
 
 Czemu w programie użyto bulk_read i bulk_write? Nie ma obsługi sygnałów poza `SIGINT`, który i tak kończy działanie programu. 
 {{< answer >}} Z tego samego powodu dla którego tak często `EINTR` jest obsłużony - przenośność kodu do innych rozwiązań. {{< /answer >}}

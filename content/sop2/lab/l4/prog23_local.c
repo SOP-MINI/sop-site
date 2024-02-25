@@ -13,16 +13,6 @@
 
 #define ERR(source) (perror(source), fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), exit(EXIT_FAILURE))
 
-int sethandler(void (*f)(int), int sigNo)
-{
-    struct sigaction act;
-    memset(&act, 0, sizeof(struct sigaction));
-    act.sa_handler = f;
-    if (-1 == sigaction(sigNo, &act, NULL))
-        return -1;
-    return 0;
-}
-
 int make_socket(char *name, struct sockaddr_un *addr)
 {
     int socketfd;
@@ -41,22 +31,7 @@ int connect_socket(char *name)
     socketfd = make_socket(name, &addr);
     if (connect(socketfd, (struct sockaddr *)&addr, SUN_LEN(&addr)) < 0)
     {
-        if (errno != EINTR)
-            ERR("connect");
-        else
-        {
-            fd_set wfds;
-            int status;
-            socklen_t size = sizeof(int);
-            FD_ZERO(&wfds);
-            FD_SET(socketfd, &wfds);
-            if (TEMP_FAILURE_RETRY(select(socketfd + 1, NULL, &wfds, NULL, NULL)) < 0)
-                ERR("select");
-            if (getsockopt(socketfd, SOL_SOCKET, SO_ERROR, &status, &size) < 0)
-                ERR("getsockopt");
-            if (0 != status)
-                ERR("connect");
-        }
+        ERR("connect");
     }
     return socketfd;
 }
@@ -123,11 +98,8 @@ int main(int argc, char **argv)
         usage(argv[0]);
         return EXIT_FAILURE;
     }
-    if (sethandler(SIG_IGN, SIGPIPE))
-        ERR("Seting SIGPIPE:");
     fd = connect_socket(argv[1]);
     prepare_request(argv, data);
-    /* Broken PIPE is treated as critical error here */
     if (bulk_write(fd, (char *)data, sizeof(int32_t[5])) < 0)
         ERR("write:");
     if (bulk_read(fd, (char *)data, sizeof(int32_t[5])) < (int)sizeof(int32_t[5]))

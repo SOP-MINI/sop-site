@@ -16,6 +16,7 @@
 #define ERR(source) (perror(source), fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), exit(EXIT_FAILURE))
 
 #define BACKLOG 3
+
 volatile sig_atomic_t do_work = 1;
 
 void sigint_handler(int sig) { do_work = 0; }
