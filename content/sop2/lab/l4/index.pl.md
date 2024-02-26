@@ -13,7 +13,6 @@ Uwagi wstępne:
 1. W trakcie tych zajęć przydatny jest [program netcat]({{< ref "../netcat" >}})
 1. Obowiązują wszystkie materiały z SOP1 i SOP2 jakie były do tej pory, szczególnie ważne są te dotyczące wątków i procesów!
 1. Szybkie przejrzenie tutoriala prawdopodobnie nic nie pomoże, należy samodzielnie uruchomić programy, sprawdzić jak działają, poczytać materiały dodatkowe takie jak strony man. W trakcie czytania sugeruję wykonywać ćwiczenia a na koniec przykładowe zadanie.
-1. Na żółtych polach podaję dodatkowe informacje, niebieskie zawierają pytania i ćwiczenia. Pod pytaniami znajdują się odpowiedzi, które staną się widoczne dopiero po kliknięciu. Proszę najpierw spróbować sobie odpowiedzieć na pytanie samemu a dopiero potem sprawdzać odpowiedź.
 1. Materiały i ćwiczenia są ułożone w pewną logiczną całość, czasem do wykonania ćwiczenia konieczny jest stan osiągnięty poprzednim ćwiczeniem dlatego zalecam wykonywanie ćwiczeń w miarę przyswajania materiału.
 1. Większość ćwiczeń wymaga użycia konsoli poleceń, zazwyczaj zakładam, ze pracujemy w jednym i tym samym katalogu roboczym więc wszystkie potrzebne pliki są "pod ręką" tzn. nie ma potrzeby podawania ścieżek dostępu.
 1. Czasem podaję znak $ aby podkreślić, że chodzi o polecenie konsolowe, nie piszemy go jednak w konsoli np.: piszę "$make" w konsoli wpisujemy samo "make".
@@ -35,9 +34,6 @@ Napisz prosty sieciowy kalkulator liczb całkowitych. Dane przesyłane pomiędzy
 - operator (+,-,*,/)
 - status
 Wszystko przekonwertowane do postaci 32 bitowych liczb w tablicy.
-
-Czemu nie struktura? 
-{{< answer >}} Struktury bez pakowania są mniej przenośne ze względu na optymizację adresacji pamięci - różne przerwy pomiędzy polami, w tym przypadku łatwiej wyślemy tablice, która nie ma tej przypadłości co struktura. {{< /answer >}} 
 
 Serwer wylicza wynik i odsyła go do klienta. Jeśli wyliczenie przebiegło pomyślnie pole status przyjmuje wartość 1, jeśli nie (np. dzielenie przez zero) wartość 0. Komunikacja z serwerem jest możliwa na 2 sposoby:
 - gniazda lokalne
@@ -101,16 +97,6 @@ $ killall -s `SIGINT` prog23a_s
 
 ```
 
-Dobierzcie się w pary, podajcie sobie swoje nazwy hosta (są w linii komend, np: p21804), niech każdy uruchomi serwer a potem wyśle zapytanie do sąsiada:
-
-```
-$ ./l4-1_server a 2000 &
-$ ./l4-1_client_tcp p21804 2000  2 2  +
-...
-$ killall -s SIGINT prog23b_s
-```
-
-
 W tym rozwiązaniu (a także następnego zadania) wszystkie programy korzystają ze wspólnej biblioteki - inaczej każdy z nich musiałby implementować funkcje w rodzaju `bulk_read` co bardzo zwiększyłoby objętość kodu.
 
 Może zastanawiać czemu stała `BACKLOG` jest ustalona na 3 a nie 5, 7 czy 9? To może być dowolna mała liczna, to tylko wskazówka dla systemu, ten program nie będzie obsługiwał dużego ruchu i kolejka czekających połączeń nie będzie nigdy duża, w praktyce połączenia są tu od razu realizowane. Przy większym ruchu trzeba empirycznie sprawdzać jaka wartość tego parametru dobrze się spisze i niestety będzie ona inna na różnych systemach.
@@ -141,7 +127,7 @@ Czy można użyć tu `epoll_wait` a zamiast `epoll_pwait`?
 {{< answer >}} Można ale nie warto bo dodanie poprawnej obsługi `SIGINT` będzie wtedy bardziej pracochłonne {{< /answer >}}
 
 Czemu gniazdo sieciowe jest w trybie nieblokującym? 
-{{< answer >}} Bez tego trybu mogłoby się zdarzyć, że klient który chce się połączyć "zginie" pomiędzy `epoll_pwait`, które potwierdzi gotowość do połączenia a `accept`, które faktycznie przyjmie to połączenie. Wtedy na nieblokującym gnieździe program zatrzymałby się aż do nadejścia kolejnego połączenia nie reagując na sygnał `SIGINT`. {{< /answer >}}
+{{< answer >}} Bez tego trybu mogłoby się zdarzyć, że klient który chce się połączyć "zginie" pomiędzy `epoll_pwait`, które potwierdzi gotowość do połączenia a `accept`, które faktycznie przyjmie to połączenie. Wtedy na blokującym gnieździe program zatrzymałby się aż do nadejścia kolejnego połączenia nie reagując na sygnał `SIGINT`. {{< /answer >}}
 
 Czemu użyto `int32_t` (stdint.h) a nie zwykły int? 
 {{< answer >}} Ze względu na różne rozmiary int'a  na różnych architekturach. {{< /answer >}}
@@ -203,11 +189,11 @@ Co student musi wiedzieć:
 - man 3p recv
 - man 3p send
 
-rozwiązanie `prog24s.c`:
-{{< includecode "prog24s.c" >}}
+rozwiązanie `l4-2_server.c`:
+{{< includecode "l4-2_server.c" >}}
 
-rozwiązanie `prog24c.c`:
-{{< includecode "prog24c.c" >}}
+rozwiązanie `l4-2_client.c`:
+{{< includecode "l4-2_client.c" >}}
 
 
 Zwróć uwagę, że w protokole UDP nie nawiązujemy połączenia, gniazda komunikują się ze sobą "ad hoc". Nie ma gniazda nasłuchującego. Możliwe są straty, duplikaty i zmiany kolejności datagramów.
@@ -253,8 +239,7 @@ Przeanalizuj jak działa limitowanie do 5 połączeń, zwróć uwagę na pole fr
 
 
 ## Przykładowe zadanie
-Wykonaj przykładowe [ćwiczenie]({{< ref "../l4-example">}}") z poprzednich lat. To zadanie szacuję na 60 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a do zajęć.
-
+Wykonaj przykładowe [ćwiczenie]({{< ref "../l4-example">}}) z poprzednich lat. To zadanie szacuję na 60 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a do zajęć.
 
 ## Kody źródłowe z treści tutoriala
 {{% codeattachments %}}

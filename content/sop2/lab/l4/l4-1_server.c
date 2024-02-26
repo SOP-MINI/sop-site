@@ -66,7 +66,7 @@ void doServer(int local_listen_socket, int tcp_listen_socket)
     ssize_t size;
     sigset_t mask, oldmask;
     sigemptyset(&mask);
-    // sigaddset(&mask, SIGINT);
+    sigaddset(&mask, SIGINT);
     sigprocmask(SIG_BLOCK, &mask, &oldmask);
     while (do_work)
     {

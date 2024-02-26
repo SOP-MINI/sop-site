@@ -10,10 +10,9 @@ In this tutorial we use `epoll` functions family to wait on multiple descriptors
 
 Introduction notes:
 
-1. It's worth to familiarize with [netcat]({{< ref "../netcat" >}}) befaore the lab
+1. It's worth to familiarize yourself with [netcat]({{< ref "../netcat" >}}) befaore the lab
 1. All materials from OPS1. OPS2 are still obligatory, especially tutorials on threads and processes!
 1. Quick look at this material will not suffice, you should compile and run all the programs, check how they work, read additional materials like man pages. As you read the material please do all the exercises and questions. At the end you will find sample task similar to the one you will do during the labs, please do it at home.
-1. You will find additional information in yellow sections, questions and tasks in blue ones. Under the question you will find the answer, to see it you have to click. Please try to answer on you own before checking. 
 1. Codes, information and tasks are organized in logical sequence, in order to fully understand it you should follow this sequence. Sometimes former task makes context for the next one and it is harder to comprehend it without the study of previous parts.  
 1. Most of exercises require command line to practice, I usually assume that all the files are placed in the current working folder and that we do not need to add path parts to file names. 
 1. Quite often you will find $ sign placed before commands you should run in the shell, obviously you do not need to rewrite this sight to command line, I put it there to remind you that it is a command to execute.
@@ -34,10 +33,6 @@ Write simple integer calculator server. Data send to server consists of:
 - operator (+,-,*,/)
 - status
 all converted to 32 bit integers in an array.
-
-Why not the structure? 
-{{< answer >}} Unpacked structures are not portable due to different gaps between structure members, in this case using an array is simply easier (see the notes on the beginning of this tutorial). {{< /answer >}} 
-
 
 Server calculates the results of operation (+,-,*,/) on operands and sends
 the result back to the client. If operation is possible status returned is 1. 
@@ -104,16 +99,7 @@ $ killall -s `SIGINT` prog23a_s
 
 ```
 
-In pairs check each other host name (it is in command line, eg. p21. 03), each of you starts the server and then establish a connection with a neighbor:
-
-```
-$ ./l4-1_server a 2000 &
-$ ./l4-1_client_tcp p21804 2000  2 2  +
-...
-$ killall -s SIGINT prog23b_s
-```
-
-In this solution (and also in the next example) all sources uses common library to avoid implementing functions like `bulk_read` all times.
+In this solution (and also in the next example) all sources uses common library to avoid implementing functions like `bulk_read` many times.
 
 You may be curious why the constant BACKLOG is set for 3, why not 5,7 or 9? In practice  any small number  would fit here, this value is merely a hint for the operating system. This program will not deal with a large amount of network traffic and it handles connections very promptly so the queue of waiting connections will never be long. When you expect a heavier traffic in your program please test larger values and find the smallest one that suits your needs. Unfortunately this value will be different on different operating systems.
 
@@ -129,7 +115,7 @@ All data exchanged  up to given point of connection time creates what we refer t
 
 You may ask why macros ntohl and htonl are in use as the connection is local and byte order should not be a concern? First of all, the same code will be reused in the second stage for TCP network connection that demands the conversion. The second reason is that local sockets are not limited to work only on local file systems. In future, it may be possible to create such a socket on a network file system and connect two different machines/architectures. Then the byte order would be an issue that this code can handle.
 
-In this code, function bulk_read is used, it is important to know how this function will work in case of nonblocking descriptor. If data is not available it will return immediately with EAGAIN error. Is this the case in this code? Is the descriptor in not blocking mode? Newly created descriptor returned by accept function does not have to inherit the flags! In case of Linux flags are in deed not inherited so as far as Linux is used not blocking mode of the descriptor does not interfere with be bulk_read. In fact it wold not cause problems also on the platforms that inherit the  not blocking flag due to the fact that we call bulk_read after we learn that the data is already available.
+In this code, function bulk_read is used, it is important to know how this function will work in case of nonblocking descriptor. If data is not available it will return immediately with EAGAIN error. Is this the case in this code? Is the descriptor in not blocking mode? Newly created descriptor returned by accept function does not have to inherit the flags! In case of Linux flags are indeed not inherited so as far as Linux is used not blocking mode of the descriptor does not interfere with be bulk_read. In fact it wold not cause problems also on the platforms that inherit the  not blocking flag due to the fact that we call bulk_read after we learn that the data is already available.
 
 You are obliged to use getaddrinfo function, the older gethostbyname function is described as obsolete in the man page and can not be used in your solutions.
 
@@ -189,11 +175,11 @@ man 3p send
 ```
 
 
-Solution `prog24s.c`:
-{{< includecode "prog24s.c" >}}
+Solution `l4-2_server.c`:
+{{< includecode "l4-2_server.c" >}}
 
-Solution `prog24c.c`:
-{{< includecode "prog24c.c" >}}
+Solution `l4-2_client.c`:
+{{< includecode "l4-2_client.c" >}}
 
 
 There is no connection in UDP protocol, sockets send datagrams "ad hoc". There is no listening socket. Losses, duplicates and reordering of datagrams  are possible!
