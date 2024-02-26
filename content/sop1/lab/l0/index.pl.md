@@ -10,11 +10,11 @@ weight: 10
 
 Pierwsze zajęcia wymagają od ciebie pewnego przygotowania, jednak głównie 
 mają służyć wyjaśnieniu wszelkich wątpliwości co do zasad prowadzenia zajęć i konfiguracji środowiska na dalsze laboratoria.
-Przeczytaj proszę informacje podane w działach [GIT]({{< ref "../../../git">}}), [program]({{< ref "../../syllabus" >}}),
-[regulamin]({{< ref "../../zasady" >}}) i [harmonogram]({{< ref "../../harmonogram" >}}).
-Zerknij też na materiały [pomocnicze]({{< ref "../../materialy" >}}).
+Przeczytaj proszę informacje podane w działach [GIT]({{< ref "/git">}}), [program]({{< ref "/sop1/syllabus" >}}),
+[regulamin]({{< ref "/sop1/zasady" >}}) i [harmonogram]({{< ref "/sop1/harmonogram" >}}).
+Zerknij też na materiały [pomocnicze]({{< ref "/sop1/materialy" >}}).
 
-W dziale z [materiałami]({{< ref "../../materialy" >}}) znajdziesz tutoriale do samodzielnego wykonania
+W dziale z [materiałami]({{< ref "/sop1/materialy" >}}) znajdziesz tutoriale do samodzielnego wykonania
 w ramach przygotowania do kolejnych zajęć.
 Można też się skonsultować droga mailową lub osobiście w czasie dyżurów prowadzących laboratoria.
 
@@ -644,7 +644,7 @@ gcc -Wall -fsanitize=address,undefined -o prog1 prog1.c
 Użycie flagi `-Wall` jest obowiązkowe w trakcie laboratorium, 
 program nie powinien generować istotnych ostrzeżeń. 
 Każde zadanie wymaga również użycia odpowiedniego zestawu opcji `-fsanitize`. 
-[Więcej informacji o sanitizerach.]({{< ref "../sanitizers" >}})
+[Więcej informacji o sanitizerach.]({{< ref "/sop1/lab/sanitizers" >}})
 {{< hint danger >}}
 **UWAGA** nie wolno dowolnie mieszać parametrów polecenia `gcc`, 
 parametr `-o` ma argument — ścieżkę do wynikowego programu.
@@ -661,7 +661,7 @@ parametr `-o` ma argument — ścieżkę do wynikowego programu.
 {{< hint info >}}
 
 Tą sekcję należy wykonać w sali na laboratorium L0.
-Przed przejściem przez tą sekcję trzeba zapoznać się z opisem użycia [GITa]({{< ref "../../../git" >}})
+Przed przejściem przez tą sekcję trzeba zapoznać się z opisem użycia [GITa]({{< ref "/git" >}})
 Wymaga ona dostępu do serwera działającego tylko w trakcie trwania laboratorium.
 Zachęcam jednak do przeczytania jej i przygotowania się do wykonania poniższych kroków.
 

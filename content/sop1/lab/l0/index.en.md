@@ -8,9 +8,9 @@ weight: 10
 
 {{< hint info >}}
 
-This laboratory does not require any preparation, its aim is to explain all the rules and answer all the question about graded labs and the classes schedule. Please carefully read everything about [GIT]({{< ref "../../../git">}}), [syllabus]({{< ref "../../syllabus" >}}), [grading]({{< ref "../../zasady" >}}) and [schedule]({{< ref "../../harmonogram" >}}). Also have a look at the [reference]({{< ref "../../materialy" >}}).
+This laboratory does not require any preparation, its aim is to explain all the rules and answer all the question about graded labs and the classes schedule. Please carefully read everything about [GIT]({{< ref "/git">}}), [syllabus]({{< ref "/sop1/syllabus" >}}), [grading]({{< ref "/sop1/zasady" >}}) and [schedule]({{< ref "/sop1/harmonogram" >}}). Also have a look at the [reference]({{< ref "/sop1/materialy" >}}).
 
-On [reference]({{< ref "../../materialy" >}}) page you can find self preparation tutorials, you should do them at home before the graded labs. The aim of graded lab is to test how well you studied the topic at home. You can ask questions about the course topics via email at any time.
+On [reference]({{< ref "/sop1/materialy" >}}) page you can find self preparation tutorials, you should do them at home before the graded labs. The aim of graded lab is to test how well you studied the topic at home. You can ask questions about the course topics via email at any time.
 
 During the zeroth laboratory you will have to do the simple task to simulate real tasks from further laboratories.
 You will receive half-finished code with some bugs. You will have to find those errors and finish its functionalities.
@@ -618,7 +618,7 @@ gcc -Wall -fsanitize=address,undefined -o prog1 prog1.c
 
 Important note: use of `-Wall` compiler flag is compulsory.
 Besides that each assignment will require usage of particular set of sanitizers.
-[More information about sanitizers during the lab.]({{< ref "../sanitizers" >}})
+[More information about sanitizers during the lab.]({{< ref "/sop1/lab/sanitizers" >}})
 {{< hint danger >}}
 **ATTENTION** you can not freely reorder the switches of the gcc command, the `-o` switch has an argument (output filename).
 {{< /hint >}}
@@ -634,7 +634,7 @@ Besides that each assignment will require usage of particular set of sanitizers.
 {{< hint info >}}
 
 This section of tutorial has to be done during the laboratory on faculty.
-Before starting you have to read section about [GIT]({{< ref "../../../git" >}}) usage.
+Before starting you have to read section about [GIT]({{< ref "/git" >}}) usage.
 Steps below require access to server available only during laboratory.
 I encourage you to read it and prepare before zeroth laboratory.
 

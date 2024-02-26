@@ -10,7 +10,7 @@ In this tutorial we use `epoll` functions family to wait on multiple descriptors
 
 Introduction notes:
 
-1. It's worth to familiarize yourself with [netcat]({{< ref "../netcat" >}}) befaore the lab
+1. It's worth to familiarize yourself with [netcat]({{< ref "/sop2/lab/netcat" >}}) befaore the lab
 1. All materials from OPS1. OPS2 are still obligatory, especially tutorials on threads and processes!
 1. Quick look at this material will not suffice, you should compile and run all the programs, check how they work, read additional materials like man pages. As you read the material please do all the exercises and questions. At the end you will find sample task similar to the one you will do during the labs, please do it at home.
 1. Codes, information and tasks are organized in logical sequence, in order to fully understand it you should follow this sequence. Sometimes former task makes context for the next one and it is harder to comprehend it without the study of previous parts.  
@@ -226,7 +226,7 @@ Analyze how 5 connection limit works, pay attention how "free" member in the con
 
 ## Sample task
 
-As an exercise do [this]({{< ref "../l4-example" >}}) task. It was used in previous years in a bit different labs timing. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab. In a new timing there is more time for the task and it will be slightly larger.
+As an exercise do [this]({{< ref "/sop2/lab/l4-example" >}}) task. It was used in previous years in a bit different labs timing. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab. In a new timing there is more time for the task and it will be slightly larger.
 
 
 ## Source codes presented in this tutorial

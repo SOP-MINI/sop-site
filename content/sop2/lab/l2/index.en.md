@@ -59,7 +59,7 @@ A huge part of programs logic ended up in signal handler, it is possible as this
 
 ## Excersise
 
-As an exercise do [this]({{< ref "../l2-example" >}}) task. It was used in previous years. It is 90 minutes task and if you can do it in this time it means you are well prepared for the lab.
+As an exercise do [this]({{< ref "/sop2/lab/l2-example" >}}) task. It was used in previous years. It is 90 minutes task and if you can do it in this time it means you are well prepared for the lab.
 
 
 ## Source codes presented in this tutorial

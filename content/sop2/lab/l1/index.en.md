@@ -240,7 +240,7 @@ Solution **prog22b.c**:
 - Is SIGCHLD handler absolutely necessary in this code?
 {{< answer >}} It won't break the logic, but without it zombi will linger and that is something a good programmer would not accept. {{< /answer >}}
 
-As an exercise do <a href="{{< ref "../l1-example" >}}">this</a> task. It was used in previous years in a bit different labs timing. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab.
+As an exercise do [this]({{< ref "/sop2/lab/l1-example" >}}) task. It was used in previous years in a bit different labs timing. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab.
 
 ## Source codes presented in this tutorial
 
