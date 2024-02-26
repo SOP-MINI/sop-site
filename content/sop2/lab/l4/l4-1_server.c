@@ -94,6 +94,8 @@ void doServer(int local_listen_socket, int tcp_listen_socket)
             ERR("epoll_pwait");
         }
     }
+    if (TEMP_FAILURE_RETRY(close(epoll_descriptor)) < 0)
+        ERR("close");
     sigprocmask(SIG_UNBLOCK, &mask, NULL);
 }
 
