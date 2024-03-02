@@ -214,6 +214,10 @@ Solution **prog22b.c**:
 - This task algorithm invalidates the child pipe descriptors as children "die" with 20% probability on each SIGINT. To not try to send the letter to such a "dead" descriptor it must be somehow marked as unused. In this example we use value zero to indicate the inactivity. Zero is a perfectly valid value for descriptor but as it is  used for standard input and normally we do not close standard input zero can be used here as we do not expect pipe descriptor to get this value. Close function does not change the descriptor value to zero or -1, we must do it the code.
 - Random selection of child descriptor must deal with inactive (zero) values. Instead of reselection the program traverses the array in search for the nearby active  descriptor. To make the search easier the buffer is wrapped around with modulo operand, to prevent infinite search in case of empty array extra counter cannot exceed the longest distance between the hit and the last element in the array.
 
+---
+
+- Does this program correctly closes all its pipes? 
+{{< answer >}} No because in signal handler we used `exit()` we never reach closing. The program must be fixed. For example in signal handler we can set variable to signal that process should exit and then in `child_work` we can check it instead of using `TEMP_FAILURE_RETRY` {{< /answer >}}
 - Where the parent program waits for the SIGINT signal? There is no blocking, no sigsuspend or sigwait?
 {{< answer >}} Most of the time program waits for input on the first read in parent's main loop, if it is interrupted by signal it exits with EINTR error. {{< /answer >}}
 - Please notice that nearly every interruptible function in the code is restarted with TEMP_FAILURE_RETRY macro, all but one above mentioned read, why?
@@ -240,8 +244,13 @@ Solution **prog22b.c**:
 - Is SIGCHLD handler absolutely necessary in this code?
 {{< answer >}} It won't break the logic, but without it zombi will linger and that is something a good programmer would not accept. {{< /answer >}}
 
-As an exercise do [this]({{< ref "/sop2/lab/l1-example" >}}) task. It was used in previous years in a bit different labs timing. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab.
-
 ## Source codes presented in this tutorial
 
 {{% codeattachments %}}
+
+## Additional materials
+
+- Simple ~60 minutes sample [task]({{< ref "/sop2/lab/l1-task-easy" >}}). 
+- A bit harder ~90 minutes [task]({{< ref "/sop2/lab/l1-task-normal" >}}).
+- <http://cs341.cs.illinois.edu/coursebook/Ipc#pipes>
+- <http://cs341.cs.illinois.edu/coursebook/Ipc#named-pipes>

@@ -225,34 +225,44 @@ Rozwiązanie **prog22b.c**:
 3.  Z logiki zadania wynika, że z czasem coraz więcej deskryptorów pipe od procesów potomnych będzie nieczynna (bo procesy dzieci giną z 20% prawdopodobieństwem) aby niepotrzebnie do takich \"umarłych\" procesów nie wysyłać liter, ich deskryptory w rodzicu musimy jakoś oznaczyć jako zamknięte. Używamy do tego wartości zero, która co prawda jest poprawną wartością deskryptora ale zazwyczaj jest używana jako stdin więc nie pojawi się naturalnie jako deskryptor pipe. Gdy program zorientuje się, że nie może wysłać do procesu potomnego, zamyka odpowiedni deskryptor pipe funkcją close, ale to nie wystarcza do oznaczenia deskryptora jako nieczynnego, musimy go jeszcze wyzerować bo funkcja close nie robi (i nie może) tego dla nas.
 4.  Losowanie deskryptora do wysyłki musi się liczyć z \"trafieniem\" zera w tablicy, aby nie powtarzać losowania zastosowano prosty trik, szukamy w sąsiednich polach tablicy niezerowego deskryptora, do tego używając operacji modulo \"zawijamy tablice w koło. Aby nie kręcić się bez końca gdy tablica jest już cała wyzerowana dodano warunek sprawdzający czy aby nie szukamy za długo.
 
-1.  Jak jest zorganizowane czekanie na sygnał w procesie rodzicu? Nie ma blokowania, nie używamy sigsuspend, sigwait ani pselect?  
-{{< answer >}} Program zorientuje się na pierwszym read w głównej pętli, dostaje informacje o \"błędzie\" EINTR. {{< /answer >}}
-2.  Zwrócić uwagę na wszechobecne `TEMP_FAILURE_RETRY`. Czemu nie ma go przy tym omawianym powyżej read?  
-{{< answer >}} Bo chcemy móc zareagować na ewentualna zmianę zmiennej globalnej, makro by nam to uniemożliwiło restartując read bez względu na tą zmienną - rodzic nie rozsyłałby liter do potomków. {{< /answer >}}
-3.  Czy zamiast tak często wołać `TEMP_FAILURE_RETRY` można by użyć flagi `SA_RESTART`?  
-{{< answer >}} Nie, bo powyżej omawiany read nie byłby w ogóle przerywany - program nie działałby, dodatkowo kod stałby się mniej przenośny o czym wspominałem w materiałach do L2 na SOP1. {{< /answer >}}
-4.  Z jakich powodów nie każdy C-c powoduje wypisanie?  
-{{< answer >}}  Może akurat wylosowany adresat postanawia się zakończyć, zdarza się też że rodzic może zgubić sygnały przez ich sklejanie gdy jest zajęty obsługą poprzedniego a na kolejne sygnały czeka tylko podczas wywołania funkcji read. {{< /answer >}}
-5.  Drugi z powyższych powodów mógłby być ograniczony przez globalny licznik zamiast binarnej flagi `last_signal`. Zrób taką modyfikację jako ćwiczenie.
-6.  Czy proces potomny może zgubić SIGINT?  
-{{< answer >}}  Teoretycznie mogą się \"skleić\" ale praktycznie jest na to bardzo mała szansa bo są natychmiast obsługiwane. {{< /answer >}}
-7.  Czemu odczyt z R w rodzicu jest dwuetapowy a zapis w potomku MUSI być jednorazowy?  
-{{< answer >}} Inaczej mogły się przemieszać odczyty, patrz uwagi na początku tego tutoriala. {{< /answer >}}
-8.  Czemu ignorujemy SIGPIPE i czy to niezbędne?  
-{{< answer >}}  To jest niezbędne, inaczej pisanie do \"martwego\" dziecka zamknęłoby cały programu. Prawidłową reakcją na zerwanie łącza od potomka NIE JEST WYJŚCIE Z PROGRAMU. {{< /answer >}}
-9.  Kiedy normalnie kończy się proces rodzic?  
-{{< answer >}} Gdy odczyta z R zero bajtów czyli gdy łacze R zostanie zerwane, czyli gdy skończą się procesy potomne. {{< /answer >}}
-10. Prawidłowa reakcja na zerwanie łącza jest zawsze ważna, sprawdź czy umiesz w kodzie wskazać wszystkie takie przypadki zarówno podczas odczytu jak i zapisu danych. Ile miejsc w kodzie tego dotyczy?  
-{{< answer >}}  4  {{< /answer >}}
-11. Czemu używamy unsigned char, co jeśli będzie sam char?  
-{{< answer >}} Dla buforów o rozmiarze powyżej 126 c przedstawiałoby wartości ujemne! {{< /answer >}}
-12. Czemu najpierw ustawiamy ignorowanie SIGINT a dopiero po forku zmieniamy to na funkcję obsługi?  
-{{< answer >}}  Aby szybki C-c na początku programu go nie zabił. {{< /answer >}}
-13. Czy obsługa SIGCHLD w tym programie jest niezbędna  
-{{< answer >}} Jej brak nie zepsuje działania co zadowoli słabszego programistę ale powstaną zombi czego dobry programista wolałby uniknąć. {{< /answer >}}
+---
 
-Wykonaj przykładowe [ćwiczenie]({{< ref "/sop2/lab/l1-example" >}}) z poprzednich lat. To zadanie szacuję na 60 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a do zajęć.
+1. Czy w tej postaci program poprawnie zamknie wszystkie swoje łącza? 
+{{< answer >}} Nie, ponieważ w signal handlerze używamy `exit()` nigdy do tego nie dojdzie. Program należy poprawić. Można np. ustawiać w handlerze flagę sygnalizującą koniec, a w `child_work` zamiast `TEMP_FAILURE_RETRY` ręcznie sprawdzać nie tylko przerwanie sygnałem ale również jej stan. {{< /answer >}}
+2.  Jak jest zorganizowane czekanie na sygnał w procesie rodzicu? Nie ma blokowania, nie używamy sigsuspend, sigwait ani pselect?  
+{{< answer >}} Program zorientuje się na pierwszym read w głównej pętli, dostaje informacje o \"błędzie\" EINTR. {{< /answer >}}
+3.  Zwrócić uwagę na wszechobecne `TEMP_FAILURE_RETRY`. Czemu nie ma go przy tym omawianym powyżej read?  
+{{< answer >}} Bo chcemy móc zareagować na ewentualna zmianę zmiennej globalnej, makro by nam to uniemożliwiło restartując read bez względu na tą zmienną - rodzic nie rozsyłałby liter do potomków. {{< /answer >}}
+4.  Czy zamiast tak często wołać `TEMP_FAILURE_RETRY` można by użyć flagi `SA_RESTART`?  
+{{< answer >}} Nie, bo powyżej omawiany read nie byłby w ogóle przerywany - program nie działałby, dodatkowo kod stałby się mniej przenośny o czym wspominałem w materiałach do L2 na SOP1. {{< /answer >}}
+5.  Z jakich powodów nie każdy C-c powoduje wypisanie?  
+{{< answer >}}  Może akurat wylosowany adresat postanawia się zakończyć, zdarza się też że rodzic może zgubić sygnały przez ich sklejanie gdy jest zajęty obsługą poprzedniego a na kolejne sygnały czeka tylko podczas wywołania funkcji read. {{< /answer >}}
+6.  Drugi z powyższych powodów mógłby być ograniczony przez globalny licznik zamiast binarnej flagi `last_signal`. Zrób taką modyfikację jako ćwiczenie.
+7.  Czy proces potomny może zgubić SIGINT?  
+{{< answer >}}  Teoretycznie mogą się \"skleić\" ale praktycznie jest na to bardzo mała szansa bo są natychmiast obsługiwane. {{< /answer >}}
+8.  Czemu odczyt z R w rodzicu jest dwuetapowy a zapis w potomku MUSI być jednorazowy?  
+{{< answer >}} Inaczej mogły się przemieszać odczyty, patrz uwagi na początku tego tutoriala. {{< /answer >}}
+9.  Czemu ignorujemy SIGPIPE i czy to niezbędne?  
+{{< answer >}}  To jest niezbędne, inaczej pisanie do \"martwego\" dziecka zamknęłoby cały programu. Prawidłową reakcją na zerwanie łącza od potomka NIE JEST WYJŚCIE Z PROGRAMU. {{< /answer >}}
+10.  Kiedy normalnie kończy się proces rodzic?  
+{{< answer >}} Gdy odczyta z R zero bajtów czyli gdy łacze R zostanie zerwane, czyli gdy skończą się procesy potomne. {{< /answer >}}
+11. Prawidłowa reakcja na zerwanie łącza jest zawsze ważna, sprawdź czy umiesz w kodzie wskazać wszystkie takie przypadki zarówno podczas odczytu jak i zapisu danych. Ile miejsc w kodzie tego dotyczy?  
+{{< answer >}}  4  {{< /answer >}}
+12. Czemu używamy unsigned char, co jeśli będzie sam char?  
+{{< answer >}} Dla buforów o rozmiarze powyżej 126 c przedstawiałoby wartości ujemne! {{< /answer >}}
+13. Czemu najpierw ustawiamy ignorowanie SIGINT a dopiero po forku zmieniamy to na funkcję obsługi?  
+{{< answer >}}  Aby szybki C-c na początku programu go nie zabił. {{< /answer >}}
+14. Czy obsługa SIGCHLD w tym programie jest niezbędna  
+{{< answer >}} Jej brak nie zepsuje działania co zadowoli słabszego programistę ale powstaną zombi czego dobry programista wolałby uniknąć. {{< /answer >}}
 
 ## Kody źródłowe z treści tutoriala
 
 {{< codeattachments >}}
+
+
+## Dodatkowe materiały
+
+- Proste przykładowe [zadanie]({{% ref "/sop2/lab/l1-task-easy" %}}). Szacunkowy czas na rozwiązanie ~60 minut.
+- Nieco trudniejsze [zadanie]({{% ref "/sop2/lab/l1-task-normal" %}}). Szacunkowy czas na rozwiązanie ~90 minut.
+- <http://cs341.cs.illinois.edu/coursebook/Ipc#pipes>
+- <http://cs341.cs.illinois.edu/coursebook/Ipc#named-pipes>
