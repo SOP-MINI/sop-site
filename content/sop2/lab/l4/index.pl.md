@@ -1,7 +1,6 @@
 ---
 title: "L4 - gniazda sieciowe i epoll"
-date: 2022-02-01T19:51:45+01:00
-weight: 30
+weight: 40
 ---
 
 {{< hint warning >}}

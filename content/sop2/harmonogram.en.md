@@ -38,5 +38,5 @@ Thursdays, 14:15 - 16:30
 | 11.04 | Lab3 Shared memory and mmap                                                  |
 | 25.04 | [Lab4 Sockets, TCP, UDP, epoll]({{< ref "lab/l4">}})                         |
 | 29.04 | 23:59: retake signup closes (in LeON)                                        |
-| 16.05 | Retakes?                                                                     |
 | 09.05 | Retakes?                                                                     |
+| 16.05 | Retakes?                                                                     |
