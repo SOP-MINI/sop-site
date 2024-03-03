@@ -23,7 +23,7 @@ zwycięskich graczy zaokrąglając w dół (np. gdy przy 5 graczach mamy 2
 zwycięzców otrzymają oni po dwa punkty). Po `M` rundach gra się kończy i
 zwycięża gracz z największą ilością punktów.
 
-1.  Program (serwer) tworzy `n` procesów graczy, każdy z nich połączony
+1.  Program (serwer) tworzy `N` procesów graczy, każdy z nich połączony
     z serwerem przez 2 pip-y - jeden do wysyłania wiadomości a drugi do
     ich odbierania. W procesie gracza należy wywołać funkcję **srand()**
     tak aby zmienić ziarno generatora, by gracze wystawiali różne karty.
@@ -32,7 +32,7 @@ zwycięża gracz z największą ilością punktów.
     16 bajtów (w razie potrzeby można je uzupełniać zerami).
 
 3.  Na początku każdej rundy serwer wypisuje na terminal `NEW ROUND`
-    przesyła do każdego z graczy wiadomość `new_round`.
+    i przesyła do każdego z graczy wiadomość `new_round`.
 
 4.  Każdy z graczy oczekuje na otrzymanie od serwera wiadomości
     `new_round` losuje jedną ze swoich kart i wysyła ją do serwera -
