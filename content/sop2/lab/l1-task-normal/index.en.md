@@ -4,8 +4,6 @@ date: 2022-02-01T19:32:59+01:00
 bookHidden: true
 ---
 
-# TODO: Przetłumaczyć
-
 ## Task
 
 Simulation of a multiplayer game. The program receives two integer arguments - `2 ≤ N ≤ 5` and
