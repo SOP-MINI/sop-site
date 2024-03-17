@@ -35,7 +35,7 @@ Thursdays, 14:15 - 16:30
 |-------|------------------------------------------------------------------------------|
 | 14.03 | [Lab1 FIFO/pipe]({{< ref "lab/l1">}})                                        |
 | 28.03 | [Lab2 POSIX queues]({{< ref "lab/l2">}})                                     |
-| 11.04 | Lab3 Shared memory and mmap                                                  |
+| 11.04 | [Lab3 Shared memory and mmap]({{< ref "lab/l3">}})                           |
 | 25.04 | [Lab4 Sockets, TCP, UDP, epoll]({{< ref "lab/l4">}})                         |
 | 29.04 | 23:59: retake signup closes (in LeON)                                        |
 | 09.05 | Retakes?                                                                     |
