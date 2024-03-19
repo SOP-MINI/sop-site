@@ -165,8 +165,6 @@ utworzy semafor o nazwie `SOP-semaphore` i zainicjalizuje go wartością 5. Wyko
 Nazwane semafory dzięki swojej prostocie są wygodne w użyciu do zapewniania synchronizacji dla procesów korzystających z pamięci dzielonej. Gdy kilka niezależnych procesów zamierza korzystać z jednego obiektu pamięci dzielonej tylko jeden będzie ją inicjalizował. Istotne jest więc, żeby pozostałe procesy wtedy czekały, aż inicjalizacja zostanie zakończona - co można właśnie prosto zrealizować przy użyciu semafora.
 
 
-- TODO
-
 ## Kody źródłowe z treści tutoriala
 {{% codeattachments %}}
 
