@@ -1,7 +1,6 @@
 ---
 title: "L4 - sockets and epoll"
-date: 2022-02-01. 1. :51. 45+01. 00
-weight: 30
+weight: 40
 ---
 
 {{< hint warning >}}
