@@ -1,5 +1,5 @@
 ---
-title: "L3 - Pamięć dzielona i mmap"
+title: "L3 - Shared memory and mmap"
 weight: 30
 ---
 
