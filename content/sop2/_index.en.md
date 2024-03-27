@@ -10,7 +10,7 @@ date: 2022-02-10T10:00:00+01:00
 ### Lecture
 
 - Paweł Sobótka
-  - office hours: Thursdays 10:00am-11:00am, room 524, please contact me beforehand
+  - office hours: Tuesdays 14:30, room 524, please contact me beforehand
   - email: pawel.sobotka@pw.edu.pl
 
 ### Laboratory
