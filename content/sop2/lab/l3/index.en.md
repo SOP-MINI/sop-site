@@ -87,7 +87,7 @@ To create a named shared memory object use `shm_open` (see `man 3p shm_open`). I
 
 `shm_open` returns a descriptor, which behaves very similarly to a file descriptor. Initially the created memory is of size zero, so it is required to increase it with e.g. `ftruncate`. Then simply use the function `mmap`.
 
-When all processes are done using the shared memory it should be deleted using the `shm_unlink` function. It is also very simple function, so just check `man 3p shm_unlink`.
+When all processes are done using the shared memory it should be deleted using the `shm_unlink` function. It is also a very simple function, so just check `man 3p shm_unlink`.
 
 ### Sharing synchronisation objects and the robust mutex
 
@@ -105,9 +105,9 @@ Condition variables and barriers are initialised similarly. They can also be sha
 
 See how shared memory and mutexes were used in the exercise below.
 
-### Excercise
+### Exercise
 
-Write two programs - client and server. The server takes one parameter - `3 < N <= 20`. It writes `My PID is: <pid>` to the terminal and creates a 1024 bytes big segment of shared memory with the name `<pid>-board`. It places in that memory a mutex, `N` and the board - an array of NxN bytes. The board is filled with random numbers from the `[1,9]` range. Every 3 seconds it displays the board's state to the terminal. After receiving `SIGINT` it displays the board one last time and terminates.
+Write two programs - client and server. The server takes one parameter - `3 < N <= 20`. It writes `My PID is: <pid>` to the terminal and creates a 1024 bytes wide segment of shared memory with the name `<pid>-board`. It places in that memory a mutex, `N` and the board - an array of NxN bytes. The board is filled with random numbers from the `[1,9]` range. Every 3 seconds it displays the board's state to the terminal. After receiving `SIGINT` it displays the board one last time and terminates.
 
 The client program takes one parameter - `PID` of the server. It opens the memory created by the server. Then it follows the instructions:
 
@@ -167,6 +167,6 @@ Thanks to their simplicity, named semaphores are great for the synchronisation o
 
 ## Additional materials
 
-- Try to solve the example [excercise from L1]({{% ref "/sop2/lab/l1-task-normal" %}}) using shared memory. Instead of sending messages that a new round has started synchronisation can be accomplished with a semaphore (parent calls `sem_post` the appropriate amount of times at the start of a round). Test the semaphore shared within shared memory and the named semaphore opened independently by child processes. Instead of sending cards by pipes players can place them in the appropriate place within shared memory. For notifying the server that players placed their cards you can use a shared memory barrier or a second semaphore.
+- Try to solve the example [exercise from L1]({{% ref "/sop2/lab/l1-task-normal" %}}) using shared memory. Instead of sending messages that a new round has started synchronisation can be accomplished with a semaphore (parent calls `sem_post` the appropriate amount of times at the start of a round). Test the semaphore shared within shared memory and the named semaphore opened independently by child processes. Instead of sending cards by pipes players can place them in the appropriate place within shared memory. For notifying the server that players placed their cards you can use a shared memory barrier or a second semaphore.
 
 - <http://cs341.cs.illinois.edu/coursebook/Ipc#mmap>
