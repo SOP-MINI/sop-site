@@ -51,7 +51,7 @@ Z `mmap` wiążą się jeszcze dwie funkcje:
 
 ### Zadanie
 
-Napisz program obliczający liczbę PI metodą Monte Carlo. Program ma jeden argument - `0 < N < 30` - liczbę procesów obliczeniowych. Każdy proces obliczeniowy wykonuje `100000` iteracji Monte Carlo.
+Napisz program obliczający liczbę PI metodą Monte Carlo. Program ma jeden argument - `0 < N < 30` - liczbę procesów obliczeniowych. Każdy proces obliczeniowy wykonuje `100 000` iteracji Monte Carlo.
 
 Proces główny mapuje dwa obszary pamięci. Pierwszy obszar służy do współdzielenia wyników obliczeń procesów potomnych. Ma rozmiar N*4 bajtów. Każdy proces potomny zapisuje wynik swoich obliczeń do jednej 4-bajtowej komórki pamięci jako float. Drugi obszar pamięci jest mapowanie pliku `log.txt`. Proces główny ustawia rozmiar tego pliku na `N*8`. Następnie procesy dzieci zapisują tam swoje wyniki końcowe w postaci tekstowej - każdy w jendej linii o szerokości 7 (+ósmy znak to `\n`).
 
@@ -131,10 +131,10 @@ man 3p pthread_mutexattr_setrobust
 man 3p pthread_mutex_consistent
 ```
 
-rozwiązanie `l3-1_server.c`:
+rozwiązanie `l3-2_server.c`:
 {{< includecode "l3-2_server.c" >}}
 
-rozwiązanie `l3-1_client.c`:
+rozwiązanie `l3-2_client.c`:
 {{< includecode "l3-2_client.c" >}}
 
 ### Uwagi i pytania
