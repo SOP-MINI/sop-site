@@ -16,7 +16,7 @@ Jest to pierwszy z serii tutoriali w "nowej formule". Zawiera więcej wyjaśnie�
 
 Na poprzednich zajęciach omówiliśmy już kilka sposobów synchronizacji oraz współdzielenia danych między procesami. Wszystkie jednak wydają się być zawsze bardziej skomplikowane, niż jest to w przypadku wątków - gdzie możemy po prostu mieć współdzielone zmienne. Gdy jednak używamy funkcji `fork()` procesy potomne otrzymują własną kopią wszystkich danych procesu rodzica. Tak więc, jeśli np. w procesie dziecka zmodyfikujemy tablicę stworzoną przed wywołaniem `fork()`, zmiany te zajdą jedynie w obrębie procesu dziecka.
 
-Możliwe jest jednak zadeklarowanie tak zwanego "mapowania" między pamięcią programu a tak zwanym "obiektem pamięci" (ang. "memory object"). Wszelkie zmiany zrobione w ta zmapowanym obszarze zostaną przeniesione na wspomniany "obiekt pamięci", który jest zarządzany przez system operacyjny. Do stworzenia takiego mapowaniu służy polecenie `mmap` (`man 3p mmap`, `man 2 mmap`).
+Możliwe jest jednak zadeklarowanie tak zwanego "mapowania" między pamięcią programu a tak zwanym "obiektem pamięci" (ang. "memory object"). Wszelkie zmiany zrobione w tak zmapowanym obszarze zostaną przeniesione na wspomniany "obiekt pamięci", który jest zarządzany przez system operacyjny. Do stworzenia takiego mapowaniu służy polecenie `mmap` (`man 3p mmap`, `man 2 mmap`).
 
 Funkcja ta ma z naszego punktu widzenia kilka głównych zastosowań:
 
