@@ -2,6 +2,7 @@
 
 Celem pierwszej części przedmiotu *Systemy Operacyjne* jest zapoznanie studentów z podstawami działania i konstrukcji współczesnych systemów operacyjnych, a także kształtowanie umiejętności wykorzystania funkcji systemowych do poprawnej realizacji prostych aplikacji wieloprocesowych/wielowątkowych, wykorzystujących standardowe kanały wejścia/wyjścia i dostęp do plików.
 
+
 # Prowadzenie zajęć
 
 Przedmiot składa się z wykładu i laboratorium.
@@ -10,7 +11,7 @@ Przedmiot składa się z wykładu i laboratorium.
     - Przedmiot składa się z 15 godzin wykładowych w 2-godzinnych blokach. Ostatni wykład trwa 1 godzinę. Zajęcia odbywają się zgodnie z harmonogramem podanym na stronie przedmiotu.
     - Na stronie przedmiotu znajdują się omawiane materiały wykładowe.
   - Laboratorium składa się z pięciu zajęć oznaczonych kolejno L0, L1, L2, L3, L4. Zajęcia odbywają się zgodnie z harmonogramem podanym na stronie przedmiotu. Na stronie przedmiotu znajdują się też materiały przygotowawcze do zajęć.
-  - Zajęcia L0 to zajęcia poświęcone na przygotowanie środowiska. W trakcie tych zajęć studenci przypominają sobie umiejętności z przedmiotu Podstawy systemu unix i konfigurują środowisko programistyczne. Wszelkie braki w konfiguracji lub tych umiejętnościach (np. brak podpowiadania nazw funkcji, podkreślania błędów w edytorze, czy brak umiejętności poruszania się po katalogach) na wszystkich kolejnych zajęciach nie są okolicznością łagodzącą przy ocenianiu. Ponadto na L0 prowadzący zapoznają studentów ze sposobem zgłaszania rozwiązaniach podczas kolejnych laboratoriów na przykładzie prostego zadania.
+  - Zajęcia L0 to zajęcia poświęcone na przygotowanie środowiska. W trakcie tych zajęć studenci konfigurują środowisko programistyczne i przypominają sobie umiejętności z przedmiotu "Podstawy systemu Unix". Wszelkie braki w konfiguracji środowiska lub tych umiejętnościach (np. brak podpowiadania nazw funkcji, podkreślania błędów w edytorze, czy brak umiejętności poruszania się po katalogach) na wszystkich kolejnych zajęciach nie są okolicznością łagodzącą przy ocenianiu. Ponadto na L0 prowadzący zapoznają studentów ze sposobem zgłaszania rozwiązań podczas kolejnych laboratoriów na przykładzie prostego zadania.
   - Zajęcia L1, L2, L3 i L4 służą ocenie umiejętności w obszarze wskazanym w harmonogramie przedmiotu. Do każdych zajęć należy przygotować się samodzielnie, korzystając z materiałów na stronie przedmiotu i materiałów wykładowych. Na każdym z zajęć studenci rozwiązują zadanie programistyczne (130 minut).
   - Na końcu semestru organizowana jest poprawa, na której można poprawiać oceny uzyskane na dokładnie jednych zajęciach (L1, L2, L3, lub L4). Zapisy na poprawy zostaną uruchomione od razu po ostatnich zajęciach laboratoryjnych w semestrze i potrwają **24 godziny**.
 
@@ -49,7 +50,7 @@ Na zajęciach jest udostępniane proste zadanie wstępne, za które można zdoby
   - Zadania laboratoryjne rozwiązywane są z użyciem systemu Arch Linux na komputerach w laboratorium. Nie jest dozwolone rozwiązywanie zadań na własnym komputerze.
   - Zadanie programistyczne jest podzielone na etapy. Punkty za każdy etap podane są w treści zadania. Etapy muszą być wykonywane w wyznaczonej kolejności. Nie wolno przechodzić do następnego etapu bez wykonania poprzednich.
   - Każdy etap jest sprawdzany i oceniany na zajęciach. Oceniana jest umiejętność korzystania z właściwych narzędzi i prawidłowa (w tym zgodna z POSIX) implementacja wymaganej funkcjonalności.
-  - Po ukończeniu każdego etapu studenci przesyłają rozwiązanie na serwer przy użyciu systemu kontroli git, w sposób opisany przez prowadzącego na L0. Zgłoszenia podlegają następującym zasadom:
+  - Po ukończeniu każdego etapu studenci przesyłają rozwiązanie na serwer przy użyciu systemu kontroli wersji git, w sposób opisany przez prowadzącego na L0. Zgłoszenia podlegają następującym zasadom:
     - Program musi być napisany w języku C (nie C++).
     - Rozwiązania nie można zgłosić częściej niż co minutę.
     - Dozwolona jest modyfikacja jedynie plików rozwiązania.

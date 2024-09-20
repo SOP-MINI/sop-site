@@ -1,6 +1,7 @@
 # Purpose of course
 
-The first goal of the *Operating Systems 1* course is to familiarize students with basics of operating system operation and design. The second goal is to develop student skills in correct application of system functions to design and implementation of simple multiprocess/multi-thread applications which communicate using standard input/output channels and files.
+The first goal of the *Operating Systems 1* course is to familiarize students with the basics of operating system operation and design. The second goal is to develop students' skills in the correct application of system functions to design and implementation of simple multiprocess/multi-thread applications which communicate using standard input/output channels and files.
+
 
 # Conducting classes
 
@@ -11,7 +12,7 @@ The subject consists of a lecture and a laboratory.
     - The lecture materials are available on the course website.
   - The laboratory consists of five classes denoted as L0, L1, L2, L3, L4. The laboratory classes take place according to the schedule provided on the course website. The course website also includes preparation materials for classes.
   - L0 class is devoted to the preparation of the environment. During this class, students have to recall the skills of the Unix Fundamentals course and to configure the development environment. Any deficiencies in the configuration or skills (e.g., lack of intellisense, underlining errors in the editor or poor ability to navigate through directories) in all subsequent classes will not be an excuse for poor grades and cannot be used as an excuse for less strict grading. Moreover, during L0 students will be familiarized with solution submission system used during following classes.
-  - L1, L2, L3 and L4 classes assess abilities in the topics given in the laboratory schedule. Students should prepare on their own for each class, using the materials on the course website and lecture materials. During each laboratory students solve programming task (130 minutes).
+  - L1, L2, L3 and L4 classes assess abilities in the topics given in the laboratory schedule. Students should prepare on their own for each class, using the materials on the course website and lecture materials. During each laboratory, students solve a programming task (130 minutes).
   - At the end of the semester, there is a retake where students can improve their grades in exactly one topic (L1, L2, L3, or L4). Registration for the retakes will start immediately after the last laboratory classes in the semester and will be open for **24 hours** only.
 
 
@@ -38,7 +39,7 @@ The learning outcomes are verified during the laboratory. There are five laborat
 
 ## L0
 
-During L0 class students solve simple programming task for which they can score up to 4 points.
+During L0 class, students solve a simple programming task, for which they can score up to 4 points.
 
 ## L1-L4
 
@@ -47,15 +48,15 @@ During L0 class students solve simple programming task for which they can score 
    - 0 to 24 points to get for each topic
    - Allotted time: 130 minutes
    - Laboratory tasks are solved using the Arch Linux system on the computers in the laboratory. It is not allowed to show solutions on student's own computer.
-   - A programming task is divided into stages. Amount of points for each stage in provided within the task description. The stages must be performed in the prescribed order. It is not allowed to proceed to the next stage without completing the predecessors.
+   - A programming task is divided into stages. The number of points for each stage in provided within the task description. The stages must be performed in the prescribed order. It is not allowed to proceed to the next stage without completing the predecessors.
    - Each stage is checked and graded during the class. Use of proper tools and POSIX API, correct implementation and functional correctness are graded.
-   - After finishing each stage students send solution to the server using git version control system as described during L0. Submissions must obey following rules:
+   - After finishing each stage, students send the solution to the server using git version control system as described during L0. Submissions must obey the following rules:
     - The task must be coded in *C* (not C++).
     - Submission may be sent only once one minute.
     - It is allowed only to modify solution files.
-    - Solution files must be formatted according to clang-format configuration provided with task. Clang-format program is installed on computers in the laboratory and its usage will be explained during L0.
-    - Solution program must compile using makefile from task repository.
-    If the solution does not follow one of the rules, it will be automatically rejected, and students will get information about the reason for the rejection. Sending solution to the server is necessary for grading - solution not sent to the server will be not graded. 
+    - Solution files must be formatted according to clang-format configuration provided with the task. Clang-format program is installed on computers in the laboratory and its usage will be explained during L0.
+    - Solution program must compile using Makefile from the task repository.
+    If the solution does not follow one of the rules, it will be automatically rejected, and students will get information about the reason for the rejection. Sending the solution to the server is necessary for grading - solution not sent to the server will not be graded. 
 
 
 # Aids acceptable for use in verifying achievement of learning outcomes
@@ -67,7 +68,7 @@ During L0 class students solve simple programming task for which they can score 
 
  - To pass the course, it is necessary to obtain a total of at least 50 points (out of 100 possible), and to attend the number of classes required in the Attendance section
  - The points from the retake always replace the result scored during the lab
- - **The final course grade** is based on total points acquired by student during the labs (100p tops):
+ - **The final course grade** is based on total points acquired by the student during the labs (100p tops):
    - Grade 5.0 - total in range [90, 100]
    - Grade 4.5 - total in range [80, 90)
    - Grade 4.0 - total in range [70, 80)
