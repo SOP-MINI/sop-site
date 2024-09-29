@@ -1,21 +1,20 @@
 ---
 title: "Schedule"
-date: 2022-02-10T10:00:00+01:00
 ---
 
 ## Lecture
 
-Tuesdays, 8:15 - 10:00, room 103
+Tuesdays, 14:15 - 16:00, room 101
 
 | Date       | Topic                                                                    |
 |------------|--------------------------------------------------------------------------|
-| 3.10.2023  | [Introduction. Computer and operating systems.]({{< ref "wyk/w1" >}})    |
-| 10.10.2023 | [File system and its interface. Stream-based I/O.]({{< ref "wyk/w2" >}}) |
-| 17.10.2023 | [Low-level input/output operations.]({{< ref "wyk/w3" >}})               |
-| 24.10.2023 | [Processes]({{< ref "wyk/w4" >}})                                        |
-| 31.10.2023 | [POSIX signals]({{< ref "wyk/w5" >}})                                    |
-| 7.11.2023  | [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})                  |
-| 14.11.2023 | [Synchronization]({{< ref "wyk/w7" >}})                                  |
+| 15.10.2024 | [Introduction. Computer and operating systems.]({{< ref "wyk/w1" >}})    |
+| 29.10.2024 | [File system and its interface. Stream-based I/O.]({{< ref "wyk/w2" >}}) |
+| 12.11.2024 | [Low-level input/output operations.]({{< ref "wyk/w3" >}})               |
+| 26.11.2024 | [Processes]({{< ref "wyk/w4" >}})                                        |
+| 10.12.2024 | [POSIX signals]({{< ref "wyk/w5" >}})                                    |
+| 7.01.2025  | [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})                  |
+| 21.01.2025 | [Synchronization]({{< ref "wyk/w7" >}})                                  |
 
 ## Laboratories
 
@@ -23,11 +22,10 @@ Tuesdays, 2:15-4:30pm
 
 | Date       | Topic                                            |
 |------------|--------------------------------------------------|
-| 17.10.2023 | [L0 Introduction]({{< ref "lab/l0" >}})          |
-| 31.10.2023 | [L1 Filesystem and IO]({{< ref "lab/l1" >}})     |
-| 14.11.2023 | [L2 Processes and signals]({{< ref "lab/l2" >}}) |
-| 28.11.2023 | [L3 Threads and mutexes]({{< ref "lab/l3" >}})   |
-| 12.12.2023 | [L4 Synchronization]({{< ref "lab/l4" >}})       |
-| 15.12.2023 | **7:00pm** retake signup closes (in LeON)        |
-| 9.01.2024  | L5 Retakes                                       |
-| 16.01.2024 | L5 Retakes part 2 (if neccessary)                |
+| 5.11.2024  | [L0 Introduction]({{< ref "lab/l0" >}})          |
+| 19.11.2024 | [L1 Filesystem and IO]({{< ref "lab/l1" >}})     |
+| 17.12.2024 | [L2 Processes and signals]({{< ref "lab/l2" >}}) |
+| 14.01.2025 | [L3 Threads and mutexes]({{< ref "lab/l3" >}})   |
+| 28.01.2025 | [L4 Synchronization]({{< ref "lab/l4" >}})       |
+| 31.01.2025 | **11:59pm** retake signup closes (in LeON)       |
+| 4.02.2025  | L5 Retakes                                       |

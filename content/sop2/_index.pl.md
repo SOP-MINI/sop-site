@@ -1,6 +1,9 @@
 ---
 title: "Systemy operacyjne 2"
-date: 2022-02-10T10:00:00+01:00
+menu: 
+  mainmenu:
+    identifier: "sop2"
+    weight: 30
 ---
 
 [Strona przedmiotu Systemy operacyjne 2 w USOSie](https://usosweb.usos.pw.edu.pl/kontroler.php?_action=katalog2/przedmioty/pokazPrzedmiot&prz_kod=1120-IN000-ISP-0245)

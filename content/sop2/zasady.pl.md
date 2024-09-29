@@ -1,6 +1,5 @@
 ---
 title: "Regulamin"
-date: 2022-02-10T10:00:00+01:00
 ---
 
 Regulamin przedmiotu znajduje się [na stronie przemiotu w usosie](https://usosweb.usos.pw.edu.pl/kontroler.php?_action=katalog2/przedmioty/pokazPrzedmiot&prz_kod=1120-IN000-ISP-0245), dostępny po zalogowaniu.

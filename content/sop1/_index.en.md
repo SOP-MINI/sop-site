@@ -1,6 +1,9 @@
 ---
 title: "Operating systems 1"
-date: 2022-02-10T10:00:00+01:00
+menu: 
+  mainmenu:
+    identifier: "ops1"
+    weight: 20
 ---
 
 # Operating systems 1
@@ -19,6 +22,6 @@ date: 2022-02-10T10:00:00+01:00
 
 - Franciszek Jełowicki *lab coordinator*
 - Tomasz Herman
-- Maciej Spychała
-- Krzysztof Smogór
 - Szymon Zyguła
+- Piotr Krasowski
+- Szymon Tur

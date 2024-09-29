@@ -1,6 +1,5 @@
 ---
 title: "Schedule"
-date: 2023-02-14T10:00:00+01:00
 ---
 
 Summer semester 2023/2024

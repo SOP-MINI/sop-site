@@ -1,6 +1,9 @@
 ---
 title: "Systemy operacyjne 1"
-date: 2022-02-10T10:00:00+01:00
+menu: 
+  mainmenu:
+    identifier: "sop1"
+    weight: 20
 ---
 
 # Systemy operacyjne 1
@@ -19,6 +22,6 @@ date: 2022-02-10T10:00:00+01:00
 
 - Franciszek Jełowicki *koordynator*
 - Tomasz Herman
-- Maciej Spychała
-- Krzysztof Smogór
 - Szymon Zyguła
+- Piotr Krasowski
+- Szymon Tur

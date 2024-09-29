@@ -1,6 +1,5 @@
 ---
 title: "Harmonogram"
-date: 2023-02-14T10:00:00+01:00
 ---
 
 Semestr letni 2023/2024
