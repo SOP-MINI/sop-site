@@ -614,12 +614,13 @@ Można wyczytać w dokumentacji `setenv`, że przy wykonaniu modyfikuje powyższ
 ## Zadanie do sprawdzenia środowiska. 
 
 Cel: Napisać trywialny program "hello world", skompilować go i uruchomić
-*Co student musi wiedzieć:*
+
+Co student musi wiedzieć:
 - znać dowolne środowisko programisty w systemie Linux
 - znać podstawowe flagi polecenia `gcc`
 - umieć posługiwać się konsolą
   
-*Co mile widziane gdy student wie:*
+Co mile widziane gdy student wie:
 - podstawowa wiedza o programie `git`
 
 *rozwiązanie **prog1.c**:*
@@ -682,15 +683,17 @@ chmod 600 ~/.ssh/id_ed25519
 Pierwszym krokiem będzie wykonanie kopii zdalnego repozytorium na swoją stację roboczą poleceniem
 
 ```shell
-$ git clone ssh://gitolite@vl01/l0pl/imię_nazwisko
+$ git clone ssh://gitolite@vl01/l0pl/imię_nazwisko l0
 ```
 
-Polecenie stworzy folder o nazwie `imię_nazwisko` i wykona do niego kopie plików.
-W tym folderze należy wykonać laboratorium.
+Polecenie stworzy folder o nazwie `l0` i wykona do niego kopie plików.
+Ostatni parametr polecenia określa nazwę folderu, który zostanie stworzony dla repozytorium - tak więc na kolejnych laboratoriach może to być `l1`, `l2` etc.
+Jeżeli nie podamy żadnej nazwy git domyślnie utworzy folder o takiej samej nazwie jak nazwa repozytorium - w tym wypadku `imię_nazwisko`.
+
 W przypadku gdyby polecenie zakończyło się niepowodzeniem należy sprawdzić, czy dobrze wpisaliśmy w adresie repozytorium nasz login postaci `imię_nazwisko` - powinien być bez polskich znaków, taki sam jak we wspomnianych plikach na LeONie - najlepiej przekopiować stamtąd. W przypadku gdy mimo to pobieranie repozytorium nie działa należy zgłosić to prowadzącemu.
 
 Zadanie składa się z etapów.
-Po zakończeniu etapu należy wykonać commita do repozytorium.
+Po zakończeniu etapu należy wykonać commita do repozytorium (polecenia `git add` i `git commit`).
 Commit powinien mieć nazwę mówiącą, którego etapu dotyczy oraz co dodaje/naprawia, w rodzaju "Etap 2 - poprawka zwalniania pamięci"
 Aby zsynchronizować lokalne zmiany do serwera, należy wykonać polecenie
 
