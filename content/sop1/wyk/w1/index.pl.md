@@ -14,22 +14,16 @@ weight: 10
   - wsadowy,
   - z podziałem czasu (TS) / interakcyjny, 
   - czasu rzeczywistego (RT).
-
 - Zadania systemu operacyjnego.
 - Zasoby systemu komputerowego.
 - Podsystemy systemu operacyjnego.
 - Funkcje systemowe, API systemu operacyjnego, standardy API.
-- Struktury systemów operacyjnych: 
-  - prosta, z monolitycznym jądrem, 
-  - z mikrojądrem, 
-  - hybrydowa; 
-  - wykorzystanie ładowalnych modułów jądra.
-
 - Przerwania, pułapki - ich obsługa i wykorzystanie (obsługa wejścia/wyjścia, wywołanie funkcji systemowych, obsługa błędów).
-- DMA - wykorzystanie do komunikacji CPU-szybkie urządzenia; ograniczenia wydajności.
 - Ochrona sprzętowa: dualny tryb CPU, ochrona wejścia/wyjścia, ochrona pamięci, czasomierz.
 
 ## Materiały
 
 1. Podręcznik: rozdz. 1 (Wstęp), 2 (Struktury systemów komputerowych), 3 (Struktury systemów operacyjnych).
-2. Slajdy: [Wstęp.pdf]({{< resource "Wstęp_2.pdf" >}})
+2. [Prezentacja wykładowa](https://link.excalidraw.com/p/readonly/GTNWL6Or9X0hCmggdAyX) ([PDF]({{< resource OPS1_Introduction.pdf >}}))
+3. [Programy wykładowe](https://gitlab.com/SaQQ/sop1/-/tree/master/01_hello_world?ref_type=heads)
+4. Stare slajdy: [Wstęp.pdf]({{< resource "Wstęp_2.pdf" >}})

@@ -4,13 +4,12 @@ title: "Reference material"
 
 ## Lecture reference
 
-- [Lec1 - Introduction. Computer and operating systems.]({{< ref "wyk/w1" >}})
-- [Lec2 - File system and its interface. Stream-based I/O.]({{< ref "wyk/w2" >}})
-- [Lec3 - Low-level input/output operations.]({{< ref "wyk/w3" >}})
-- [Lec4 - Processes.]({{< ref "wyk/w4" >}})
-- [Lec5 - POSIX signals.]({{< ref "wyk/w5" >}})
-- [Lec6 - Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})
-- [Lec7 - Synchronization.]({{< ref "wyk/w7" >}})
+- [Introduction. Computer and operating systems.]({{< ref "wyk/w1" >}})
+- [File system and its interface.]({{< ref "wyk/w2" >}})
+- [Processes.]({{< ref "wyk/w4" >}})
+- [POSIX signals.]({{< ref "wyk/w5" >}})
+- [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})
+- [Synchronization.]({{< ref "wyk/w7" >}})
 
 ## Laboratory reference
 

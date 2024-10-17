@@ -4,13 +4,12 @@ title: "Materiały pomocnicze"
 
 ## Materiały wykładowe
 
-- [W1 - Wstęp. Systemy komputerowe i operacyjne.]({{< ref "wyk/w1">}})
-- [W2 - Interfejs systemu plików. Strumieniowe wejście/wyjście]({{< ref "wyk/w2">}})
-- [W3 - Niskopoziomowe operacje wejścia/wyjścia]({{< ref "wyk/w3">}})
-- [W4 - Procesy]({{< ref "wyk/w4">}})
-- [W5 - Procesy i sygnały POSIX]({{< ref "wyk/w5">}})
-- [W6 - Wątki. P-wątki i muteksy]({{< ref "wyk/w6">}})
-- [W7 - Synchronizacja]({{< ref "wyk/w7" >}})
+- [Wstęp. Systemy komputerowe i operacyjne.]({{< ref "wyk/w1">}})
+- [Interfejs systemu plików.]({{< ref "wyk/w2">}})
+- [Procesy]({{< ref "wyk/w4">}})
+- [Procesy i sygnały POSIX]({{< ref "wyk/w5">}})
+- [Wątki. P-wątki i muteksy]({{< ref "wyk/w6">}})
+- [Synchronizacja]({{< ref "wyk/w7" >}})
 
 ## Opisy ćwiczeń laboratoryjnych
 

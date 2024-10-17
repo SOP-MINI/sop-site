@@ -6,15 +6,15 @@ title: "Schedule"
 
 Tuesdays, 14:15 - 16:00, room 101
 
-| Date       | Topic                                                                    |
-|------------|--------------------------------------------------------------------------|
-| 15.10.2024 | [Introduction. Computer and operating systems.]({{< ref "wyk/w1" >}})    |
-| 29.10.2024 | [File system and its interface. Stream-based I/O.]({{< ref "wyk/w2" >}}) |
-| 12.11.2024 | [Low-level input/output operations.]({{< ref "wyk/w3" >}})               |
-| 26.11.2024 | [Processes]({{< ref "wyk/w4" >}})                                        |
-| 10.12.2024 | [POSIX signals]({{< ref "wyk/w5" >}})                                    |
-| 7.01.2025  | [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})                  |
-| 21.01.2025 | [Synchronization]({{< ref "wyk/w7" >}})                                  |
+| Date       | Topic                                                                 |
+|------------|-----------------------------------------------------------------------|
+| 15.10.2024 | [Introduction. Computer and operating systems.]({{< ref "wyk/w1" >}}) |
+| 29.10.2024 | [File system interface.]({{< ref "wyk/w2" >}})                        |
+| 12.11.2024 | [File system interface.]({{< ref "wyk/w2" >}})                        |
+| 26.11.2024 | [Processes]({{< ref "wyk/w4" >}})                                     |
+| 10.12.2024 | [POSIX signals]({{< ref "wyk/w5" >}})                                 |
+| 7.01.2025  | [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})               |
+| 21.01.2025 | [Synchronization]({{< ref "wyk/w7" >}})                               |
 
 ## Laboratories
 
