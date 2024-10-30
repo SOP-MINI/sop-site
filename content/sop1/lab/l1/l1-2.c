@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
 #define MAX_PATH 101
 
 #define ERR(source) (perror(source), fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), exit(EXIT_FAILURE))
@@ -14,7 +15,7 @@ void scan_dir()
     struct dirent *dp;
     struct stat filestat;
     int dirs = 0, files = 0, links = 0, other = 0;
-    if (NULL == (dirp = opendir(".")))
+    if ((dirp = opendir(".")) == NULL)
         ERR("opendir");
     do
     {
@@ -43,11 +44,10 @@ void scan_dir()
 
 int main(int argc, char **argv)
 {
-    int i;
     char path[MAX_PATH];
     if (getcwd(path, MAX_PATH) == NULL)
         ERR("getcwd");
-    for (i = 1; i < argc; i++)
+    for (int i = 1; i < argc; i++)
     {
         if (chdir(argv[i]))
             ERR("chdir");

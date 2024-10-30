@@ -12,7 +12,7 @@ void scan_dir()
     struct dirent *dp;
     struct stat filestat;
     int dirs = 0, files = 0, links = 0, other = 0;
-    if (NULL == (dirp = opendir(".")))
+    if ((dirp = opendir(".")) == NULL)
         ERR("opendir");
     do
     {
