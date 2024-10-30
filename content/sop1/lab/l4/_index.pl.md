@@ -110,7 +110,7 @@ Które części funkcji wątku są wywoływane współbieżnie?
 Jak jest wybierany wątek jednego gracza do posumowania rundy?
 {{< expand "Answer" >}} pthread_barrier_wait zwraca PTHREAD_BARRIER_SERIAL_THREAD tylko dla jednego wątku (standard nie określa, który to wątek), a dla innych wątków zwraca 0. Ten mechanizm zapewnia, że akcja jest wykonywana tylko przez jeden wątek w każdej rundzie, uniemożliwiając wielokrotne równoczesne wykonanie tego samego kodu, który powinien być wykonany tylko raz. {{< /expand >}}
 
-Wykonaj przykładowe <a href="{{< ref "/sop1/lab/l4-example" >}}">ćwiczenie</a>. To zadanie szacuję na 150 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a  do zajęć. Pamiętaj, że w aktualnym układzie zajęć będzie dane zadanie na około 120 minut, więc trochę mniej pracochłonne.
+Wykonaj przykładowe <a href="{{< ref "/sop1/lab/l4/example1" >}}">ćwiczenie</a>. To zadanie szacuję na 150 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a  do zajęć. Pamiętaj, że w aktualnym układzie zajęć będzie dane zadanie na około 120 minut, więc trochę mniej pracochłonne.
 
 ## Kody źródłowe z treści tutoriala
 

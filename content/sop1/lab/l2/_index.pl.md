@@ -345,7 +345,7 @@ bardziej nie mamy jak wyznaczyć od którego momentu trzeba wznowić wypisywanie
 gdzie restartowanie będzie krytyczne i musimy wypisać dużo danych. Tam gdzie błąd braku restartu nie jest krytyczny (
 wypisywanie na ekran) lub gdy ilość danych jest mała tam nie ma tego problemu.
 
-Wykonaj przykładowe <a href="{{< ref "/sop1/lab/l2-example">}}">ćwiczenie</a> z poprzednich lat. To zadanie szacuję na 60 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a  do zajęć. Pamiętaj, że w aktualnym układzie zajęć będzie dane zadnie na około 1,5 godziny, więc trochę bardziej pracochłonne.
+Wykonaj przykładowe <a href="{{< ref "/sop1/lab/l2/example1">}}">ćwiczenie</a> z poprzednich lat. To zadanie szacuję na 60 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a  do zajęć. Pamiętaj, że w aktualnym układzie zajęć będzie dane zadnie na około 1,5 godziny, więc trochę bardziej pracochłonne.
 
 ## Kody źródłowe z treści tutoriala
 

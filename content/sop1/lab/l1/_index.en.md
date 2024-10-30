@@ -356,7 +356,7 @@ Can you write data to a descriptor returned by `open` using `fprintf`?
 No! `fprintf`, `fgets`, `fscanf` etc. function accept a variable of type `FILE*` as their argument, a descriptor on the other hand is just a number of type `int` used by the operating system to identify an open file.
 {{< /expand >}}
 
-As an exercise do <a href="{{< ref "/sop1/lab/l1-example" >}}">this</a> task.
+As an exercise do <a href="{{< ref "/sop1/lab/l1/example1" >}}">this</a> task.
 It was used in previous years in a bit different labs timing.
 It is a 75 minutes task and if you can do it in this time it means you are prepared for the lab.
 Remember that during the lab you will be given 2 hours to solve a task, so expect it to be more demanding.

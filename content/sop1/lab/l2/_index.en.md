@@ -372,7 +372,7 @@ Really big (f)printfs can get interrupted in the middle of the process (like wri
 process especially if formatting is complicated. Avoid using printf where restarting would be critical (most cases
 except for the screen output) and the volume of transferred data is significant, use write instead.
 
-As an exercise do <a href="{{< ref "/sop1/lab/l2-example" >}}">this</a> task. It was used in previous years in a bit different labs timing. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab. In a new timing there is more time for the task and it will be slightly larger.
+As an exercise do <a href="{{< ref "/sop1/lab/l2/example1" >}}">this</a> task. It was used in previous years in a bit different labs timing. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab. In a new timing there is more time for the task and it will be slightly larger.
 
 ## Source codes presented in this tutorial
 

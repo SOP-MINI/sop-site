@@ -6,8 +6,6 @@ weight: 40
 
 # Tutorial 3 - Threads, mutexes and signals
 
-<a href="{{< ref "/sop1/lab/l3-test" >}}">A list of requirements for the introductory test</a>
-
 {{< hint info >}}
 Introduction notes:
 
@@ -286,7 +284,7 @@ Improve random selection as an exercise.
 
 Have a look at the method used to measure the 4 seconds life time of the program (clock_gettime, nanosleep). Please change the solution  to use alarm function and the SIGALRM handler as an exercise.
 
-As an exercise do <a href="{{< ref "/sop1/lab/l3-example" >}}">this</a> task. It was used in previous years in a bit different labs timing. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab. In a new timing there is more time for the task and it will be slightly larger.
+As an exercise do <a href="{{< ref "/sop1/lab/l3/example1" >}}">this</a> task. It was used in previous years in a bit different labs timing. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab. In a new timing there is more time for the task and it will be slightly larger.
 
 ## Source codes presented in this tutorial
 
