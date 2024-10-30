@@ -260,7 +260,7 @@ Rozwiązanie **prog22b.c**:
 
 ## Dodatkowe materiały
 
-- Proste przykładowe [zadanie]({{% ref "/sop2/lab/l1-task-easy" %}}). Szacunkowy czas na rozwiązanie ~60 minut.
-- Nieco trudniejsze [zadanie]({{% ref "/sop2/lab/l1-task-normal" %}}). Szacunkowy czas na rozwiązanie ~90 minut.
+- Proste przykładowe [zadanie]({{% ref "/sop2/lab/l1/example1" %}}). Szacunkowy czas na rozwiązanie ~60 minut.
+- Nieco trudniejsze [zadanie]({{% ref "/sop2/lab/l1/example2" %}}). Szacunkowy czas na rozwiązanie ~90 minut.
 - <http://cs341.cs.illinois.edu/coursebook/Ipc#pipes>
 - <http://cs341.cs.illinois.edu/coursebook/Ipc#named-pipes>

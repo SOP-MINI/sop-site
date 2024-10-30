@@ -238,7 +238,7 @@ Przeanalizuj jak działa limitowanie do 5 połączeń, zwróć uwagę na pole fr
 
 
 ## Przykładowe zadanie
-Wykonaj przykładowe [ćwiczenie]({{< ref "/sop2/lab/l4-example">}}) z poprzednich lat. To zadanie szacuję na 60 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a do zajęć.
+Wykonaj przykładowe [ćwiczenie]({{< ref "/sop2/lab/l4/example1">}}) z poprzednich lat. To zadanie szacuję na 60 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a do zajęć.
 
 ## Kody źródłowe z treści tutoriala
 {{% codeattachments %}}

@@ -65,7 +65,7 @@ Można również uprościć program, zastępując notyfikacje wątkiem dedykowan
 Spora część logiki programu "wylądowała" w funkcji obsługi sygnału, co było możliwe, ponieważ nie ma zależności między kodem wysyłającym liczby a tym odbierającym notyfikacje. Jednak zadanie łatwo można skomplikować, aby taka zależność istniała. Jako ćwiczenie przenieś całą logikę związaną z odbiorem wiadomości do kodu właściwego rodzica (czyli poza asynchroniczne wywołanie funkcji obsługi sygnału).
 
 ## Ćwiczenie
-Wykonaj przykładowe [ćwiczenie]({{< ref "/sop2/lab/l2-example" >}}) z poprzednich lat. To zadanie szacuję na 90 minut. Jeśli wyrobisz się w tym czasie, oznacza to, że jesteś dobrze przygotowany/a do zajęć.
+Wykonaj przykładowe [ćwiczenie]({{< ref "/sop2/lab/l2/example1" >}}) z poprzednich lat. To zadanie szacuję na 90 minut. Jeśli wyrobisz się w tym czasie, oznacza to, że jesteś dobrze przygotowany/a do zajęć.
 
 ## Kody źródłowe z treści tutoriala
 {{% codeattachments %}}

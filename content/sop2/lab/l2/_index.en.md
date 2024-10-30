@@ -58,7 +58,7 @@ A huge part of the program's logic ended up in the signal handler; it is possibl
 
 
 ## Excersise
-As an exercise do [this]({{< ref "/sop2/lab/l2-example" >}}) task. It was used in previous years. It is a 90-minute task, and if you can do it this time, you are well prepared for the lab.
+As an exercise do [this]({{< ref "/sop2/lab/l2/example1" >}}) task. It was used in previous years. It is a 90-minute task, and if you can do it this time, you are well prepared for the lab.
 
 ## Source codes presented in this tutorial
 {{% codeattachments %}}
