@@ -350,9 +350,12 @@ Czy do deskryptora zwróconego z `open` można zapisać dane przez `fprintf`?
 Nie! Funkcje `fprintf`, `fgets`, `fscanf` itd. przyjmują jako argument zmienną typu `FILE*`, deskryptor jest natomiast pojedynczą liczbą `int` używaną przez system operacyjny do identyfikacji otwartego pliku.
 {{< /expand >}}
 
-Wykonaj przykładowe <a href="{{< ref "/sop1/lab/l1/example1" >}}">ćwiczenie</a> z poprzednich lat. To zadanie szacuję na 75
-minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a do zajęć. Pamiętaj, że w aktualnym
-układzie zajęć będzie dane zadnie na dwie godziny, będzie więc bardziej pracochłonne.
+## Przykładowe zadania
+
+Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianem czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
+
+- [Zadanie 1]({{< ref "/sop1/lab/l1/example1" >}}) ~75 minut
+- [Zadanie 2]({{< ref "/sop1/lab/l1/example2" >}}) ~75 minut
 
 ## Kody źródłowe z treści tutoriala
 {{% codeattachments %}}
