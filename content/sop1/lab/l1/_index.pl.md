@@ -352,7 +352,7 @@ Nie! Funkcje `fprintf`, `fgets`, `fscanf` itd. przyjmują jako argument zmienną
 
 ## Przykładowe zadania
 
-Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianem czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
+Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
 
 - [Zadanie 1]({{< ref "/sop1/lab/l1/example1" >}}) ~75 minut
 - [Zadanie 2]({{< ref "/sop1/lab/l1/example2" >}}) ~75 minut
