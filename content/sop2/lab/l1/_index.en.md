@@ -248,7 +248,7 @@ Solution **prog22b.c**:
 
 ## Additional materials
 
-- Simple ~60 minutes sample [task]({{< ref "/sop2/lab/l1/example1" >}}). 
+- A simple ~60 minutes sample [task]({{< ref "/sop2/lab/l1/example1" >}}). 
 - A bit harder ~90 minutes [task]({{< ref "/sop2/lab/l1/example2" >}}).
 - <http://cs341.cs.illinois.edu/coursebook/Ipc#pipes>
 - <http://cs341.cs.illinois.edu/coursebook/Ipc#named-pipes>

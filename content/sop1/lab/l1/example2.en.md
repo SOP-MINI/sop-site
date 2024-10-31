@@ -7,16 +7,16 @@ bookHidden: true
 
 In this task, you will write a program that helps you scan a directory
 by scanning the files in it. Your program should receive a list of
-directories in its arguments and those directories will be scanned. As a
+directories as its arguments and those directories will be scanned. As a
 result we want to get the list of all the files with its size which are
 in scanned directories.
 
 
 Flag `-p` is used to provide each directory path. Flag `-d` means depth
 of scanning as the scanning process is limited to some depth of
-sub-directory search. Depth equal to 1 will only scan the current
+subdirectory search. Depth equal to 1 will only scan the current
 directory, depth equal 2 will scan the current directory and its
-immediate children and so on. During scanning you should skip symlinks.
+immediate children and so on. During the scanning you should skip symlinks.
 Flag `-e` is optional and when provided, the program should skip during
 scanning all the files with the extension other than given with this
 flag. If the `-o` option is provided and the environment variable

@@ -358,7 +358,7 @@ No! `fprintf`, `fgets`, `fscanf` etc. function accept a variable of type `FILE*`
 
 ## Example tasks
 
-Do example tasks. During laboratory you will have more time and a starting code. If you do following tasks in time it means that you are well prepared.
+Do the example tasks. During the laboratory you will have more time and a starting code. If you do following tasks in the allotted time, it means that you are well-prepared.
 
 - [Task 1]({{< ref "/sop1/lab/l1/example1" >}}) ~75 minutes
 - [Task 2]({{< ref "/sop1/lab/l1/example2" >}}) ~75 minutes

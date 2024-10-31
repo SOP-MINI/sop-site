@@ -225,7 +225,7 @@ Analyze how 5 connection limit works, pay attention how "free" member in the con
 
 ## Sample task
 
-As an exercise do [this]({{< ref "/sop2/lab/l4/example1" >}}) task. It was used in previous years in a bit different labs timing. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab. In a new timing there is more time for the task and it will be slightly larger.
+As an exercise do [this]({{< ref "/sop2/lab/l4/example1" >}}) task. It was used in previous years when duration of the lab was different. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab. Now there is more time for the task during the lab and it will be slightly larger.
 
 
 ## Source codes presented in this tutorial
