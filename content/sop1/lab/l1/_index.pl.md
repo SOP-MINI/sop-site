@@ -21,7 +21,7 @@ obecnych w katalogu roboczym, polecenie to wyświetla także rozmaite atrybuty k
 objętość pliku, uprawnienia dostępu, czy data ostatniej modyfikacji. Dostęp do tych informacji możliwy jest
 także (kto by się spodziewał) z poziomu języka C. W tym celu, przeglądany katalog należy "otworzyć" funkcją
 `opendir`, a następnie kolejne rekordy odczytać funkcją `readdir`. Aby użyć tych funkcji, konieczne jest 
-dołączenie do naszego kodu pliku nagłówkowego `<dirent.h>`. Spojrzyjmy na definicje obu funkcji:
+dołączenie do naszego kodu pliku nagłówkowego `<dirent.h>` (`man 3p fdopendir`). Spojrzyjmy na definicje obu funkcji:
 
 ```
 DIR *opendir(const char *dirname);
@@ -30,14 +30,14 @@ struct dirent *readdir(DIR *dirp);
 
 Jak widzimy, `opendir` zwraca nam wskaźnik na obiekt typu `DIR`, którym będziemy się posługiwać przy odczytywaniu
 danych o zawartości katalogu. Funkcja `readdir` zwraca natomiast wskaźnik na strukturę typu `dirent`, która posiada 
-(wg POSIX) następujące pola:
+(wg POSIX) następujące pola (`man 0p dirent.h`):
 
 ```
-ino_t  d_ino       -> identyfikator pliku (inode)
+ino_t  d_ino       -> identyfikator pliku (numer inode, więcej w man 7 inode)
 char   d_name[]    -> nazwa pliku
 ```
 
-Pozostałe dane o pliku można używając funkcji `stat` lub `lstat` z pliku nagłówkowego `<sys/stat.h>`.
+Pozostałe dane o pliku można używając funkcji `stat` lub `lstat` z pliku nagłówkowego `<sys/stat.h>` (`man 3p fstatat`).
 Ich definicje są nastepujące:
 
 ```
@@ -144,7 +144,7 @@ Program z poprzedniego zadania umożliwiał skanowanie zawartości tylko katalog
 Dużo lepsza byłaby możliwość wyboru, jaki katalog należałoby zeskanować. Widzimy, że wystarczyłoby w tym celu podmienić
 argument funkcji `opendir` na ścieżkę podaną np. w parametrze pozycyjnym. Nie będziemy jednak chcieli modyfikować funkcji `scan_dir`, aby przedstawić sposób na wczytanie i zmianę katalogu roboczego z poziomu kodu programu.
 
-Operacje na katalogu roboczym umożliwiają funkcje `getcwd` i `chdir`, dostępne po dołączeniu pliku nagłówkowego `<unistd.h>`. 
+Operacje na katalogu roboczym umożliwiają funkcje `getcwd` i `chdir`, dostępne po dołączeniu pliku nagłówkowego `<unistd.h>` (`man 3p getcwd`, `man 3p chdir`). 
 Ich deklaracje, według standardu, są następujące:
 
 ```
