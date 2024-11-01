@@ -28,17 +28,16 @@ DIR *opendir(const char *dirname);
 struct dirent *readdir(DIR *dirp);
 ```
 
-Jak widzimy, `opendir` zwraca nam wskaźnik na obiekt typu `DIR`, którym się będziemy posługiwać przy odczytywaniu
+Jak widzimy, `opendir` zwraca nam wskaźnik na obiekt typu `DIR`, którym będziemy się posługiwać przy odczytywaniu
 danych o zawartości katalogu. Funkcja `readdir` zwraca natomiast wskaźnik na strukturę typu `dirent`, która posiada 
 (wg POSIX) następujące pola:
 
 ```
-ino_t  d_ino       -> numer identyfikacyjny pliku (inode)
+ino_t  d_ino       -> identyfikator pliku (inode)
 char   d_name[]    -> nazwa pliku
 ```
 
-Z pewnością nie są to wszystkie informacje, które można uzyskać wspomnianym na początku poleceniem konsolowym.
-Szczegółowe dane można uzyskać, używając funkcji `stat` lub `lstat` z pliku nagłówkowego `<sys/stat.h>`.
+Pozostałe dane o pliku można używając funkcji `stat` lub `lstat` z pliku nagłówkowego `<sys/stat.h>`.
 Ich definicje są nastepujące:
 
 ```
@@ -49,9 +48,10 @@ int lstat(const char *restrict path, struct stat *restrict buf);
 - `buf` jest wskaźnikiem do (wcześniej zaalokowanej) struktury typu `stat` (nie mylić z nazwą funkcji!) 
 przechowującej informacje o pliku.
 
-*Manualowe* definicje argumentów funkcji często zawierają słowo kluczowe `restrict`. Jest to jedynie wskazówka
-dla kompilatora mówiąca, że argument powinien być (czyli należy samemu o to zadbać) blokiem pamięci rozłącznym 
-z innymi argumentami. 
+*Manualowe* definicje argumentów funkcji często zawierają słowo kluczowe `restrict`. Jest to deklaracja
+mówiąca, że dany argument musi być blokiem pamięci rozłącznym z innymi argumentami. W takim przypadku, 
+podanie tego samego bloku pamięci (np. tego samego wskaźnika) jest poważnym błędem i może spowodować 
+SEGFAULT lub nieprawidłowe działanie programu. 
 
 Jedyną różnicą w działaniu funkcji `stat` i `lstat` jest obługa linków. `stat` zwróci informacje o pliku, do 
 którego dany link prowadzi, natomiast `lstat` zwróci informacje o samym linku. 
@@ -116,7 +116,7 @@ ln -s prog9.c prog_link.c
 
 - Przeczytaj `man readdir`. Jakie pola zawiera struktura opisująca obiekt w systemie plików (`dirent`) w Linuksie? 
 {{< answer >}} 
-Numer identyfikacyjny, nazwę i 3 inne pola nie objęte standardem.
+Identyfikator, nazwę i 3 inne pola nie objęte standardem.
 {{< /answer >}}
 
 - Tam, gdzie implementacja Linuksa odbiega od standardu, trzymamy się zawsze standardów, to powoduje większą przenośność
@@ -142,8 +142,7 @@ przypisywana będzie wtedy uznana za wartość wyrażenia w nawiasie. Robimy tak
 
 Program z poprzedniego zadania umożliwiał skanowanie zawartości tylko katalogu, w którym został uruchomiony. 
 Dużo lepsza byłaby możliwość wyboru, jaki katalog należałoby zeskanować. Widzimy, że wystarczyłoby w tym celu podmienić
-argument funkcji `opendir` na ścieżkę podaną np. w parametrze pozycyjnym. Nie będziemy tutaj jednak modyfikować funkcji 
-`scan_dir`, aby przedstawić sposób na wczytanie i zmianę katalogu roboczego z poziomu kodu programu.
+argument funkcji `opendir` na ścieżkę podaną np. w parametrze pozycyjnym. Nie będziemy jednak chcieli modyfikować funkcji `scan_dir`, aby przedstawić sposób na wczytanie i zmianę katalogu roboczego z poziomu kodu programu.
 
 Operacje na katalogu roboczym umożliwiają funkcje `getcwd` i `chdir`, dostępne po dołączeniu pliku nagłówkowego `<unistd.h>`. 
 Ich deklaracje, według standardu, są następujące:
@@ -182,7 +181,7 @@ rozwiązanie `l1-2.c`:
 
 - Sprawdź, jak program zachowa się w przypadku: 
    - nieistniejących katalogów, 
-   - katalogów co do których nie masz prawa dostępu, 
+   - katalogów, co do których nie masz prawa dostępu, 
    - czy poprawnie poradzi sobie ze ścieżkami zarówno względnymi, jak i bezwzględnymi, podawanymi jako parametr.
 
 - Dlaczego program pobiera i zapamiętuje aktualny katalog roboczy?
@@ -196,7 +195,7 @@ przewidywanego `./dir2/dir3/`.
 
 - Czy prawdziwe jest stwierdzenie, że program powinien "wrócić" do tego katalogu w którym był uruchomiony?
 {{< answer >}}
-Nie, katalog roboczy to właściwość procesu. Jeśli proces-dziecko zmienia swój CWD to nie ma to wpływu na proces-rodzic,
+Nie, katalog roboczy to właściwość procesu. Jeśli proces-dziecko zmienia swój CWD, to nie ma to wpływu na proces-rodzic,
 zatem nie ma obowiązku ani potrzeby wracać.
 {{< /answer >}}
 
@@ -267,7 +266,7 @@ rozwiązanie `l1-3.c`:
 - Jeśli definicja funkcji `nftw` lub użycie `walk` w rozwiązaniu są dla Ciebie niezrozumiałe, 
 powtórz koniecznie, co to są i jak działają wskaźniki na funkcje w C.
 
-- Sprawdź jak program sobie radzi z niedostępnymi i nieistniejącymi katalogami.
+- Sprawdź, jak program sobie radzi z niedostępnymi i nieistniejącymi katalogami.
 
 - W jakim celu użyta jest flaga `FTW_PHYS`?
 {{< answer >}} 
