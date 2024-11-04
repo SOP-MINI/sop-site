@@ -289,11 +289,69 @@ przeskanowanie bardzo głębokiego drzewa katalogów (głębszego niż limit), a
 mamy. W zakresie deskryptorów, maksima systemowe pod Linuksem są nieokreślone, ale można oddzielnie limitować procesy na
 poziomie administracji systemem.
 
-## Zadanie 4 - operacje na plikach
+## Operacje na plikach
 
-Cel: Napisać program tworzący nowy plik o podanej parametrami nazwie (-n NAME), uprawnieniach (-p OCTAL ) i rozmiarze (
+Duża część programów wchodzi w interakcję z plikami na dysku. Najprostszym sposobem którym można to zrealizować jest:
+1. Otwarcie (stworzenie) za pomocą `fopen`,
+2. Ustawienie kursora pliku z `fseek`,
+3. Wpisanie danych `fprintf`, `fputc`, `fputs`, `fwrite` lub wczytanie ich `fscanf`, `fgetc`, `fgets`, `fread`
+4. Powtórzenie kroków 2.-3. w miarę potrzeby,
+5. Zamknięcie pliku `fclose`.
+
+Potrzebne funkcje znajdziemy w nagłówku `<stdio.h>`.
+```
+FILE *fopen(const char *restrict pathname, const char *restrict mode);
+```
+- `pathname` oznacza ścieżkę otwieranego pliku,
+- `mode` to tryb w którym chcemy go otworzyć. String trybu może wyglądać w następujący sposób, co może dawać różne możliwości manipulacji plikiem:
+   - "r" - plik udostępnia czytanie danych,
+   - "w" lub "w+" - plik zostaje skrócony do zera (lub stworzony) i udostępnia pisanie danych,
+   - "a" lub "a+" - plik udostępnia dopisywanie danych do końca jego istniejącej treści.
+   - "r+" - plik udostępnia czytanie oraz pisanie danych.
+
+Do każdego z trybów możemy dodać na koniec "b", co w standardzie UNIX nic nie zmieni w deskryptorze który otrzymamy. Jest to opcja utrzymywana dla kompatybilności ze standardem C.
+
+Funkcja ta zwraca wskaźnik do wewnętrznej struktury `FILE`, która pozwala na kontrolowanie strumienia powiązanego z otwartym przez nią plikiem. Zgodnie z mądrością komentarza umieszczonego w jednej z implementacji `FILE` `<stdio.h>` przez Pedro A. Aranda Gutiérreza:
+>\* Some believe that nobody in their right mind should make use of the\
+>\* internals of this structure.
+
+Więc nie będziemy się przyglądać temu co jest wewnątrz. Dla nas zwyczajnie nie jest to potrzebne. Zwykle więc traktujemy ją jako typ nieprzejrzysty, nie ustawiamy ani nie odczytujemy pól bezpośrednio ze struktury. Przechowujemy wyłącznie wskaźnik i używamy go poprzez wywoływanie na nim różnych funkcji.
+
+Funkcja `fseek` przyjmuje wskaźnik do tejże tajemniczej struktury i pozwala nam przesunąć się na odpowiednie miejsce w pliku. Wyjątkiem jest plik otwarty w trybie "a" - append, który niezmiennie wskazuje na koniec treści niezależnie od wywołań `fseek`. Poza tym przypadkiem, tuż po otwarciu, kursor pliku wskazuje na pierwszy bajt.
+```
+int fseek(FILE *stream, long offset, int whence);
+```
+- `stream` jest wyżej wymienionym identyfikatorem strumienia pliku,
+- `offset` określa liczbę bajtów o którą chcemy się przesunąć,
+- `whence` mówi o tym jaki punkt odniesienia powinniśmy przyjąć w momencie przesunięcia. Może przyjmować następujące wartości:
+   - SEEK_SET - punktem odniesienia jest początek pliku, funkcja ustawia kursor pliku na `offset`-ym bajcie pliku.
+   - SEEK_CUR - przesunięcie relatywne do obecnego kursora pliku, funkcja ustawia kursor o `offset` bajtów do przodu (do tyłu w przypadku wartości ujemnej).
+   - SEEK_END - punktem odniesienia jest koniec pliku. Kursor pliku będzie wskazywał na dane tylko jeśli wartość `offset` jest ujemna.
+      - Dla wartości `offset` równej `0` kursor pliku ustawiony jest na bajt po ostatnim bajcie pliku. Odczytanie pozycji kursora funkcją `ftell` podaje wtedy dokładny rozmiar pliku w bajtach. Operacja ta pozwala programiście zaalokować dokładną ilość bajtów która będzie potrzebna na wczytanie całego pliku.
+
+Kiedy ustawimy kursor pliku na pożądaną pozycję, możemy zacząć wczytywać dane z pliku lub je do niego zapisywać. Funkcje `fprintf` oraz `fscanf` działają analogicznie do dobrze znanych wszystkim funkcji działających na standardowym wejściu - `printf` oraz `scanf`. Pozostałe funkcje na początku mogą wydawać się mniej użyteczne, chociaż w szczególności `fread` w praktyce stanowczo przewyższa częstością użycia swojego kuzyna `fscanf`. Własnoręczna implementacja konwersji danych z pliku na wartości o docelowych typach danych daje znacznie większą kontrolę niż implementacje biblioteczne.
+```
+size_t fread(void *restrict ptr, size_t size, size_t nitems, FILE *restrict stream);
+```
+- `ptr` - bufor w który będą zapisywane dane,
+- `size` - rozmiar nieprzerwanych elementów do wczytania,
+- `nitems` - liczba elementów do wczytania,
+- `stream` - wskaźnik pozyskany z `fopen`.
+
+Zwrócona wartość oznacza liczbę elementów wczytanych z sukcesem. Będzie ona mniejsza niż `nitems` w przypadku błędu lub zakończenia pliku. Można pomyśleć że podział wczytanych danych na elementy jest niepotrzebną komplikacją, ale daje to pewną korzyść w przypadku gdy wczytywany plik składa się z pewnych rekordów których nie chcemy przerywać w połowie (np. 4-bajtowe zmienne całkowitoliczbowe `int`). W przypadku niepełnego odczytu nie musimy obliczać ile obiektów wczytaliśmy poprawnie ani cofać kursora pliku aby wczytać niepełny rekord jeszcze raz. W momencie gdy pierwsze wywołanie zwróciło `n` wystarczy wywołać funkcję jeszcze raz z przesuniętym buforem `ptr+size*n` oraz liczbą elementów `nitems-n`.
+
+
+W momencie gdy skończymy używać otwarty plik wszystkie zasady C, UNIX, MiNI, rozumu i godności człowieka nakazują - zwolnić używane zasoby. W tym przypadku używamy funkcji `fclose`.
+
+W przypadku gdy potrzebujemy usunąć plik należy wywołać `unlink`. Jeżeli jakiś proces (w tym nasz) wciąż otwiera `unlink`-owany przez nas plik, jest on usunięty z systemu plików, lecz istnieje wciąż w pamięci. Jest on ostatecznie usunięty w momencie gdy ostatni używający proces go zamknie.
+
+### Zadanie
+
+Napisać program tworzący nowy plik o podanej parametrami nazwie (-n NAME), uprawnieniach (-p OCTAL ) i rozmiarze (
 -s SIZE). Zawartość pliku ma się składać w około 10% z losowych znaków [A-Z], resztę pliku wypełniają zera (znaki o
 kodzie zero, nie '0'). Jeśli podany plik już istnieje, należy go skasować.
+
+### Rozwiązanie zadania
 
 Co student musi wiedzieć: 
 - man 3p fopen
@@ -308,19 +366,21 @@ Dokumentacja glibc dotycząca umask <a href="http://www.gnu.org/software/libc/ma
 <em>kod do pliku <b>prog12.c</b></em>
 {{< includecode "prog12.c" >}}
 
-Jaką maskę bitową tworzy wyrażenie `~perms&0777` ? 
+### Uwagi i pytania
+
+- Jaką maskę bitową tworzy wyrażenie `~perms&0777` ? 
 {{< answer >}}
 odwrotność wymaganych parametrem -p uprawnień przycięta do 9 bitów, 
 jeśli nie rozumiesz jak to działa koniecznie powtórz sobie operacje bitowe w C.
 {{< /answer >}}
 
-Jak działa losowanie znaków ? 
+- Jak działa losowanie znaków ? 
 {{< answer >}}
 W losowych miejscach wstawia kolejne znaki alfabetu od A do Z potem znowu A itd.
 Wyrażenie 'A'+(i%('Z'-'A'+1)) powinno być zrozumiałe, jeśli nie poświęć mu więcej czasu takie losowania będą się jeszcze pojawiać.
 {{< /answer >}}
 
-Uruchom program kilka razy, pliki wynikowe wyświetl poleceniem cat i less sprawdź jakie mają rozmiary (ls -l), czy zawsze równe podanej w parametrach wartości? Z czego wynikają różnice dla małych rozmiarów -s a z czego dla dużych (> 64K) rozmiarów?
+- Uruchom program kilka razy, pliki wynikowe wyświetl poleceniem cat i less sprawdź jakie mają rozmiary (ls -l), czy zawsze równe podanej w parametrach wartości? Z czego wynikają różnice dla małych rozmiarów -s a z czego dla dużych (> 64K) rozmiarów?
 {{< answer >}}
 Prawie zawsze rozmiary są różne w obu przypadkach wynika to ze sposobu tworzenia pliku,
 który jest na początku pusty a potem w losowych lokalizacjach wstawiane są znaki, 
@@ -328,67 +388,67 @@ nie zawsze będzie wylosowany znak na ostatniej pozycji. Losowanie podlega limit
 wiec w dużych plikach losowane są znaki na pozycjach do granicy RAND_MAX.
 {{< /answer >}}
 
-Przerób program tak, aby rozmiar zawsze był zgodny z założonym.
+- Przerób program tak, aby rozmiar zawsze był zgodny z założonym.
 
-Czemu podczas sprawdzania błędu unlink jeden przypadek ignorujemy?
+- Czemu podczas sprawdzania błędu unlink jeden przypadek ignorujemy?
 {{< answer >}}
 ENOENT oznacza brak pliku, jeśli plik o podanej nazwie nie istniał to nie możemy go skasować,
 ale to nie przeszkadza programowi, w tym kontekście to nie jest błąd. 
 Bez tego wyjątku moglibyśmy tylko nadpisywać istniejące pliki a nie tworzyć nowe.
 {{< /answer >}}
 
-Zwrócić uwagę na wyłączenie z main funkcji do tworzenia pliku, im więcej kodu tym ważniejszy podział na użyteczne funkcję. Przy okazji krótko omówmy cechy dobrej funkcji:
-- robi jedną rzecz na raz (krótki kod)
-- możliwie duży stopień generalizacji problemu (dodano procent jako parametr)
-- wszystkie dane wejściowe dostaje przez parametry (nie używamy zmiennych globalnych)
-- wyniki przekazuje przez parametry wskaźnikowe lub wartość zwracaną (w tym przypadku wynikiem jest plik) a nie przez zmienne globalne
+- Zwrócić uwagę na wyłączenie z main funkcji do tworzenia pliku, im więcej kodu tym ważniejszy podział na użyteczne funkcję. Przy okazji krótko omówmy cechy dobrej funkcji:
+   - robi jedną rzecz na raz (krótki kod)
+   - możliwie duży stopień generalizacji problemu (dodano procent jako parametr)
+   - wszystkie dane wejściowe dostaje przez parametry (nie używamy zmiennych globalnych)
+   - wyniki przekazuje przez parametry wskaźnikowe lub wartość zwracaną (w tym przypadku wynikiem jest plik) a nie przez zmienne globalne
 
-W kodzie używamy specjalnych typów numerycznych `ssize_t`, `mode_t` zamiast int robimy to ze względu na zgodność typów z
+- W kodzie używamy specjalnych typów numerycznych `ssize_t`, `mode_t` zamiast int robimy to ze względu na zgodność typów z
 prototypami funkcji systemowych.
 
-Czemu w tym programie używamy umask? Otóż funkcja fopen nie pozwala ustawić uprawnień, a przez umask możemy okroić
+- Czemu w tym programie używamy umask? Otóż funkcja fopen nie pozwala ustawić uprawnień, a przez umask możemy okroić
 uprawnienia jakie są nadawane domyślnie przez fopen, niskopoziomowe open daje nam nad uprawnieniami większą kontrolę.
 
-Czemu zatem nie możemy dodać uprawnień "x"? Funkcja fopen domyślnie nadaje tylko prawa 0666 a nie pełne 0777, przez
+- Czemu zatem nie możemy dodać uprawnień "x"? Funkcja fopen domyślnie nadaje tylko prawa 0666 a nie pełne 0777, przez
 bitowe odejmowanie nijak nam nie może wyjść ta brakująca część 0111.
 
-Jak zwykle sprawdzamy wszystkie błędy, ale nie sprawdzamy statusu umask, czemu? Otóż umask nie zwraca błędów tylko starą
+- Jak zwykle sprawdzamy wszystkie błędy, ale nie sprawdzamy statusu umask, czemu? Otóż umask nie zwraca błędów tylko starą
 maskę.
 
-Zmiana umask jest lokalna dla naszego procesu i nie ma wpływu na proces rodzicielski zatem nie musimy jej przywracać.
+- Zmiana umask jest lokalna dla naszego procesu i nie ma wpływu na proces rodzicielski zatem nie musimy jej przywracać.
 
-Parametr tekstowy -p został zmieniony na oktalne uprawnienia dzięki funkcji strtol, warto znać takie przydatne funkcje
+- Parametr tekstowy -p został zmieniony na oktalne uprawnienia dzięki funkcji strtol, warto znać takie przydatne funkcje
 aby potem nie wyważać otwartych drzwi i nie próbować pisać samemu oczywistych konwersji.
 
-Pytanie czemu kasujemy plik skoro tryb otwarcia w+ nadpisuje plik? Jeśli plik o danej nazwie istniał to jego uprawnienia
+- Pytanie czemu kasujemy plik skoro tryb otwarcia w+ nadpisuje plik? Jeśli plik o danej nazwie istniał to jego uprawnienia
 są zachowywane a my przecież musimy nadać nasze, przy okazji jest to pretekst do ćwiczenia kasowania.
 
-Tryb otwarcia pliku "b" nie ma w systemach POSIX-owych żadnego znaczenia, nie rozróżniamy dostępu na tekstowy i binarny,
+- Tryb otwarcia pliku "b" nie ma w systemach POSIX-owych żadnego znaczenia, nie rozróżniamy dostępu na tekstowy i binarny,
 jest tylko binarny.
 
-W programie nie wypełniamy pliku zerami, dzieje się to automatycznie ponieważ gdy zapisujemy coś poza aktualnym końcem
+- W programie nie wypełniamy pliku zerami, dzieje się to automatycznie ponieważ gdy zapisujemy coś poza aktualnym końcem
 pliku system automatycznie dopełnia lukę zerami. Co więcej, jeśli tych zer ciągiem jest sporo to nie zajmują one
 sektorów dysku!
 
-Jeśli wykonamy unlink na pliku już otwartym i używanym w innym programie to plik zniknie z filesystemu ale nadal
+- Jeśli wykonamy unlink na pliku już otwartym i używanym w innym programie to plik zniknie z filesystemu ale nadal
 zainteresowane procesy będą mogły z niego korzystać. Gdy skończą plik zniknie na dobre.
 
-Najlepiej w procesie wywołać srand dokładnie jeden raz z unikalnym ziarnem,w tym programie wystarczy czas podany w
+- Najlepiej w procesie wywołać srand dokładnie jeden raz z unikalnym ziarnem,w tym programie wystarczy czas podany w
 sekundach.
 
-## Zadanie 5 – buforowanie standardowego wyjścia
+## Buforowanie standardowego wyjścia
 
-Ten temat ma więcej wspólnego z ogólnym programowaniem w C niż z systemami operacyjnymi, niemniej jednak wspominamy o nim, bowiem w poprzednich latach był częstym źródłem problemów.
+### Eksperyment
 
 <em>kod do pliku <b>prog13.c</b></em>
 {{< includecode "prog13.c" >}}
 
-Spróbuj uruchomić ten (bardzo prosty!) kod z terminala. Co widać na terminalu? 
+- Spróbuj uruchomić ten (bardzo prosty!) kod z terminala. Co widać na terminalu? 
 {{< answer >}} 
 To czego się spodziewaliśmy: co sekundę pokazuje się liczba.
 {{</ answer >}}
 
-Spróbuj uruchomić kod ponownie, tym razem jednak przekierowując wyjście do pliku `./plik_wykonwyalny >
+- Spróbuj uruchomić kod ponownie, tym razem jednak przekierowując wyjście do pliku `./plik_wykonwyalny >
 plik_z_wyjściem`. Następnie spróbuj otworzyć plik z wyjściem w trakcie działania programu, a potem zakończyć
 działanie programu przez Ctrl+C i otworzyć plik jeszcze raz. Co widać tym razem? 
 {{< answer >}} Jeśli zrobimy te kroki wystarczająco szybko, plik okazuje się być pusty! To zjawisko wynika z
@@ -399,7 +459,7 @@ Oczywiście, jeśli damy programowi dojść do końca działania, to wszystkie d
 ale nie musimy tego robić, jak za chwilę zobaczymy. 
 {{</ answer >}}
 
-Spróbuj uruchomić kod podobnie, ponownie pozwalając wyjściu trafić do terminala (jak za pierwszym razem), ale spróbuj usunąć nową linię z argumentu `printf`: `printf("%d", i);`. Co widzimy tym razem?
+- Spróbuj uruchomić kod podobnie, ponownie pozwalając wyjściu trafić do terminala (jak za pierwszym razem), ale spróbuj usunąć nową linię z argumentu `printf`: `printf("%d", i);`. Co widzimy tym razem?
 {{< answer >}}
 Wbrew temu co powiedzieliśmy wcześniej, nie widać wyjścia mimo to, że tym razem dane trafiają bezpośrednio do terminala;
 dzieje się natomiast to samo co w poprzednim kroku. Otóż biblioteka buforuje standardowe wyjście nawet jeśli dane
@@ -410,13 +470,13 @@ biblioteka nic nie wypisze na ekran dopóki w innym wypisywanym stringu nie poja
 zakończy poprawnie.
 {{</ answer >}}
 
-Spróbuj ponownie zrobić poprzednie trzy kroki, tym razem jednak wypisując dane do strumienia standardowego błędu: `fprintf(stderr, /* parametry wcześniej przekazywane do printf */);`. Co dzieje się tym razem? Żeby przekierować standardowy błąd do pliku, należy użyć `>2` zamiast `>`. 
+- Spróbuj ponownie zrobić poprzednie trzy kroki, tym razem jednak wypisując dane do strumienia standardowego błędu: `fprintf(stderr, /* parametry wcześniej przekazywane do printf */);`. Co dzieje się tym razem? Żeby przekierować standardowy błąd do pliku, należy użyć `>2` zamiast `>`. 
 {{< answer >}}
 Tym razem nic się nie buforuje i zgodnie z oczekiwaniami widzimy jedną cyfrę co sekundę. Standardowa biblioteka nie
 buforuje standardowego błędu, bowiem często wykorzystuje się go do debugowania. 
 {{</ answer >}}
 
-Często możemy chcieć użyć `printf(...)` do debugowania, dodając wywołania tej funkcji w celu sprawdzenia
+- Często możemy chcieć użyć `printf(...)` do debugowania, dodając wywołania tej funkcji w celu sprawdzenia
 wartości zmiennych bądź czy wywołanie dochodzi do jakiegoś miejsca w naszym kodzie. W takich przypadkach należy zamiast
 tej funkcji użyć `fprintf(stderr, ...)` i wypisywać do standardowego błędu. W przeciwnym przypadku może się
 okazać, że nasze dane zostaną zbuforowane i zostaną wypisane później niż się spodziewamy, a w skrajnych przypadkach
@@ -426,12 +486,49 @@ rezultatów, a do czegokolwiek innego używa się standardowego błędu. Na przy
 wystąpienia na standardowe wyjście, ale ewentualne błędy przy otwarciu pliku trafią na standardowy błąd. Nawet nasze
 makro `ERR` wypisuje błąd do strumienia standardowego błędu.
 
-## Zadanie 6 - operacje niskopoziomowe na plikach
+## Operacje niskopoziomowe na plikach
+
+Do realizacji odczytu i zapisu plików można użyć też funkcji niskopoziomowych, t.j. takich, których nie definiuje biblioteka standardowa C, a które udostępnia sam system operacyjny. Są one trudniejsze w użyciu, ale są też bardziej uniwersalne. Można przy ich pomocy np. wysyłać pakiety przez sieć, czym zajmiemy się w przyszłym semestrze.
+
+Zamiast wskaźników na struktury `FILE` funkcje niskopoziomowe pracują na *file descriptors* (fd) - wartościach całkowitoliczbowych identyfikujących zasoby w obrębie procesu. W tym przypadku będą to pliki, ale w ogólności mogą odnosić się do różnego typu zasobów systemowych. Aby użyć poniższych funkcji konieczne jest dołączenie nagłówków `<fcntl.h>` i `<unistd.h>`.
+
+```
+int open(const char *path, int oflag, ...);
+```
+- `path` - ścieżka otwieranego pliku,
+- `oflag` - flagi otwarcia pliku połączone operacją bitowego OR `|`, analogiczne do trybu otwarcia funkcji `fopen`, ale też precyzujące zachowanie w różnych warunkach brzegowych. Odnieś się do `man 3p open` dla listy flag.
+
+Funkcja zwraca całkowitoliczbowy deskryptor `fd` pliku, którego używać będziemy w kolejnych funkcjach.
+
+Funkcje niskopoziomowe nie korzystają z luksusu buforowania. `read` dostaje znaki natychmiastowo kiedy są dostępne. Oznacza to, że nie zawsze wczyta tyle znaków ile oczekujemy. Z jednej strony dostajemy dane najszybciej jak się da nie musząc czekać aż system załaduje resztę z dysku. Z drugiej jednak musimy uważać żeby faktycznie wczytać całość danych które chcemy.
+```
+ssize_t read(int fildes, void *buf, size_t nbyte);
+```
+- `filedes` - deskryptor pliku, pozyskany z `open`,
+- `buf` - wskaźnik na bufor w którym zapisane będą dane,
+- `nbyte` - rozmiar danych których ma oczekiwać funkcja.
+
+Funkcja zwraca ilość bajtów które udało się wczytać.
+
+Ta sama uwaga tyczy się również `write`. Brak buforowania oznacza, że dane będą natychmiast przekazane. Wielokrotne wywoływanie będzie więc oznaczało dodatkowy koszt czasowy programu. Z różnych powodów systemowych działanie funkcji może też być przerwane, co będzie skutkowało zapisaniu mniejszej ilości bajtów.
+```
+ssize_t write(int fildes, const void *buf, size_t nbyte);
+```
+- `filedes` - deskryptor pliku, pozyskany z `open`,
+- `buf` - wskaźnik na bufor z którego pobierane będą dane,
+- `nbyte` - rozmiar danych przeznaczonych do wysłania.
+
+Zwrócona wartość oznacza ilość zapisanych bajtów.
+
+
+### Zadanie
 
 Napisz prosty program kopiujący pliki.
-Powinien akceptować jako swoje argumenty dwie ścieżki i skopiować plik z pierwszej na drugą.
+Powinien akceptować jako swoje argumenty dwie ścieżki i skopiować plik z pierwszej na drugą. 
 
-Tym razem do realizacji odczytu i zapisu plików użyjemy funkcji niskopoziomowych, t.j. takich, których nie definiuje biblioteka standardowa C, a które udostępnia sam system operacyjny. Są one trudniejsze w użyciu, ale są też bardziej uniwersalne. Można przy ich pomocy np. wysyłać pakiety przez sieć, czym zajmiemy się w przyszłym semestrze.
+Tym razem użyj funkcji niskopoziomowych.
+
+### Rozwiązanie zadania
 
 Co student musi wiedzieć: 
 - man 3p open
@@ -444,10 +541,12 @@ Co student musi wiedzieć:
 <em>kod do pliku <b>prog14.c</b></em>
 {{< includecode "prog14.c" >}}
 
+### Uwagi i pytania
+
 Aby dostępne było makro `TEMP_FAILURE_RETRY` trzeba najpierw zdefiniować `GNU_SOURCE` a następnie dołączyć plik
 nagłówkowy `unistd.h`. Nie musisz jeszcze w pełni rozumieć działania tego makra, będzie on ważniejsze w trakcie kolejnego laboratorium gdy zajmiemy się sygnałami.
 
-Dlaczego w powyższym programie używane są funkcje `bulk_read` i `bulk_write`?
+- Dlaczego w powyższym programie używane są funkcje `bulk_read` i `bulk_write`?
 Czy nie wystarczyłoby po prostu użyć `read` i `write`
 {{< answer >}}
 Zgodnie ze specyfikacją funkcje `read` i `write` mogą zwrócić zanim ilość danych której zażądał użytkownik zostanie odczytana/zapisana.
@@ -455,15 +554,50 @@ Więcej o tym zachowaniu dowiesz się w tutorialu do kolejnego laboratorium.
 Teoretycznie w tym zadaniu nie ma to znaczenia (ponieważ nie używamy sygnałów), ale dobrze się do tego przyzwyczaić już teraz.
 {{< /answer >}}
 
-Czy powyższy program mógłby być zaimplementowany funkcjami bibliotecznymi z C zamiast niskopoziomowym IO? (`fopen`, `fprintf`, ...)
+- Czy powyższy program mógłby być zaimplementowany funkcjami bibliotecznymi z C zamiast niskopoziomowym IO? (`fopen`, `fprintf`, ...)
 {{< answer >}}
 Tak, w tym programie nie ma niczego co nie pozwala użyć wcześniej pokazanych funkcji.
 {{< /answer >}}
 
-Czy do deskryptora zwróconego z `open` można zapisać dane przez `fprintf`?
+- Czy do deskryptora zwróconego z `open` można zapisać dane przez `fprintf`?
 {{< answer >}}
 Nie! Funkcje `fprintf`, `fgets`, `fscanf` itd. przyjmują jako argument zmienną typu `FILE*`, deskryptor jest natomiast pojedynczą liczbą `int` używaną przez system operacyjny do identyfikacji otwartego pliku.
 {{< /answer >}}
+
+## Operacje wektorowe na plikach
+
+Funkcja `writev` oferuje wygodne rozwiązanie w przypadku gdy dane które chcemy zapisać nie znajdują się w jednym ciągłym fragmencie pamięci. Pozwala ona zebrać dane z wielu miejsc i zapisać je w pliku za pomocą jednego wywołania funkcji. Znajduje się w nagłówku `<sys/uio.h>`.
+```
+ssize_t writev(int fildes, const struct iovec *iov, int iovcnt);
+```
+- `filedes` - deskryptor do którego zapisywane są dane,
+- `iov` - tablica struktur opisujących bufory z których funkcja zbiera dane - `struct iovec`, które mają następujące pola: 
+```
+void   *iov_base -> wskaźnik na obszar pamięci
+size_t  iov_len  -> długość obszaru pamięci
+```
+- `iovcnt` - rozmiar tablicy `iov`.
+
+Funkcja ta zapisuje do `filedes`:\
+`iov[0].iov_len` bajtów zaczynając od `iov[0].iov_base`, następnie\
+`iov[1].iov_len` bajtów zaczynając od `iov[1].iov_base`, ... aż do\
+`iov[iovcnt-1].iov_len` bajtów zaczynając od `iov[iovcnt-1].iov_base`.
+
+Rozumowanie to można odwrócić też gdy dane odczytane z pliku mają docelowo znaleźć się w różnych miejscach pamięci. Funkcja `readv` pozwala rozproszyć dane czytane z pliku w wiele buforów za pomocą jednego wywołania funkcji.
+```
+ssize_t readv(int fildes, const struct iovec *iov, int iovcnt);
+```
+- `filedes` - deskryptor z którego czytane są dane,
+- `iov` - tablica struktur `struct iovec` opisujących bufory do których funkcja rozprasza dane.
+- `iovcnt` - rozmiar tablicy `iov`.
+
+W innych aspektach funkcje te zachowują się jak ich niewektorowe odpowiedniki `write` i `read`.
+
+### Przydatne strony
+
+- man 3p writev
+- man 3p readv
+- man 0p sys_uio.h
 
 ## Przykładowe zadania
 
