@@ -16,12 +16,11 @@ należy **koniecznie przeczytać wskazane strony manuala**, aby dobrze poznać i
 
 ## Przeglądanie katalogu
 
-Na "Podstawach systemu UNIX" z pewnością korzystaliście z polecenia `ls -l`. Oprócz nazw plików i folderów
-obecnych w katalogu roboczym, polecenie to wyświetla także rozmaite atrybuty każdego z obiektów, jak np.
-objętość pliku, uprawnienia dostępu, czy data ostatniej modyfikacji. Dostęp do tych informacji możliwy jest
-także (kto by się spodziewał) z poziomu języka C. W tym celu, przeglądany katalog należy "otworzyć" funkcją
-`opendir`, a następnie kolejne rekordy odczytać funkcją `readdir`. Aby użyć tych funkcji, konieczne jest 
-dołączenie do naszego kodu pliku nagłówkowego `<dirent.h>` (`man 3p fdopendir`). Spojrzyjmy na definicje obu funkcji:
+Przejrzenie katalogu umożliwia nam poznanie nazw oraz atrybutów zawartych w nim plików. 
+Realizuje to zadanie np. terminalowe polecenie `ls -l`. Aby natomiast uzyskać dostęp do
+tych informacji z poziomu języka C, należy "otworzyć" przeglądany katalog funkcją
+`opendir`, a następnie kolejne rekordy odczytać funkcją `readdir`. Wspomniane funkcje
+obecne są w pliku nagłówkowym `<dirent.h>` (`man 3p fdopendir`). Spójrzmy na definicje obu funkcji:
 
 ```
 DIR *opendir(const char *dirname);
