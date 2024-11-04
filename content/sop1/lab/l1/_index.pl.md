@@ -312,12 +312,14 @@ FILE *fopen(const char *restrict pathname, const char *restrict mode);
 Do każdego z trybów możemy dodać na koniec "b", co w standardzie UNIX nic nie zmieni w deskryptorze który otrzymamy. Jest to opcja utrzymywana dla kompatybilności ze standardem C.
 
 Funkcja ta zwraca wskaźnik do wewnętrznej struktury `FILE`, która pozwala na kontrolowanie strumienia powiązanego z otwartym przez nią plikiem. Zgodnie z mądrością komentarza umieszczonego w jednej z implementacji `FILE` `<stdio.h>` przez Pedro A. Aranda Gutiérreza:
+
 >\* Some believe that nobody in their right mind should make use of the\
 >\* internals of this structure.
 
-Więc nie będziemy się przyglądać temu co jest wewnątrz. Dla nas zwyczajnie nie jest to potrzebne. Zwykle więc traktujemy ją jako typ nieprzejrzysty, nie ustawiamy ani nie odczytujemy pól bezpośrednio ze struktury. Przechowujemy wyłącznie wskaźnik i używamy go poprzez wywoływanie na nim różnych funkcji.
+nie będziemy się przyglądać temu co jest wewnątrz. Budowa tej struktury zależy od konkretnej implementacji systemu, więc zwykle traktujemy ją jako typ nieprzejrzysty, nie ustawiamy ani nie odczytujemy z niej bezpośrednio jej pól. Przechowujemy wyłącznie wskaźnik i używamy go poprzez wywoływanie na nim różnych funkcji.
 
-Funkcja `fseek` przyjmuje wskaźnik do tejże tajemniczej struktury i pozwala nam przesunąć się na odpowiednie miejsce w pliku. Wyjątkiem jest plik otwarty w trybie "a" - append, który niezmiennie wskazuje na koniec treści niezależnie od wywołań `fseek`. Poza tym przypadkiem, tuż po otwarciu, kursor pliku wskazuje na pierwszy bajt.
+Funkcja `fseek` przyjmuje wskaźnik `FILE` i pozwala nam przesunąć się na odpowiednie miejsce w pliku. Wyjątkiem jest plik otwarty w trybie "a" - append, który niezmiennie wskazuje na koniec treści niezależnie od wywołań `fseek`. Poza tym przypadkiem, tuż po otwarciu, kursor pliku wskazuje na pierwszy bajt.
+
 ```
 int fseek(FILE *stream, long offset, int whence);
 ```
@@ -340,8 +342,7 @@ size_t fread(void *restrict ptr, size_t size, size_t nitems, FILE *restrict stre
 
 Zwrócona wartość oznacza liczbę elementów wczytanych z sukcesem. Będzie ona mniejsza niż `nitems` w przypadku błędu lub zakończenia pliku. Można pomyśleć że podział wczytanych danych na elementy jest niepotrzebną komplikacją, ale daje to pewną korzyść w przypadku gdy wczytywany plik składa się z pewnych rekordów których nie chcemy przerywać w połowie (np. 4-bajtowe zmienne całkowitoliczbowe `int`). W przypadku niepełnego odczytu nie musimy obliczać ile obiektów wczytaliśmy poprawnie ani cofać kursora pliku aby wczytać niepełny rekord jeszcze raz. W momencie gdy pierwsze wywołanie zwróciło `n` wystarczy wywołać funkcję jeszcze raz z przesuniętym buforem `ptr+size*n` oraz liczbą elementów `nitems-n`.
 
-
-W momencie gdy skończymy używać otwarty plik wszystkie zasady C, UNIX, MiNI, rozumu i godności człowieka nakazują - zwolnić używane zasoby. W tym przypadku używamy funkcji `fclose`.
+Należy pamiętać, żeby po zakończeniu działaniu na danym pliku zwolnić używane zasoby przy użyciu funkcji `fclose`.
 
 W przypadku gdy potrzebujemy usunąć plik należy wywołać `unlink`. Jeżeli jakiś proces (w tym nasz) wciąż otwiera `unlink`-owany przez nas plik, jest on usunięty z systemu plików, lecz istnieje wciąż w pamięci. Jest on ostatecznie usunięty w momencie gdy ostatni używający proces go zamknie.
 
@@ -488,29 +489,33 @@ makro `ERR` wypisuje błąd do strumienia standardowego błędu.
 
 ## Operacje niskopoziomowe na plikach
 
-Do realizacji odczytu i zapisu plików można użyć też funkcji niskopoziomowych, t.j. takich, których nie definiuje biblioteka standardowa C, a które udostępnia sam system operacyjny. Są one trudniejsze w użyciu, ale są też bardziej uniwersalne. Można przy ich pomocy np. wysyłać pakiety przez sieć, czym zajmiemy się w przyszłym semestrze.
+Do realizacji odczytu i zapisu plików można użyć też funkcji niskopoziomowych, t.j. takich, których nie definiuje biblioteka standardowa C, a które udostępnia sam system operacyjny. Można przy ich pomocy np. wysyłać pakiety przez sieć, czym zajmiemy się w przyszłym semestrze.
 
 Zamiast wskaźników na struktury `FILE` funkcje niskopoziomowe pracują na *file descriptors* (fd) - wartościach całkowitoliczbowych identyfikujących zasoby w obrębie procesu. W tym przypadku będą to pliki, ale w ogólności mogą odnosić się do różnego typu zasobów systemowych. Aby użyć poniższych funkcji konieczne jest dołączenie nagłówków `<fcntl.h>` i `<unistd.h>`.
 
 ```
 int open(const char *path, int oflag, ...);
 ```
+
 - `path` - ścieżka otwieranego pliku,
 - `oflag` - flagi otwarcia pliku połączone operacją bitowego OR `|`, analogiczne do trybu otwarcia funkcji `fopen`, ale też precyzujące zachowanie w różnych warunkach brzegowych. Odnieś się do `man 3p open` dla listy flag.
 
-Funkcja zwraca całkowitoliczbowy deskryptor `fd` pliku, którego używać będziemy w kolejnych funkcjach.
+Funkcja zwraca deskryptor pliku `fd`, którego używać będziemy w kolejnych funkcjach.
 
-Funkcje niskopoziomowe nie korzystają z luksusu buforowania. `read` dostaje znaki natychmiastowo kiedy są dostępne. Oznacza to, że nie zawsze wczyta tyle znaków ile oczekujemy. Z jednej strony dostajemy dane najszybciej jak się da nie musząc czekać aż system załaduje resztę z dysku. Z drugiej jednak musimy uważać żeby faktycznie wczytać całość danych które chcemy.
+Funkcje niskopoziomowe nie korzystają z buforowania. `read` dostaje znaki natychmiastowo kiedy są dostępne. Oznacza to, że nie zawsze wczyta tyle znaków ile oczekujemy. Z jednej strony dostajemy dane najszybciej jak się da nie musząc czekać aż system załaduje resztę z dysku. Z drugiej jednak musimy uważać żeby faktycznie wczytać całość danych które chcemy.
+
 ```
 ssize_t read(int fildes, void *buf, size_t nbyte);
 ```
+
 - `filedes` - deskryptor pliku, pozyskany z `open`,
 - `buf` - wskaźnik na bufor w którym zapisane będą dane,
 - `nbyte` - rozmiar danych których ma oczekiwać funkcja.
 
 Funkcja zwraca ilość bajtów które udało się wczytać.
 
-Ta sama uwaga tyczy się również `write`. Brak buforowania oznacza, że dane będą natychmiast przekazane. Wielokrotne wywoływanie będzie więc oznaczało dodatkowy koszt czasowy programu. Z różnych powodów systemowych działanie funkcji może też być przerwane, co będzie skutkowało zapisaniu mniejszej ilości bajtów.
+W analogiczny sposób działa funkcja `write`:
+
 ```
 ssize_t write(int fildes, const void *buf, size_t nbyte);
 ```
@@ -583,15 +588,17 @@ Funkcja ta zapisuje do `filedes`:\
 `iov[1].iov_len` bajtów zaczynając od `iov[1].iov_base`, ... aż do\
 `iov[iovcnt-1].iov_len` bajtów zaczynając od `iov[iovcnt-1].iov_base`.
 
-Rozumowanie to można odwrócić też gdy dane odczytane z pliku mają docelowo znaleźć się w różnych miejscach pamięci. Funkcja `readv` pozwala rozproszyć dane czytane z pliku w wiele buforów za pomocą jednego wywołania funkcji.
+W analogiczny sposób działa funkcja `readv`:
+
 ```
 ssize_t readv(int fildes, const struct iovec *iov, int iovcnt);
 ```
+
 - `filedes` - deskryptor z którego czytane są dane,
 - `iov` - tablica struktur `struct iovec` opisujących bufory do których funkcja rozprasza dane.
 - `iovcnt` - rozmiar tablicy `iov`.
 
-W innych aspektach funkcje te zachowują się jak ich niewektorowe odpowiedniki `write` i `read`.
+W pozostałych aspektach funkcje te zachowują się jak ich niewektorowe odpowiedniki `write` i `read`.
 
 ### Przydatne strony
 
@@ -605,6 +612,7 @@ Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu
 
 - [Zadanie 1]({{< ref "/sop1/lab/l1/example1" >}}) ~75 minut
 - [Zadanie 2]({{< ref "/sop1/lab/l1/example2" >}}) ~75 minut
+- [Zadanie 3]({{< ref "/sop1/lab/l1/example3" >}}) ~120 minut
 
 ## Kody źródłowe z treści tutoriala
 {{% codeattachments %}}
