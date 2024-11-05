@@ -291,11 +291,11 @@ poziomie administracji systemem.
 ## Operacje na plikach
 
 Duża część programów wchodzi w interakcję z plikami na dysku. Najprostszym sposobem którym można to zrealizować jest:
-1. Otwarcie (stworzenie) za pomocą `fopen`,
-2. Ustawienie kursora pliku z `fseek`,
+1. Otwarcie (stworzenie) za pomocą `fopen` (`man 3p fopen`),
+2. Ustawienie kursora pliku z `fseek` (`man 3p fseek`),
 3. Wpisanie danych `fprintf`, `fputc`, `fputs`, `fwrite` lub wczytanie ich `fscanf`, `fgetc`, `fgets`, `fread`
 4. Powtórzenie kroków 2.-3. w miarę potrzeby,
-5. Zamknięcie pliku `fclose`.
+5. Zamknięcie pliku `fclose` (`man 3p fclose`).
 
 Potrzebne funkcje znajdziemy w nagłówku `<stdio.h>`.
 ```
@@ -330,7 +330,7 @@ int fseek(FILE *stream, long offset, int whence);
    - SEEK_END - punktem odniesienia jest koniec pliku. Kursor pliku będzie wskazywał na dane tylko jeśli wartość `offset` jest ujemna.
       - Dla wartości `offset` równej `0` kursor pliku ustawiony jest na bajt po ostatnim bajcie pliku. Odczytanie pozycji kursora funkcją `ftell` podaje wtedy dokładny rozmiar pliku w bajtach. Operacja ta pozwala programiście zaalokować dokładną ilość bajtów która będzie potrzebna na wczytanie całego pliku.
 
-Kiedy ustawimy kursor pliku na pożądaną pozycję, możemy zacząć wczytywać dane z pliku lub je do niego zapisywać. Funkcje `fprintf` oraz `fscanf` działają analogicznie do dobrze znanych wszystkim funkcji działających na standardowym wejściu - `printf` oraz `scanf`. Pozostałe funkcje na początku mogą wydawać się mniej użyteczne, chociaż w szczególności `fread` w praktyce stanowczo przewyższa częstością użycia swojego kuzyna `fscanf`. Własnoręczna implementacja konwersji danych z pliku na wartości o docelowych typach danych daje znacznie większą kontrolę niż implementacje biblioteczne.
+Kiedy ustawimy kursor pliku na pożądaną pozycję, możemy zacząć wczytywać dane z pliku lub je do niego zapisywać. Funkcje `fprintf` oraz `fscanf` działają analogicznie do dobrze znanych wszystkim funkcji działających na standardowym wejściu - `printf` oraz `scanf`. Pozostałe funkcje na początku mogą wydawać się mniej użyteczne, chociaż w szczególności `fread` (`man 3p fread`) w praktyce stanowczo przewyższa częstością użycia swojego kuzyna `fscanf`. Własnoręczna implementacja konwersji danych z pliku na wartości o docelowych typach danych daje znacznie większą kontrolę niż implementacje biblioteczne.
 ```
 size_t fread(void *restrict ptr, size_t size, size_t nitems, FILE *restrict stream);
 ```
@@ -343,7 +343,7 @@ Zwrócona wartość oznacza liczbę elementów wczytanych z sukcesem. Będzie on
 
 Należy pamiętać, żeby po zakończeniu działaniu na danym pliku zwolnić używane zasoby przy użyciu funkcji `fclose`.
 
-W przypadku gdy potrzebujemy usunąć plik należy wywołać `unlink`. Jeżeli jakiś proces (w tym nasz) wciąż otwiera `unlink`-owany przez nas plik, jest on usunięty z systemu plików, lecz istnieje wciąż w pamięci. Jest on ostatecznie usunięty w momencie gdy ostatni używający proces go zamknie.
+W przypadku gdy potrzebujemy usunąć plik należy wywołać `unlink` (`man 3p unlink`). Jeżeli jakiś proces (w tym nasz) wciąż otwiera `unlink`-owany przez nas plik, jest on usunięty z systemu plików, lecz istnieje wciąż w pamięci. Jest on ostatecznie usunięty w momencie gdy ostatni używający proces go zamknie.
 
 ### Zadanie
 
@@ -495,25 +495,24 @@ Zamiast wskaźników na struktury `FILE` funkcje niskopoziomowe pracują na *fil
 ```
 int open(const char *path, int oflag, ...);
 ```
-
+Zobacz `man 3p open`.
 - `path` - ścieżka otwieranego pliku,
 - `oflag` - flagi otwarcia pliku połączone operacją bitowego OR `|`, analogiczne do trybu otwarcia funkcji `fopen`, ale też precyzujące zachowanie w różnych warunkach brzegowych. Odnieś się do `man 3p open` dla listy flag.
 
 Funkcja zwraca deskryptor pliku `fd`, którego używać będziemy w kolejnych funkcjach.
 
-Funkcje niskopoziomowe nie korzystają z buforowania. `read` dostaje znaki natychmiastowo kiedy są dostępne. Oznacza to, że nie zawsze wczyta tyle znaków ile oczekujemy. Z jednej strony dostajemy dane najszybciej jak się da nie musząc czekać aż system załaduje resztę z dysku. Z drugiej jednak musimy uważać żeby faktycznie wczytać całość danych które chcemy.
+Funkcje niskopoziomowe nie korzystają z buforowania. `read` (`man 3p read`) dostaje znaki natychmiastowo kiedy są dostępne. Oznacza to, że nie zawsze wczyta tyle znaków ile oczekujemy. Z jednej strony dostajemy dane najszybciej jak się da nie musząc czekać aż system załaduje resztę z dysku. Z drugiej jednak musimy uważać żeby faktycznie wczytać całość danych które chcemy.
 
 ```
 ssize_t read(int fildes, void *buf, size_t nbyte);
 ```
-
 - `filedes` - deskryptor pliku, pozyskany z `open`,
 - `buf` - wskaźnik na bufor w którym zapisane będą dane,
 - `nbyte` - rozmiar danych których ma oczekiwać funkcja.
 
 Funkcja zwraca ilość bajtów które udało się wczytać.
 
-W analogiczny sposób działa funkcja `write`:
+W analogiczny sposób działa funkcja `write` (`man 3p write`):
 
 ```
 ssize_t write(int fildes, const void *buf, size_t nbyte);
@@ -570,12 +569,12 @@ Nie! Funkcje `fprintf`, `fgets`, `fscanf` itd. przyjmują jako argument zmienną
 
 ## Operacje wektorowe na plikach
 
-Funkcja `writev` oferuje wygodne rozwiązanie w przypadku gdy dane które chcemy zapisać nie znajdują się w jednym ciągłym fragmencie pamięci. Pozwala ona zebrać dane z wielu miejsc i zapisać je w pliku za pomocą jednego wywołania funkcji. Znajduje się w nagłówku `<sys/uio.h>`.
+Funkcja `writev` (`man 3p writev`) oferuje wygodne rozwiązanie w przypadku gdy dane które chcemy zapisać nie znajdują się w jednym ciągłym fragmencie pamięci. Pozwala ona zebrać dane z wielu miejsc i zapisać je w pliku za pomocą jednego wywołania funkcji. Znajduje się w nagłówku `<sys/uio.h>`.
 ```
 ssize_t writev(int fildes, const struct iovec *iov, int iovcnt);
 ```
 - `filedes` - deskryptor do którego zapisywane są dane,
-- `iov` - tablica struktur opisujących bufory z których funkcja zbiera dane - `struct iovec`, które mają następujące pola: 
+- `iov` - tablica struktur opisujących bufory z których funkcja zbiera dane - `struct iovec` (`man 0p sys_uio.h`), które mają następujące pola: 
 ```
 void   *iov_base -> wskaźnik na obszar pamięci
 size_t  iov_len  -> długość obszaru pamięci
@@ -587,7 +586,7 @@ Funkcja ta zapisuje do `filedes`:\
 `iov[1].iov_len` bajtów zaczynając od `iov[1].iov_base`, ... aż do\
 `iov[iovcnt-1].iov_len` bajtów zaczynając od `iov[iovcnt-1].iov_base`.
 
-W analogiczny sposób działa funkcja `readv`:
+W analogiczny sposób działa funkcja `readv` (`man 3p readv`):
 
 ```
 ssize_t readv(int fildes, const struct iovec *iov, int iovcnt);
