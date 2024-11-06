@@ -345,7 +345,13 @@ bardziej nie mamy jak wyznaczyć od którego momentu trzeba wznowić wypisywanie
 gdzie restartowanie będzie krytyczne i musimy wypisać dużo danych. Tam gdzie błąd braku restartu nie jest krytyczny (
 wypisywanie na ekran) lub gdy ilość danych jest mała tam nie ma tego problemu.
 
-Wykonaj przykładowe <a href="{{< ref "/sop1/lab/l2/example1">}}">ćwiczenie</a> z poprzednich lat. To zadanie szacuję na 60 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a  do zajęć. Pamiętaj, że w aktualnym układzie zajęć będzie dane zadnie na około 1,5 godziny, więc trochę bardziej pracochłonne.
+## Przykładowe zadania
+
+Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy, że jesteś dobrze przygotowany do zajęć.
+
+- [Zadanie 1]({{< ref "/sop1/lab/l2/example1" >}}) ~60 minut
+- [Zadanie 2]({{< ref "/sop1/lab/l2/example2" >}}) ~120 minut
+- [Zadanie 3]({{< ref "/sop1/lab/l2/example3" >}}) ~120 minut
 
 ## Kody źródłowe z treści tutoriala
 

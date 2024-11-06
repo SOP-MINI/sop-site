@@ -364,12 +364,6 @@ Do the example tasks. During the laboratory you will have more time and a starti
 - [Task 2]({{< ref "/sop1/lab/l1/example2" >}}) ~75 minutes
 - [Task 3]({{< ref "/sop1/lab/l1/example3" >}}) ~120 minutes
 
-
-As an exercise do <a href="{{< ref "/sop1/lab/l1/example1" >}}">this</a> task.
-It was used in previous years in a bit different labs timing.
-It is a 75 minutes task and if you can do it in this time it means you are prepared for the lab.
-Remember that during the lab you will be given 2 hours to solve a task, so expect it to be more demanding.
-
 ## Source codes presented in this tutorial
 
 {{% codeattachments %}}

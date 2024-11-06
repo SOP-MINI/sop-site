@@ -372,7 +372,10 @@ Really big (f)printfs can get interrupted in the middle of the process (like wri
 process especially if formatting is complicated. Avoid using printf where restarting would be critical (most cases
 except for the screen output) and the volume of transferred data is significant, use write instead.
 
-As an exercise do <a href="{{< ref "/sop1/lab/l2/example1" >}}">this</a> task. It was used in previous years when duration of the lab was different. It is a 60 minutes task and if you can do it in this time, it means you are prepared for the lab. Now there is more time for the task during the lab and it will be slightly larger.
+Do the example tasks. During the laboratory you will have more time and a starting code. If you do following tasks in the allotted time, it means that you are well-prepared.
+
+- [Task 1]({{< ref "/sop1/lab/l2/example1" >}}) ~75 minutes
+- [Task 2]({{< ref "/sop1/lab/l2/example2" >}}) ~120 minutes
 
 ## Source codes presented in this tutorial
 
