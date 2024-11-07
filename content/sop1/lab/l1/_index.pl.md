@@ -36,7 +36,7 @@ ino_t  d_ino       -> identyfikator pliku (numer inode, więcej w man 7 inode)
 char   d_name[]    -> nazwa pliku
 ```
 
-Pozostałe dane o pliku można używając funkcji `stat` lub `lstat` z pliku nagłówkowego `<sys/stat.h>` (`man 3p fstatat`).
+Pozostałe dane o pliku można odczytać używając funkcji `stat` lub `lstat` z pliku nagłówkowego `<sys/stat.h>` (`man 3p fstatat`).
 Ich definicje są nastepujące:
 
 ```
