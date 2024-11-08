@@ -25,7 +25,7 @@ DIR *opendir(const char *dirname);
 struct dirent *readdir(DIR *dirp);
 ```
 
-As we can see, `opendir` returns a pointer to the object of `DIR` type, which we will use to read the directory content. The function `readdir` returns a pointer to the `dirent` structure, which contains (according to POSIX) the following fields:
+As we can see, `opendir` returns a pointer to the object of `DIR` type, which we will use to read the directory content. The function `readdir` returns a pointer to the `dirent` structure, which contains (according to POSIX) the following fields (`man 0p dirent.h`):
 
 ```
 ino_t  d_ino       -> file identifier (inode number, more: man 7 inode)
@@ -236,6 +236,8 @@ man 3p nftw
 solution `l1-3.c`:
 {{< includecode "l1-3.c" >}}
 
+### Notes and questions
+
 - If you do not understand the definition of `nftw` or the use of `walk` in the solution, make sure you know how to declare and use pointers to functions in C.
 
 - Test how this program reacts on not available or non-existing folders.
@@ -277,12 +279,12 @@ FILE *fopen(const char *restrict pathname, const char *restrict mode);
 ```
 - `pathname` specifies the path of the file to be opened,
 - `mode` is the mode in which we want to open the file. The mode string can look as follows, enabling different ways of interacting with the file:
-   - "r" - opens the file for reading,
-   - "w" or "w+" - truncates the file to zero length (or creates it) and opens it for writing,
-   - "a" or "a+" - allows appending data to the end of its existing content,
-   - "r+" - opens the file for both reading and writing.
+   - `r` - opens the file for reading,
+   - `w` or `w+` - truncates the file to zero length (or creates it) and opens it for writing,
+   - `a` or `a+` - allows appending data to the end of its existing content,
+   - `r+` - opens the file for both reading and writing.
 
-You can add "b" to each mode, which doesn’t affect the file descriptor on UNIX. It is allowed for C standard compatibility.
+You can add `b` to each mode, which doesn’t affect the file descriptor on UNIX. It is allowed for C standard compatibility.
 
 This function returns a pointer to an internal `FILE` structure, allowing control over the stream associated with the opened file. Following the wisdom of a comment by Pedro A. Aranda Gutiérrez in one `FILE` implementation in `<stdio.h>`:
 
@@ -338,7 +340,7 @@ glibc documentation on umask <a href="http://www.gnu.org/software/libc/manual/ht
 <em>code for file <b>prog12.c</b></em>
 {{< includecode "prog12.c" >}}
 
-### Comments and Questions
+### Notes and questions
 
 - What bitmask is created by the expression `~perms&0777`?
 {{< answer >}}
@@ -356,7 +358,7 @@ Sizes are almost always different. This results from file creation: initially em
 {{</ answer >}}
 
 - Modify the program to always match the set size exactly.
----
+
 - Why do we ignore one case in unlink error checking?
 {{< answer >}}
 ENOENT indicates a non-existent file, so we can’t delete it if it didn’t exist. Without this exception, we could only overwrite existing files, not create new ones.
@@ -372,7 +374,7 @@ ENOENT indicates a non-existent file, so we can’t delete it if it didn’t exi
 
 - Why do we use `umask` here? The `fopen` function doesn’t set permissions, but `umask` allows restricting the default permissions given by `fopen`; low-level `open` gives better control over permissions.
 
-- Why can’t we add "x" permissions? `fopen` assigns only 0666 rights, not full 0777; bitwise subtraction can't yield the missing 0111 component.
+- Why can’t we add `x` permissions? `fopen` assigns only 0666 rights, not full 0777; bitwise subtraction can't yield the missing 0111 component.
 
 - We always check for errors, but not umask status. Why? `umask` doesn’t return errors, only the old mask.
 
@@ -380,9 +382,9 @@ ENOENT indicates a non-existent file, so we can’t delete it if it didn’t exi
 
 - The `-p` text parameter was converted to octal permissions with `strtol`. Knowing such functions prevents "reinventing the wheel" for straightforward conversions.
 
-- Why delete the file if the w+ open mode overwrites it? If a file already existed under the given name, its permissions would persist, and we must assign ours. Also, it’s a pretext for deletion practice.
+- Why delete the file if the `w+` open mode overwrites it? If a file already existed under the given name, its permissions would persist, and we must assign ours. Also, it’s a pretext for deletion practice.
 
-- POSIX systems don’t distinguish "b" mode; only binary access exists.
+- POSIX systems don’t distinguish `b` mode; only binary access exists.
 
 - Zeros automatically fill the file, since writing beyond the file end auto-fills gaps with zeros. Long zero sequences take up no disk sectors!
 

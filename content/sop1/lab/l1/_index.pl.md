@@ -303,12 +303,12 @@ FILE *fopen(const char *restrict pathname, const char *restrict mode);
 ```
 - `pathname` oznacza ścieżkę otwieranego pliku,
 - `mode` to tryb w którym chcemy go otworzyć. String trybu może wyglądać w następujący sposób, co może dawać różne możliwości manipulacji plikiem:
-   - "r" - plik udostępnia czytanie danych,
-   - "w" lub "w+" - plik zostaje skrócony do zera (lub stworzony) i udostępnia pisanie danych,
-   - "a" lub "a+" - plik udostępnia dopisywanie danych do końca jego istniejącej treści.
-   - "r+" - plik udostępnia czytanie oraz pisanie danych.
+   - `r` - plik udostępnia czytanie danych,
+   - `w` lub `w+` - plik zostaje skrócony do zera (lub stworzony) i udostępnia pisanie danych,
+   - `a` lub `a+` - plik udostępnia dopisywanie danych do końca jego istniejącej treści.
+   - `r+` - plik udostępnia czytanie oraz pisanie danych.
 
-Do każdego z trybów możemy dodać na koniec "b", co w standardzie UNIX nic nie zmieni w deskryptorze który otrzymamy. Jest to opcja utrzymywana dla kompatybilności ze standardem C.
+Do każdego z trybów możemy dodać na koniec `b`, co w standardzie UNIX nic nie zmieni w deskryptorze który otrzymamy. Jest to opcja utrzymywana dla kompatybilności ze standardem C.
 
 Funkcja ta zwraca wskaźnik do wewnętrznej struktury `FILE`, która pozwala na kontrolowanie strumienia powiązanego z otwartym przez nią plikiem. Zgodnie z mądrością komentarza umieszczonego w jednej z implementacji `FILE` `<stdio.h>` przez Pedro A. Aranda Gutiérreza:
 
@@ -397,7 +397,7 @@ ale to nie przeszkadza programowi, w tym kontekście to nie jest błąd.
 Bez tego wyjątku moglibyśmy tylko nadpisywać istniejące pliki a nie tworzyć nowe.
 {{< /answer >}}
 
-- Zwrócić uwagę na wyłączenie z main funkcji do tworzenia pliku, im więcej kodu tym ważniejszy podział na użyteczne funkcję. Przy okazji krótko omówmy cechy dobrej funkcji:
+- Zwrócić uwagę na wyłączenie z `main` funkcji do tworzenia pliku, im więcej kodu tym ważniejszy podział na użyteczne funkcję. Przy okazji krótko omówmy cechy dobrej funkcji:
    - robi jedną rzecz na raz (krótki kod)
    - możliwie duży stopień generalizacji problemu (dodano procent jako parametr)
    - wszystkie dane wejściowe dostaje przez parametry (nie używamy zmiennych globalnych)
@@ -409,21 +409,21 @@ prototypami funkcji systemowych.
 - Czemu w tym programie używamy umask? Otóż funkcja fopen nie pozwala ustawić uprawnień, a przez umask możemy okroić
 uprawnienia jakie są nadawane domyślnie przez fopen, niskopoziomowe open daje nam nad uprawnieniami większą kontrolę.
 
-- Czemu zatem nie możemy dodać uprawnień "x"? Funkcja fopen domyślnie nadaje tylko prawa 0666 a nie pełne 0777, przez
+- Czemu zatem nie możemy dodać uprawnień `x`? Funkcja fopen domyślnie nadaje tylko prawa 0666 a nie pełne 0777, przez
 bitowe odejmowanie nijak nam nie może wyjść ta brakująca część 0111.
 
 - Jak zwykle sprawdzamy wszystkie błędy, ale nie sprawdzamy statusu umask, czemu? Otóż umask nie zwraca błędów tylko starą
 maskę.
 
-- Zmiana umask jest lokalna dla naszego procesu i nie ma wpływu na proces rodzicielski zatem nie musimy jej przywracać.
+- Zmiana `umask` jest lokalna dla naszego procesu i nie ma wpływu na proces rodzicielski zatem nie musimy jej przywracać.
 
 - Parametr tekstowy -p został zmieniony na oktalne uprawnienia dzięki funkcji strtol, warto znać takie przydatne funkcje
 aby potem nie wyważać otwartych drzwi i nie próbować pisać samemu oczywistych konwersji.
 
-- Pytanie czemu kasujemy plik skoro tryb otwarcia w+ nadpisuje plik? Jeśli plik o danej nazwie istniał to jego uprawnienia
+- Pytanie czemu kasujemy plik skoro tryb otwarcia `w+` nadpisuje plik? Jeśli plik o danej nazwie istniał to jego uprawnienia
 są zachowywane a my przecież musimy nadać nasze, przy okazji jest to pretekst do ćwiczenia kasowania.
 
-- Tryb otwarcia pliku "b" nie ma w systemach POSIX-owych żadnego znaczenia, nie rozróżniamy dostępu na tekstowy i binarny,
+- Tryb otwarcia pliku `b` nie ma w systemach POSIX-owych żadnego znaczenia, nie rozróżniamy dostępu na tekstowy i binarny,
 jest tylko binarny.
 
 - W programie nie wypełniamy pliku zerami, dzieje się to automatycznie ponieważ gdy zapisujemy coś poza aktualnym końcem
