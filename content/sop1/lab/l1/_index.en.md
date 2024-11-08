@@ -177,6 +177,12 @@ we would have tried to visit the `./dir1/` folder first (this is still correct) 
 the anticipated `./dir2/dir3/`.
 {{< /answer >}}
 
+- Is this true that the program should change the working directory back to the one which it was launched in?
+{{< answer >}}
+No, the working directory is a property of a single process. Changing CWD by a child process does not influence
+the parent process, so there is no need for changing back.
+{{< /answer >}} 
+
 - Not all errors encountered in this program has to terminate it, what error can be handled in better way, how?
 {{< answer >}} 
 The `chdir` function may, for example, indicate an error for a non-existent directory. This could be handled with
