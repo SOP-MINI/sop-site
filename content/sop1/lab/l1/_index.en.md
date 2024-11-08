@@ -163,10 +163,10 @@ solution `l1-2.c`:
 
 ### Notes and questions 
 
-- Check, how this program deals with:
+- Check how this program deals with:
    - non existing folders, 
    - no access folders, 
-   - relative paths and absolute paths as parameters?
+   - relative paths and absolute paths as parameters. 
 
 - Why does this program store the initial working folder?
 {{< answer >}}
