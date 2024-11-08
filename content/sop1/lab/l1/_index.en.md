@@ -105,7 +105,7 @@ ln -s prog9.c prog_link.c
 Name, inode and 3 other not covered by the standard.
 {{< /answer >}}
 
-- Where the Linux/GNU documentation deviates from the standard always follow the standard -- it will result in better
+- Where the Linux/GNU documentation deviates from the standard, always follow the standard -- it will result in better
 portability of your code.
 
 - Error checks usually follow the same schema: `if(fun()) ERR();` (the `ERR` macro was declared and discussed before). You should
@@ -168,14 +168,9 @@ solution `l1-2.c`:
    - no access folders, 
    - relative paths and absolute paths as parameters?
 
-- Why this program stores the initial working folder?
+- Why does this program store the initial working folder?
 {{< answer >}}
-Paths given as parameters may be relative to the start working folder.
-The program changes location in the tree of folders to "be" in folder pointed by the parameter but this automatically
-invalidates all other relative paths (other parameters) to make other relative paths valid again program must go back to
-initial position in the three. 
-{{< /answer >}}
-This is the solution to the case where the user specifies several relative paths as parameters, e.g. 
+This is the solution to the case when the user specifies several relative paths as parameters, e.g. 
 `l1-2 dir1 dir2/dir3`. The program from the solution changes the working directory to the target directory before scanning. 
 Thus, if we did not return to the starting directory each time after browsing the directory,
 we would have tried to visit the `./dir1/` folder first (this is still correct) and then `./dir1/dir2/dir3/` instead of the 
@@ -193,38 +188,77 @@ the arguments? This applies to any string, not only the one from arguments.
 
 ## Browsing directories and subdirectories (recursive)
 
+If it were necessary to visit not only the working directory, but the entire directory subtree, the solution using `opendir` function
+would be problematic. Instead of this, we can use `ftw` and `nftw` functions, which are present in `<ftw.h>` header, which traverse
+the entire directory tree rooted at the given path, and call, for every visited file and directory, a given function. Only `nftw`
+is described here, due to the fact that `ftw` is marked as obsolete and should not be used. The declaration of `nftw` function is
+as follows:
+
+```
+int nftw(const char *path, int (*fn)(const char *, const struct stat *, int, struct FTW *), int fd_limit, int flags);
+```
 TODO
-Goal: 
-Write a program that counts all occurrences of the files, folders, symbolic links and other objects in a sub-trees rooted at locations indicated by parameters.  
-What you need to know:
-- man 3p ftw
-- man 3p nftw
+- `path` denotes the path to the directory the search will start from,
+- `fn` denotes the **pointer to the function** which takes four arguments:
+   - first, of type `const char*`, which contains the path to currently visited file/directory,
+   - second, of type `const struct stat*`, which contains a pointer to the `stat` structure that was discussed earlier in the tutorial,
+   - third, of type `int`, which contains an additional information about the file. It can take one of the specified values (see `man 3p nftw`),
+   the more important ones being: 
+      - `FTW_D`: a directory was visited,
+      - `FTW_F`: a file was visited,
+      - `FTW_SL`: a link was visited,
+      - `FTW_DNR`: a directory that could not be read was visited.
+   - fourth, of type `struct FTW *`, which contains a pointer to the structure with two fields: the field `level` informs about the depth of the tree node we are currentry in,
+   while `base` contains the index of the character in the path (present in the first argument) that starts the actual file name, e.g. for the path `/usr/bin/cat` this value would be `9`.
+   This function is called for each file and directory visited, and can be thought of as a kind of callback.
+The `fn` function should normally return `0`, if it returns something else, `nftw` will immediately terminate and return that value as well (this can also be used as an error indication).
+- `fd_limit` denotes the maximal depth of the directory tree which will be traversed,
+- `flags` denotes flags that modify the function behaviour, the more important of which are:
+   - `FTW_CHDIR`: changes the working directory to the currently processed directory while running the function,
+   - `FTW_DEPTH`: depth-first search (by default `nftw` does a breadth-first search),
+   - `FTW_PHYS`: if present, `ntfw` will visit each link itself -- by default, `nftw` visits the files pointed to by a link.
+These flags can be passed simultaneously using the `|` (bitwise OR) operator.
 
-<em>code for <b>prog11.c</b> file:</em>
-{{< includecode "prog11.c" >}}
+Man page (`man 3p nftw`) contains more detailed information and all the possible values that can be passed or encountered during the `nftw` execution.
 
-- Make sure you know how to declare and use pointers to functions in C
-- Test how this program reacts on not available or not existing folders.
+### Excercise
 
-Why `FTW_PHYS` flag is applied?
+Write a program that counts all occurrences of the files, folders, symbolic links and other objects in a subtrees rooted at locations indicated by parameters.  
+
+### Solution
+
+New man pages:
+```
+man 3p ftw
+man 3p nftw
+```
+
+solution `l1-3.c`:
+{{< includecode "l1-3.c" >}}
+
+- If you do not understand the definition `nftw` or the use of `walk` in the solution, make sure you know how to declare and use pointers to functions in C.
+
+- Test how this program reacts on not available or non-existing folders.
+
+- Why `FTW_PHYS` flag is applied?
 {{< answer >}}
-Without it nftw trawers the links to real objects, so it can not count them, similar to stat and lstat functions.
+Without it `nftw` processes the objects pointed to by links, so it can not count them -- similar to `stat` and `lstat` functions.
 {{< /answer >}}
 
-How other flags modify nftw algorithm?
+- Check how other flags modify `nftw` behaviour.
 
-Declaration of `_XOPEN_SOURCE` has to be placed prior to the include if you wish to use nftw, otherwise you can only use
-obsolete ftw.
+- Declaration of `_XOPEN_SOURCE` has to be placed prior to the include if you wish to use `nftw` on Linux, otherwise you can only use
+the obsolete `ftw`.
 
-Global variables are known to be the root of all evil in coding. They are very easy to use and have many negative
-consequences on code portability, re-usability and last but not least on how easily you can understand the code. They
-create indirect code dependencies that are sometimes really hard to trace. Unfortunately there are exceptional
-situations where we are forced to use them. This is one of such a cases because nftw callback function has no better way
+- Global variables are known to be the 'root of all evil' in coding. They are very easy to use and have many negative
+consequences on code portability, re-usability and, last but not least, on how easily you can understand the code. They
+create indirect code dependencies that are sometimes really hard to trace. (Unfortunately) There are exceptional
+situations where we are forced to use them. This is one of such a cases because `nftw` callback function has no better way
 to return its results to the main code. Other exceptions will be discussed soon. You are allowed to use globals ONLY in
 those defined cases.
 
-`nftw` descriptor limit is a very useful feature if you have to restrict the descriptor resources consumed. Take into
-account that the limit should be no less that the depth of the scanned tree otherwise you run out of the descriptors
+- `nftw` descriptor limit is a very useful feature if you have to restrict the descriptor resources consumed. Take into
+account that if the limit is less than the depth of the scanned tree, you will run out of the descriptors
 before reaching the bottom of the tree. In Linux, descriptor limit is not defined but administrator can limit individual
 processes.
 
