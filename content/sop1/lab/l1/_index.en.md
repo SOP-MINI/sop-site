@@ -197,7 +197,7 @@ as follows:
 ```
 int nftw(const char *path, int (*fn)(const char *, const struct stat *, int, struct FTW *), int fd_limit, int flags);
 ```
-TODO
+
 - `path` denotes the path to the directory the search will start from,
 - `fn` denotes the **pointer to the function** which takes four arguments:
    - first, of type `const char*`, which contains the path to currently visited file/directory,
@@ -236,7 +236,7 @@ man 3p nftw
 solution `l1-3.c`:
 {{< includecode "l1-3.c" >}}
 
-- If you do not understand the definition `nftw` or the use of `walk` in the solution, make sure you know how to declare and use pointers to functions in C.
+- If you do not understand the definition of `nftw` or the use of `walk` in the solution, make sure you know how to declare and use pointers to functions in C.
 
 - Test how this program reacts on not available or non-existing folders.
 
