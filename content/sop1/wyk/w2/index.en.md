@@ -41,7 +41,7 @@ Standard C API:
 ## Reference
 
 1. Textbook: "File system interface - chapter 11"
-2. [Lecture presentation](https://link.excalidraw.com/p/readonly/g9ICNTqqCX154vDBmccC) ([PDF]({{< resource OPS2_Filesystem_API.pdf >}}))
+2. [Lecture presentation](https://link.excalidraw.com/p/readonly/g9ICNTqqCX154vDBmccC) ([PDF]({{< resource OPS1_Filesystem_API.pdf >}}))
 3. [Lecture code samples](https://gitlab.com/SaQQ/sop1/-/tree/master/02_filesystem2?ref_type=heads)
 4. The GNU C library documentation: [Input/output concepts](https://www.gnu.org/software/libc/manual/html_node/I_002fO-Concepts.html#I_002fO-Concepts)
 5. The GNU C library documentation: [Low-Level Input/Output (13.1-13.5,13.8)](https://www.gnu.org/software/libc/manual/html_node/#toc-Low_002dLevel-Input_002fOutput)
