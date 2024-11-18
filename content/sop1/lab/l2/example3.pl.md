@@ -15,6 +15,7 @@ Dziecko po otrzymaniu sygnału rozpoczyna pracę w pętli, śpi losową ilość 
 
 Jeśli rodzic otrzyma sygnał SIGUSR1 to wysyła sygnał SIGUSR2 do obecnie pracującego dziecka i SIGUSR1 do następnego dziecka o indeksie większym o jeden (dla ostatniego dziecka wyślij do dziecka o indeksie 0).
 Dziecko, które otrzyma sygnał SIGUSR2 zatrzymuje swoją pętlę i oczekuje na sygnał SIGUSR1 aby wznowić działanie.
+W skrócie, SIGUSR1 zleca dziecku pracę, a SIGUSR2 zleca zatrzymanie pracy.
 
 Po otrzymaniu sygnału SIGINT rodzic przekazuje ten sam sygnał wszystkim dzieciom.
 Po otrzymaniu sygnału SIGINT dzieci zapisują (wykorzystując wywołanie systemowe) swój licznik do pliku {PID}.txt i kończą działanie.
