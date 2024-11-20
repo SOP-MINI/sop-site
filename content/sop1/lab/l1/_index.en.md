@@ -218,7 +218,8 @@ int nftw(const char *path, int (*fn)(const char *, const struct stat *, int, str
    while `base` contains the index of the character in the path (present in the first argument) that starts the actual file name, e.g. for the path `/usr/bin/cat` this value would be `9`.
    This function is called for each file and directory visited, and can be thought of as a kind of callback.
 The `fn` function should normally return `0`, if it returns something else, `nftw` will immediately terminate and return that value as well (this can also be used as an error indication).
-- `fd_limit` denotes the maximal depth of the directory tree which will be traversed,
+- `fd_limit` denotes the maximum number of descriptors used by `nftw` during a tree search. For each directory level at most one descriptor is used,
+so the given value is also a lower bound for the depth of the tree which will be traversed,
 - `flags` denotes flags that modify the function behaviour, the more important of which are:
    - `FTW_CHDIR`: changes the working directory to the currently processed directory while running the function,
    - `FTW_DEPTH`: depth-first search (by default `nftw` does a breadth-first search),
