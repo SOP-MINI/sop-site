@@ -31,6 +31,7 @@ weight: 50
 
 ## Reference
 
-1.  Slides: [POSIX\_signals.pdf]({{< resource "POSIX_signals_6.pdf" >}})
-2.  Extra reading: The GNU C library documentation: [Signal Handling (24.1-24.8)](https://www.gnu.org/software/libc/manual/html_node/Signal-Handling.html#Signal-Handling)
-3.  Exemplary lecture code: [nonatomic.c]({{< resource "nonatomic.c" >}}), [sig1sleep.c]({{< resource "sig1sleep.c" >}}), [sig1wait.c]({{< resource "sig1wait.c" >}}), [timeout.c]({{< resource "timeout.c" >}})
+1. [Lecture presentation](https://link.excalidraw.com/p/readonly/awkHYH5frIwYCA09WJLg)
+2. [Lecture code samples](https://gitlab.com/SaQQ/sop1/-/tree/master/04_signals?ref_type=heads)
+3. Extra reading: The GNU C library documentation: [Signal Handling (24.1-24.8)](https://www.gnu.org/software/libc/manual/html_node/Signal-Handling.html#Signal-Handling)
+4. Old Slides: [POSIX\_signals.pdf]({{< resource "POSIX_signals_6.pdf" >}})
