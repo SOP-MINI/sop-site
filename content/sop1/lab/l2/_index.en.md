@@ -131,7 +131,7 @@ void sigchld_handler(int sig) {
         for(;;){
                 pid=waitpid(0, NULL, WNOHANG);
                 if(pid==0) return;
-                if(pid&lt;=0) {
+                if(pid<=0) {
                         if(errno==ECHILD) return;
                         ERR("waitpid");
                 }
