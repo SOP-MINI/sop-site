@@ -54,7 +54,7 @@ The program must not use any global variables.
 1. Read the arguments, initialize the array. Create dog threads. Each
    thread increases a random array cell by 1, prints its number, and
    finishes. After all dog threads finish, the main thread prints the final
-   state of the track. **(4p)**
-2. Implement the logic of the dog thread, initially without locking. **(4p)**
-3. Implement locking using mutexes. **(4p)**
-4. Implement program termination using SIGINT. **(4p)**
+   state of the track.
+2. Implement the logic of the dog thread, initially without locking.
+3. Implement locking using mutexes.
+4. Implement program termination using SIGINT.

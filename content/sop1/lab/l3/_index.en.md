@@ -288,7 +288,7 @@ Do the example tasks. During the laboratory you will have more time and a starti
 
 - [Task 1]({{< ref "/sop1/lab/l3/example1" >}}) ~60 minutes
 - [Task 2]({{< ref "/sop1/lab/l3/example2" >}}) ~120 minutes
-- [Task 3]({{< ref "/sop1/lab/l3/example3" >}}) ~120 minutes
+- [Task 3]({{< ref "/sop1/lab/l3/example3" >}}) ~100 minutes
 
 ## Source codes presented in this tutorial
 

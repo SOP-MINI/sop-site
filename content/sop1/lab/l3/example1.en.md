@@ -12,7 +12,7 @@ Write a program that takes 2 input parameters: n,k. where n is the number of pro
 
 At each stage run the program with n=3 and k = 7 when presenting the results
 
-1.  Creating n+1 threads. Each thread is printing “\*”. Main thread is waiting for all threads. (4p)
-2.  Main thread is filling the task array and prints it, the processing threads are choosing random array cell number, print its index and exit. (4p)
-3.  Processing threads are calculating result of one random cell with mutex synchronization, print the result and exit . Main thread is printing both arrays afterwards (after the join). At this stage cells can be calculated more than once but not in parallel. (5p)
-4.  Each cell is protected by separate mutex. Processing threads are counting remaining cells to compute. If that number reaches 0, threads are terminating otherwise they calculate the next random remaining cell and sleep (4p)
+1.  Creating n+1 threads. Each thread is printing “\*”. Main thread is waiting for all threads.
+2.  Main thread is filling the task array and prints it, the processing threads are choosing random array cell number, print its index and exit.
+3.  Processing threads are calculating result of one random cell with mutex synchronization, print the result and exit . Main thread is printing both arrays afterwards (after the join). At this stage cells can be calculated more than once but not in parallel.
+4.  Each cell is protected by separate mutex. Processing threads are counting remaining cells to compute. If that number reaches 0, threads are terminating otherwise they calculate the next random remaining cell and sleep

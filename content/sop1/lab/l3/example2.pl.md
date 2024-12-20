@@ -84,17 +84,17 @@ jedna flaga w etapie 4 (wskazówka: ona też nie jest potrzebna).
 1. Stwórz 3 wątki jak w opisie zadania. Na tym etapie dane mogą być
    przesyłane między wątkami przez współdzieloną zmienną chronioną mutexem.
    W przypadku braku dostępnych danych wątek czeka 5ms i próbuje ponownie.
-   Mutexy nie powinny być zablokowane dłużej, niż to konieczne. **(5p)**
+   Mutexy nie powinny być zablokowane dłużej, niż to konieczne.
 
 2. Dodaj synchronizację wyświetlania w wątku wyświetlającym (podpowiedź:
-   `clock_gettime`). **(3p)**
+   `clock_gettime`).
 
 3. Zaimplementuj bufor cykliczny tak, jak to opisano w
-   treści zadania. **(4p)**
+   treści zadania.
 
 4. Główny wątek obsługuje sygnały - po otrzymaniu SIGINT
    (ctrl+c) główny wątek sygnalizuje pozostałym wątkom koniec pracy, czeka
-   na ich zakończenie, zwalnia wszystkie zasoby i się kończy. **(4p)**
+   na ich zakończenie, zwalnia wszystkie zasoby i się kończy.
 
 ## Kod początkowy
 

@@ -295,7 +295,7 @@ Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu
 
 - [Zadanie 1]({{< ref "/sop1/lab/l3/example1" >}}) ~60 minut
 - [Zadanie 2]({{< ref "/sop1/lab/l3/example2" >}}) ~120 minut
-- [Zadanie 3]({{< ref "/sop1/lab/l3/example3" >}}) ~120 minut
+- [Zadanie 3]({{< ref "/sop1/lab/l3/example3" >}}) ~100 minut
 
 ## Kody źródłowe z treści tutoriala
 

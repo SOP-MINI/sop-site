@@ -43,7 +43,7 @@ Stages:
 ## Graded stages
 
 1.  Create array and mutexes as per task description. After receiving
-    `SIGUSR1`, swaps are performed by the main thread. **(5p)**
-2. Implement printing on `SIGUSR2` using new, detached thread. **(3p)**
-3. Move swapping operation to a separate thread. Implement thread count limit logic. **(6p)**
-4. After receiving `SIGINT` (ctrl+c) program joins all threads and cleanly terminates **(2p)**
+    `SIGUSR1`, swaps are performed by the main thread.
+2. Implement printing on `SIGUSR2` using new, detached thread.
+3. Move swapping operation to a separate thread. Implement thread count limit logic.
+4. After receiving `SIGINT` (ctrl+c) program joins all threads and cleanly terminates.

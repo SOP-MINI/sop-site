@@ -10,8 +10,8 @@ Napisz program, który tworzy n wątków (n to parametr programu), każdy wątek
 
 ## Oceniane etapy (w ramach pokazania jak działa etap proszę uruchomić z parametrem 10)
 
-1.  Tworzenie n wątków, każdy wątek wypisuje „\*” dla pokazania, że działa, wątek główny czeka na zakończenie wszystkich wątków (4p)
-2.  Wątki poboczne losują swoje mnożniki i wypisują je na ekran (3p)
-3.  Wątek główny wykonuje odliczanie, poboczne sprawdzają podzielność, całość bez synchronizacji/ochrony dostępu do licznika L, C-c kończy bez specjalnej obsługi (4p)
-4.  Dodajemy ochronę L przed zmianą zanim wszystkie wątki poboczne nie sprawdzą podzielności. Sugestia: może się przydać licznik wątków, które już sprawdziły. (3p) – pokazujemy kod ochrony dostępu
-5.  Dodajemy pełną obsługę C-c. (3p) – pokazujemy kod zamykania programu
+1.  Tworzenie n wątków, każdy wątek wypisuje „\*” dla pokazania, że działa, wątek główny czeka na zakończenie wszystkich wątków
+2.  Wątki poboczne losują swoje mnożniki i wypisują je na ekran
+3.  Wątek główny wykonuje odliczanie, poboczne sprawdzają podzielność, całość bez synchronizacji/ochrony dostępu do licznika L, C-c kończy bez specjalnej obsługi
+4.  Dodajemy ochronę L przed zmianą zanim wszystkie wątki poboczne nie sprawdzą podzielności. Sugestia: może się przydać licznik wątków, które już sprawdziły. Pokazujemy kod ochrony dostępu
+5.  Dodajemy pełną obsługę C-c. Pokazujemy kod zamykania programu

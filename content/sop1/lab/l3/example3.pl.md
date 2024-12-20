@@ -53,7 +53,7 @@ W programie nie można używać żadnych zmiennych globalnych.
 1. Odczytać argumenty, zainicjować tablicę. Utworzyć wątki psów. Każdy
    wątek zwiększa o 1 losową komórkę tablicy, wypisuje jej numer i się
    kończy. Po zakończeniu wszystkich wątków psów wątek główny wypisuje
-   końcowy stan toru. **(4p)**
-2. Działa logika wątku psa, na razie bez blokowania. **(4p)**
-3. Działa blokowanie z użyciem mutexów. **(4p)**
-4. Działa kończenie programu z użyciem `SIGINT`. **(4p)**
+   końcowy stan toru.
+2. Działa logika wątku psa, na razie bez blokowania.
+3. Działa blokowanie z użyciem mutexów.
+4. Działa kończenie programu z użyciem `SIGINT`.
