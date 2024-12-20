@@ -2,6 +2,7 @@
 title: "Zadanie testowe nr 2 z tematu Procesy, sygnały i deskryptory"
 date: 2022-02-05T19:34:07+01:00
 bookHidden: true
+katex: true
 ---
 
 ## Treść

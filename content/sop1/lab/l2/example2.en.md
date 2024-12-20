@@ -6,7 +6,7 @@ bookHidden: true
 
 ## The problem:
 
-Your task is to write a program using the POSIX standard that simulates laboratory classes. There is the main process - a teacher and n child processes - students. During classes, students do a task divided into p parts (1 <= p <= 10). Each part of the task takes t times 100 ms to finish (1 < t <= 10), so in total, the task takes p*t*100ms.
+Your task is to write a program using the POSIX standard that simulates laboratory classes. There is the main process - a teacher and n child processes - students. During classes, students do a task divided into p parts (1 <= p <= 10). Each part of the task takes t times 100 ms to finish (1 < t <= 10), so in total, the task takes p\*t\*100ms.
 
 The program takes as positional arguments parameters p, t and a list of numbers from 0-100 (at least one). Each number determines each student's probability of having some issue during classes. It means that for every 100 ms of doing a task by a student, there is a given chance out of 100 that the student will need an additional 50 ms. So a student can have an issue t times per part of the task.
 
@@ -33,7 +33,7 @@ A message starting with "Student" must be printed by a student process and "Teac
 
 HINT: To obtain signal sender PID, use a siginfo_t structure.
 
-Example: ./sop-lsim 4 3 30 50 - runs a simulation with two students, which have 30% and 50% chances of having an issue each 100 ms of the task (which takes 4*3*100 ms in total without considering additional time per issue).
+Example: ./sop-lsim 4 3 30 50 - runs a simulation with two students, which have 30% and 50% chances of having an issue each 100 ms of the task (which takes 4\*3\*100 ms in total without considering additional time per issue).
 
 Example output:
 
