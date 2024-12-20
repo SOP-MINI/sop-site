@@ -2,17 +2,49 @@
 title: "Laboratory task 3: threads, mutexes, signals"
 date: 2022-02-07T20:02:06+01:00
 bookHidden: true
+katex: true
 ---
 
 ## Task
 
-Write a program that takes 2 input parameters: n,k. where n is the number of processing posix threads and k is the task array size. The main thread fills the task array with random floating point number of range \[1,60\]. Main thread creates n processing threads. Each processing thread is calculating the square root of random array cell and stores the result in result array, prints: “sqrt(a) = b” (b is a result, a is an input) and then sleeps for 100ms. The programmer must ensure that each cell is calculated only once and each calculation should be mutex protected. The program ends when all cells are calculated. The main thread is waiting for all threads and then prints input and results arrays.
+Write a program which performs parallel operations on an array of
+integers. Program takes $n$ ($8 \leq n \leq 256$) and $p$
+($1 \leq p \leq 16$) as arguments. Then it creates an array of
+subsequent integers from 0 to $n-1$. Parameter $p$ is the number of
+working threads running at the same time.
+
+After receiving `SIGUSR1` program generates two random numbers $a$ and
+$b$ ($0 \leq a < b \leq n-1$) and spawns a new thread to perform
+inversion on array - swap elements $a$ and $b$, $a+1$ and $b-1$, $a+2$
+and $b-2$ etc. until $a+\lfloor\frac{b-a-1}{2}\rfloor$. After each swap
+thread, wait 5ms. A single swap should be atomic (you should make sure
+that swapped elements are not modified by different threads) - use mutex
+per array element.
+
+After receiving `SIGUSR2`, the program spawns a new thread which prints
+the state of the array. To print the array in a valid, existing state,
+you should lock it whole (otherwise swapping threads can make changes
+during printing).
+
+If a new signal arrives when there are already $p$ working threads, the
+program should print message `All thread busy, aborting request` and
+return to waiting. Working threads should be counted and monitored. When
+one of the threads finishes its job, a new request can be processed.
+
+Think about locking order to ensure operations safety and avoid
+deadlocks. You don’t need to (and you shouldn’t) perform redundant
+operations like swapping elements with itself.
+
+You should not put heavy logic in signal handlers - only a few
+assignments or simple arithmetic operations are permitted. Any system
+functions are not permitted.
+
+Stages:
 
 ## Graded stages
 
-At each stage run the program with n=3 and k = 7 when presenting the results
-
-1.  Creating n+1 threads. Each thread is printing “\*”. Main thread is waiting for all threads. (4p)
-2.  Main thread is filling the task array and prints it, the processing threads are choosing random array cell number, print its index and exit. (4p)
-3.  Processing threads are calculating result of one random cell with mutex synchronization, print the result and exit . Main thread is printing both arrays afterwards (after the join). At this stage cells can be calculated more than once but not in parallel. (5p)
-4.  Each cell is protected by separate mutex. Processing threads are counting remaining cells to compute. If that number reaches 0, threads are terminating otherwise they calculate the next random remaining cell and sleep (4p)
+1.  Create array and mutexes as per task description. After receiving
+    `SIGUSR1`, swaps are performed by the main thread. **(5p)**
+2. Implement printing on `SIGUSR2` using new, detached thread. **(3p)**
+3. Move swapping operation to a separate thread. Implement thread count limit logic. **(6p)**
+4. After receiving `SIGINT` (ctrl+c) program joins all threads and cleanly terminates **(2p)**
