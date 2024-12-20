@@ -284,7 +284,11 @@ Improve random selection as an exercise.
 
 Have a look at the method used to measure the 4 seconds life time of the program (clock_gettime, nanosleep). Please change the solution  to use alarm function and the SIGALRM handler as an exercise.
 
-As an exercise do <a href="{{< ref "/sop1/lab/l3/example1" >}}">this</a> task. It was used in previous years when duration of the lab was different. It is a 60 minutes task and if you can do it in this time, it means you are prepared for the lab. Now there is more time for the task during the lab and it will be slightly larger.
+Do the example tasks. During the laboratory you will have more time and a starting code. If you do following tasks in the allotted time, it means that you are well-prepared.
+
+- [Task 1]({{< ref "/sop1/lab/l3/example1" >}}) ~60 minutes
+- [Task 2]({{< ref "/sop1/lab/l3/example2" >}}) ~120 minutes
+- [Task 3]({{< ref "/sop1/lab/l3/example3" >}}) ~120 minutes
 
 ## Source codes presented in this tutorial
 
