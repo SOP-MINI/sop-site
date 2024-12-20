@@ -2,21 +2,20 @@
 title: "Laboratory task 3: threads, mutexes, signals"
 date: 2022-02-07T20:02:06+01:00
 bookHidden: true
-katex: true
 ---
 
 ## Task
 
 Write a program which performs parallel operations on an array of
-integers. Program takes $n$ ($8 \leq n \leq 256$) and $p$
-($1 \leq p \leq 16$) as arguments. Then it creates an array of
-subsequent integers from 0 to $n-1$. Parameter $p$ is the number of
+integers. Program takes `n` (`8 <= n <= 256`) and `p`
+(`1 <= p <= 16`) as arguments. Then it creates an array of
+subsequent integers from `0` to `n-1`. Parameter `p` is the number of
 working threads running at the same time.
 
-After receiving `SIGUSR1` program generates two random numbers $a$ and
-$b$ ($0 \leq a < b \leq n-1$) and spawns a new thread to perform
-inversion on array - swap elements $a$ and $b$, $a+1$ and $b-1$, $a+2$
-and $b-2$ etc. until $a+\lfloor\frac{b-a-1}{2}\rfloor$. After each swap
+After receiving `SIGUSR1` program generates two random numbers `a` and
+`b` (`0 <= a < b <= n-1`) and spawns a new thread to perform
+inversion on array - swap elements `a` and `b`, `a+1` and `b-1`, `a+2`
+and `b-2` etc. until {{< katex >}}a+\lfloor\frac{b-a-1}{2}\rfloor{{< /katex >}}. After each swap
 thread, wait 5ms. A single swap should be atomic (you should make sure
 that swapped elements are not modified by different threads) - use mutex
 per array element.
@@ -26,7 +25,7 @@ the state of the array. To print the array in a valid, existing state,
 you should lock it whole (otherwise swapping threads can make changes
 during printing).
 
-If a new signal arrives when there are already $p$ working threads, the
+If a new signal arrives when there are already `p` working threads, the
 program should print message `All thread busy, aborting request` and
 return to waiting. Working threads should be counted and monitored. When
 one of the threads finishes its job, a new request can be processed.

@@ -2,18 +2,17 @@
 title: "Laboratory task 3: threads, mutexes, signals"
 date: 2022-02-07T20:02:06+01:00
 bookHidden: true
-katex: true
 ---
 
 ## Task
 
 You need to write a program simulating a dog race. The program takes two
-natural numbers as arguments: $n>20$ - the length of the track, and
-$m>2$ - the number of dogs. The main thread of the program creates a
-racetrack for dogs - an array of integers of length $n$. The array is
+natural numbers as arguments: `n>20` - the length of the track, and
+`m>2` - the number of dogs. The main thread of the program creates a
+racetrack for dogs - an array of integers of length `n`. The array is
 initially filled with zeros. The array will store the number of dogs at
 each position on the track. After initializing the array, the program
-creates $m$ threads, each thread representing one dog.
+creates `m` threads, each thread representing one dog.
 
 The dog’s thread operates as follows: initially, the dog is outside the
 track. At the beginning, the thread places the dog at position 0 and
@@ -21,8 +20,8 @@ increases the array value by 1. The direction of the dog’s movement is
 towards increasing array indices. Then, in a loop, it performs the
 following actions:
 
-1.  Waits for a random time in the range $[200, 1520]$ ms.
-2.  Generates a random integer in the range $[1,5]$ - the distance it
+1.  Waits for a random time in the range `[200, 1520]` ms.
+2.  Generates a random integer in the range `[1,5]` - the distance it
     will move.
 3.  Checks if the randomly chosen position is within the array range. If
     not, it moves as far as possible, then changes the direction of

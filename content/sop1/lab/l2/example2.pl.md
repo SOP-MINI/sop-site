@@ -2,14 +2,13 @@
 title: "Zadanie testowe nr 2 z tematu Procesy, sygnały i deskryptory"
 date: 2022-02-05T19:34:07+01:00
 bookHidden: true
-katex: true
 ---
 
 ## Treść
 
-Zadanie polega na napisaniu programu w standardzie POSIX, który symuluje rozprzestrzenianie się wirusa grypy w przedszkolu. Główny proces powinien odpowiadać za obsługę przedszkola, a $n$ procesów potomnych za symulowanie dzieci przebywających w przedszkolu. Symulacja trwa $t$ sekund.
+Zadanie polega na napisaniu programu w standardzie POSIX, który symuluje rozprzestrzenianie się wirusa grypy w przedszkolu. Główny proces powinien odpowiadać za obsługę przedszkola, a `n` procesów potomnych za symulowanie dzieci przebywających w przedszkolu. Symulacja trwa `t` sekund.
 
-Gdy dziecko jest chore, zaczyna kasłać co pewien czas (losowo, co 50-200 ms) i kaszle na wszystkie inne dzieci w przedszkolu – wysyłając sygnał SIGUSR1. Gdy zdrowe dziecko otrzyma wirusa (sygnał), istnieje prawdopodobieństwo $p$, że samo zachoruje i zacznie kaszleć. Po chore dziecko przyjeżdżają rodzice po $k$ sekundach i je zabierają.
+Gdy dziecko jest chore, zaczyna kasłać co pewien czas (losowo, co 50-200 ms) i kaszle na wszystkie inne dzieci w przedszkolu – wysyłając sygnał SIGUSR1. Gdy zdrowe dziecko otrzyma wirusa (sygnał), istnieje prawdopodobieństwo `p`, że samo zachoruje i zacznie kaszleć. Po chore dziecko przyjeżdżają rodzice po `k` sekundach i je zabierają.
 
 Program jako argumenty powinien przyjąć wartości t, k, n oraz p, gdzie:
 * t - to czas symulacji w sekundach (1 - 100), 
@@ -19,11 +18,11 @@ Program jako argumenty powinien przyjąć wartości t, k, n oraz p, gdzie:
 
 Należy założyć, że zawsze jedno dziecko jest chore na starcie, dla uproszenia można przyjąć, że jest to pierwsze z listy.
 
-Główny proces po czasie $t$ sekund wysyła SIGTERM do wszystkich dzieci, który oznacza zakończenie symulacji. Dziecko po otrzymaniu sygnału, kończy swoje działanie i zwraca jako exit status liczbę kaszlnięć (aby przekazać ją do głównego procesu). W celu odliczania czasu użyj funkcji alarm.
+Główny proces po czasie `t` sekund wysyła SIGTERM do wszystkich dzieci, który oznacza zakończenie symulacji. Dziecko po otrzymaniu sygnału, kończy swoje działanie i zwraca jako exit status liczbę kaszlnięć (aby przekazać ją do głównego procesu). W celu odliczania czasu użyj funkcji alarm.
 
 W momencie odebrania dziecka przez rodziców, dziecko wyświetla o tym fakcie informację oraz kończy swoje działanie wracając odpowiedni exit code. Procesy dzieci, które zakończą się przed wysłaniem sygnału kończącego symulacją należy uznać za odebrane.
 
-Gdy wszystkie procesy dzieci zakończą swoje działanie po czasie $t$, proces główny wyświetla listę wszystkich dzieci wraz z ich stanem, w poniższym formacie, gdzie Child ID to PID:
+Gdy wszystkie procesy dzieci zakończą swoje działanie po czasie `t`, proces główny wyświetla listę wszystkich dzieci wraz z ich stanem, w poniższym formacie, gdzie Child ID to PID:
 
     No. | Child ID | Status
       1 |    17487 | Coughed 3 times and parents picked them up!
