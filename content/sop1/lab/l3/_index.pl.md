@@ -25,10 +25,10 @@ Uwagi wstępne:
   poćwiczyć a jeśli trzeba dopytać się u prowadzących.
 - Ten tutorial opiera się na przykładach od naszego studenta, drobne ich słabości występują jedynie w częściach nie
   związanych z wątkami i zostawiłem je celowo. Są one omawiane w komentarzach i zadaniach. To co się powtarza to:
-- Funkcje main są za długie, można je łatwo podzielić
-- Nadużywany jest typ bool, wymaga to nawet specjalnego pliku nagłówkowego, prościej i bardziej klasycznie można użyć 0
-  i 1
-- Pojawiają się "magic numbers" - stałe liczbowe zamiast zdefiniowanych makr
+  - Funkcje main są za długie, można je łatwo podzielić
+  - Nadużywany jest typ bool, wymaga to nawet specjalnego pliku nagłówkowego, prościej i bardziej klasycznie można użyć 0
+    i 1
+  - Pojawiają się "magic numbers" - stałe liczbowe zamiast zdefiniowanych makr
 {{< /hint >}}
 
 _Ten tutorial został przygotowany w oparciu o pomysły na zadania i ich rozwiązania przygotowane przez studenta Mariusza Kowalskiego._

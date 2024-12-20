@@ -25,9 +25,9 @@ Introduction notes:
   material after the graded lab you can still ask teachers for help.
 - This tutorial is based on student's examples, it has some minor flaws in parts not related to the threads (I left them
   on purpose and explain them in comments). Some repeating flaws not mentioned in tasks are:
-- Main functions are too long, it should be easy to split them
-- Bool data type requires extra header and can be easily avoided by using integers (0 and 1)
-- So called  "magic numbers" are left in code - those numerical constants should be replaced with "C" preprocesor macro
+  - Main functions are too long, it should be easy to split them
+  - Bool data type requires extra header and can be easily avoided by using integers (0 and 1)
+  - So called  "magic numbers" are left in code - those numerical constants should be replaced with "C" preprocesor macro
 {{< /hint >}}
 
 _This tutorial is based on tasks and code examples provided by student Mariusz Kowalski._
