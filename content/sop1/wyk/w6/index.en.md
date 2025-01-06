@@ -27,8 +27,9 @@ weight: 60
 
 ## Reference
 
-1.  Textbook: chapter 5 "Threads" - in 8th and 9th ed., or chapter 4 "Threads & Concurrency" - in 10th ed.
-2.  Slides: [Threads.pdf]({{< resource "Threads_3.pdf" >}}), [POSIX\_threads.pdf]({{< resource "POSIX_threads_9.pdf" >}})
-3.  Extra reading: The GNU C library documentation: [1.2.2.1 POSIX Safety Concepts](https://www.gnu.org/software/libc/manual/html_node/POSIX-Safety-Concepts.html#POSIX-Safety-Concepts), [12.5 Streams and Threads](https://www.gnu.org/software/libc/manual/html_node/Streams-and-Threads.html#Streams-and-Threads)
-4.  Exemplary lecture code: [pth1.c]({{< resource "pth1.c" >}}), [pth2.c]({{< resource "pth2.c" >}}), [pth3.c]({{< resource "pth3.c" >}}), [sighand.c]({{< resource "sighand.c" >}})
+1. [Lecture presentation](https://link.excalidraw.com/p/readonly/7BKPuXNbLqsDFIZCtztO)
+2. [Lecture code samples](https://gitlab.com/SaQQ/sop1/-/tree/master/06_threads?ref_type=heads)
+3.  Textbook: chapter 5 "Threads" - in 8th and 9th ed., or chapter 4 "Threads & Concurrency" - in 10th ed.
+4.  Extra reading: The GNU C library documentation: [1.2.2.1 POSIX Safety Concepts](https://www.gnu.org/software/libc/manual/html_node/POSIX-Safety-Concepts.html#POSIX-Safety-Concepts), [12.5 Streams and Threads](https://www.gnu.org/software/libc/manual/html_node/Streams-and-Threads.html#Streams-and-Threads)
 5.  [Excerpt]({{< resource "IEEE_Std_1003.1_2008_Thread_cancellation.pdf" >}}) from the POSIX Standard on threads cancellation
+6.  Old Slides: [Threads.pdf]({{< resource "Threads_3.pdf" >}}), [POSIX\_threads.pdf]({{< resource "POSIX_threads_9.pdf" >}})
