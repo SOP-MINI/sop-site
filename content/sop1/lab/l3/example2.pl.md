@@ -98,4 +98,4 @@ jedna flaga w etapie 4 (wskazówka: ona też nie jest potrzebna).
 
 ## Kod początkowy
 
-- [l3e2pl.zip](/files/l3e2pl.zip)
+- [sop1l3e2pl.zip](/files/sop1l3e2pl.zip)

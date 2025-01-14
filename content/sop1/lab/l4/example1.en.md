@@ -1,6 +1,5 @@
 ---
 title: "Laboratory task 4: synchronization"
-date: 2022-02-07T20:02:06+01:00
 bookHidden: true
 ---
 

@@ -1,6 +1,5 @@
 ---
 title: "Zadanie testowe z tematu Synchronizacja"
-date: 2022-02-05T19:36:50+01:00
 bookHidden: true
 ---
 
