@@ -1,3 +1,8 @@
+---
+title: "Laboratory task 4: synchronization"
+bookHidden: true
+---
+
 # Treść
 
 Twoim zadaniem jest przygotowanie zestawu wątków oczekujących na funkcje

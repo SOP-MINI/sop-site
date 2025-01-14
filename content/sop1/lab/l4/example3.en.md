@@ -1,3 +1,8 @@
+---
+title: "Laboratory task 4: synchronization"
+bookHidden: true
+---
+
 # Description
 
 Your task is to prepare a pool of threads waiting for functions to
