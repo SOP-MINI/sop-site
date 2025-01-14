@@ -117,7 +117,11 @@ Which parts of the thread function are called concurrently?
 How is the one player thread selected to conclude the round?
 {{< details "Answer" >}} The pthread_barrier_wait function returns PTHREAD_BARRIER_SERIAL_THREAD only for one thread (standard does not specify which one), and 0 for other threads. This mechanism ensures that the action is performed by a single thread in each round, preventing multiple threads from concurrently executing the same code that should only be executed once. {{< /details >}}
 
-As an exercise do <a href="{{< ref "/sop1/lab/l4/example1" >}}">this</a> task. It is a 150 minutes task and if you can do it in this time it means you are prepared for the lab. Now there is less time for the task and it will be slightly smaller.
+Do the example tasks. During the laboratory you will have more time and a starting code. If you do following tasks in the allotted time, it means that you are well-prepared.
+
+- [Task 1]({{< ref "/sop1/lab/l4/example1" >}}) ~120 minutes
+- [Task 2]({{< ref "/sop1/lab/l4/example2" >}}) ~120 minutes
+- [Task 3]({{< ref "/sop1/lab/l4/example3" >}}) ~120 minutes
 
 ## Source codes presented in this tutorial
 
