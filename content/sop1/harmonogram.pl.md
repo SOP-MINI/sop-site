@@ -27,7 +27,6 @@ Wtorki, godz. 14:15 - 16:30
 | 10.12.2024 | [L2 Procesy i sygnały]({{< ref "lab/l2" >}})      |
 | 7.01.2025  | [L3 Wątki i muteksy]({{< ref "lab/l3" >}})        |
 | 21.01.2025 | [L4 Synchronizacja]({{< ref "lab/l4" >}})         |
-| 24.01.2025 | **23:59** -- zamknięcie zapisów na poprawy w LeON |
 | 4.02.2025  | L5 Poprawy                                        |
 
 

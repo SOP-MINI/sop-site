@@ -27,5 +27,4 @@ Tuesdays, 2:15-4:30pm
 | 17.12.2024 | [L2 Processes and signals]({{< ref "lab/l2" >}}) |
 | 14.01.2025 | [L3 Threads and mutexes]({{< ref "lab/l3" >}})   |
 | 28.01.2025 | [L4 Synchronization]({{< ref "lab/l4" >}})       |
-| 31.01.2025 | **11:59pm** retake signup closes (in LeON)       |
 | 4.02.2025  | L5 Retakes                                       |

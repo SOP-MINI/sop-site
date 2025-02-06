@@ -1,6 +1,6 @@
 # Przeznaczenie przedmiotu
 
-Celem drugiej części przedmiotu *Systemy Operacyjne* jest zapoznanie studentów z zaawansowanymi problemami implementacji współczesnych systemów operacyjnych, a także kształtowanie umiejętności wykorzystania zaawansowanych mechanizmów systemowych do poprawnej realizacji (w środowisku POSIX/UNIX/Linux) aplikacji wieloprocesowych/wielowątkowych, wykorzystujących różne środki komunikacji międzyprocesowej i synchronizacji oraz komunikację sieciową.
+Celem drugiej części przedmiotu *Systemy Operacyjne* jest zapoznanie studentów z zaawansowanymi problemami implementacji współczesnych systemów operacyjnych, a także kształtowanie umiejętności wykorzystania zaawansowanych mechanizmów systemowych do poprawnej realizacji (w środowisku POSIX/UNIX/Linux) aplikacji wieloprocesowych/wielowątkowych, wykorzystujących różne środki komunikacji międzyprocesowej i synchronizacji oraz komunikację sieciową. Wymagana jest znajomość języka C (przedmiot Programowanie 1) oraz podstawowych API POSIX (dotyczących plików, wątków, procesów i sygnałów nauczanych na przedmiocie Systemy Operacyjne 1)
 
 # Prowadzenie zajęć
 
@@ -12,12 +12,8 @@ Przedmiot składa się z wykładu i laboratorium.
     - Każdy student ma prawo do jednej poprawy każdego ze sprawdzianów w dodatkowym terminie (terminie sprawdzianu poprawkowego). Obowiązuje ten sam zakres materiału co w pierwotnym terminie. Student musi zgłosić wykładowcy zamiar przystąpienia do tego sprawdzianu najpóźniej jedną dobę przed tym terminem. Ocena zdobyta na sprawdzianie poprawkowym zastępuje poprzednią - jeśli jest lepsza.
     - Suma punktów do zdobycia za sprawdziany wykładowe wynosi 100.
   - Laboratorium składa się z czterech zajęć oznaczonych kolejno L1, L2, L3, L4. Zajęcia odbywają się zgodnie z harmonogramem podanym na stronie przedmiotu. Na stronie przedmiotu znajdują się też materiały przygotowawcze do zajęć.
-  - Zajęcia służą ocenie umiejętności w obszarze wskazanym w harmonogramie przedmiotu. Do każdych zajęć należy przygotować się samodzielnie, korzystając z materiałów na stronie przedmiotu i materiałów wykładowych. Każde z zajęć zbudowane składa się z trzech części:
-    - wejściówka (8 minut): rozwiązywanie testu w LeOn
-    - zadanie programistyczne (120 minut)
-  -Na końcu semestru organizowana jest poprawa, na której można poprawiać oceny uzyskane na dokładnie jednych zajęciach (L1, L2, L3, lub L4). Można poprawiać albo jedną część (wejściówkę, program) albo obie części. Zapisy na poprawy zostaną uruchomione od razu po ostatnich zajęciach laboratoryjnych w semestrze i potrwają **24 godziny**.
-  - W sesji egzaminacyjnej jest organizowana poprawa sprawdzianów wykładowych. Można poprawiać jeden lub oba testy, jeden po drugim.
-
+  - Zajęcia służą ocenie umiejętności w obszarze wskazanym w harmonogramie przedmiotu. Do każdych zajęć należy przygotować się samodzielnie, korzystając z materiałów na stronie przedmiotu i materiałów wykładowych. Zajęcia polegają na rozwiazaniu zadania programistycznego (130 minut).
+  - Student ma prawo przystąpić do poprawy. Zadanie na laboratorium poprawkowym może dotyczyć wszystkich tematów omawianych w trakcie semestru. Wynik z poprawy zastępuje najgorszy wynik uzyskany przez studenta w semestrze.
 
 # Materiały do przedmiotu
 
@@ -51,17 +47,10 @@ W trakcie semestru są dwa sprawdziany wykładowe.
 
 ## Laboratorium
 
-### Wejściówka
-  - Test weryfikujący wiedzę z wykładu i z materiałów przygotowawczych do laboratorium. Każda wejściówka obejmuje wszystkie wykłady poprzedzające i wszystkie poprzedzające tematy laboratorium oraz bieżący temat laboratorium.
-  - Pytania zamknięte, wielokrotnego wyboru (poprawna może być dowolna liczba odpowiedzi większa od 0), wykonywany na platformie LeOn. 
-  - Wejściówka składa się z 4 pytań, za każde z pytań można uzyskać wynik z przedziału [0,1] punktu. W sumie, za cały test, maksymalnie 4 punkty. 
-  - Wejściówka jest punktowana w następujący sposób. W każdym pytaniu wielokrotnego wyboru jest *n* poprawnych odpowiedzi i *m* niepoprawnych odpowiedzi (każda odpowiedź jest albo poprawna, albo niepoprawna). Za każdą zaznaczoną poprawną odpowiedź jest 1/n punktów, a za każdą zaznaczoną niepoprawną odpowiedź jest -1/m punktów. Za każde pytanie przyznawana jest suma punktów wynikająca z zaznaczonych niepoprawnych i poprawnych odpowiedzi, o ile uzyskana suma nie jest ujemna. W takiej sytuacji przyznawane jest 0 punktów.
-  - Wejściówka trwa 8 minut.
-
 ### Zadanie programistyczne
 
-  - Za zadanie uzyskać można od 0 do 21 punktów
-  - Na wykonanie zadania jest 120 minut
+  - Za zadanie uzyskać można od 0 do 25 punktów
+  - Na wykonanie zadania jest 130 minut
   - Zadania laboratoryjne rozwiązywane są z użyciem systemu Arch Linux na komputerach w laboratorium. Nie jest dozwolone rozwiązywanie zadań na własnym komputerze.
   - Zadanie programistyczne jest podzielone na etapy. Punkty za każdy etap podane są w treści zadania. Etapy muszą być wykonywane w wyznaczonej kolejności. Nie wolno przechodzić do następnego etapu bez wykonania poprzednich.
   - Każdy etap jest sprawdzany i oceniany na zajęciach. Oceniana jest umiejętność korzystania z właściwych narzędzi i prawidłowa (w tym zgodna z POSIX) implementacja wymaganej funkcjonalności.
@@ -72,10 +61,11 @@ W trakcie semestru są dwa sprawdziany wykładowe.
     - Pliki muszą być odpowiednio sformatowane - zgodnie z konfiguracją programu clang-format znajdującą się w startowym repozytorium zadania (program jest dostępny na komputerach laboratoryjnych, jego działanie jest wyjaśniane podczas L0).
     - Program przy kompilacji przy użyciu pliku makefile zawartego w repozytorium nie powinien zwracać żadnych błędów.
      Jeżeli rozwiązanie nie spełnia któregoś z warunków, jest odrzucane, a student dostaje informację zwrotną o zaistniałym problemie. Przesłanie rozwiązania na serwer jest warunkiem wstępnym oceny danego etapu, rozwiązania nieprzesłane nie podlegają ocenie.
+  - W trakcie laboratorium, na żądanie prowadzącego, studenci są zobowiązani uruchomić dostarczone z zadaniem oprogramowanie monitorujące ich pracę.
 
 # Pomoce dopuszczone do użycia podczas weryfikacji osiągnięcia efektów uczenia się
 
-  - W trakcie rozwiązywania testów wykładowych **nie można** korzystać z żadnych materiałów pomocnicznych. Niedozwolona jest komunikacja z innymi.
+  - W trakcie rozwiązywania testów wykładowych **nie można** korzystać z żadnych materiałów pomocniczych. Niedozwolona jest komunikacja z innymi.
   - W trakcie rozwiązywania wejściówki **nie można** korzystać z żadnych materiałów pomocniczych. Niedozwolona jest komunikacja z innymi.
   - W czasie rozwiązywania zadań programistycznych **można** korzystać z tutoriala, własnych materiałów, rozwiązań zadań przykładowych, dokumentacji systemowej oraz Internetu jednak tak, by oceniana praca była dziełem samodzielnym - w szczególności niedozwolone jest używanie rozwiązań oparty o AI, jak chat GPT, Github Copilot i podobnych.
 

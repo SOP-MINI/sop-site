@@ -30,10 +30,8 @@ Czwartki, 14:15 - 16:30
 
 | Data  | Tytuł                                                                     |
 |-------|---------------------------------------------------------------------------|
-|  7.03 | [L1 FIFO/pipe]({{< ref "lab/l1" >}})                                      |
-| 21.03 | [L2 Kolejki POSIX]({{< ref "lab/l2" >}})                                  |
-|  4.04 | [L3 Pamięć dzielona i mmap]({{< ref "lab/l3" >}})                         |
-| 25.04 | [L4 Gniazda, TCP, UDP, epoll]({{< ref "lab/l4" >}})                       |
-| 29.04 | 23:59 -- zamknięcie zapisów na poprawy w LeON                             |
-| 16.05 | Poprawy?                                                                  |
-| 23.05 | Poprawy?                                                                  |
+| 13.03 | [L1 FIFO/pipe]({{< ref "lab/l1" >}})                                      |
+| 27.03 | [L2 Kolejki POSIX]({{< ref "lab/l2" >}})                                  |
+| 10.04 | [L3 Pamięć dzielona i mmap]({{< ref "lab/l3" >}})                         |
+|  8.05 | [L4 Gniazda, TCP, UDP, epoll]({{< ref "lab/l4" >}})                       |
+| 29.05 | Poprawa                                                                   |
