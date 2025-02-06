@@ -1,6 +1,6 @@
 # Purpose of course
 
-The first goal of the  *Operating Systems 2* course is to familiarize students with advanced problems of contemporary operating systems design and implementation. The second goal is to develop student knowledge and skills necessary to design and implement (in POSIX/Unix/Linux environment) multi-process/multi-threaded applications with the use of various inter-process communication means, synchronization techniques and network communication. The good understanding of the C programming language (covered during Programming 1 course) alongside basic POSIX APIs (files, threads, processes, signals - covered during Operating Systems 1) is required.
+The first goal of the  *Operating Systems 2* course is to familiarize students with advanced problems of contemporary operating systems design and implementation. The second goal is to develop student knowledge and skills necessary to design and implement (in POSIX/Unix/Linux environment) multi-process/multi-threaded applications with the use of various inter-process communication means, synchronization techniques and network communication. A good understanding of the C programming language (covered during Programming 1 course) alongside basic POSIX APIs (files, threads, processes, signals - covered during Operating Systems 1) is required.
 
 # Conducting classes
 
@@ -13,7 +13,7 @@ The subject consists of a lecture and a laboratory.
     - Total number of points from lecture tests is 100.
   - The laboratory consists of four classes denoted as L1, L2, L3, L4. The laboratory classes take place according to the schedule provided on the course website. The course website also includes preparation materials for classes.
   - Classes assess abilities in the topics given in the laboratory schedule. Students should prepare on their own for each class, using the materials on the course website and lecture materials. During each laboratory, students solve a programming task (130 minutes).
-  - At the end of the semester, there is a retake where students can improve their worst grade. The retake takes form of a programming task, however it can cover all topics covered during the semester.
+  - At the end of the semester, there is a retake where students can improve their worst grade. The retake takes form of a programming task, it can cover all topics covered during the semester.
 
 # Course materials
 
@@ -58,7 +58,7 @@ There are two lecture tests during the semester.
     - Solution files must be formatted according to clang-format configuration provided with task. Clang-format program is installed on computers in the laboratory and its usage will be explained during L0.
     - Solution program must compile using makefile from task repository.
     If solution does not follow one of the rules it will be automatically rejected and student get information about problem. Sending solution to the server is necessary for grading - solution not sent to server will be not graded. 
-  - During the laboratory, for the teacher request, students are obliged to turn on dedicated software monitoring their work.
+  - During the laboratory, at the teacher request, students are obliged to turn on dedicated software monitoring their work.
 
 # Aids acceptable for use in verifying achievement of learning outcomes
 
