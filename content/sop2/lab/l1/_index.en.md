@@ -246,9 +246,17 @@ Solution **prog22b.c**:
 
 {{% codeattachments %}}
 
+
+## Example tasks
+Do the example tasks. During the laboratory you will have more time and the starting code. However, if you finish the following tasks in the recommended time, you will know you're well prepared for the laboratory.
+
+- [Task 1]({{< ref "/sop2/lab/l1/example1" >}}) ~60 minutes
+- [Task 2]({{< ref "/sop2/lab/l1/example2" >}}) ~90 minutes
+- [Task 3]({{< ref "/sop2/lab/l1/example3" >}}) ~120 minutes
+- [Task 4]({{< ref "/sop2/lab/l1/example4" >}}) ~120 minutes
+- [Task 5]({{< ref "/sop2/lab/l1/example5" >}}) ~120 minutes
+
 ## Additional materials
 
-- A simple ~60 minutes sample [task]({{< ref "/sop2/lab/l1/example1" >}}). 
-- A bit harder ~90 minutes [task]({{< ref "/sop2/lab/l1/example2" >}}).
 - <http://cs341.cs.illinois.edu/coursebook/Ipc#pipes>
 - <http://cs341.cs.illinois.edu/coursebook/Ipc#named-pipes>

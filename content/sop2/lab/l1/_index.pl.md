@@ -257,10 +257,17 @@ Rozwiązanie **prog22b.c**:
 
 {{< codeattachments >}}
 
+## Przykładowe zadania
+
+Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
+
+- [Zadanie 1]({{% ref "/sop2/lab/l1/example1" %}}) ~60 minut
+- [Zadanie 2]({{% ref "/sop2/lab/l1/example2" %}}) ~90 minut
+- [Zadanie 3]({{% ref "/sop2/lab/l1/example3" %}}) ~120 minut
+- [Zadanie 4]({{% ref "/sop2/lab/l1/example4" %}}) ~120 minut
+- [Zadanie 5]({{< ref "/sop2/lab/l1/example5" >}}) ~120 minut
 
 ## Dodatkowe materiały
 
-- Proste przykładowe [zadanie]({{% ref "/sop2/lab/l1/example1" %}}). Szacunkowy czas na rozwiązanie ~60 minut.
-- Nieco trudniejsze [zadanie]({{% ref "/sop2/lab/l1/example2" %}}). Szacunkowy czas na rozwiązanie ~90 minut.
 - <http://cs341.cs.illinois.edu/coursebook/Ipc#pipes>
 - <http://cs341.cs.illinois.edu/coursebook/Ipc#named-pipes>
