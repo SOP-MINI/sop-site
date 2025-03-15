@@ -144,7 +144,7 @@ int main(int argc, char **argv)
         usage(argv[0]);
 
     mqd_t pin, pout;
-    struct mq_attr attr;
+    struct mq_attr attr = {};
     attr.mq_maxmsg = 10;
     attr.mq_msgsize = 1;
     if ((pin = TEMP_FAILURE_RETRY(mq_open("/bingo_in", O_RDWR | O_NONBLOCK | O_CREAT, 0600, &attr))) == (mqd_t)-1)

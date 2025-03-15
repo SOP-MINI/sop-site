@@ -46,7 +46,7 @@ mqd_t mq_open(const char *name, int oflag, ...);
 Funkcja zwraca deskryptor kolejki (typu `mqd_t`) lub `(mqd_t)-1` w przypadku błędu.
 Nieużywany deskryptor zamykamy funkcją `mq_close` (`man 3p mq_close`). 
 
-Kolejkę o podanej nazwie można natomiast usunąć funkcją `mq_unlink`. Należy jednak uważać na sytuację, w której chcemy usunąć kolejkę niezamkniętą przez pewien inny proces. Jak można przeczytać w manualu (`man 3p mq_unlink`), wywołanie usunięcia kolejki może, lecz nie musi, blokować do zamknięcia wszystkich deskryptorów związanych z daną kolejką. Zachowanie jest zależne od implementacji. W Linuksie (`man 3 mq_unlink`) usunięcie kolejki powoduje tylko zwolnienie jej nazwy (np. do ponownego utworzenia), a `mq_unlink` zwraca natychmiastowo, natomiast kolejka jest rzeczywiście usuwana dopiero, gdy wszystkie deskryptory z nią zostaną zamknięte. Nawet w takiej sytuacji, stworzona kolejka o tej samej nazwie będzie inną kolejką od tej starszej.
+Kolejkę o podanej nazwie można natomiast usunąć funkcją `mq_unlink`. Należy jednak uważać na sytuację, w której chcemy usunąć kolejkę niezamkniętą przez pewien inny proces. Jak można przeczytać w manualu (`man 3p mq_unlink`), wywołanie usunięcia kolejki może, lecz nie musi, prowadzić do zamknięcia wszystkich deskryptorów związanych z daną kolejką. Zachowanie jest zależne od implementacji. W Linuksie (`man 3 mq_unlink`) usunięcie kolejki powoduje tylko zwolnienie jej nazwy (np. do ponownego utworzenia), a `mq_unlink` zwraca natychmiastowo, natomiast kolejka jest rzeczywiście usuwana dopiero, gdy wszystkie deskryptory do niej zostaną zamknięte. Nawet w takiej sytuacji, stworzona kolejka o tej samej nazwie będzie inną kolejką od tej starszej.
 
 ### Atrybuty kolejki
 
@@ -81,7 +81,7 @@ ssize_t mq_receive(mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned *msg_pri
 ```
 - `mqdes` to deskryptor otwartej kolejki,
 - `msg_ptr` to wskaźnik do bufora z wiadomością do wysłania (dla `mq_send`) lub do wypełnienia odbieraną wiadomością (dla `mq_receive`),
-- `msg_len` to rozmiar bufora `msg_ptr` w bajtach (nie może być większy niż wartość atrybutu `mq_msgsize`),
+- `msg_len` to rozmiar bufora `msg_ptr` w bajtach (nie może być większy niż wartość atrybutu `mq_msgsize` w przypadku `mq_send`, a dla `mq_receive` musi być większy lub równy `mq_msgsize`),
 - `msg_prio`:
   - dla `mq_send` jest to priorytet wiadomości (musi być mniejszy niż wartość stałej `MQ_PRIO_MAX` -- POSIX zapewnia, że `MQ_PRIO_MAX >= 32`),
   - dla `mq_receive`, jest to wskażnik na zmienną, do której zostanie zapisany priorytet odbieranej wiadomości (można też podać `NULL`, jeśli priorytet nie jest nam potrzebny).
@@ -97,13 +97,13 @@ W trybie blokującym, możemy także ustawić maksymalny czas oczekiwania na wia
 int mq_timedsend(mqd_t mqdes, const char *msg_ptr, size_t msg_len, unsigned msg_prio, const struct timespec *abstime);
 ssize_t mq_timedreceive(mqd_t mqdes, char *restrict msg_ptr, size_t msg_len, unsigned *restrict msg_prio, const struct timespec *restrict abstime);
 ```
-które zawierają dodatkowy argument `abstime`, będący wskaźnikiem na strukturę typu `timespec` (z pliku nagłówkowego `<time.h>`), wyznaczającą czas maksymalny czas oczekiwania na wiadomość (`mq_timedreceive`) lub na miejsce w kolejce (`mq_timedsend`). Obie funkcje zachowują się tak jak ich odpowiedniki bez podawanego czasu, z wyjątkiem sytuacji, w której przekroczymy podany czas oczekiwania. Wtedy, obie funkcje zwrócą `-1`, a `errno` zostanie ustawione na `ETIMEDOUT`.
+które zawierają dodatkowy argument `abstime`, będący wskaźnikiem na strukturę typu `timespec` (z pliku nagłówkowego `<time.h>`), wyznaczającą maksymalny czas oczekiwania na wiadomość (`mq_timedreceive`) lub na miejsce w kolejce (`mq_timedsend`). Obie funkcje zachowują się tak jak ich odpowiedniki bez podawanego czasu, z wyjątkiem sytuacji, w której przekroczymy podany czas oczekiwania. Wtedy, obie funkcje zwrócą `-1`, a `errno` zostanie ustawione na `ETIMEDOUT`.
 
 Gdy kolejka jest w trybie nieblokującym, funkcje `mq_timed(send|receive)` zachowują się dokładnie tak samo jak `mq_(send|receive)`.
 
 ### Powiadamianie
 
-POSIX przewiduje możliwość asynchronicznego powiadamiania procesów o nadchodzących wiadomościach do pustej kolejki. Zarejestrować proces w celu powiadomienia możemy, używając funkcji `mq_notify` (`man 3p mq_notify`):
+POSIX przewiduje możliwość asynchronicznego powiadamiania procesów o nadchodzących wiadomościach do pustej kolejki. Zarejestrować proces w celu powiadomienia możemy używając funkcji `mq_notify` (`man 3p mq_notify`):
 
 ```
 int mq_notify(mqd_t mqdes, const struct sigevent *notification);
@@ -139,7 +139,7 @@ Poniższe przykładowe zadanie realizuje powiadamianie sygnałem. Powiadamianie 
 1. Dołączenie biblioteki `librt` jest wymagane podczas linkowania programu używającego kolejek POSIX.
 2. Jeśli otwieramy istniejącą kolejkę, może zawierać ona jakieś dane. Nie należy zakładać, że jest pusta. Aby zapewnić, że kolejka jest pusta, można ją usunąć przed ponownym utworzeniem.
 
-### Zadanie
+### Zadanie 1
 
 Napisz program, który symuluje prostą wersję gry w *bingo*. Losującym liczby jest proces rodzic, a graczami -- jego procesy potomne. Komunikacja między nimi odbywa się za pomocą kolejek komunikatów POSIX. Proces rodzic tworzy `n` procesów potomnych (`0 < n < 100`, gdzie `n` to parametr programu) oraz dwie kolejki komunikatów. Pierwsza kolejka `pout` służy do przekazywania co sekundę losowanych liczb z przedziału `[0-9]` do procesów potomnych, druga `pin` do odbierania od procesów potomnych informacji o wygranej lub zakończeniu gry.
 
@@ -149,7 +149,7 @@ Proces rodzica cały czas, asynchronicznie względem wysyłania liczb, ma odbier
 
 **UWAGA**: W tym zadaniu, rozmiar komunikatów w kolejce powinien być ograniczony do 1 bajta!
 
-### Rozwiązanie zadania
+#### Rozwiązanie zadania
 
 Nowe strony z manuala:
 
@@ -166,7 +166,7 @@ Nowe strony z manuala:
 
 {{< includecode "l6-1.c" >}}
 
-### Uwagi i pytania
+#### Uwagi i pytania
 
 - Zwróć uwagę na użycie wskaźnika przesyłanego z sygnałem. Prototyp funkcji obsługi sygnału zawiera dodatkowy parametr `siginfo_t*`, a podczas instalowania obsługi użyto flagi SA_SIGINFO, aby przesłanie wskaźnika było możliwe. Warto zauważyć, że nie wysyłamy sami takiego sygnału. Dostajemy go jako notyfikację o zdarzeniu w kolejce. Funkcją `kill` nie można wysłać wskaźnika. Można to zrobić jedynie za pomocą funkcji `sigqueue`.
 
@@ -191,9 +191,47 @@ Nowe strony z manuala:
 
 - Spora część logiki programu "wylądowała" w funkcji obsługi sygnału, co było możliwe, ponieważ nie ma zależności między kodem wysyłającym liczby a tym odbierającym notyfikacje. Jednak zadanie łatwo można skomplikować, aby taka zależność istniała. Jako ćwiczenie przenieś całą logikę związaną z odbiorem wiadomości do kodu właściwego rodzica (czyli poza asynchroniczne wywołanie funkcji obsługi sygnału).
 
-## Powiadamianie wątkiem
+### Zadanie 2: powiadamianie wątkiem
 
-<!--> TODO </!-->
+Napisz program, który symuluje rozmowy na rzymskim forum.
+Zdefiniuj stałą `CHILD_COUNT`.
+Proces rodzic tworzy `CHILD_COUNT` kolejek, otwiera je w trybie nieblokującym i uruchamia `CHILD_COUNT` liczbę dzieci.
+Każdemu dziecku przekazuje jego wygenerowane w dowolny sposób imię.
+Każde dziecko to inny obywatel na forum.
+Obywatele wysyłają sobie losowo wiadomości z ich imionami, a otrzymując je wypisują treść poprzedzoną swoim imieniem.
+Po każdym wysłaniu śpią losową ilość czasu, a po wysłaniu `ROUNDS` (stała) wiadomości kończą pracę.
+Każdy obywatel czeka na wiadomości poprzez powiadamianie wątkiem.
+
+#### Rozwiązanie zadania
+
+{{< includecode "l6-2.c" >}}
+
+#### Uwagi i pytania
+
+- Dlaczego wywołując `mq_receive` przerywamy pętlę przy błędzie `EAGAIN`?
+{{< answer >}} Błąd ten oznacza, że w kolejce nie ma już niczego więcej do przeczytania. {{< /answer >}}
+
+- Dlaczego w `child_function` wywołujemy funkcję `handle_messages`, a nie tylko `register_notification`?
+{{< answer >}} Bo jeśli w kolejce już są jakieś wiadomości od innych dzieci, to powiadomienie nigdy by nie zostało wysłane. Musimy więc przeczytać wiadomości w głównym wątku. {{< /answer >}}
+
+- Proces rodzica zamyka wszystkie deskryptory kolejek zaraz po utworzeniu dzieci. Dlaczego nie stanowi to dla nich problemu?
+{{< answer >}} Ponieważ dziecko dziedziczy kopię danych w rodzicu, w tym kopię deskryptorów. Oznacza to, że jeśli rodzic zamknie swoje deskryptory, to deskryptory dzieci nadal pozostają otwarte. {{< /answer >}}
+
+- Dlaczego procesy dzieci nie zamykają kolejek na sam koniec?
+{{< answer >}} Jest to jeden z bardzo żadkich przypadków, gdzie sprzątanie na koniec działania programu byłoby błędem! Kiedy zamykamy kolejki, to usuwane są powiadomienia, więc nie wystartują nowe wątki obsługi powiadomień. Co jednak, gdybyśmy zamknęli deskryptory kolejek w trakcie działania wątku powiadamiającego? Próbowałby on wtedy wywołać `mq_notify` lub `mq_receive` na niepoprawnych deskryptorach. Kolejki muszą więc być otwarte do samego końca działania programu. Deskryptory zostaną zamknięte przez jądro systemu przy wyjściu z programu, więc nie jest to stricte błąd. {{< /answer >}}
+
+- Czy w powyższej sytuacji nie możemy użyć jakiejś struktury synchronizacyjnej, aby uniknąć takiego impasu?
+{{< answer >}} Niestety nie możemy. Gdybyśmy tak zrobili, to problem byłby z samą strukturą. Należałoby ją na koniec działania programu zniszczyć, ale co jeśli w tym czasie działa jeszcze wątek obsługi powiadomień? Będzie wtedy próbował użyć zniszczonej struktury. {{< /answer >}}
+
+- Czy nie wystarczyłoby zaczekać, aż wątek obsługi sygnału zakończy pracę, zanim zamknęlibyśmy kolejki?
+{{< answer >}} Nie możemy czekać na ten wątek. Nie mamy jego TID. Nawet gdyby jakimś kanałem komunikacji wątek ten przekazywałby nam TID, to przy zamykaniu kolejek nie wiemy, czy nadal on istnieje. Poza tym, implementacja może ten wątek tworzyć w stanie `detached`. Na taki wątek nie możemy już nigdy czekać. {{< /answer >}}
+
+- Czy nie wystarczyłoby zaczekać, aż wątek obsługi sygnału zakończy pracę, zanim zamknęlibyśmy kolejki?
+{{< answer >}} Nie możemy czekać na ten wątek. Nie mamy jego TID. Nawet gdyby jakimś kanałem komunikacji wątek ten przekazywałby nam TID, to przy zamykaniu kolejek nie wiemy, czy nadal on istnieje. Poza tym, implementacja może ten wątek tworzyć w stanie `detached`. Na taki wątek nie możemy już nigdy czekać. {{< /answer >}}
+
+- Czy wywołanie `exit(EXIT_SUCCESS)` w procesie dziecka możemy przenieść z funkcji `child_function` do `spawn_child` zaraz za wywołanie `child_function`?
+{{< answer >}} Nie, z tego samego powodu, dlaczego nie zamykamy kolejek. Gdybyśmy tak zrobili, to zmienna `child_data` straciłaby ważność po wyjściu z funkcji `child_function`. Ale używa jej wątek, który być może jeszcze działa. Jeśli `exit(EXIT_SUCCESS)` pozostaje w `child_data`, to nie ma tego problemu. {{< /answer >}}
+
 
 ## Przykładowe zadania
 
