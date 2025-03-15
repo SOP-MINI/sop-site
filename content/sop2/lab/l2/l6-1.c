@@ -35,11 +35,11 @@ void mq_handler(int sig, siginfo_t *info, void *p)
 
     pin = (mqd_t *)info->si_value.sival_ptr;
 
-    static struct sigevent not ;
-    not .sigev_notify = SIGEV_SIGNAL;
-    not .sigev_signo = SIGRTMIN;
-    not .sigev_value.sival_ptr = pin;
-    if (mq_notify(*pin, &not ) < 0)
+    static struct sigevent notif;
+    notif.sigev_notify = SIGEV_SIGNAL;
+    notif.sigev_signo = SIGRTMIN;
+    notif.sigev_value.sival_ptr = pin;
+    if (mq_notify(*pin, &notif) < 0)
         ERR("mq_notify");
 
     for (;;)
