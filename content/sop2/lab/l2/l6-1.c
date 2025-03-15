@@ -35,11 +35,11 @@ void mq_handler(int sig, siginfo_t *info, void *p)
 
     pin = (mqd_t *)info->si_value.sival_ptr;
 
-    static struct sigevent not ;
-    not .sigev_notify = SIGEV_SIGNAL;
-    not .sigev_signo = SIGRTMIN;
-    not .sigev_value.sival_ptr = pin;
-    if (mq_notify(*pin, &not ) < 0)
+    static struct sigevent not;
+    not.sigev_notify = SIGEV_SIGNAL;
+    not.sigev_signo = SIGRTMIN;
+    not.sigev_value.sival_ptr = pin;
+    if (mq_notify(*pin, &not) < 0)
         ERR("mq_notify");
 
     for (;;)
@@ -54,7 +54,7 @@ void mq_handler(int sig, siginfo_t *info, void *p)
         if (0 == msg_prio)
             printf("MQ: got timeout from %d.\n", ni);
         else
-            printf("MQ:%d is a bingo number!\n", ni);
+            printf("MQ: %d is a bingo number!\n", ni);
     }
 }
 
@@ -78,13 +78,10 @@ void sigchld_handler(int sig, siginfo_t *s, void *p)
 
 void child_work(int n, mqd_t pin, mqd_t pout)
 {
-    int life;
-    uint8_t ni;
-    uint8_t my_bingo;
     srand(getpid());
-    life = rand() % LIFE_SPAN + 1;
-    my_bingo = (uint8_t)(rand() % MAX_NUM);
-    while (life--)
+    uint8_t my_bingo = (uint8_t)(rand() % MAX_NUM);
+    uint8_t ni;
+    for (int life = rand() % LIFE_SPAN + 1; life > 0; life--)
     {
         if (TEMP_FAILURE_RETRY(mq_receive(pout, (char *)&ni, 1, NULL)) < 1)
             ERR("mq_receive");
@@ -103,10 +100,9 @@ void child_work(int n, mqd_t pin, mqd_t pout)
 void parent_work(mqd_t pout)
 {
     srand(getpid());
-    uint8_t ni;
     while (children_left)
     {
-        ni = (uint8_t)(rand() % MAX_NUM);
+        uint8_t ni = (uint8_t)(rand() % MAX_NUM);
         if (TEMP_FAILURE_RETRY(mq_send(pout, (const char *)&ni, 1, 0)))
             ERR("mq_send");
         sleep(1);
@@ -116,7 +112,7 @@ void parent_work(mqd_t pout)
 
 void create_children(int n, mqd_t pin, mqd_t pout)
 {
-    while (n-- > 0)
+    while (n > 0)
     {
         switch (fork())
         {
@@ -124,17 +120,17 @@ void create_children(int n, mqd_t pin, mqd_t pout)
                 child_work(n, pin, pout);
                 exit(EXIT_SUCCESS);
             case -1:
-                perror("Fork:");
-                exit(EXIT_FAILURE);
+                ERR("fork");
         }
         children_left++;
+        n--;
     }
 }
 
-void usage(void)
+void usage(char* name)
 {
-    fprintf(stderr, "USAGE: signals n k p l\n");
-    fprintf(stderr, "100 >n > 0 - number of children\n");
+    fprintf(stderr, "USAGE: %s n k p l\n", name);
+    fprintf(stderr, "100 > n > 0 - number of children\n");
     exit(EXIT_FAILURE);
 }
 
@@ -142,19 +138,19 @@ int main(int argc, char **argv)
 {
     int n;
     if (argc != 2)
-        usage();
+        usage(argv[0]);
     n = atoi(argv[1]);
     if (n <= 0 || n >= 100)
-        usage();
+        usage(argv[0]);
 
     mqd_t pin, pout;
     struct mq_attr attr;
     attr.mq_maxmsg = 10;
     attr.mq_msgsize = 1;
     if ((pin = TEMP_FAILURE_RETRY(mq_open("/bingo_in", O_RDWR | O_NONBLOCK | O_CREAT, 0600, &attr))) == (mqd_t)-1)
-        ERR("mq open in");
+        ERR("mq_open in");
     if ((pout = TEMP_FAILURE_RETRY(mq_open("/bingo_out", O_RDWR | O_CREAT, 0600, &attr))) == (mqd_t)-1)
-        ERR("mq open out");
+        ERR("mq_open out");
 
     sethandler(sigchld_handler, SIGCHLD);
     sethandler(mq_handler, SIGRTMIN);
