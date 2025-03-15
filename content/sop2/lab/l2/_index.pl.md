@@ -109,10 +109,29 @@ POSIX przewiduje możliwość asynchronicznego powiadamiania procesów o nadchod
 int mq_notify(mqd_t mqdes, const struct sigevent *notification);
 ```
 - `mqdes` to desktyptor otwartej kolejki,
-- `notification` to wskaźnik na strukturę `sigevent`, mówiącą, w jaki sposób powiadomienie powinno zostać zrealizowane. Struktura ta posiada następujące pola (`man 7 sigevent`):
-  - TODO
+- `notification` to wskaźnik na strukturę `sigevent` (plik nagłówkowy `<signal.h>`), mówiącą, w jaki sposób powiadomienie powinno zostać zrealizowane. 
+
+Strukturę `sigevent` powinniśmy wypełnić w następujący sposób, w zależności od typu powiadomienia (`man 7 sigevent`):
+- Dla powiadomienia sygnałem (tylko sygnały *realtime*):
+  - ustawiamy `sigev_notify` na `SIGEV_SIGNAL`,
+  - ustawiamy `sigev_signo` na sygnał, który chcemy otrzymać (np. `SIGRTMIN`),
+  - ustawiamy `sigev_value.sival_int` lub `sigev_value.sival_ptr` na wartość, którą chcemy otrzymać w argumencie handlera sygnału (odpowiednio: liczba całkowita lub adres w pamięci).
+
+  Ponadto:
+  - przy ustawianiu handlera sygnałów funkcją `sigaction`, w strukturze `sigaction` podanej jako argument funkcji, należy ustawić pole `sa_flags` na `SA_SIGINFO` (patrz funkcja `sethandler` z rozwiązania poniższego zadania),
+  - przekazane wartości (w `sigev_value`) są przekazywane do handlera w polu `si_value` struktury `siginfo_t` (patrz funkcja `mq_handler` z rozwiązania zadania).
+- Dla powiadomienia wątkiem:
+  - ustawiamy `sigev_notify` na `SIGEV_THREAD`,
+  - ustawiamy `sigev_notify_function` na wskaźnik do funkcji przyjmującej `union sigval` (typ pola `sigev_value`) i zwracającej `void`,
+  - ustawiamy `sigev_value.sival_int` lub `sigev_value.sival_ptr` na wartość, którą chcemy otrzymać w argumencie podanej wyżej funkcji (odpowiednio: liczba całkowita lub adres w pamięci).
+  - opcjonalnie ustawiamy parametry wątku w `sigev_notify_attributes`.
 
 Jeśli chcemy wyrejestrować proces z powiadomienia, należy wywołać `mq_notify` i jako `notification` przekazać `NULL`. Przekazanie `NULL`, gdy proces nie jest zarejestrowany, spowoduje zwrócenie wartości `-1` i ustawienie `errno` na `EINVAL` (czyli błąd).
+
+**WAŻNE**: 
+- Ustawienia powiadomień na kolejce są jednokrotne, czyli po odebraniu notyfikacji nie spodziewamy się kolejnych. Jeśli chcemy otrzymać kolejne powiadomienie, musimy wywołać `mq_notify` ponownie. 
+- Notyfikacja zadziała tylko wtedy, gdy kolejka przejdzie ze stanu pustego w niepusty. 
+- Tylko jeden proces może być zarejestrowany do otrzymywania notyfikacji (inaczej `mq_notify` zwróci `-1` i ustawi `errno` na `EBUSY`).
 
 Poniższe przykładowe zadanie realizuje powiadamianie sygnałem. Powiadamianie wątkiem omówione zostanie szerzej w kolejnej sekcji.
 
@@ -124,7 +143,7 @@ Poniższe przykładowe zadanie realizuje powiadamianie sygnałem. Powiadamianie 
 
 Napisz program, który symuluje prostą wersję gry w *bingo*. Losującym liczby jest proces rodzic, a graczami -- jego procesy potomne. Komunikacja między nimi odbywa się za pomocą kolejek komunikatów POSIX. Proces rodzic tworzy `n` procesów potomnych (`0 < n < 100`, gdzie `n` to parametr programu) oraz dwie kolejki komunikatów. Pierwsza kolejka `pout` służy do przekazywania co sekundę losowanych liczb z przedziału `[0-9]` do procesów potomnych, druga `pin` do odbierania od procesów potomnych informacji o wygranej lub zakończeniu gry.
 
-Procesy potomne na początku losują swoją liczbę oczekiwaną (wygrywającą) `E` (`[0-9]`) oraz liczbę liczb, jakie odczytają `N` (`[0-9]`) z kolejki. Następnie cyklicznie konkurują o dostęp do danych w kolejce `pout` -- jedna wysłana liczba może być odebrana tylko przez jeden proces, a nie przez wszystkie naraz. Procesy potomne porównują odczytaną z `pout` liczbę do swojej liczby `E` i, jeśli jest to ta sama liczba, to poprzez drugą kolejkę `pin` przekazują informację o jej wartości, a następnie kończą działanie. Po wykonaniu `N` sprawdzeń proces potomny przed zakończeniem wysyła przez kolejkę `pin` swój numer porządkowy (z przedziału `1..n`).
+Procesy potomne na początku losują swoją liczbę oczekiwaną (wygrywającą) `E` (z przedziału `[0-9]`) oraz liczbę `N` liczb, jakie odczytają z kolejki (także z przedziału `[0-9]`). Następnie cyklicznie konkurują o dostęp do danych w kolejce `pout` -- jedna wysłana liczba może być odebrana tylko przez jeden proces, a nie przez wszystkie naraz. Procesy potomne porównują odczytaną z `pout` liczbę do swojej liczby `E` i, jeśli jest to ta sama liczba, to poprzez drugą kolejkę `pin` przekazują informację o jej wartości, a następnie kończą działanie. Po wykonaniu `N` sprawdzeń proces potomny przed zakończeniem wysyła przez kolejkę `pin` swój numer porządkowy (z przedziału `1..n`).
 
 Proces rodzica cały czas, asynchronicznie względem wysyłania liczb, ma odbierać komunikaty z `pin` i wyświetlać odpowiednie treści na ekranie. Gdy wszystkie procesy potomne zakończą działanie, proces rodzic również kończy działanie i usuwa kolejki.
 
@@ -155,8 +174,6 @@ Nowe strony z manuala:
 
 - W programie występuje obsługa sygnałów, więc konieczna jest ochrona przed przerwaniami sygnałem, np. za pomocą `TEMP_FAILURE_RETRY`. Makra te zostały dodane w całym kodzie, chociaż zagrożony przerwaniem jest tylko kod procesu rodzica, bo tylko on otrzymuje notyfikacje o stanie kolejki. Dodawanie zabezpieczeń przed przerwaniem funkcji przez obsługę sygnału nie spowalnia kodu, a czyni go bardziej przenośnym.
 
-- Ustawienia notyfikacji na kolejce są jednokrotne, czyli po odebraniu notyfikacji nie spodziewamy się kolejnych, o ile nie wywołamy `mq_notify` ponownie. Notyfikacja zadziała tylko wtedy, gdy kolejka przejdzie ze stanu pustego w niepusty. Tylko jeden proces może być zarejestrowany do otrzymywania notyfikacji.
-
 - W kodzie procesu rodzica brak jest ochrony przed przerwaniem w jednym z wywołań, w którym? Dlaczego tam ochrona taka nie jest konieczna? 
 {{< answer >}} Chodzi o wywołanie `mq_receive` w funkcji obsługi sygnału. Nie spodziewamy się przerwania funkcji obsługi sygnału obsługiwanym sygnałem, gdyż domyślnie na czas tej obsługi sygnał ten jest blokowany. {{< /answer >}}
 
@@ -171,10 +188,6 @@ Nowe strony z manuala:
 
 - Jak są wykorzystane priorytety wiadomości i jak to się ma do limitu 1 bajta dla długości wiadomości?
 {{< answer >}} W tym programie priorytety nie służą do ustalania kolejności, ale jako wyznaczniki typu informacji. Zmusza nas do tego krótki, jednobajtowy rozmiar wiadomości. Trudno (choć się da) zakodować w nim więcej niż samą liczbę. Informacja, czy chodzi o wygraną czy zakończenie gry, jest zawarta właśnie w priorytecie. {{< /answer >}}
-
-<!-- - W ramach dalszych ćwiczeń można przerobić ten program, aby notyfikacje odbywały się nie przez sygnał, a przez wątek. -->
-
-<!-- - Można również uprościć program, zastępując notyfikacje wątkiem dedykowanym tylko do odczytu z kolejki. Wykonaj taką modyfikację jako ćwiczenie. -->
 
 - Spora część logiki programu "wylądowała" w funkcji obsługi sygnału, co było możliwe, ponieważ nie ma zależności między kodem wysyłającym liczby a tym odbierającym notyfikacje. Jednak zadanie łatwo można skomplikować, aby taka zależność istniała. Jako ćwiczenie przenieś całą logikę związaną z odbiorem wiadomości do kodu właściwego rodzica (czyli poza asynchroniczne wywołanie funkcji obsługi sygnału).
 
