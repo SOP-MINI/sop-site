@@ -35,11 +35,11 @@ void mq_handler(int sig, siginfo_t *info, void *p)
 
     pin = (mqd_t *)info->si_value.sival_ptr;
 
-    static struct sigevent not;
-    not.sigev_notify = SIGEV_SIGNAL;
-    not.sigev_signo = SIGRTMIN;
-    not.sigev_value.sival_ptr = pin;
-    if (mq_notify(*pin, &not) < 0)
+    static struct sigevent not ;
+    not .sigev_notify = SIGEV_SIGNAL;
+    not .sigev_signo = SIGRTMIN;
+    not .sigev_value.sival_ptr = pin;
+    if (mq_notify(*pin, &not ) < 0)
         ERR("mq_notify");
 
     for (;;)
@@ -127,7 +127,7 @@ void create_children(int n, mqd_t pin, mqd_t pout)
     }
 }
 
-void usage(char* name)
+void usage(char *name)
 {
     fprintf(stderr, "USAGE: %s n k p l\n", name);
     fprintf(stderr, "100 > n > 0 - number of children\n");
