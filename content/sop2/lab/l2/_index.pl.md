@@ -64,8 +64,14 @@ W ramach dalszych ćwiczeń można przerobić ten program, aby notyfikacje odbyw
 Można również uprościć program, zastępując notyfikacje wątkiem dedykowanym tylko do odczytu z kolejki. Wykonaj taką modyfikację jako ćwiczenie.
 Spora część logiki programu "wylądowała" w funkcji obsługi sygnału, co było możliwe, ponieważ nie ma zależności między kodem wysyłającym liczby a tym odbierającym notyfikacje. Jednak zadanie łatwo można skomplikować, aby taka zależność istniała. Jako ćwiczenie przenieś całą logikę związaną z odbiorem wiadomości do kodu właściwego rodzica (czyli poza asynchroniczne wywołanie funkcji obsługi sygnału).
 
-## Ćwiczenie
-Wykonaj przykładowe [ćwiczenie]({{< ref "/sop2/lab/l2/example1" >}}) z poprzednich lat. To zadanie szacuję na 90 minut. Jeśli wyrobisz się w tym czasie, oznacza to, że jesteś dobrze przygotowany/a do zajęć.
+## Przykładowe zadania
+
+Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
+
+- [Zadanie 1]({{< ref "/sop2/lab/l2/example1" >}}) ~90 minut
+- [Zadanie 2]({{% ref "/sop2/lab/l2/example2" %}}) ~120 minut
+- [Zadanie 3]({{% ref "/sop2/lab/l2/example3" %}}) ~120 minut
+- [Zadanie 4]({{< ref "/sop2/lab/l2/example4" >}}) ~150 minut
 
 ## Kody źródłowe z treści tutoriala
 {{% codeattachments %}}
