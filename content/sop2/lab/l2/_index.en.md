@@ -56,9 +56,14 @@ As an exercise, modify this code to start a thread for notification.
 You can simplify the program by creating a thread dedicated to reading all the messages from the queue; no notifications will be used then. Please do this as an exercise.
 A huge part of the program's logic ended up in the signal handler; it is possible as this part does not have any common state (variables) with the rest of the program. What if we complicate it a bit and need some common variables? Can you change the program in such a way that all logic is in the main code, and the signal handler is limited only to a very simple global variable change? Do it as an exercise.
 
+## Example tasks
+Do the example tasks. During the laboratory you will have more time and the starting code. However, if you finish the following tasks in the recommended time, you will know you're well prepared for the laboratory.
 
-## Excersise
-As an exercise do [this]({{< ref "/sop2/lab/l2/example1" >}}) task. It was used in previous years. It is a 90-minute task, and if you can do it this time, you are well prepared for the lab.
+- [Task 1]({{< ref "/sop2/lab/l2/example1" >}}) ~90 minutes
+- [Task 2]({{< ref "/sop2/lab/l2/example2" >}}) ~120 minutes
+- [Task 3]({{< ref "/sop2/lab/l2/example3" >}}) ~120 minutes
+- [Task 4]({{< ref "/sop2/lab/l2/example4" >}}) ~150 minutes
+
 
 ## Source codes presented in this tutorial
 {{% codeattachments %}}

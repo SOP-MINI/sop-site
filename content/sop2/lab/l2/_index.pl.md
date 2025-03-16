@@ -232,12 +232,14 @@ Każdy obywatel czeka na wiadomości poprzez powiadamianie wątkiem.
 - Czy wywołanie `exit(EXIT_SUCCESS)` w procesie dziecka możemy przenieść z funkcji `child_function` do `spawn_child` zaraz za wywołanie `child_function`?
 {{< answer >}} Nie, z tego samego powodu, dlaczego nie zamykamy kolejek. Gdybyśmy tak zrobili, to zmienna `child_data` straciłaby ważność po wyjściu z funkcji `child_function`. Ale używa jej wątek, który być może jeszcze działa. Jeśli `exit(EXIT_SUCCESS)` pozostaje w `child_data`, to nie ma tego problemu. {{< /answer >}}
 
-
 ## Przykładowe zadania
 
 Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
 
-- [Zadanie 1]({{< ref "/sop1/lab/l2/example1" >}}) ~90 minut
+- [Zadanie 1]({{< ref "/sop2/lab/l2/example1" >}}) ~90 minut
+- [Zadanie 2]({{% ref "/sop2/lab/l2/example2" %}}) ~120 minut
+- [Zadanie 3]({{% ref "/sop2/lab/l2/example3" %}}) ~120 minut
+- [Zadanie 4]({{< ref "/sop2/lab/l2/example4" >}}) ~150 minut
 
 ## Kody źródłowe z treści tutoriala
 {{% codeattachments %}}
