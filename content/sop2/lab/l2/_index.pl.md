@@ -138,7 +138,9 @@ Zwróć uwagę na realizację powiadamiania sygnałem w Zadaniu 1. Powiadamianie
 1. Dołączenie biblioteki `librt` jest wymagane podczas linkowania programu używającego kolejek POSIX.
 2. Jeśli otwieramy istniejącą kolejkę, może zawierać ona jakieś dane. Nie należy zakładać, że jest pusta. Aby zapewnić, że kolejka jest pusta, można ją usunąć przed ponownym utworzeniem.
 
-### Zadanie 1
+## Zadania z rozwiązaniami
+
+### Zadanie 1: powiadomienie sygnałem
 
 Napisz program, który symuluje prostą wersję gry w *bingo*. Losującym liczby jest proces rodzic, a graczami -- jego procesy potomne. Komunikacja między nimi odbywa się za pomocą kolejek komunikatów POSIX. Proces rodzic tworzy `n` procesów potomnych (`0 < n < 100`, gdzie `n` to parametr programu) oraz dwie kolejki komunikatów. Pierwsza kolejka `pout` służy do przekazywania co sekundę losowanych liczb z przedziału `[0,9]` do procesów potomnych, druga `pin` do odbierania od procesów potomnych informacji o wygranej lub zakończeniu gry.
 
@@ -217,16 +219,15 @@ Każdy obywatel czeka na wiadomości poprzez powiadamianie wątkiem.
 {{< answer >}} Ponieważ dziecko dziedziczy kopię danych w rodzicu, w tym kopię deskryptorów. Oznacza to, że jeśli rodzic zamknie swoje deskryptory, to deskryptory dzieci nadal pozostają otwarte. {{< /answer >}}
 
 - Dlaczego procesy dzieci nie zamykają kolejek na sam koniec?
-{{< answer >}} Jest to jeden z bardzo rzadkich przypadków, gdzie sprzątanie na koniec działania programu byłoby błędem! Kiedy zamykamy kolejki, to usuwane są powiadomienia, więc nie wystartują nowe wątki obsługi powiadomień. Co jednak, gdybyśmy zamknęli deskryptory kolejek w trakcie działania wątku powiadamiającego? Próbowałby on wtedy wywołać `mq_notify` lub `mq_receive` na niepoprawnych deskryptorach. Kolejki muszą więc być otwarte do samego końca działania programu. Deskryptory zostaną zamknięte przez jądro systemu przy wyjściu z programu, więc nie jest to stricte błąd. {{< /answer >}}
+{{< answer >}} Kiedy zamykamy kolejki, to usuwane są powiadomienia, więc nie wystartują nowe wątki obsługi powiadomień. Co jednak, gdybyśmy zamknęli deskryptory kolejek w trakcie działania wątku powiadamiającego? Próbowałby on wtedy wywołać `mq_notify` lub `mq_receive` na niepoprawnych deskryptorach. Kolejki muszą więc być otwarte do samego końca działania programu. Deskryptory zostaną zamknięte przez jądro systemu przy wyjściu z programu, więc nie jest to stricte błąd. {{< /answer >}}
+
+- Czy nie wystarczyłoby zaczekać, aż wątek obsługi sygnału zakończy pracę, zanim zamknęlibyśmy kolejki?
+{{< answer >}} Nie możemy czekać na ten wątek. Nie mamy jego TID. Nawet gdyby jakimś kanałem komunikacji wątek ten przekazywałby nam TID, to przy zamykaniu kolejek nie wiemy, czy nadal on istnieje. Poza tym, implementacja może ten wątek tworzyć w stanie `detached`. Na taki wątek nie możemy już nigdy czekać. {{< /answer >}}
 
 - Czy w powyższej sytuacji nie możemy użyć jakiejś struktury synchronizacyjnej, aby uniknąć takiego impasu?
-{{< answer >}} Niestety nie możemy. Gdybyśmy tak zrobili, to problem byłby z samą strukturą. Należałoby ją na koniec działania programu zniszczyć, ale co jeśli w tym czasie działa jeszcze wątek obsługi powiadomień? Będzie wtedy próbował użyć zniszczonej struktury. {{< /answer >}}
+{{< answer >}} Niestety nie możemy. Gdybyśmy tak zrobili, to problem byłby z samą strukturą. Należałoby ją na koniec działania programu zniszczyć, ale co jeśli w tym czasie działa jeszcze wątek obsługi powiadomień? Będzie wtedy próbował użyć zniszczonej struktury. W tym konkretnym przypadku nie ma idealnego rozwiązania. Zamykanie kolejki oznacza, że program już się kończy - gdyby więc na przykład wątki miały zapisywać jakieś dane do pliku, byłoby warto dodać synchronizację (np. zmienną warunkową zliczającą uruchomione wątki), żeby upewnić się, że wszystkie już rozpoczętę wątki skończą pracę i nie zostawią pliku w niepoprawnym stanie. Jednak w tym konkretnym przypadku nie ma to znaczenia. {{< /answer >}}
 
-- Czy nie wystarczyłoby zaczekać, aż wątek obsługi sygnału zakończy pracę, zanim zamknęlibyśmy kolejki?
-{{< answer >}} Nie możemy czekać na ten wątek. Nie mamy jego TID. Nawet gdyby jakimś kanałem komunikacji wątek ten przekazywałby nam TID, to przy zamykaniu kolejek nie wiemy, czy nadal on istnieje. Poza tym, implementacja może ten wątek tworzyć w stanie `detached`. Na taki wątek nie możemy już nigdy czekać. {{< /answer >}}
 
-- Czy nie wystarczyłoby zaczekać, aż wątek obsługi sygnału zakończy pracę, zanim zamknęlibyśmy kolejki?
-{{< answer >}} Nie możemy czekać na ten wątek. Nie mamy jego TID. Nawet gdyby jakimś kanałem komunikacji wątek ten przekazywałby nam TID, to przy zamykaniu kolejek nie wiemy, czy nadal on istnieje. Poza tym, implementacja może ten wątek tworzyć w stanie `detached`. Na taki wątek nie możemy już nigdy czekać. {{< /answer >}}
 
 - Czy wywołanie `exit(EXIT_SUCCESS)` w procesie dziecka możemy przenieść z funkcji `child_function` do `spawn_child` zaraz za wywołanie `child_function`?
 {{< answer >}} Nie, z tego samego powodu, dlaczego nie zamykamy kolejek. Gdybyśmy tak zrobili, to zmienna `child_data` straciłaby ważność po wyjściu z funkcji `child_function`. Ale używa jej wątek, który być może jeszcze działa. Jeśli `exit(EXIT_SUCCESS)` pozostaje w `child_function`, to nie ma tego problemu. {{< /answer >}}
