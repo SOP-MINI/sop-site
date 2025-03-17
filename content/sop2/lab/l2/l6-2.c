@@ -114,7 +114,7 @@ void child_function(char* name, mqd_t* queues, int i)
 
     union sigval data;
     data.sival_ptr = &child_data;
-    handle_messages(data);  // TODO: dlaczego nie register notification?
+    handle_messages(data);
 
     for (int i = 0; i < ROUNDS; ++i)
     {

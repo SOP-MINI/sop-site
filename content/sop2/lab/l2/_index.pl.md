@@ -46,8 +46,7 @@ mqd_t mq_open(const char *name, int oflag, ...);
 Funkcja zwraca deskryptor kolejki (typu `mqd_t`) lub `(mqd_t)-1` w przypadku błędu.
 Nieużywany deskryptor zamykamy funkcją `mq_close` (`man 3p mq_close`). 
 
-Kolejkę o podanej nazwie można natomiast usunąć funkcją `mq_unlink`. Należy jednak uważać na sytuację, w której chcemy usunąć kolejkę niezamkniętą przez pewien inny proces. Jak można przeczytać w manualu (`man 3p mq_unlink`), wywołanie usunięcia kolejki może, lecz nie musi, prowadzić do zamknięcia wszystkich deskryptorów związanych z daną kolejką. Zachowanie jest zależne od implementacji. W Linuksie (`man 3 mq_unlink`) usunięcie kolejki powoduje tylko zwolnienie jej nazwy (np. do ponownego utworzenia), a `mq_unlink` zwraca natychmiastowo, natomiast kolejka jest rzeczywiście usuwana dopiero, gdy wszystkie deskryptory do niej zostaną zamknięte. Nawet w takiej sytuacji, stworzona kolejka o tej samej nazwie będzie inną kolejką od tej starszej.
-
+Kolejkę o podanej nazwie można natomiast usunąć funkcją `mq_unlink`. Należy jednak uważać na sytuację, w której chcemy usunąć kolejkę niezamkniętą przez pewien inny proces. Jak można przeczytać w manualu (`man 3p mq_unlink`), wywołanie usunięcia kolejki powoduje tylko zwolnienie jej nazwy (np. do ponownego utworzenia). Sama kolejka jest rzeczywiście usuwana dopiero, gdy wszystkie związane z nią deskryptory zostaną zamknięte. W zależności od implementacji, `mq_unlink` może wstrzymać dalsze działanie programu, aż inne procesy zamkną odpowiednie deskryptory. W Linuksie jednak (`man 3 mq_unlink`), funkcja ta zwraca natychmiastowo. Nawet w takiej sytuacji, stworzona kolejka o tej samej nazwie będzie inną kolejką od tej starszej. 
 ### Atrybuty kolejki
 
 Kolejka przechowuje swoje atrybuty w strukturze `mq_attr`, omówionej w poprzedniej sekcji (patrz wyjaśnienie funkcji `mq_open`, flaga `O_CREAT`). Pobrać atrybuty kolejki możemy, używając funkcji `mq_getattr` (`man 3p mq_getattr`), której definicja wygląda następująco:
@@ -133,7 +132,7 @@ Jeśli chcemy wyrejestrować proces z powiadomienia, należy wywołać `mq_notif
 - Notyfikacja zadziała tylko wtedy, gdy kolejka przejdzie ze stanu pustego w niepusty. 
 - Tylko jeden proces może być zarejestrowany do otrzymywania notyfikacji (inaczej `mq_notify` zwróci `-1` i ustawi `errno` na `EBUSY`).
 
-Poniższe przykładowe zadanie realizuje powiadamianie sygnałem. Powiadamianie wątkiem omówione zostanie szerzej w kolejnej sekcji.
+Zwróć uwagę na realizację powiadamiania sygnałem w Zadaniu 1. Powiadamianie wątkiem jest natomiast zaimplementowane w rozwiązaniu Zadania 2.
 
 ### Uwagi
 1. Dołączenie biblioteki `librt` jest wymagane podczas linkowania programu używającego kolejek POSIX.
@@ -195,7 +194,7 @@ Nowe strony z manuala:
 
 Napisz program, który symuluje rozmowy na rzymskim forum.
 Zdefiniuj stałą `CHILD_COUNT`.
-Proces rodzic tworzy `CHILD_COUNT` kolejek, otwiera je w trybie nieblokującym i uruchamia `CHILD_COUNT` liczbę dzieci.
+Proces rodzic tworzy `CHILD_COUNT` kolejek, otwiera je w trybie nieblokującym i uruchamia `CHILD_COUNT` dzieci.
 Każdemu dziecku przekazuje jego wygenerowane w dowolny sposób imię.
 Każde dziecko to inny obywatel na forum.
 Obywatele wysyłają sobie losowo wiadomości z ich imionami, a otrzymując je wypisują treść poprzedzoną swoim imieniem.
@@ -218,7 +217,7 @@ Każdy obywatel czeka na wiadomości poprzez powiadamianie wątkiem.
 {{< answer >}} Ponieważ dziecko dziedziczy kopię danych w rodzicu, w tym kopię deskryptorów. Oznacza to, że jeśli rodzic zamknie swoje deskryptory, to deskryptory dzieci nadal pozostają otwarte. {{< /answer >}}
 
 - Dlaczego procesy dzieci nie zamykają kolejek na sam koniec?
-{{< answer >}} Jest to jeden z bardzo żadkich przypadków, gdzie sprzątanie na koniec działania programu byłoby błędem! Kiedy zamykamy kolejki, to usuwane są powiadomienia, więc nie wystartują nowe wątki obsługi powiadomień. Co jednak, gdybyśmy zamknęli deskryptory kolejek w trakcie działania wątku powiadamiającego? Próbowałby on wtedy wywołać `mq_notify` lub `mq_receive` na niepoprawnych deskryptorach. Kolejki muszą więc być otwarte do samego końca działania programu. Deskryptory zostaną zamknięte przez jądro systemu przy wyjściu z programu, więc nie jest to stricte błąd. {{< /answer >}}
+{{< answer >}} Jest to jeden z bardzo rzadkich przypadków, gdzie sprzątanie na koniec działania programu byłoby błędem! Kiedy zamykamy kolejki, to usuwane są powiadomienia, więc nie wystartują nowe wątki obsługi powiadomień. Co jednak, gdybyśmy zamknęli deskryptory kolejek w trakcie działania wątku powiadamiającego? Próbowałby on wtedy wywołać `mq_notify` lub `mq_receive` na niepoprawnych deskryptorach. Kolejki muszą więc być otwarte do samego końca działania programu. Deskryptory zostaną zamknięte przez jądro systemu przy wyjściu z programu, więc nie jest to stricte błąd. {{< /answer >}}
 
 - Czy w powyższej sytuacji nie możemy użyć jakiejś struktury synchronizacyjnej, aby uniknąć takiego impasu?
 {{< answer >}} Niestety nie możemy. Gdybyśmy tak zrobili, to problem byłby z samą strukturą. Należałoby ją na koniec działania programu zniszczyć, ale co jeśli w tym czasie działa jeszcze wątek obsługi powiadomień? Będzie wtedy próbował użyć zniszczonej struktury. {{< /answer >}}
@@ -230,7 +229,7 @@ Każdy obywatel czeka na wiadomości poprzez powiadamianie wątkiem.
 {{< answer >}} Nie możemy czekać na ten wątek. Nie mamy jego TID. Nawet gdyby jakimś kanałem komunikacji wątek ten przekazywałby nam TID, to przy zamykaniu kolejek nie wiemy, czy nadal on istnieje. Poza tym, implementacja może ten wątek tworzyć w stanie `detached`. Na taki wątek nie możemy już nigdy czekać. {{< /answer >}}
 
 - Czy wywołanie `exit(EXIT_SUCCESS)` w procesie dziecka możemy przenieść z funkcji `child_function` do `spawn_child` zaraz za wywołanie `child_function`?
-{{< answer >}} Nie, z tego samego powodu, dlaczego nie zamykamy kolejek. Gdybyśmy tak zrobili, to zmienna `child_data` straciłaby ważność po wyjściu z funkcji `child_function`. Ale używa jej wątek, który być może jeszcze działa. Jeśli `exit(EXIT_SUCCESS)` pozostaje w `child_data`, to nie ma tego problemu. {{< /answer >}}
+{{< answer >}} Nie, z tego samego powodu, dlaczego nie zamykamy kolejek. Gdybyśmy tak zrobili, to zmienna `child_data` straciłaby ważność po wyjściu z funkcji `child_function`. Ale używa jej wątek, który być może jeszcze działa. Jeśli `exit(EXIT_SUCCESS)` pozostaje w `child_function`, to nie ma tego problemu. {{< /answer >}}
 
 ## Przykładowe zadania
 
