@@ -96,7 +96,9 @@ W trybie blokującym, możemy także ustawić maksymalny czas oczekiwania na wia
 int mq_timedsend(mqd_t mqdes, const char *msg_ptr, size_t msg_len, unsigned msg_prio, const struct timespec *abstime);
 ssize_t mq_timedreceive(mqd_t mqdes, char *restrict msg_ptr, size_t msg_len, unsigned *restrict msg_prio, const struct timespec *restrict abstime);
 ```
-które zawierają dodatkowy argument `abstime`, będący wskaźnikiem na strukturę typu `timespec` (z pliku nagłówkowego `<time.h>`), wyznaczającą maksymalny czas oczekiwania na wiadomość (`mq_timedreceive`) lub na miejsce w kolejce (`mq_timedsend`). Obie funkcje zachowują się tak jak ich odpowiedniki bez podawanego czasu, z wyjątkiem sytuacji, w której przekroczymy podany czas oczekiwania. Wtedy, obie funkcje zwrócą `-1`, a `errno` zostanie ustawione na `ETIMEDOUT`.
+które zawierają dodatkowy argument `abstime`, będący wskaźnikiem na strukturę typu `timespec` (z pliku nagłówkowego `<time.h>`), wyznaczającą **bezwzględny** czas, po którym proces przestanie oczekiwać na wiadomość (`mq_timedreceive`) lub na miejsce w kolejce (`mq_timedsend`). Obie funkcje zachowują się tak jak ich odpowiedniki bez podawanego czasu, z wyjątkiem sytuacji, w której przekroczymy podany czas oczekiwania. Wtedy, obie funkcje zwrócą `-1`, a `errno` zostanie ustawione na `ETIMEDOUT`.
+
+**WAŻNE**: Jak zostało wspomniane, argument `abstime` wyznacza bezwzględny czas, po którym oczekiwanie zakończy się. W celu ustawienia poprawnej wartości, musimy najpierw pobrać aktualną wartość czasu, np. funkcją `clock_gettime` dla zegara o ID `CLOCK_REALTIME` (`man 3p clock_getres`), a następnie do pobranej wartości dodać względny czas oczekiwania (czyli np. jak chcemy czekać 1 sekundę, to po wywołaniu `clock_gettime` musimy dodać `1` do pola `tv_sec` używanej zmiennej typu `struct timespec`).
 
 Gdy kolejka jest w trybie nieblokującym, funkcje `mq_timed(send|receive)` zachowują się dokładnie tak samo jak `mq_(send|receive)`.
 
