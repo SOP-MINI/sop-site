@@ -251,7 +251,7 @@ Each citizen waits for messages using thread-based notification.
   {{< answer >}} Because children inherit a copy of the parent's data, including file descriptors. Closing them in the parent does not affect the children’s copies. {{< /answer >}}
 
 - Why don’t the child processes close the queues at the end?  
-  {{< answer >}} Closing a queue removes its notification, meaning no new handler threads will start. If a thread is running while the queue is closed, it may attempt `mq_notify` or `mq_receive` on an invalid descriptor. Therefore, queues must remain open until the program ends. The OS will close them when the program exits, so it’s not an error. {{< /answer >}}
+  {{< answer >}} Closing a queue removes its notification, meaning no new handler threads will start. However, if a thread is already running while the queue is closed, it may attempt `mq_notify` or `mq_receive` on an invalid descriptor. Therefore, queues must remain open until the program ends. The OS will close them when the program exits, so it’s not an error. {{< /answer >}}
 
 - Could we just wait for the notification handler thread to finish before closing the queues?  
   {{< answer >}} No. We don’t have the thread’s TID. Even if it were shared, we wouldn’t know if the thread still exists when closing queues. Also, the thread might be in `detached` mode — such threads can’t be joined. {{< /answer >}}
