@@ -1,6 +1,5 @@
 ---
-title: "Task on POSIX message queues"
-date: 2022-02-01T19:36:27+01:00
+title: "Task on shared memory and mmap"
 bookHidden: true
 ---
 

@@ -1,6 +1,5 @@
 ---
 title: "Zadanie testowe z tematu pamięć dzielona i mmap"
-date: 2022-02-01T19:36:27+01:00
 bookHidden: true
 ---
 
