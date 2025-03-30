@@ -167,6 +167,10 @@ Thanks to their simplicity, named semaphores are great for the synchronisation o
 
 ## Additional materials
 
-- Try to solve the example [exercise from L1]({{% ref "/sop2/lab/l1/example2" %}}) using shared memory. Instead of sending messages that a new round has started, synchronisation can be accomplished with a semaphore (parent calls `sem_post` the appropriate amount of times at the start of a round). Test the semaphore shared within shared memory and the named semaphore opened independently by child processes. Instead of sending cards by pipes players can place them in the appropriate place within shared memory. For notifying the server that players placed their cards you can use a shared memory barrier or a second semaphore.
+Complete the sample exercises. You will have more time and starter code during the lab session, but completing the tasks below on your own means you are well prepared.
 
+- [Exercise 1]({{< ref "/sop2/lab/l3/example1" >}}) ~120 minutes
+- [Exercise 2]({{% ref "/sop2/lab/l3/example2" %}}) ~120 minutes
+- [Exercise 3]({{% ref "/sop2/lab/l3/example3" %}}) ~120 minutes
+- Try to solve the example [exercise from L1]({{% ref "/sop2/lab/l1/example2" %}}) using shared memory. Instead of sending messages that a new round has started, synchronisation can be accomplished with a semaphore (parent calls `sem_post` the appropriate amount of times at the start of a round). Test the semaphore shared within shared memory and the named semaphore opened independently by child processes. Instead of sending cards by pipes players can place them in the appropriate place within shared memory. For notifying the server that players placed their cards you can use a shared memory barrier or a second semaphore.
 - <http://cs341.cs.illinois.edu/coursebook/Ipc#mmap>
