@@ -170,5 +170,10 @@ Nazwane semafory dzięki swojej prostocie są wygodne w użyciu do zapewniania s
 
 ## Materiały dodatkowe
 
-- Spróbuj rozwiązać przykładowe [zadanie z L1]({{% ref "/sop2/lab/l1/example2" %}}) używając pamięci dzielonej. Zamiast wysyłania wiadomości o nowej rundzie synchronizacja może odbywać się przy pomocy semafora (rodzic wywołuje `sem_post` odpowiednią ilość razy na początku rundy). Przetestuj semafor współdzielony w pamięci dzielonej oraz nazwany semafor otwierany niezależnie przez procesy potomne. Zamiast wysyłania kart przez pipy gracze mogą umieszczać je w odpowiednim obszarze pamięci dzielonej. Do zasygnalizowania serwerowi, że gracze wystawili już swoje kart możesz użyć współdzielonej bariery albo ponownie semafora.
+Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
+
+- [Zadanie 1]({{% ref "/sop2/lab/l3/example1" %}}) ~120 minut
+- [Zadanie 2]({{% ref "/sop2/lab/l3/example2" %}}) ~120 minut
+- [Zadanie 3]({{< ref "/sop2/lab/l3/example3" >}}) ~120 minut
+- Spróbuj rozwiązać przykładowe [zadanie z L1]({{% ref "/sop2/lab/l1/example2" %}}) używając pamięci dzielonej. Zamiast wysyłania wiadomości o nowej rundzie synchronizacja może odbywać się przy pomocy semafora (rodzic wywołuje `sem_post` odpowiednią ilość razy na początku rundy). Przetestuj semafor współdzielony w pamięci dzielonej oraz nazwany semafor otwierany niezależnie przez procesy potomne. Zamiast wysyłania kart przez łącza gracze mogą umieszczać je w odpowiednim obszarze pamięci dzielonej. Do zasygnalizowania serwerowi, że gracze wystawili już swoje karty możesz użyć współdzielonej bariery albo ponownie semafora.
 - <http://cs341.cs.illinois.edu/coursebook/Ipc#mmap>
