@@ -1,11 +1,10 @@
 ---
 title: "Netcat"
-date: 2022-06-07T10:46:18+02:00
 ---
 
 # Introduction
 
-`netcat` is a program that can be used to perform a variety of network connections (TCP, UDP and others) and send data read from `stdin` to the connection as well as printing the data from the network connection to `stdout`. You can use netcat to communicate with programs that use plaintext based network protocol. During OPS2 classes netcat is a useful tool during labs that cover networking:  ([Lab3]({{< ref "l3">}}), [Lab4]({{< ref "l4">}}). This way you can test your programs.
+`netcat` is a program that can be used to perform a variety of network connections (TCP, UDP and others) and send data read from `stdin` to the connection as well as printing the data from the network connection to `stdout`. You can use netcat to communicate with programs that use plaintext based network protocol. During OPS2 classes `netcat` is a useful tool during lab that cover networking: ([L8]({{< ref "l8">}})). This way you can test your programs.
 
 # netcat versions
 
@@ -15,7 +14,7 @@ The `netcat` program comes in several different version depending on the operati
  - [GNU](http://netcat.sourceforge.net/),
  - OpenBSD -- an implementation taken from OpenBSD system, probably the most versatile of all of them. It can use unix domain socket (traditional and GNU versions cannot do that).
 
-The remainder of this page describes netcat OpenBSD version as this is the version installed in the lab computers.
+The remainder of this page describes `netcat` OpenBSD version as this is the version installed in the lab computers.
 
 # netcat usage
 
@@ -32,10 +31,10 @@ By default if there are no switches specifying the protocol to be used `netcat` 
  
 ## UDP
 
-To use netcat in UCP mode option `-u` is used:
+To use `netcat` in UCP mode option `-u` is used:
 
- - `nc -u <host> <port>` --- creates a UDP socket bound to a random port and sends all data from stdin to the address given,
- - `nc -u -l -s <address> -p <port>` --- creates udp socket bound to the specified address and port and waits for data from the network. stdin data is send to the address where the network datagram come from.
+ - `nc -u <host> <port>` --- creates a UDP socket bound to a random port and sends all data from `stdin` to the address given,
+ - `nc -u -l -s <address> -p <port>` --- creates udp socket bound to the specified address and port and waits for data from the network. `stdin` data is send to the address where the network datagram come from.
 
 ## UNIX
 
