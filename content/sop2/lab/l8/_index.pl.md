@@ -240,9 +240,16 @@ Przeanalizuj jak działa limitowanie do 5 połączeń, zwróć uwagę na pole fr
 
 
 ## Przykładowe zadanie
-Wykonaj przykładowe [ćwiczenie]({{< ref "/sop2/lab/l8/example1">}}) z poprzednich lat. To zadanie szacuję na 60 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a do zajęć.
+
+Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
+
+- [Zadanie 1]({{< ref "/sop2/lab/l8/example1" >}}) ~60 minut
+- [Zadanie 2]({{< ref "/sop2/lab/l8/example2" >}}) ~120 minut
+- [Zadanie 3]({{< ref "/sop2/lab/l8/example3" >}}) ~120 minut
+- [Zadanie 4]({{< ref "/sop2/lab/l8/example4" >}}) ~120 minut
 
 ## Kody źródłowe z treści tutoriala
+
 {{% codeattachments %}}
 
 ## Materiały dodatkowe
@@ -250,4 +257,3 @@ Wykonaj przykładowe [ćwiczenie]({{< ref "/sop2/lab/l8/example1">}}) z poprzedn
  - <http://cs341.cs.illinois.edu/coursebook/Networking#layer-4-tcp-and-client>
  - <http://cs341.cs.illinois.edu/coursebook/Networking#layer-4-tcp-server>
  - <http://cs341.cs.illinois.edu/coursebook/Networking#non-blocking-io>
- 

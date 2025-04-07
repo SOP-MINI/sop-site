@@ -1,6 +1,5 @@
 ---
-title: "Zadanie testowe z sieci"
-date: 2022-02-01T19:36:27+01:00
+title: "Task on network"
 bookHidden: true
 ---
 

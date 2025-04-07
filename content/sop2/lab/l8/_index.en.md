@@ -1,5 +1,5 @@
 ---
-title: "L4 - sockets and epoll"
+title: "L8 - sockets and epoll"
 weight: 40
 ---
 
@@ -227,8 +227,12 @@ Analyze how 5 connection limit works, pay attention how "free" member in the con
 
 ## Sample task
 
-As an exercise do [this]({{< ref "/sop2/lab/l8/example1" >}}) task. It was used in previous years when duration of the lab was different. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab. Now there is more time for the task during the lab and it will be slightly larger.
+Complete the sample exercises. You will have more time and starter code during the lab session, but completing the tasks below on your own means you are well prepared.
 
+- [Exercise 1]({{< ref "/sop2/lab/l8/example1" >}}) ~60 minutes
+- [Exercise 2]({{< ref "/sop2/lab/l8/example2" >}}) ~120 minutes
+- [Exercise 3]({{< ref "/sop2/lab/l8/example3" >}}) ~120 minutes
+- [Exercise 4]({{< ref "/sop2/lab/l8/example4" >}}) ~120 minutes
 
 ## Source codes presented in this tutorial
 
@@ -239,4 +243,3 @@ As an exercise do [this]({{< ref "/sop2/lab/l8/example1" >}}) task. It was used 
  - <http://cs341.cs.illinois.edu/coursebook/Networking#layer-4-tcp-and-client>
  - <http://cs341.cs.illinois.edu/coursebook/Networking#layer-4-tcp-server>
  - <http://cs341.cs.illinois.edu/coursebook/Networking#non-blocking-io>
- 
