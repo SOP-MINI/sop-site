@@ -81,7 +81,7 @@ solution `l7-1.c`:
 
 ### shm_*
 
-In the example above we created an area of memory using `mmap`, which was shared by a group of processes created using `fork()`. What if we wanted the processes to be independent? We can create a named shared memory object, which can be mapped by any process using its unique name. It is very similar and analogous in their differences to the pair: pipe - FIFO, which was introduced in L1.
+In the example above we created an area of memory using `mmap`, which was shared by a group of processes created using `fork()`. What if we wanted the processes to be independent? We can create a named shared memory object, which can be mapped by any process using its unique name. It is very similar and analogous in their differences to the pair: pipe - FIFO, which was introduced in L5.
 
 To create a named shared memory object use `shm_open` (see `man 3p shm_open`). Its usage is very simple, and the parameters are analogous to regular `open` or `mq_open`, so reading the man page should explain it.
 

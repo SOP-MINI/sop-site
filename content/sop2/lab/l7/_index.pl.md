@@ -82,7 +82,7 @@ rozwiązanie `l7-1.c`:
 
 ### shm_*
 
-W przykładzie wyżej dzięki `mmap` tworzyliśmy obszar pamięci, który współdzieliła ze sobą grupa procesów stworzona przez `fork()`. Co jednak, gdy procesy są od siebie niezależne? W takiej sytuacji możemy stworzyć nazwany obiekt pamięci dzielonej, która każdy proces może zmapować po unikalnej nazwie. Jest więc to rzecz bardzo podobna i analogiczna w różnicach co pipe i FIFO omawiane na L1.
+W przykładzie wyżej dzięki `mmap` tworzyliśmy obszar pamięci, który współdzieliła ze sobą grupa procesów stworzona przez `fork()`. Co jednak, gdy procesy są od siebie niezależne? W takiej sytuacji możemy stworzyć nazwany obiekt pamięci dzielonej, która każdy proces może zmapować po unikalnej nazwie. Jest więc to rzecz bardzo podobna i analogiczna w różnicach co pipe i FIFO omawiane na L5.
 
 Do tworzenia nazwanego obiektu pamięci dzielonej służy funkcja `shm_open` (patrz `man 3p shm_open`). Jej użycie jest bardzo proste, a parametry analogiczne do zwykłego `open` albo `mq_open`, tak więc po prostu przeczytaj stronę manuala.
 

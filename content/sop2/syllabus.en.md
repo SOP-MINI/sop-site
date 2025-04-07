@@ -42,11 +42,10 @@ At the end of the course students should:
 
 ### Laboratory scope:
 
-  - Lab 1 FIFO/pipe (3h)
-  - Lab 2 POSIX queues (3h)
-  - Lab 3 Network sockets, pselect (3h)
-  - Lab 4 Sockets, threads, shared memory, synchronization (3h)
-  - Lab 5 Retake (3h)
+  - Lab 5 FIFO/pipe
+  - Lab 6 POSIX queues
+  - Lab 7 Shared memory and mmap
+  - Lab 8 sockets and epoll
 
 ### Literature:
 

@@ -42,11 +42,10 @@ Po ukończeniu kursu studenci powinni:
 
 ### Zakres zajęć laboratoryjnych
 
--   L1: Łącza nazwane/nienazwane (pipe/FIFO) (3g)
--   L2: Kolejki POSIX (3g)
--   L3: Gniazda, pselect (3g)
--   L4: Gniazda, wątki, pamięć wspólna, synchronizacja (3g)
--   L5: Indywidualna poprawa jednego ćwiczenia (3g)
+-   L5: Łącza nazwane/nienazwane (pipe/FIFO)
+-   L6: Kolejki POSIX
+-   L7: Pamięć dzielona i mmap
+-   L8: gniazda sieciowe i epoll
 
 ### Literatura
 

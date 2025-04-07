@@ -1,5 +1,5 @@
 ---
-title: "L4 - sockets and epoll"
+title: "L8 - sockets and epoll"
 weight: 40
 ---
 
@@ -79,22 +79,22 @@ Pay closer attention at Q&A in `man 7 epoll`. It is well prepared so we will not
 
 
 Common library for all sources in this tutorial:
-{{< includecode "l4_common.h" >}}
+{{< includecode "l8_common.h" >}}
 
-server `l4-1_server.c`:
-{{< includecode "l4-1_server.c" >}}
-local client `l4-1_client_local.c`:
-{{< includecode "l4-1_client_local.c" >}}
-TCP client `l4-1_client_tcp.c`:
-{{< includecode "l4-1_client_tcp.c" >}}
+server `l8-1_server.c`:
+{{< includecode "l8-1_server.c" >}}
+local client `l8-1_client_local.c`:
+{{< includecode "l8-1_client_local.c" >}}
+TCP client `l8-1_client_tcp.c`:
+{{< includecode "l8-1_client_tcp.c" >}}
 
 To run the code:
 ```
-$ ./l4-1_server a 2000&
-$ ./l4-1_client_local a 2 1 +
-$ ./l4-1_client_local a 2 1 '*'
-$ ./l4-1_client_local a 2 0 /
-$ ./l4-1_client_tcp localhost 2000 234 17  /
+$ ./l8-1_server a 2000&
+$ ./l8-1_client_local a 2 1 +
+$ ./l8-1_client_local a 2 1 '*'
+$ ./l8-1_client_local a 2 0 /
+$ ./l8-1_client_tcp localhost 2000 234 17  /
 
 $ killall -s `SIGINT` prog23a_s
 
@@ -176,11 +176,11 @@ man 3p send
 ```
 
 
-Solution `l4-2_server.c`:
-{{< includecode "l4-2_server.c" >}}
+Solution `l8-2_server.c`:
+{{< includecode "l8-2_server.c" >}}
 
-Solution `l4-2_client.c`:
-{{< includecode "l4-2_client.c" >}}
+Solution `l8-2_client.c`:
+{{< includecode "l8-2_client.c" >}}
 
 
 There is no connection in UDP protocol, sockets send datagrams "ad hoc". There is no listening socket. Losses, duplicates and reordering of datagrams  are possible!
