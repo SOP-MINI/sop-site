@@ -1,7 +1,9 @@
 ---
-title: "L4 - gniazda sieciowe i epoll"
+title: "L8 - gniazda sieciowe i epoll"
 weight: 40
 ---
+
+# Tutorial 8 - Gniazda sieciowe i epoll
 
 {{< hint warning >}}
 W tym tutorialu do czekania na wielu deskryptorach używamy funkcji z rodziny `epoll`, które nie są częścią standardu POSIX, ale rozszerzeniem Linuxa. Przy pisaniu kodu przenośnego między systemami należy użyć funkcji z rodziny `select` lub `poll`, które jednak cechują się gorszą wydajnością a ich użycie jest mniej wygodne. 
@@ -75,22 +77,22 @@ Zwróć uwagę zwłaszcza na sekcję Q&A w `man 7 epoll`. Ponieważ jest bardzo 
 
 
 Wspólna biblioteka dla wszystkich kodów w tym tutorialu:
-{{< includecode "l4_common.h" >}}
+{{< includecode "l8_common.h" >}}
 
-serwer `l4-1_server.c`:
-{{< includecode "l4-1_server.c" >}}
-klient lokalny `l4-1_client_local.c`:
-{{< includecode "l4-1_client_local.c" >}}
-klient TCP `l4-1_client_tcp.c`:
-{{< includecode "l4-1_client_tcp.c" >}}
+serwer `l8-1_server.c`:
+{{< includecode "l8-1_server.c" >}}
+klient lokalny `l8-1_client_local.c`:
+{{< includecode "l8-1_client_local.c" >}}
+klient TCP `l8-1_client_tcp.c`:
+{{< includecode "l8-1_client_tcp.c" >}}
 
 Uruchomienie:
 ```
-$ ./l4-1_server a 2000&
-$ ./l4-1_client_local a 2 1 +
-$ ./l4-1_client_local a 2 1 '*'
-$ ./l4-1_client_local a 2 0 /
-$ ./l4-1_client_tcp localhost 2000 234 17  /
+$ ./l8-1_server a 2000&
+$ ./l8-1_client_local a 2 1 +
+$ ./l8-1_client_local a 2 1 '*'
+$ ./l8-1_client_local a 2 0 /
+$ ./l8-1_client_tcp localhost 2000 234 17  /
 
 $ killall -s `SIGINT` prog23a_s
 
@@ -188,11 +190,11 @@ Co student musi wiedzieć:
 - man 3p recv
 - man 3p send
 
-rozwiązanie `l4-2_server.c`:
-{{< includecode "l4-2_server.c" >}}
+rozwiązanie `l8-2_server.c`:
+{{< includecode "l8-2_server.c" >}}
 
-rozwiązanie `l4-2_client.c`:
-{{< includecode "l4-2_client.c" >}}
+rozwiązanie `l8-2_client.c`:
+{{< includecode "l8-2_client.c" >}}
 
 
 Zwróć uwagę, że w protokole UDP nie nawiązujemy połączenia, gniazda komunikują się ze sobą "ad hoc". Nie ma gniazda nasłuchującego. Możliwe są straty, duplikaty i zmiany kolejności datagramów.
@@ -238,7 +240,7 @@ Przeanalizuj jak działa limitowanie do 5 połączeń, zwróć uwagę na pole fr
 
 
 ## Przykładowe zadanie
-Wykonaj przykładowe [ćwiczenie]({{< ref "/sop2/lab/l4/example1">}}) z poprzednich lat. To zadanie szacuję na 60 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a do zajęć.
+Wykonaj przykładowe [ćwiczenie]({{< ref "/sop2/lab/l8/example1">}}) z poprzednich lat. To zadanie szacuję na 60 minut, jeśli wyrobisz się w tym czasie to znaczy, że jesteś dobrze przygotowany/a do zajęć.
 
 ## Kody źródłowe z treści tutoriala
 {{% codeattachments %}}

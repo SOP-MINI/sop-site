@@ -21,10 +21,10 @@ title: "Reference material"
 
 ## Laboratory reference
 
-- [Lab 1 FIFO/pipe ]({{< ref "lab/l1" >}})
-- [Lab 2 POSIX queues ]({{< ref "lab/l2" >}})
-- Lab 3 Network sockets, pselect
-- Lab 4 Sockets, threads, shared memory, synchronization
+- [Lab 5 FIFO/pipe ]({{< ref "lab/l5" >}})
+- [Lab 6 POSIX queues ]({{< ref "lab/l6" >}})
+- [Lab 7 Network sockets, pselect]({{< ref "lab/l7" >}})
+- [Lab 8 Sockets, threads, shared memory, synchronization]({{< ref "lab/l8" >}})
 
 ## Other links
 

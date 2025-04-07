@@ -1,9 +1,9 @@
 ---
-title: "L3 - Shared memory and mmap"
+title: "L7 - Shared memory and mmap"
 weight: 30
 ---
 
-# Shared memory and mmap
+# Tutorial 7 - Shared memory and mmap
 
 {{< hint info >}}
 
@@ -66,8 +66,8 @@ man 0p sys_mman.h
 man 3p ftruncate
 ```
 
-solution `l3-1.c`:
-{{< includecode "l3-1.c" >}}
+solution `l7-1.c`:
+{{< includecode "l7-1.c" >}}
 
 ### Notes and questions 
 
@@ -131,11 +131,11 @@ man 3p pthread_mutexattr_setrobust
 man 3p pthread_mutex_consistent
 ```
 
-solution `l3-1_server.c`:
-{{< includecode "l3-2_server.c" >}}
+solution `l7-1_server.c`:
+{{< includecode "l7-2_server.c" >}}
 
-solution `l3-1_client.c`:
-{{< includecode "l3-2_client.c" >}}
+solution `l7-1_client.c`:
+{{< includecode "l7-2_client.c" >}}
 
 ### Notes and questions
 
@@ -169,8 +169,8 @@ Thanks to their simplicity, named semaphores are great for the synchronisation o
 
 Complete the sample exercises. You will have more time and starter code during the lab session, but completing the tasks below on your own means you are well prepared.
 
-- [Exercise 1]({{< ref "/sop2/lab/l3/example1" >}}) ~120 minutes
-- [Exercise 2]({{% ref "/sop2/lab/l3/example2" %}}) ~120 minutes
-- [Exercise 3]({{% ref "/sop2/lab/l3/example3" %}}) ~120 minutes
-- Try to solve the example [exercise from L1]({{% ref "/sop2/lab/l1/example2" %}}) using shared memory. Instead of sending messages that a new round has started, synchronisation can be accomplished with a semaphore (parent calls `sem_post` the appropriate amount of times at the start of a round). Test the semaphore shared within shared memory and the named semaphore opened independently by child processes. Instead of sending cards by pipes players can place them in the appropriate place within shared memory. For notifying the server that players placed their cards you can use a shared memory barrier or a second semaphore.
+- [Exercise 1]({{< ref "/sop2/lab/l7/example1" >}}) ~120 minutes
+- [Exercise 2]({{% ref "/sop2/lab/l7/example2" %}}) ~120 minutes
+- [Exercise 3]({{% ref "/sop2/lab/l7/example3" %}}) ~120 minutes
+- Try to solve the example [exercise from L1]({{% ref "/sop2/lab/l5/example2" %}}) using shared memory. Instead of sending messages that a new round has started, synchronisation can be accomplished with a semaphore (parent calls `sem_post` the appropriate amount of times at the start of a round). Test the semaphore shared within shared memory and the named semaphore opened independently by child processes. Instead of sending cards by pipes players can place them in the appropriate place within shared memory. For notifying the server that players placed their cards you can use a shared memory barrier or a second semaphore.
 - <http://cs341.cs.illinois.edu/coursebook/Ipc#mmap>

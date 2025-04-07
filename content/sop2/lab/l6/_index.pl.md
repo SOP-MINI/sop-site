@@ -1,5 +1,5 @@
 ---
-title: "L2 - Kolejki POSIX"
+title: "L6 - Kolejki POSIX"
 date: 2022-02-10T10:00:00+01:00
 weight: 20
 ---
@@ -238,10 +238,10 @@ Każdy obywatel czeka na wiadomości poprzez powiadamianie wątkiem.
 
 Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
 
-- [Zadanie 1]({{< ref "/sop2/lab/l2/example1" >}}) ~90 minut
-- [Zadanie 2]({{% ref "/sop2/lab/l2/example2" %}}) ~120 minut
-- [Zadanie 3]({{% ref "/sop2/lab/l2/example3" %}}) ~120 minut
-- [Zadanie 4]({{< ref "/sop2/lab/l2/example4" >}}) ~150 minut
+- [Zadanie 1]({{< ref "/sop2/lab/l6/example1" >}}) ~90 minut
+- [Zadanie 2]({{% ref "/sop2/lab/l6/example2" %}}) ~120 minut
+- [Zadanie 3]({{% ref "/sop2/lab/l6/example3" %}}) ~120 minut
+- [Zadanie 4]({{< ref "/sop2/lab/l6/example4" >}}) ~150 minut
 
 ## Kody źródłowe z treści tutoriala
 {{% codeattachments %}}

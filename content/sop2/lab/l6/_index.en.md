@@ -1,5 +1,5 @@
 ---
-title: "L2 - POSIX Queues"
+title: "L6 - POSIX Queues"
 date: 2022-02-10T10:00:00+01:00
 weight: 20
 ---
@@ -266,10 +266,10 @@ Each citizen waits for messages using thread-based notification.
 
 Complete the sample exercises. You will have more time and starter code during the lab session, but completing the tasks below on your own means you are well prepared.
 
-- [Exercise 1]({{< ref "/sop2/lab/l2/example1" >}}) ~90 minutes  
-- [Exercise 2]({{% ref "/sop2/lab/l2/example2" %}}) ~120 minutes  
-- [Exercise 3]({{% ref "/sop2/lab/l2/example3" %}}) ~120 minutes  
-- [Exercise 4]({{< ref "/sop2/lab/l2/example4" >}}) ~150 minutes
+- [Exercise 1]({{< ref "/sop2/lab/l6/example1" >}}) ~90 minutes  
+- [Exercise 2]({{% ref "/sop2/lab/l6/example2" %}}) ~120 minutes  
+- [Exercise 3]({{% ref "/sop2/lab/l6/example3" %}}) ~120 minutes  
+- [Exercise 4]({{< ref "/sop2/lab/l6/example4" >}}) ~150 minutes
 
 ## Source Code from the Tutorial
 {{% codeattachments %}}

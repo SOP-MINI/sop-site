@@ -3,6 +3,8 @@ title: "L4 - sockets and epoll"
 weight: 40
 ---
 
+# Tutorial 8 - Sockets and epoll
+
 {{< hint warning >}}
 In this tutorial we use `epoll` functions family to wait on multiple descriptors. `epoll` is not a part of POSIX, but Linux extension. If you want to write portable code, you should look at `select` or `poll` functions - which are standarized, but have worse performance and are less convenient to use.
 {{< /hint >}}
@@ -225,7 +227,7 @@ Analyze how 5 connection limit works, pay attention how "free" member in the con
 
 ## Sample task
 
-As an exercise do [this]({{< ref "/sop2/lab/l4/example1" >}}) task. It was used in previous years when duration of the lab was different. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab. Now there is more time for the task during the lab and it will be slightly larger.
+As an exercise do [this]({{< ref "/sop2/lab/l8/example1" >}}) task. It was used in previous years when duration of the lab was different. It is 60 minutes task and if you can do it in this time it means you are prepared for the lab. Now there is more time for the task during the lab and it will be slightly larger.
 
 
 ## Source codes presented in this tutorial

@@ -1,10 +1,10 @@
 ---
-title: "L1 - FIFO/pipe"
+title: "L5 - FIFO/pipe"
 date: 2022-02-10T10:00:00+01:00
 weight: 10
 ---
 
-# Tutorial 1 - FIFO/pipe
+# Tutorial 5 - FIFO/pipe
 
 {{< hint info >}}
 Uwagi wstępne:
@@ -261,11 +261,11 @@ Rozwiązanie **prog22b.c**:
 
 Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
 
-- [Zadanie 1]({{% ref "/sop2/lab/l1/example1" %}}) ~60 minut
-- [Zadanie 2]({{% ref "/sop2/lab/l1/example2" %}}) ~90 minut
-- [Zadanie 3]({{% ref "/sop2/lab/l1/example3" %}}) ~120 minut
-- [Zadanie 4]({{% ref "/sop2/lab/l1/example4" %}}) ~120 minut
-- [Zadanie 5]({{< ref "/sop2/lab/l1/example5" >}}) ~120 minut
+- [Zadanie 1]({{% ref "/sop2/lab/l5/example1" %}}) ~60 minut
+- [Zadanie 2]({{% ref "/sop2/lab/l5/example2" %}}) ~90 minut
+- [Zadanie 3]({{% ref "/sop2/lab/l5/example3" %}}) ~120 minut
+- [Zadanie 4]({{% ref "/sop2/lab/l5/example4" %}}) ~120 minut
+- [Zadanie 5]({{< ref "/sop2/lab/l5/example5" >}}) ~120 minut
 
 ## Dodatkowe materiały
 

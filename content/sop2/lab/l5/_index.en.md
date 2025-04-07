@@ -1,10 +1,10 @@
 ---
-title: "L1 - FIFO/pipe"
+title: "L5 - FIFO/pipe"
 date: 2022-02-10T10:00:00+01:00
 weight: 10
 ---
 
-# Tutorial 1 - FIFO/pipe
+# Tutorial 5 - FIFO/pipe
 
 {{< hint info >}}
 Introduction notes:
@@ -250,11 +250,11 @@ Solution **prog22b.c**:
 ## Example tasks
 Do the example tasks. During the laboratory you will have more time and the starting code. However, if you finish the following tasks in the recommended time, you will know you're well prepared for the laboratory.
 
-- [Task 1]({{< ref "/sop2/lab/l1/example1" >}}) ~60 minutes
-- [Task 2]({{< ref "/sop2/lab/l1/example2" >}}) ~90 minutes
-- [Task 3]({{< ref "/sop2/lab/l1/example3" >}}) ~120 minutes
-- [Task 4]({{< ref "/sop2/lab/l1/example4" >}}) ~120 minutes
-- [Task 5]({{< ref "/sop2/lab/l1/example5" >}}) ~120 minutes
+- [Task 1]({{< ref "/sop2/lab/l5/example1" >}}) ~60 minutes
+- [Task 2]({{< ref "/sop2/lab/l5/example2" >}}) ~90 minutes
+- [Task 3]({{< ref "/sop2/lab/l5/example3" >}}) ~120 minutes
+- [Task 4]({{< ref "/sop2/lab/l5/example4" >}}) ~120 minutes
+- [Task 5]({{< ref "/sop2/lab/l5/example5" >}}) ~120 minutes
 
 ## Additional materials
 

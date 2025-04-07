@@ -21,10 +21,10 @@ title: "Materiały do przedmiotu"
 
 ## Opisy ćwiczeń laboratoryjnych
 
-- [L1 FIFO/pipe]({{< ref "lab/l1" >}})
-- [L2 kolejki POSIX]({{< ref "lab/l2" >}})
-- L3 Gniazda pselect
-- L4  Gniazda, wątki, pamięć wspólna, synchronizacja
+- [L5 FIFO/pipe]({{< ref "lab/l5" >}})
+- [L6 kolejki POSIX]({{< ref "lab/l6" >}})
+- [L7 Gniazda pselect]({{< ref "lab/l7" >}})
+- [L8 Gniazda, wątki, pamięć wspólna, synchronizacja]({{< ref "lab/l8" >}})
 
 ## Inne materiały
 

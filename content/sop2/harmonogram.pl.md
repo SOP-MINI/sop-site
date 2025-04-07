@@ -30,8 +30,8 @@ Czwartki, 14:15 - 16:30
 
 | Data  | Tytuł                                                                     |
 |-------|---------------------------------------------------------------------------|
-| 13.03 | [L1 FIFO/pipe]({{< ref "lab/l1" >}})                                      |
-| 27.03 | [L2 Kolejki POSIX]({{< ref "lab/l2" >}})                                  |
-| 10.04 | [L3 Pamięć dzielona i mmap]({{< ref "lab/l3" >}})                         |
-|  8.05 | [L4 Gniazda, TCP, UDP, epoll]({{< ref "lab/l4" >}})                       |
+| 13.03 | [L5 FIFO/pipe]({{< ref "lab/l5" >}})                                      |
+| 27.03 | [L6 Kolejki POSIX]({{< ref "lab/l6" >}})                                  |
+| 10.04 | [L7 Pamięć dzielona i mmap]({{< ref "lab/l7" >}})                         |
+|  8.05 | [L8 Gniazda, TCP, UDP, epoll]({{< ref "lab/l8" >}})                       |
 | 29.05 | Poprawa                                                                   |

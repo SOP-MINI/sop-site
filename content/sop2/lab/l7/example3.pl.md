@@ -81,4 +81,4 @@ Uruchomienie tych programów bez argumentów pokazuje, jak ich używać.
 
 ## Kod początkowy
 
-- [sop2l3e3.zip](/files/sop2l3e3.zip)
+- [sop2l7e3.zip](/files/sop2l7e3.zip)

@@ -30,8 +30,8 @@ Thursdays, 14:15 - 16:30
 
 | Date  | Topic                                                                        |
 |-------|------------------------------------------------------------------------------|
-| 20.03 | [Lab1 FIFO/pipe]({{< ref "lab/l1">}})                                        |
-|  3.04 | [Lab2 POSIX queues]({{< ref "lab/l2">}})                                     |
-| 24.04 | [Lab3 Shared memory and mmap]({{< ref "lab/l3">}})                           |
-| 15.05 | [Lab4 Sockets, TCP, UDP, epoll]({{< ref "lab/l4">}})                         |
+| 20.03 | [Lab5 FIFO/pipe]({{< ref "lab/l5">}})                                        |
+|  3.04 | [Lab6 POSIX queues]({{< ref "lab/l6">}})                                     |
+| 24.04 | [Lab7 Shared memory and mmap]({{< ref "lab/l7">}})                           |
+| 15.05 | [Lab8 Sockets, TCP, UDP, epoll]({{< ref "lab/l8">}})                         |
 | 29.05 | Retakes                                                                      |
