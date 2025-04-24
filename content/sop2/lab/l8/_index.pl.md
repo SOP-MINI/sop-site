@@ -34,6 +34,7 @@ Napisz prosty sieciowy kalkulator liczb całkowitych. Dane przesyłane pomiędzy
 - wynik
 - operator (+,-,*,/)
 - status
+
 Wszystko przekonwertowane do postaci 32 bitowych liczb w tablicy.
 
 Serwer wylicza wynik i odsyła go do klienta. Jeśli wyliczenie przebiegło pomyślnie pole status przyjmuje wartość 1, jeśli nie (np. dzielenie przez zero) wartość 0. Komunikacja z serwerem jest możliwa na 2 sposoby:
@@ -50,6 +51,7 @@ Należy napisać 2 programy klientów, po jednym dla każdego typu połączenia,
 - operand 1
 - operand 2
 - operator (+,-,*,/)
+
 Jeśli wyliczenie się uda należy wyświetlić wynik. 
 Wszystkie 3 programy można przerwać C-c, nie wolno po sobie zostawiać pliku połączenia lokalnego.
 		

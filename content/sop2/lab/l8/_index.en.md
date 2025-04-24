@@ -33,6 +33,7 @@ Write simple integer calculator server. Data send to server consists of:
 - result
 - operator (+,-,*,/)
 - status
+
 all converted to 32 bit integers in an array.
 
 Server calculates the results of operation (+,-,*,/) on operands and sends
@@ -51,6 +52,7 @@ Write 2 types of client, one for each connection type, those clients shall take 
 - operand 1
 - operand 2
 - operator (+,-,*,/)
+
 On success client displays the result on the screen.
 All above programs can be interrupted with C-c, server may NOT leave local socket file not deleted in such a case.
 		
