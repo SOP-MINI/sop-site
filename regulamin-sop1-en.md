@@ -1,95 +1,83 @@
-# Purpose of course
+# Recommendations or restrictions on student participation in a course resulting from the required sequence in which the courses should be followed in line with the study plan, and prerequisites
 
-The first goal of the *Operating Systems 1* course is to familiarize students with the basics of operating system operation and design. The second goal is to develop students' skills in the correct application of system functions to design and implementation of simple multiprocess/multi-thread applications which communicate using standard input/output channels and files.
+Participation in the Operating Systems 1 course requires passing the courses: Programming 1, Programming 2, Computer Architecture, and Unix System Fundamentals. The student must be able to write and understand programs in the C language.
 
+# Regulations on student mandatory attendance at courses for which attendance is obligatory, including the allowable limit of non-attendance and justification of non-attendance
 
-# Conducting classes
+- Attendance at lectures is not mandatory, but recommended due to the close connection of the discussed material with the laboratory.
+- Attendance at graded laboratory classes is mandatory. In case of absence from classes, the student receives 0 points for activities carried out during the classes from which they were absent.
+- Absence from two of the laboratory classes graded L1/L2/L3/L4 results in failing the course.
 
-The subject consists of a lecture and a laboratory.
+# Detailed methods of partial and/or final verification of learning outcomes achievement (e.g., the number of tests) and types of materials and devices approved for use by students during verification of learning outcomes achievement
 
-  - The lectures introduce students to the course matter, in particular, to the topic covered by the laboratory.
-    - The course consists of 15 lecture hours in 2-hour blocks. The last lecture is 1 hour long. Lectures take place according to the schedule provided on the course website.
-    - The lecture materials are available on the course website.
-  - The laboratory consists of five classes denoted as L0, L1, L2, L3, L4. The laboratory classes take place according to the schedule provided on the course website. The course website also includes preparation materials for classes.
-  - L0 class is devoted to the preparation of the environment. During this class, students have to recall the skills of the Unix Fundamentals course and to configure the development environment. Any deficiencies in the configuration or skills (e.g., lack of intellisense, underlining errors in the editor or poor ability to navigate through directories) in all subsequent classes will not be an excuse for poor grades and cannot be used as an excuse for less strict grading. Moreover, during L0 students will be familiarized with solution submission system used during following classes.
-  - L1, L2, L3 and L4 classes assess abilities in the topics given in the laboratory schedule. Students should prepare on their own for each class, using the materials on the course website and lecture materials. During each laboratory, students solve a programming task (130 minutes).
-  - At the end of the semester, there is a retake where students can improve their grades in exactly one topic (L1, L2, L3, or L4). Registration for the retakes will start immediately after the last laboratory classes in the semester and will be open for **24 hours** only.
+The course consists of lectures and laboratories.
 
+The laboratory consists of non-graded classes (W1, W2 and W3), graded classes (L1, L2, L3 and L4) and a project. Classes are held according to the schedule provided on the course website. The course website also contains preparatory materials for the classes.
 
-# Course materials
+### Graded laboratories
+  - Classes L1, L2, L3 and L4 are used to assess skills in the area indicated in the course schedule. For each class, students should prepare independently, using the materials on the course website and lecture materials.
+  - You can get from 0 to 22 points for the task
+  - The time to complete the task is 130 minutes
+  - Laboratory tasks are solved using the Arch Linux system on computers in the laboratory. It is not allowed to solve tasks on student's own computer.
+  - The programming task is divided into stages. The points for each stage are given in the task description. The stages must be performed in the specified order. You are not allowed to proceed to the next stage without completing the previous ones.
+  - Each stage is checked and assessed during the classes. The assessment covers the ability to use appropriate tools and the correct (including POSIX-compliant) implementation of the required functionality.
+  - After completing each stage, students submit their solution to the server using the git version control system, as described at W1. Submissions are subject to the following rules:
+    - The program must be written in C (not C++).
+    - The solution cannot be submitted more often than once a minute.
+    - Only the solution files can be modified.
+    - Files must be formatted according to the `clang-format` configuration in the task's starter repository (the tool is available on lab computers and its usage is explained during W1).
+    - The program must compile without any errors or warnings using the provided makefile.
+  - If a solution does not meet one of these conditions, it is rejected, and the student receives feedback on the issue. Submitting the solution to the server is a prerequisite for grading a given stage; unsent solutions will not be graded.
+  - During the solving of programming tasks, students **can** use the course website, their own materials, solutions to sample tasks, system documentation and the Internet, but in such a way that the submitted solution is their independent work. In particular, communication with others and the use of AI-based solutions, such as ChatGPT, Github Copilot and similar, is not allowed.
 
-  - Materials provided during the lecture (e.g. slides, code snippets)
-  - Literature given at the lecture and available on the subject's website
-  - Descriptions of laboratory exercises on the subject page
-  - [The GNU C library manual](http://www.gnu.org/software/libc/manual/)
-  - [The Single UNIX specification Version 3](http://www.unix.org/version3/online.html) (includes IEEE Std 1003.1 and ISO / IEC 9945)
-  - [POSIX FAQ](http://www.opengroup.org/austin/papers/posix_faq.html)
+Class W1 is dedicated to environment setup. During this class, students will configure their programming environment and review skills from the "Unix System Fundamentals" course. Any shortcomings in the environment configuration or these skills (e.g., lack of function name completion, error highlighting in the editor, or inability to navigate directories) will not be considered as mitigating circumstances for grading in subsequent classes. Additionally, during W1, teachers will familiarize students with the solution submission process for the labs.
 
+### Project
 
-# Class attendance
-
-  - Attendance at the lectures is not obligatory but recommended due to the close relation between the discussed material and the laboratory.
-  - Attendance at the laboratory classes is obligatory. In case of absence, the student receives 0 points for activities carried during the classes in which he was absent.
-  - Absence from two of the assessed laboratory classes L1/L2/L3/L4 results in failure to complete the course.
-
-
-# Verification of achievement of learning outcomes
-
-The learning outcomes are verified during the laboratory. There are five laboratory classes during the semester, denoted as L0, L1, L2, L3 and L4 on the course website.
-
-## L0
-
-During L0 class, students solve a simple programming task, for which they can score up to 4 points.
-
-## L1-L4
-
-### Programming task
-
-   - 0 to 24 points to get for each topic
-   - Allotted time: 130 minutes
-   - Laboratory tasks are solved using the Arch Linux system on the computers in the laboratory. It is not allowed to show solutions on student's own computer.
-   - A programming task is divided into stages. The number of points for each stage in provided within the task description. The stages must be performed in the prescribed order. It is not allowed to proceed to the next stage without completing the predecessors.
-   - Each stage is checked and graded during the class. Use of proper tools and POSIX API, correct implementation and functional correctness are graded.
-   - After finishing each stage, students send the solution to the server using git version control system as described during L0. Submissions must obey the following rules:
-    - The task must be coded in *C* (not C++).
-    - Submission may be sent only once one minute.
-    - It is allowed only to modify solution files.
-    - Solution files must be formatted according to clang-format configuration provided with the task. Clang-format program is installed on computers in the laboratory and its usage will be explained during L0.
-    - Solution program must compile using Makefile from the task repository.
-    If the solution does not follow one of the rules, it will be automatically rejected, and students will get information about the reason for the rejection. Sending the solution to the server is necessary for grading - solution not sent to the server will not be graded. 
+The project is completed according to the schedule on the course website. It involves creating a larger program and discussing its implementation with the teacher. The same materials are allowed as in the laboratories. The project is worth up to 12 points.
 
 
-# Aids acceptable for use in verifying achievement of learning outcomes
+# Schedule of partial and/or final verification of learning outcomes achievement, in particular the dates of written and oral tests and deadlines for submission of reports on completed laboratory work and projects, including make-up dates, if the specifics of the course allow for it
 
-  - During graded coding tasks one **can** use man pages and any code from tutorials, own code repository, online and book examples and materials as long as the solution remains individual. In particular, it is not allowed to use AI-based solutions like chat GPT, Github Copilot and similar ones.
-
-
-# The rules for passing the course and for calculating the final grade
-
- - To pass the course, it is necessary to obtain a total of at least 50 points (out of 100 possible), and to attend the number of classes required in the Attendance section
- - The points from the retake always replace the result scored during the lab
- - **The final course grade** is based on total points acquired by the student during the labs (100p tops):
-   - Grade 5.0 - total in range [90, 100]
-   - Grade 4.5 - total in range [80, 90)
-   - Grade 4.0 - total in range [70, 80)
-   - Grade 3.5 - total in range [60, 70)
-   - Grade 3.0 - total in range [50, 60)
-   - Grade 2.0 - total in range [0, 50)
+The schedule is available on the course website: sop.mini.pw.edu.pl
 
 
-# Deadline and procedure for announcing grades
+# Possibility and rules for students’ participation in tests and examinations held on additional dates
 
-  - Partial grades
-    - The number of points obtained for the subsequent stages of the laboratory task is given at the time of checking by the teacher and written on a sheet with the content of the task
-    - Points from both parts of the laboratory are placed in USOS no later than 24 hours after the class. The number of points in USOS determines the final grade
-  - Final grade
-    - Issued in USOS within 24 hours from the publication of the results of the last L4 laboratory in USOS
-    - Corrected during the exam session within 24 hours from the publication of the results of the retakes in USOS
+Additional exam dates beyond the number required by the study regulations will not be organized.
+
+# Rules for awarding course credit and the final course grade
+
+- To pass the course, it is necessary to obtain a total of at least 50 points (out of 100 possible), subject to the permissible number of absences.
+- The grade from the retake replaces the grade from the retaken classes.
+- **The final grade for the course** is the sum of the points obtained by the student from the laboratory:
+  - Grade 5.0 - score in the range [90, 100]
+  - Grade 4.5 - score in the range [80, 90)
+  - Grade 4.0 - score in the range [70, 80)
+  - Grade 3.5 - score in the range [60, 70)
+  - Grade 3.0 - score in the range [50, 60)
+  - Grade 2.0 - score in the range [0, 50)
 
 
-# Rules of repetition of classes due to failure of a subject
+# Dates and methods of providing information on the results of partial and/or final verification of learning outcomes achievement and grades awarded to students
 
-A person who did not pass the subject must repeat the entire subject. It is not possible to transfer partial points from previous semesters.
+The results of the laboratories are entered into USOS immediately after each class. The results of the project are entered immediately after it is checked during the classes designated for this purpose.
 
-# Others
+- Partial grades
+  - The number of points obtained for subsequent stages of the laboratory task is given at the time of checking by the instructor and written down on the sheet with the task description
+  - Points from the laboratory are placed in USOS no later than 24 hours after the classes. The number of points entered in USOS determines the final grade
+  - The results of the project are entered immediately after it is checked during the classes designated for this purpose.
+- Final grade
+  - Issued in USOS within 24 hours of the publication of the results of the last L4 laboratory in USOS
+  - Corrected during the examination session within 24 hours of the publication of the results of the make-up laboratory in USOS
 
+
+# The rules for improving the results of partial and/or final verification of learning outcomes achievement and grades awarded to students
+
+At the end of the semester, a retake is organized, during which students can improve the grade obtained in one of the graded laboratories. Registration for the retake will be launched immediately after the last laboratory classes in the semester and will last **24 hours**.
+
+# The rules for retaking particular types of classes included in the course due to unsatisfactory academic progress
+
+A person who has not passed the course must repeat the entire course and take all the assessments. It is not possible to transfer partial points from previous semesters.
+
+# Other information depending on the specifics of the course

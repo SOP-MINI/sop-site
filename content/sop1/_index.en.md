@@ -22,6 +22,5 @@ menu:
 
 - Franciszek Jełowicki *lab coordinator*
 - Tomasz Herman
-- Szymon Zyguła
 - Piotr Krasowski
 - Szymon Tur
