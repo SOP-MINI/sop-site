@@ -440,62 +440,7 @@ rozróżnić zero od błędu, wtedy używamy funkcji strtol.
 Argumenty programu można nadpisać w trakcie jego działania, w tym i nazwę! Może to służyć próbie ukrycia procesu i/lub
 jego argumentów (np. hasła).
 
-## Zadanie 6 - parametry wywołania programu 3
-
-Cel: Napisać program przyjmujący dowolną liczbę parametrów typu -t x i dowolną liczbę parametrów -n NAME. Parametry mogą
-wystąpić w dowolnej kolejności. Dla każdego wystąpienia parametru -n wypisujemy dokładnie x razy powitanie "Hello NAME".
-Początkowo x=1, ale kolejne wystąpienia -t mogą to zmienia
-
-Np.: `./prog6 -n Anna -t 2 -n John -n Matt -t 1 -n Danny` wypisze
-```
-Hello Anna
-Hello Jonh
-Hello Jonh
-Hello Matt
-Hello Matt
-Hello Danny
-```
-
-Co student musi wiedzieć: 
-- man 3p getopt 
-- [dokumentacja GNU](http://www.gnu.org/software/libc/manual/html_node/Using-Getopt.html)
-
-<em>poprawmy funkcję usage w <b>prog6.c</b></em>
-```c
-fprintf(stderr, "USAGE:%s ([-t x] -n Name) ... \n", pname);
-```
-<em>kod do pliku <b>prog6.c</b></em>
-{{< includecode "prog6.c" >}}
-
-Sprawdź, jak działa program dla niepoprawnych argumentów lub jeśli podamy argumenty pozycyjne (niepoprzedzone oznaczeniem
-opcji) oraz gdy nie podamy argumentów lub parametrów.
-
-W programie zmienną c (int) porównujemy ze znakami 't' i 'n' (char), to poprawne podejście w C char jest po prostu
-jedno-bajtowym typem numerycznym.
-
-W parametrach getopt opisujemy pożądaną składnię - zazwyczaj literki opcji z opcjonalnymi przyrostkami - `:` znaczy ma
-argument, natomiast `::` znaczy, że ma opcjonalny argument.
-
-Komunikaty dla błędnych opcji "invalid option -- '?'" są generowane w samej funkcji getopt, jeśli chcemy je wyłączyć
-ustawiamy zmienną globalną opterr na zero.
-
-Zmienne optarg i optind to kolejne zmienne globalne typu extern z biblioteki powiązane z getopt.
-Co zawiera pierwsza, widać w kodzie.
-Druga mówi, ile opcji z linii wywołania do danego momentu przetworzono.
-Trzeba przy tym wiedzieć, że argumenty niebędące opcjami lub ich argumentami są w trakcie przetwarzania przesuwane na koniec linii poleceń, teraz
-już wiesz co robi ostatni warunek w kodzie powyżej - sprawdza czy nie było argumentów pozycyjnych spoza wymaganej
-składni.
-
-Zwróć uwagę, że lepiej byłoby najpierw przeprowadzić parsowanie opcji kontrolnie a dopiero potem wykonać program, ale
-jako przykład tyle wystarczy.
-
-`optarg` to statyczny bufor nadpisywany kolejnymi wywołaniami, czasem gdy musimy przechować te wartości trzeba je
-kopiować (strcpy, alokacja pamięci).
-
-Długie opcje np.: `--count 10` są obsługiwane przez `getopt_long` ale nie są one standaryzowane przez POSIX to
-rozszerzenie GNU i nie będziemy ich używać.
-
-## Zadanie 7 - zmienne środowiskowe 1
+## Zadanie 6 - zmienne środowiskowe 1
 
 Cel: Napisać program wypisujący listę wszystkich zmiennych środowiskowych
 
@@ -503,13 +448,13 @@ Co student musi wiedzieć:
 - man 3p environ
 - man 7 environ
 
-<em>zawartość do pliku <b>prog7.c</b></em>
-{{< includecode "prog7.c" >}}
+<em>zawartość do pliku <b>prog6.c</b></em>
+{{< includecode "prog6.c" >}}
 
-Własną zmienna mogę dodać np. tak: `TVAR2="122345" ./prog7` , pojawi się na wypisie, ale nie zostanie zapamiętana w
-powłoce, tzn. kolejne wywołania programu  `./prog7` już jej nie pokażą.
+Własną zmienna mogę dodać np. tak: `TVAR2="122345" ./prog6` , pojawi się na wypisie, ale nie zostanie zapamiętana w
+powłoce, tzn. kolejne wywołania programu  `./prog6` już jej nie pokażą.
 
-Mogę też dodać zmienną trwale do środowiska powłoki `export TVAR1='qwert'` i teraz, ilekroć wywołam program `./prog7`
+Mogę też dodać zmienną trwale do środowiska powłoki `export TVAR1='qwert'` i teraz, ilekroć wywołam program `./prog6`
 ta zmienna wciąż tam będzie.
 
 Czy jeśli uruchomię drugą powłokę z menu środowiska i w niej uruchomię program to zmienna TVAR1 nadal będzie widoczna?
@@ -523,7 +468,7 @@ Czy jeśli uruchomię drugą powłokę z pierwszej i w niej uruchomię program t
 Tak, druga powłoka dziedziczy zmienne od swojego rodzica, czyli od pierwszej powłoki. 
 {{< /details >}}
 
-## Zadanie 8 - zmienne środowiskowe 2
+## Zadanie 7 - zmienne środowiskowe 2
 
 Cel: Zmodyfikować prog3.c tak, aby każda linia tekstu "Hello NAME" była powielona tyle razy, ile nakazuje mnożnik
 przekazany przez zmienną środowiskową TIMES. Na zakończenie programu ustawić zmienną środowiskową RESULT na "Done".
@@ -534,8 +479,8 @@ Co student musi wiedzieć:
 - man 3p setenv
 - man 3 system (3p) jest trochę mniej czytelny
 
-<em>kod do pliku <b>prog8.c</b></em>
-{{< includecode "prog8.c" >}}
+<em>kod do pliku <b>prog7.c</b></em>
+{{< includecode "prog7.c" >}}
 
 Zwróć uwagę na możliwy błąd braku zmiennej środowiska i jego obsługę na początku kodu. Dobry programista nigdy nie
 pomija sprawdzania błędów, jeśli się śpieszysz i pomijasz to Twój kod jest gorszy - musisz być tego świadomy/a.
@@ -567,22 +512,22 @@ Zmienna była ustawiona tylko w programie i w powłoce w nim na chwilę wywołan
 ale po zakończeniu tych procesów się nie zachowała. 
 {{< /details >}}
 
-## Zadanie 9 - obsługa błędów
+## Zadanie 8 - obsługa błędów
 
-Cel: zmodyfikować program prog7.c, aby dodał zmienne środowiskowe podane przez użytkownika i dopiero wtedy wypisał je wszystkie.
+Cel: zmodyfikować program prog6.c, aby dodał zmienne środowiskowe podane przez użytkownika i dopiero wtedy wypisał je wszystkie.
 
 Co student musi wiedzieć: 
 - man 3p errno
 
-<em>kod do pliku <b>prog9.c</b></em>
-{{< includecode "prog9.c" >}}
+<em>kod do pliku <b>prog8.c</b></em>
+{{< includecode "prog8.c" >}}
 
 Skompiluj i wykonaj program na dwa sposoby:
 ```shell
-$ ./prog9 VAR1 VAL1
+$ ./prog8 VAR1 VAL1
 ``` 
 ```shell
-$ ./prog9 VA=R1 VAL1
+$ ./prog8 VA=R1 VAL1
 ``` 
 
 W drugim wypadku program powinien zakończyć się błędem.

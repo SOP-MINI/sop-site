@@ -421,73 +421,20 @@ control over the conversion and be able to tell error from real zero use strtol 
 You can overwrite program arguments and name in the run time! It may be a hiding technique for the process or for the
 passwords in arguments.
 
-## Task 6 - program parameters 3
-
-Goal:
-Write a program that accepts any number of parameters of type -t x and any number of -n NAME parameters. 
-Parameters can be mixed in any order.  Each occurrence of -n results in the printout of NAME x-times.
-Initially x=1, each occurrence of -t changes x to the new value,
-e.g.: `prog6 -n Anna -t 2 -n John -n Matt  -t 1 -n Danny` will print:
-```
-Hello Anna
-Hello Jonh
-Hello Jonh
-Hello Matt
-Hello Matt
-Hello Danny
-```
-
-What you need to know:
-- man 3p getopt
-- GNU documentation on getopt <a href="http://www.gnu.org/software/libc/manual/html_node/Using-Getopt.html">link</a>
-
-<em>Lets correct usage in <b>prog6.c</b>:</em>
-```c
-fprintf(stderr, "USAGE:%s ([-t x] -n Name) ... \n", pname);
-```
-
-<em>code for <b>prog6.c</b> file:</em>
-{{< includecode "prog6.c" >}}
-
-Test how this program deals with invalid options, spare positional (not preceded with option letter) parameters, missing
-arguments and missing options.
-
-In the code we compare c (int) with chars 't' and 'n' (char), those types can be easily compared as they are both
-numeric, char is just a one byte number.
-
-getopt parameter describes the syntax - mostly option letters with optional suffixes - `:` to denote mandatory parameter
-and `::` for optional parameter.
-
-Invalid option messages come from getopt function itself, to turn them off you need to zero global variable opterr.
-
-Other global, extern type variables connected to getopt are optarg and optind. The meaning of the first one is obvious
-(see the code). The second one denotes how many parameters from the command line has been processed up to now. Positional
-parameters not related to the syntax are shifted to the end. Considering those two facts it should be easier to tell
-what the last "if" in the code is for - it tests for spare (not defined in syntax) arguments that should be left at the
-end of the list after the main loop.
-
-Please notice that it may be a good idea to verify the parameters before processing them.
-
-`optarg` is stored in static buffer, it is overwritten with next call to getopt, if you need to store values from this
-buffer make copies (strcpy, memory allocation).
-
-Long options like `--count 10` are recognized by getopt_long, however they are not part of the POSIX standard, it is
-GNU extension, and we are not going to use them here.
-
-## Task 7 - environment variables 1
+## Task 6 - environment variables 1
 
 Goal: List all the environmental variables of the process
 What you need to know:
 - man 3p environ
 - man 7 environ
 
-<em>code for <b>prog7.c</b> file:</em>
-{{< includecode "prog7.c" >}}
+<em>code for <b>prog6.c</b> file:</em>
+{{< includecode "prog6.c" >}}
 
-You can add your own variable in the following way: `$ TVAR2="122345" ./prog7` , it will show up on the list but it will
-not be stored in the parent environment i.e. next run `./prog7` will not list it.
+You can add your own variable in the following way: `$ TVAR2="122345" ./prog6` , it will show up on the list but it will
+not be stored in the parent environment i.e. next run `./prog6` will not list it.
 
-You can also store it in the shell environment: `export TVAR1='qwert'` and invoke `./prog7` multiple times, it will
+You can also store it in the shell environment: `export TVAR1='qwert'` and invoke `./prog6` multiple times, it will
 keep showing TVAR1 on the list.
 
 If you start another shell from the menu and run this program inside will it list the variable exported in the first one?
@@ -500,7 +447,7 @@ If I run the second shell from the first one and then run the program in 2nd one
 Yes, the second one inherits the environment with this variable from the first one as it is parent child relation of those two processes.
 {{< /details >}}
 
-## Task 8 - environmental variables 2
+## Task 7 - environmental variables 2
 
 Goal: 
 Enhance prog3.c to multiply each welcome line of text as many times as environmental variable TIMES says. At the end of the program set RESULT environmental variable to "Done" value. 
@@ -510,8 +457,8 @@ What you need to know:
 - man 3p setenv
 - man 3 system (3p) is a bit confusing
 
-<em>code for <b>prog8.c</b> file:</em>
-{{< includecode "prog8.c" >}}
+<em>code for <b>prog7.c</b> file:</em>
+{{< includecode "prog7.c" >}}
 
 Please notice that environmental variable may be absent and that this code is prepared for this situation. Good
 programmer always checks for errors. If you are in a hurry and skip those checks your must be aware that your code is
@@ -541,22 +488,22 @@ The variable was set in the program process and, for a brief moment, in the shel
 After those processes have ended the variable vanished with them.
 {{< /details >}}
 
-## Task 9 - error handling
+## Task 8 - error handling
 
-Goal: Modify program prog7.c to add append new environmental variables passed by user and then list all them all.
+Goal: Modify program prog6.c to add append new environmental variables passed by user and then list all them all.
 
 What you need to know:
 - man 3p errno
 
-<em>code for <b>prog9.c</b> file:</em>
-{{< includecode "prog9.c" >}}
+<em>code for <b>prog8.c</b> file:</em>
+{{< includecode "prog8.c" >}}
 
 Compile and run program in two ways:
 ```shell
-$ ./prog9 VAR1 VAL1
+$ ./prog8 VAR1 VAL1
 ``` 
 ```shell
-$ ./prog9 VA=R1 VAL1
+$ ./prog8 VA=R1 VAL1
 ``` 
 
 Second run should finish with error.
