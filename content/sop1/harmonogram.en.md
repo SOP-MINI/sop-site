@@ -4,17 +4,25 @@ title: "Schedule"
 
 ## Lecture
 
-Tuesdays, 14:15 - 16:00, room 101
+Wednesdays, 4:15 - 6:00 PM, room 103
 
 | Date       | Topic                                                                 |
 |------------|-----------------------------------------------------------------------|
-| 15.10.2024 | [Introduction. Computer and operating systems.]({{< ref "wyk/w1" >}}) |
-| 29.10.2024 | [File system interface.]({{< ref "wyk/w2" >}})                        |
-| 12.11.2024 | [File system interface.]({{< ref "wyk/w2" >}})                        |
-| 26.11.2024 | [Processes]({{< ref "wyk/w4" >}})                                     |
-| 10.12.2024 | [POSIX signals]({{< ref "wyk/w5" >}})                                 |
-| 7.01.2025  | [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})               |
-| 21.01.2025 | [Synchronization]({{< ref "wyk/w7" >}})                               |
+| 8.10.2025  | [Introduction. Computer and operating systems.]({{< ref "wyk/w1" >}}) |
+| 15.10.2025 | [File system interface.]({{< ref "wyk/w2" >}})                        |
+| 22.10.2025 | [File system interface.]({{< ref "wyk/w2" >}})                        |
+| 29.10.2025 | [Processes]({{< ref "wyk/w4" >}})                                     |
+| 5.11.2025  | [POSIX signals]({{< ref "wyk/w5" >}})                                 |
+| 12.11.2025 | `inotify` interface (?)                                               |
+| 19.11.2025 | `io_uring` interface (?)                                              |
+| 26.11.2025 | [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})               |
+| 3.12.2025  | [Synchronization]({{< ref "wyk/w7" >}})                               |
+| 10.12.2025 | [Synchronization]({{< ref "wyk/w7" >}})                               |
+| 17.12.2025 | _Office hours_                                                        |
+| 7.01.2026  | Scheduling                                                            |
+| 14.01.2026 | Pipes and FIFOs                                                       |
+| 21.01.2026 | Message queues                                                        |
+| 28.01.2026 | _Office hours_                                                        |
 
 ## Laboratories
 
