@@ -1,12 +1,12 @@
 ---
-title: "System kontroli wersji git"
-menu: sop1
+title: "System kontroli wersji GIT"
+weight: 20
 ---
 
 {{< hint info >}}
 
 Ta strona zawiera ogólne informacje o systemie GIT.
-Po jej przeczytaniu zobacz też [tutorial do L0 na SOP1]({{< ref "sop1/lab/l0#schemat-użycia-gita-na-laboratorium" >}}) w którym zostało omówione użycie GITa na laboratorium.
+Po jej przeczytaniu przejżyj też stronę [Użycie GITa w czasie laboratorium]({{< ref "git-on-lab" >}}).
 
 {{< /hint >}}
 
@@ -135,6 +135,25 @@ Aby zobaczyć listę wszystkich zmian w repozytorium, należy wykonać polecenie
 $ git log
 ```
 
+## Wypychanie zmian na zdalny serwer
+
+Jak było wspomniane na początku GIT jest używany do ułatwienia współpracy między programistami. W związku z tym repozytorium rzadko jest tylko lokalne - ważną funkcjonalnością jest możliwość "wypychania" (ang. "push") swoich zmian tak, żeby inni mogli je zobaczyć. Jest to możliwe za pośrednictwem różnych metod i protokołów, jednak w ostatnim czasie największą popularność zdobyły tak zwane "kuźnie oprogramowania" (ang. "source forge") - serwerów trzymających repozytoria GITa oraz umożliwiających zarządzanie nimi przy użyciu wygodnego interfejsu webowego. Popularne strony to np. [GitHub](https://github.com/), [GitLab](https://gitlab.com/) czy [CodeBerg](https://codeberg.org/), ale jest ich [o wiele więcej](https://en.wikipedia.org/wiki/Comparison_of_source-code-hosting_facilities).
+
+Na laboratoriach z SOPów używamy własnego systemu - jednak jest on włączany tylko w trakcie zajęć. Wciąż warto przećwiczyć wypychanie zmian używając jednej z ogólnodostępnych i darmowych stron. W tym celu najpierw załóż konto (lub zaloguj się, jeżeli już masz) na wybranej przez siebie stronie oraz stwórz nowe repozytorium na swoim koncie. Szczegóły różnią się między różnymi oprogramowaniami, jednak najczęściej tworzone jest puste repozytorium a strona wyświetla instrukcję jak podpiąć nasze lokalne repozytorium na komputerze do zdalnego (ang. "remote"). Przykładowy wygląd strony pustego zdalnego repozytorium:
+
+![](/img/empty-repo.png)
+
+Jak widać strona udostępnia dwie instrukcje. Pierwsza dotyczy nowego repozytorium i pokrywa się w dużej części tym, co dopiero przećwiczyliśmy. Na taką okazję jest właśnie przygotowana druga instrukcja. Nowym elementem w obu jest ustawianie adresu zdalnego repozytorium komendą `git remote` oraz wypychanie swoich zmian (commitów) komendą `git push`. To, co powinno wystarczyć to użycie:
+
+```shell
+$ git remote add origin <adres zdalnego repozytorium>
+```
+ta komenda dodaje do repozytorium nowy "remote" o nazwie `origin` (jest to konwencjonalnie nazwa "głównego" remote-a z którym pracujemy) i podanym adresie. Następnie wystarczy już napisać tylko:
+
+```shell
+$ git push
+```
+aby wypchnąć commity z aktualnej gałązi na domyślne zdalne repozytorium.
 
 ## Dodatkowe materiały
 
@@ -142,12 +161,12 @@ Powyższy opis pokrywa tylko podstawowe funkcje GITa.
 Nie został tutaj poruszony temat gałęzi, łączenia zmian czy rozwiązywania konfliktów.
 W praktyce są to bardzo popularne problemy, jednak zbyt złożone do opisania tutaj.
 Ta [książka](https://git-scm.com/book/en/v2) jest bardzo dobrym źródłem do zapoznania się z wieloma funkcjami GITa.
-Polecam szczególnie rozdział drugi jako uzupełnienie tego opisu.
+Polecamy szczególnie rozdział drugi jako uzupełnienie tego opisu.
 
 
 {{< hint info >}}
 
 Ta strona zawiera ogólne informacje o systemie GIT.
-Po jej przeczytaniu zobacz też [tutorial do L0 na SOP1]({{< ref "sop1/lab/l0#schemat-użycia-gita-na-laboratorium" >}}) w którym zostało omówione użycie GITa na laboratorium.
+Po jej przeczytaniu zobacz też [Użycie GITa w czasie laboratorium]({{< ref "sop1/lab/l0#schemat-użycia-gita-na-laboratorium" >}}).
 
 {{< /hint >}}

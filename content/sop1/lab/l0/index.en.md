@@ -8,7 +8,7 @@ weight: 10
 
 {{< hint info >}}
 
-This laboratory does not require any preparation, its aim is to explain all the rules and answer all the question about graded labs and the classes schedule. Please carefully read everything about [GIT]({{< ref "/git">}}), [syllabus]({{< ref "/sop1/syllabus" >}}), [grading]({{< ref "/sop1/zasady" >}}) and [schedule]({{< ref "/sop1/harmonogram" >}}). Also have a look at the [reference]({{< ref "/sop1/materialy" >}}).
+This laboratory does not require any preparation, its aim is to explain all the rules and answer all the question about graded labs and the classes schedule. Please carefully read everything about [GIT]({{< ref "/info/git">}}), [syllabus]({{< ref "/sop1/syllabus" >}}), [grading]({{< ref "/sop1/zasady" >}}) and [schedule]({{< ref "/sop1/harmonogram" >}}). Also have a look at the [reference]({{< ref "/sop1/materialy" >}}).
 
 On [reference]({{< ref "/sop1/materialy" >}}) page you can find self preparation tutorials, you should do them at home before the graded labs. The aim of graded lab is to test how well you studied the topic at home. You can ask questions about the course topics via email at any time.
 
@@ -540,8 +540,6 @@ Goal: Write a trivial program "hello world", compile and run it.
 - know one of available (in our labs) programmers environment for Linux
 - know how to do basic compilation with gcc
 - know how to use a command line interface
-
-*What student should know:*
 - fundamental know how about `git` program
 
 
@@ -575,61 +573,6 @@ Besides that each assignment will require usage of particular set of sanitizers.
 ```shell
 ./prog1
 ```
-
-## Instruction of using GIT on the laboratory
-
-{{< hint info >}}
-
-This section of tutorial has to be done during the laboratory on faculty.
-Before starting you have to read section about [GIT]({{< ref "/git" >}}) usage.
-Steps below require access to server available only during laboratory.
-I encourage you to read it and prepare before zeroth laboratory.
-
-{{< /hint >}}
-
-During laboratory every task will be done inside a GIT repository.
-Credentials to remote access will be provided during the laboratory.
-Your code has to be tracked by GIT during the laboratory.
-Every stage has to be synchronized with server.
-**If some code will not be sent to the server, you will not take points for it.** 
-
-Before you start coding, you need your personal SSH key from [LeON](https://leon.pw.edu.pl).
-On the OPS page you can download two files: `id_ed25519` and `id_ed25519.pub`.
-You have to copy it to `~/.ssh` directory.
-Every pair of keys is unique to student and has to be used by only one student.
-
-Because the private key is secret, it shouldn't be readable to other users. You need to change permissions:
-```shell
-chmod 600 ~/.ssh/id_ed25519
-```
-
-First step on laboratory is copy remote repository to your local workstation with command 
-```shell
-$ git clone ssh://gitolite@vl01/l0en/name_surname
-```
-
-Command creates directory with name of repository (`name_surname`) and copies files to it.
-Inside this directory you write your code.
-
-The task consists of stages.
-When you finish one stage, you should commit your change to repository.
-To synchronize your code with server you have to run command 
-
-```shell
-$ git push
-```
-
-Please remember to send your code to the server as soon as possible.
-Access to the server will be closed when the laboratory finishes.
-Code can be graded if and only if it will be sent to this server.
-
-The solution will be accepted by the server if and only if:
-- Only solution files (`.c`) were modified - if you change any other files, e.g., makefile, commit will be rejected
-- Solution files are correctly formatted. In the repository, there is a configuration file `.clang-format` for `clang-format` program, which is installed in the system. It allows to format source files - use `clang-format -i <filename.c>`. Many IDEs allow automatic formatting on save
-- Solution is not too long - 600 lines by default, it should be more than sufficient for lab task
-- Solution can be compiled without any warnings using makefile from the repository
-
-If one of the rules is not met the server will reject the solution with a reject message. In that case, you need to fix your code, create a new commit, and push it. The server allows one push every minute.
 
 
 ## Source codes presented in this tutorial

@@ -1,14 +1,12 @@
 ---
 title: "GIT version control system"
-menu: 
-  mainmenu:
-    weight: 10
+weight: 20
 ---
 
 {{< hint info >}}
 
 This page contains general information about GIT version control system.
-After reading it see also [OPS1 L0 tutorial]({{< ref "sop1/lab/l0#instruction-of-using-git-on-the-laboratory" >}}) which explains how GIT is used during laboratory.
+After reading it see also [Using GIT during laboratory]({{< ref "sop1/lab/l0#instruction-of-using-git-on-the-laboratory" >}}).
 
 {{< /hint >}}
 
@@ -148,6 +146,5 @@ I recommend reading chapter 2 as supplement to this description.
 {{< hint info >}}
 
 This page contains general information about GIT version control system.
-After reading it see also [OPS1 L0 tutorial]({{< ref "sop1/lab/l0#instruction-of-using-git-on-the-laboratory" >}}) which explains how GIT is used during laboratory.
-
+After reading it see also [Using GIT during laboratory]({{< ref "sop1/lab/l0#instruction-of-using-git-on-the-laboratory" >}}).
 {{< /hint >}}
