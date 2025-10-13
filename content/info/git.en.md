@@ -135,6 +135,26 @@ To see list of all commits (changes) you have to run command
 $ git log
 ```
 
+## Pushing changes to remote server
+
+As mentioned at the beginning, GIT is used to facilitate collaboration between developers. Therefore, the repository is rarely local only - an important feature is the ability to "push" your changes so that others can see them. This can be done using various methods and protocols, but recently, so-called "source forges" have become the most popular. These are servers that host and manage GIT repositories using a convenient web interface. Popular sites include [GitHub](https://github.com/), [GitLab](https://gitlab.com/), and [CodeBerg](https://codeberg.org/), but there are [many more](https://en.wikipedia.org/wiki/Comparison_of_source-code-hosting_facilities)
+
+In this course we use our own system, but it is only activated during classes. It is still worth practicing pushing changes using one of the publicly available and free websites. To do this, first create an account (or log in if you already have one) on the website of your choice and create a new repository. The details vary between different software, but most often an empty repository is created and the website displays instructions on how to connect our local repository on the computer to a remote one. An example of what an empty remote repository looks like:
+
+![](/img/empty-repo.png)
+
+As you can see, this website provides two sets of instructions. The first one is about creating a new repository and largely covers what we have just practiced. The second set of instructions is for connecting an existing repository. A new element in both is setting the remote repository address with the `git remote` command and pushing your changes (commits) with the `git push` command. What should suffice is to use:
+
+```shell
+$ git remote add origin <adres zdalnego repozytorium>
+```
+which add to the repository a new "remote" named `origin` (the default name for "main" remote) with given address. Then you only need to use:
+
+```shell
+$ git push
+```
+to push your commits from current branch to default remote.
+
 ## Additional materials
 
 Description above covers only fundamental functions of GIT.

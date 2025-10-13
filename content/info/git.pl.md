@@ -143,7 +143,7 @@ Na laboratoriach z SOPów używamy własnego systemu - jednak jest on włączany
 
 ![](/img/empty-repo.png)
 
-Jak widać strona udostępnia dwie instrukcje. Pierwsza dotyczy nowego repozytorium i pokrywa się w dużej części tym, co dopiero przećwiczyliśmy. Na taką okazję jest właśnie przygotowana druga instrukcja. Nowym elementem w obu jest ustawianie adresu zdalnego repozytorium komendą `git remote` oraz wypychanie swoich zmian (commitów) komendą `git push`. To, co powinno wystarczyć to użycie:
+Jak widać strona udostępnia dwie instrukcje. Pierwsza dotyczy nowego repozytorium i pokrywa się w dużej części tym, co dopiero przećwiczyliśmy. Na okazję już stworzonego repozytorium jest skrócona, druga instrukcja. Nowym elementem w obu jest ustawianie adresu zdalnego repozytorium komendą `git remote` oraz wypychanie swoich zmian (commitów) komendą `git push`. To, co powinno wystarczyć to użycie:
 
 ```shell
 $ git remote add origin <adres zdalnego repozytorium>
