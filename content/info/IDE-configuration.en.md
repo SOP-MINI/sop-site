@@ -5,7 +5,7 @@ weight: 40
 
 # Configuring IDE
 
-No specific environment is required in the laboratories. You can choose any program installed on the facoulty's computers and even (for advanced users) if you really miss your favorite program, try a local installation. However, a good code editor or IDE (Integrated Development Environment) should have several features that are very useful when solving lab tasks. These include:
+No specific environment is required in the laboratories. You can choose any program installed on the faculty's computers and even (for advanced users) if you really miss your favorite program, try a local installation. However, a good code editor or IDE (Integrated Development Environment) should have several features that are very useful when solving lab tasks. These include:
 
 - program syntax highlighting
 - error reporting and highlighting
@@ -50,7 +50,7 @@ clean:
 	rm main
 ```
 
-Now, calling `make` should correctly compile our small program, which after runnging should print `Hello world`.
+Now, calling `make` should correctly compile our small program, which after running should print `Hello world`.
 
 We can now launch the QtCreator. After launching, select `File->New Project`. It is important to select `New Project` and not `Open File or Project` - if we simply open our `main.c` file, QtCreator will not know which flags we want to use to compile the program, and thus its operation may be unstable (e.g., reporting errors that do not actually exist). In the window that appears, select `Import project` and then `Import Existing Project`.
 
@@ -81,7 +81,7 @@ PointerAlignment: Left
 InsertNewlineAtEOF: true
 ```
 
-Note that the name of this file begins with a dot - it is invisible by default. Now go to the `Edit->Preferences` menu and select the `Beautifier` section. In the `General` tab, check `Automatic formatting on file save` and select `ClangFormat` from the `Tool` menu. In the `ClangFormat` tab, select `Use predefinied style` and set it to `File`. Accept the settings by clicking `Ok`.
+Note that the name of this file begins with a dot - it is invisible by default. Now go to the `Edit->Preferences` menu and select the `Beautifier` section. In the `General` tab, check `Automatic formatting on file save` and select `ClangFormat` from the `Tool` menu. In the `ClangFormat` tab, select `Use predefined style` and set it to `File`. Accept the settings by clicking `Ok`.
 
 ![](/img/qtcreator3.png) 
 

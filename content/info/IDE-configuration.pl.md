@@ -59,9 +59,9 @@ Następnie wybieramy nazwę dla naszego projektu (w przykładzie jest to po pros
 
 ![](/img/qtcreator2.png) 
 
-W czasie laboratorium nowoutworzonych plików nie należy dodawać do gita (serwer je odrzuci) - jest to tylko nasz lokalna konfiguracja, w praktyce gdy kilku programistów współpracuje ze sobą każdy może używać innych narzędzi. Z tych plików interesuje nas tylko `test.cflags`. W tym pliku podajemy flagi kompilacji, których QtCreator użyje do swoich "inteligentych" funkcjonalności, jak np. raportowanie błędów. Jest ważne, żeby flagi były takie same jak w pliku `Makefile`, tak więc teraz należy wpisać tam `-fsanitize=address,undefined -Wall -Wextra -Wshadow -Werror`.
+W czasie laboratorium nowo utworzonych plików nie należy dodawać do gita (serwer je odrzuci) - jest to tylko nasz lokalna konfiguracja, w praktyce gdy kilku programistów współpracuje ze sobą każdy może używać innych narzędzi. Z tych plików interesuje nas tylko `test.cflags`. W tym pliku podajemy flagi kompilacji, których QtCreator użyje do swoich "inteligentnych" funkcjonalności, jak np. raportowanie błędów. Jest ważne, żeby flagi były takie same jak w pliku `Makefile`, tak więc teraz należy wpisać tam `-fsanitize=address,undefined -Wall -Wextra -Wshadow -Werror`.
 
-W tym momemcie wszystkie podstawowe funkcjonalności powinny działać. W miarę jak będziesz pisał kod powinieneś widzieć okienko z podpowiedziami. Gdy popełnisz błąd (spróbuj np. nie dodać średnika na końcu linii) program podświetli błędną linię na czerwono.
+W tym momencie wszystkie podstawowe funkcjonalności powinny działać. W miarę jak będziesz pisał kod powinieneś widzieć okienko z podpowiedziami. Gdy popełnisz błąd (spróbuj np. nie dodać średnika na końcu linii) program podświetli błędną linię na czerwono.
 
 Ostatnim elementem jest włączenie formatowania przy zapisie - oszczędzi to nam uciążliwego wywoływania `clang-format` przed każdym commitem. W tym celu musimy włączyć plugin `beautifier`. Z menu `Help` kliknij `About Plugins` a następnie znajdź na liście `Beautifier` i aktywuj po kliknięciu `Ok` konieczny będzie restart programu. W folderze projektu stwórz plik konfiguracyjny dla `clang-format` - na laboratorium będzie zawarty w startowym repozytorium.
 
@@ -80,7 +80,7 @@ PointerAlignment: Left
 InsertNewlineAtEOF: true
 ```
 
-Zauważ, że nazwa tego pliku zaczyna się od kropki - jest on domyślnie niewidoczny. Teraz wejdź w menu `Edit->Preferences` i wybierz sekcje `Beautifier`. W zakładce `General` zaznacz `Automatic formatting on file save` a z menu `Tool` wybierz `ClangFormat`. W zakładce `ClangFormat` wybierz `Use predefinied style` i ustaw jako `File`. Zaakceptuj ustawienia klikając `Ok`.
+Zauważ, że nazwa tego pliku zaczyna się od kropki - jest on domyślnie niewidoczny. Teraz wejdź w menu `Edit->Preferences` i wybierz sekcje `Beautifier`. W zakładce `General` zaznacz `Automatic formatting on file save` a z menu `Tool` wybierz `ClangFormat`. W zakładce `ClangFormat` wybierz `Use predefined style` i ustaw jako `File`. Zaakceptuj ustawienia klikając `Ok`.
 
 ![](/img/qtcreator3.png) 
 
