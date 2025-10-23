@@ -5,6 +5,3 @@ menus:
     identifier: "info"
     weight: 10
 ---
-
-Zapoznaj
-

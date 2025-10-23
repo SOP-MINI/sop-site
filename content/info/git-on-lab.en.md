@@ -15,6 +15,8 @@ I encourage you to read it and prepare before zeroth laboratory.
 
 {{< /hint >}}
 
+### ssh configuration
+
 During laboratory every task will be done inside a GIT repository.
 Credentials to remote access will be provided during the laboratory.
 Your code has to be tracked by GIT during the laboratory.
@@ -30,6 +32,20 @@ Because the private key is secret, it shouldn't be readable to other users. You 
 ```shell
 chmod 600 ~/.ssh/id_ed25519
 ```
+
+#### Managing multiple ssh keys
+
+It is possible that in the `~/.ssh` directory there are arleady some keys (e.g. for another course). In such case the best solution is to tell `ssh` which one use for which host. Change the name of downloaded keys, e.g. to `id_ed25519_ops` and `id_ed25519_ops.pub` and place in `~/.ssh` directory (remember about correct permission, `chmod 600`). Now, create a new file `~/.ssh/config` with content:
+
+```
+IdentityFile ~/.ssh/id_ed25519
+Host vl01
+  IdentityFile ~/.ssh/id_ed25519_ops
+```
+
+Configuration file like this tells `ssh` to first look at default key `id_ed25519` (like before) but when we are connecting to host `vl01` (this is server we use during laboratories) to use key `id_ed25519_ops`. You can use this method to add more keys to other servers.
+
+### Working with the repository
 
 First step on laboratory is copy remote repository to your local workstation with command 
 ```shell

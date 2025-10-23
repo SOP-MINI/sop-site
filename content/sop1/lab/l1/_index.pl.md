@@ -230,8 +230,9 @@ int nftw(const char *path, int (*fn)(const char *, const struct stat *, int, str
       - `FTW_DNR`: odwiedzono katalog, którego nie można było otworzyć.
    - czwarty: typu `struct FTW *`, zawierający wskaźnik na strukturę, której pole `level` informuje, jak głęboko aktualnie jesteśmy 
    w drzewie przeszukania, a pole `base` zawiera indeks znaku w ścieżce (obecnej w pierwszym argumencie), 
-   który rozpoczyna właściwą nazwę pliku, np. dla ścieżki `/usr/bin/cat` tą wartością byłoby `9`. 
-Funkcja ta jest wywoływana dla każdego odwiedzonego pliku i katalogu, można ją traktować jako pewnego rodzaju callback.
+   który rozpoczyna właściwą nazwę pliku, np. dla ścieżki `/usr/bin/cat` tą wartością byłoby `9`.
+
+    Funkcja ta jest wywoływana dla każdego odwiedzonego pliku i katalogu, można ją traktować jako pewnego rodzaju callback.
 W funkcji `fn` powinniśmy zwykle zwrócić `0`, jeśli zwrócimy coś innego, `nftw` natychmiast zakończy działanie i zwróci też tę wartość
 (to można także wykorzystać jako sygnalizację błędu).
 - `fd_limit` oznacza maksymalną liczbę deskryptorów użytych przez `nftw` podczas przeszukania drzewa. Na każdy poziom drzewa katalogów

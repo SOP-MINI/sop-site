@@ -15,6 +15,8 @@ Zachęcam jednak do przeczytania jej i przygotowania się do wykonania poniższy
 
 {{< /hint >}}
 
+### Konfiguracja ssh
+
 Na laboratorium każde zadanie będzie rozwiązywane w takim repozytorium.
 Twoim celem jest śledzenie zmian w repozytorium w trakcie trwania laboratorium i ich synchronizacja z serwerem.
 **Jeżeli jakiś kod nie znajdzie się na serwerze, nie będzie oceniany.**
@@ -26,6 +28,20 @@ Każdy klucz jest unikatowy i - zgodnie z nazwą - prywatny, tzn. działa jak ha
 ```shell
 chmod 600 ~/.ssh/id_ed25519
 ```
+
+#### Wiele różnych kluczy
+
+Może zdarzyć się tak, że w folderze `~/.ssh` znajdują się już inne klucze (np. na potrzeby innego przedmiotu). W takiej sytuacji najlepszy rozwiązaniem, jest powiedzenie programowi `ssh`, jakich kluczy ma używać przy połączeniu z danym serwerem. Zmień nazwę pobranych kluczy na inną, np. `id_ed25519_sop` oraz `id_ed25519_sop.pub` i umieść w katalogu `~/.ssh/` (pamiętaj o uprawnieniach, `chmod 600`). Następnie utwórz plik `~/.ssh/config` z zawartością postaci:
+
+```
+IdentityFile ~/.ssh/id_ed25519
+Host vl01
+  IdentityFile ~/.ssh/id_ed25519_sop
+```
+
+Tak skonstruowany plik konfiguracyjny mówi programowi `ssh`, żeby zawsze patrzył na domyślny klucz `id_ed25519` (jak wcześniej), a jeżeli łączymy się do servera `vl01` (serwer używany na SOPach) żeby użył klucza `id_ed25519_sop`. W ten sposób możesz dodawać kolejne klucze do różnych serwerów. 
+
+### Praca z repozytorium
 
 Pierwszym krokiem będzie wykonanie kopii zdalnego repozytorium na swoją stację roboczą poleceniem
 

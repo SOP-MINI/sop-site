@@ -5,5 +5,3 @@ menus:
     identifier: "info"
     weight: 10
 ---
-
-# Before the first lab

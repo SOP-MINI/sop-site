@@ -63,7 +63,7 @@ W czasie laboratorium nowo utworzonych plików nie należy dodawać do gita (ser
 
 W tym momencie wszystkie podstawowe funkcjonalności powinny działać. W miarę jak będziesz pisał kod powinieneś widzieć okienko z podpowiedziami. Gdy popełnisz błąd (spróbuj np. nie dodać średnika na końcu linii) program podświetli błędną linię na czerwono.
 
-Ostatnim elementem jest włączenie formatowania przy zapisie - oszczędzi to nam uciążliwego wywoływania `clang-format` przed każdym commitem. W tym celu musimy włączyć plugin `beautifier`. Z menu `Help` kliknij `About Plugins` a następnie znajdź na liście `Beautifier` i aktywuj po kliknięciu `Ok` konieczny będzie restart programu. W folderze projektu stwórz plik konfiguracyjny dla `clang-format` - na laboratorium będzie zawarty w startowym repozytorium.
+Ostatnim elementem jest włączenie formatowania przy zapisie - oszczędzi to nam uciążliwego wywoływania `clang-format` przed każdym commitem. W tym celu musimy włączyć plugin `beautifier`. Z menu `Help` kliknij `About Plugins` a następnie znajdź na liście `Beautifier` i aktywuj przez kliknięcie `Ok`. Konieczny będzie restart programu. W folderze projektu stwórz plik konfiguracyjny dla `clang-format` - na laboratorium będzie zawarty w startowym repozytorium.
 
 **.clang-format**:
 ```
