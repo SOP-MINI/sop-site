@@ -255,6 +255,11 @@ solution `l1-3.c`:
 Without it `nftw` processes the objects pointed to by links, so it can not count them -- similar to `stat` and `lstat` functions.
 {{< /answer >}}
 
+- Why additionally check `stat` struct using `S_ISREG` when the type returned by nftw is `FTW_F`?
+{{< answer >}} 
+According to the manual `FTW_F` means only that "The object is a non-directory file" (and not a symlink in case of `FTW_PHYS`).
+{{< /answer >}}
+
 - Check how other flags modify `nftw` behaviour.
 
 - Declaration of `_XOPEN_SOURCE` has to be placed prior to the include if you wish to use `nftw` on Linux, otherwise you can only use
