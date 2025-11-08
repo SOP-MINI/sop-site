@@ -6,6 +6,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#define IS_CHILD 0
 #define ERR(source) \
     (fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), perror(source), kill(0, SIGKILL), exit(EXIT_FAILURE))
 
@@ -25,7 +26,7 @@ void sig_handler(int sig) { last_signal = sig; }
 void sigchld_handler(int sig)
 {
     pid_t pid;
-    for (;;)
+    while (1)
     {
         pid = waitpid(0, NULL, WNOHANG);
         if (pid == 0)
@@ -84,25 +85,28 @@ void usage(char *name)
 
 int main(int argc, char **argv)
 {
-    int m, p;
     if (argc != 3)
         usage(argv[0]);
-    m = atoi(argv[1]);
-    p = atoi(argv[2]);
+
+    int m = atoi(argv[1]);
+    int p = atoi(argv[2]);
     if (m <= 0 || m > 999 || p <= 0 || p > 999)
         usage(argv[0]);
+
     sethandler(sigchld_handler, SIGCHLD);
     sethandler(sig_handler, SIGUSR1);
     sethandler(sig_handler, SIGUSR2);
+
     sigset_t mask, oldmask;
     sigemptyset(&mask);
     sigaddset(&mask, SIGUSR1);
     sigaddset(&mask, SIGUSR2);
     sigprocmask(SIG_BLOCK, &mask, &oldmask);
+
     pid_t pid;
     if ((pid = fork()) < 0)
         ERR("fork");
-    if (0 == pid)
+    if (IS_CHILD == pid)
         child_work(m, p);
     else
     {

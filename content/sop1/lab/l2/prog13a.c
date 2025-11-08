@@ -25,9 +25,7 @@ void create_children(int n)
     for (int i = 0; i < n; ++i)
     {
         if ((s = fork()) < 0)
-        {
             ERR("Fork:");
-        }
 
         if (s == IS_CHILD)
         {
@@ -46,15 +44,11 @@ void usage(char *name)
 int main(int argc, char **argv)
 {
     if (argc < 2)
-    {
         usage(argv[0]);
-    }
 
     int child_count = atoi(argv[1]);
     if (child_count <= 0)
-    {
         usage(argv[0]);
-    }
 
     create_children(child_count);
     return EXIT_SUCCESS;
