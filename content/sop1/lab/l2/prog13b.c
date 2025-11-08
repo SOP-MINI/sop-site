@@ -25,9 +25,7 @@ void create_children(int n)
     for (int i = 0; i < n; ++i)
     {
         if ((s = fork()) < 0)
-        {
             ERR("Fork:");
-        }
 
         if (s == IS_CHILD)
         {
@@ -46,22 +44,18 @@ void usage(char *name)
 int main(int argc, char **argv)
 {
     if (argc < 2)
-    {
         usage(argv[0]);
-    }
 
     int n = atoi(argv[1]);
     if (n <= 0)
-    {
         usage(argv[0]);
-    }
 
     create_children(n);
     while (n > 0)
     {
         sleep(3);
         pid_t pid;
-        for (;;)
+        while (1)
         {
             pid = waitpid(0, NULL, WNOHANG);
             if (pid > 0)

@@ -24,11 +24,11 @@ Uwagi wstępne:
 ### Tworzenie procesów
 Stworzenie procesu potomnego wykonawane jest za pomocą polecenia `fork`. Przyjrzymy się definicji tej funkcji: 
 
-```c
+```
 pid_t fork(void)
 ```
 
-Jak widać, zwraca ona obiekt typu `pid_t`, jest to typ całkowitoliczbowy ze znakiem. W procesie rodzica funkcja zwraca identyfikator nowo utworzonego procesu, natomiast w utworzonym procesie zwaracane jest `0`, pozwala to łatwo rozdzielić logikę na tę wykonywaną przez dzieci oraz na tę wykonywaną prez rodzica.
+Jak widać, zwraca ona obiekt typu `pid_t`, jest to typ całkowitoliczbowy ze znakiem. W procesie rodzica funkcja zwraca identyfikator nowo utworzonego procesu, natomiast w utworzonym procesie zwracane jest `0`, pozwala to łatwo rozdzielić logikę na tę wykonywaną przez dzieci oraz na tę wykonywaną prez rodzica.
 
 
 Oczywiście stworzenie nowego procesu może się nie powieść (np. gdy systemowi zabraknie potrzebnych zasobów). W takim wypadku funkcja `fork` zwraca wartość `-1` i ustawia odpowiednią wartość zmiennej `errno`.
@@ -40,19 +40,21 @@ Każdy proces posiada unikatowy identyfikator typu `pid_t`.
 Aby uzyskać informację o identyfikatorze procesu używamy funkcji `getpid()`, natomiast aby dowiedzieć się jaki jest idenyfikator procesu rodzica funkcji  `getppid()`. 
 Ich definicje są następujące: 
 
-```c
+```
 pid_t getpid(void)
 pid_t getppid(void)
 ```
+
+Jak widać nie przyjmują one żadnych argumentów i zwracają obiekt typu `pid_t`.:
 
 Zgodnie ze standardem POSIX obie funkcję __zawszę kończą się sukcesem__.
 
 
 ### Zadanie 
 
-Napisz program tworzący n procesów potomnych (n jest parametrem na pozycji 1), każdy z tych procesów czeka przez losowy czas [5-10] sekund po czym wypisuje na ekran swój PID i się kończy. Proces rodzica co 3s ma wyświetlać na stdout ile jeszcze posiada pod-procesów.
+Napisz program tworzący n procesów potomnych (n jest parametrem na pozycji 1), każdy z tych procesów czeka przez losowy czas [5-10] sekund po czym wypisuje na ekran swój PID i się kończy. Proces rodzica co 3s ma wyświetlać na stdout ile jeszcze posiada pod-procesów. Narazie nie przejmuj się czekaniem na zakończenie procesów potomnych.
 
-Nowe strony z Manuala: 
+Nowe strony z manuala: 
 - man 3p fork
 - man 3p getpid
 - man 3p wait
@@ -106,7 +108,7 @@ W kolejnym etapie dodamy czekanie i zliczanie procesów potomnych. Pytanie skąd
 Aby nie dopuścić do żadnego wycieku, przed zakończeniem procesu rodzica należy zaczekać na zakończenie wszystkich procesów potomnych, możemy to zrobić korzystając z funkcji `wait`, która czeka na dowolony proces potomny, lub funkcji `waitpid`, która umożliwia określenie na które procesy czekamy. 
 Przyjrzyjmy się ich definicjom:
 
-```c
+```
 pid_t wait(int *stat_loc);
 pid_t waitpid(pid_t pid, int *stat_loc, int options);
 ```
@@ -125,12 +127,12 @@ Funkcja `waitpid` posiada dwa dodatkowe argumenty, kolejno `pid` typu `pid_t` or
 
 argument `options` określa modyfikacje sposobu działania funkcji, i jest kombinacją następujących opcji:
 - `WCONTINUED` - funkcja powinna zwrócić również informacje o procesach, które zostały wznowione po zatrzymaniu
-- `WNOHANG` - funkcja `waitpid` nie powinna zatrzymywać wywołania biężącego procesu jeżeli żaden z procesów na które czekamy nie może natychmiast powiadomić o swoim statusie.
+- `WNOHANG` - funkcja `waitpid` nie powinna zatrzymywać wywołania biężącego procesu jeżeli żaden z procesów na które czekamy nie może natychmiast powiadomić o swoim statusie.W takiej sytuacji funkcja zwaraca wartość `0`.
 - `WUNTRACED` - funkcja powinna zwrócić również informacje o procesach, które zostały zatrzymane.
   
 W ramach laboratorium wystarczy znajomość opcji `WNOHANG`.
 
-Podsumowując możemy patrzeć na funkcję `waitpid` jako na bardziej rozbudowaną wersję funkcji `wait` - wywołanie funkcji `wait(stat_loc)` jest równażne wywołaniu `waitpid(-1, stat_loc, 0).
+Podsumowując możemy patrzeć na funkcję `waitpid` jako na bardziej rozbudowaną wersję funkcji `wait` - wywołanie funkcji `wait(stat_loc)` jest równażne wywołaniu `waitpid(-1, stat_loc, 0)`.
 
 Oczywiście obie te funkcję mogą się nie powieść, zwracają one wtedy `-1` i ustawiają odpowiednią zmienną wartość errno. 
 
@@ -244,17 +246,68 @@ A co się stanie jeśli za fork  przeniesiemy obsługę SIGCHLD?
 Pytanie, czy wait na końcu main jest potrzebny? Przecież i tak funkcja parent_work() powinna działać co najmniej tyle czasu co najdłuższy z podprocesów?
 {{< details "Odpowiedź" >}} Wyliczenie czasu w pętli rodzica nie wystarczy, w obciążonym systemie możliwe są dowolnie długie opóźnienia, bez wait powstaje zatem tzw. race condition - kto się pierwszy zakończy rodzic czy potomne procesy. {{< /details >}}
 
-## Zadanie 3 - czekanie na sygnał
+## Czekanie na sygnał
 
-Cel: Program tworzy jeden pod-proces, który co określony parametrami czas (w mikrosekundach) wysyła do procesu rodzica
+Często podczas pisania programów natkniemy sie na sytuację, w której proces, zanim wykona prace musi zostać poinformowany o tym, że inny proces zakończył swoje zadanie.
+Jak się pewnie domyślasz, ten problem można łatwo rozwiązać z wykorzystaniem __sygnałów__. Inspirując się poprzednim zadaniem, moglibyśmy napisać logikę, która opiera się na tym, że nasz proces
+śpi w pętli i sprawdza, czy ostatni otrzymany przez niego sygnał to ten, na który czeka. Niestety nie dość, że to rozwiązanie jest nieeleganckie, to jeszcze jest __niepoprawne__ - mogło by dojść do sytuacji że sygnał na który czekamy zostanie "sklejony" z innym sygnałem i tak naprawdę nigdy nie dowiedzielibyśmy się, że nasz proces może rozpocząć pracę.
+Na szczęscie system operacyjny dostarcza nam narzędzia, które pozwalają rozwiązać ten problem.
+
+Aby zablokować program do momentu, gdy otrzyma on sygnał będziemy używać funkcji `sigsuspend`. Przyjrzyjmy się jej definicji:
+
+```
+int sigsuspend(const sigset_t *sigmask);
+```
+
+Jak możemy zauważyć funkcja ta zwaraca wartość typu `int` służącą do powiadomienia o potencjalnym błędzie, zwracane wtedy jest `-1`. Przyjmuje argument `sigmask` typu `const sigset_t *` jest to wskaźnik na zbiór sygnałów, na które funkcja będzie czekać. 
+
+Działanie tej funkcji jest następujące: ustawia ona maskę sygnałów na tę podaną w argumencie, czeka na przechwycenie jednego z tych sygnałów, po czym przywraca poprzednią maskę sygnałów i wznawia wykonywanie procesu.
+
+### Zarządzanie maską sygnałów
+
+Zbiór sygnałów będzie nazywać maską sygnałów. Maskę sygnałów będziemy przechowywać jako obiekt o typie `sigset_t`. Standard nie określa w jaki sposób ma być zaimplementowany ten typ, może być to zarówno `int`, jak i struktura. 
+W celu modyfikacji maski sygnałów będziemy używac funcji `sigsemptyset`, inicjalizującej maskę jako zbiór pusty, oraz `sigaddset` ,dodającej sygnał do maski. 
+Przyjrzyjmy się ich definicją:
+
+```
+int sigemptyset(sigset_t *set);
+int sigaddset(sigset_t *set, int signo);
+```
+
+Jak możemy zauważyć, obie funkcję przyjmują jako pierwszy argument `set` typu `sigset_t *`, jest to wskaźnik na maskę, którą chcemy edytować. 
+funkcja `sigaddset` dodatkowo przyjmuje argument `signo` będący kodem sygnału, który chcemy dodać do maski.
+
+Obie funkcje zwracają wartość typu int, służącą do sygnalizacji przebiegu operacji: w razie sukcesu zwracają `0`, a w razie błędu `-1`, ustawiając odpowiednią wartość zmiennej `errno`.
+
+### Zmiana maski sygnałów
+
+Skoro już zdefiniowaliśmy nową maskę sygnałów, chcielibśmy sprawić, by wpłynęła ona na działanie naszego procesu. 
+W tym celu będziemy używać funkcji `sigprocmask`, która określa, w jaki sposób zdefiniowana przez nas maska sygnałów ma wpłynąć na aktulaną maskę sygnałów procesu.
+Przyjrzyjmy się jej definicji:
+```
+int sigprocmask(int how, const sigset_t *restrict set,
+           sigset_t *restrict oset);
+```
+
+Jak możemy zauważyć funkcja ta przyjmuje kolejno argumenty:
+`how` typu `int` określa w jaki sposób nowa maska ma wpłynąć na aktualną maskę. Dostępne opcje:
+- `SIG_BLOCK` - wynikowa maska sygnałów jest sumą zbiorów maski wskazanej przez `set` i aktualnej maski sygnałów (określamy jakie sygnały checmy __dodać__ do maski).
+- `SIG_SETMASK` - wynikowa maska sygnałów jest maską sygnałów wskazywaną przez `set`.
+- `SIG_UNBLOCK` - wynikowa maska sygnałów jest przecięciem aktualnej maski i dopełnieiem zbioru maski wskazanej przez `set` (Określamy jakie sygnały chcemy __usunąć__ z maski).
+
+Argument `set` typu `const sigset_t` to wskaźnik na maskę, na podstawie której chcemy modyfikować poprzednią maskę.
+Argument `oset` typu `sigset_t *` jest wskaźnikiem na obiekt do którego chcemy zapisać maskę sygnałów sprzed edycji.
+
+
+### Zadanie
+Napisz program, który tworzy jeden pod-proces, który co określony parametrami czas (w mikrosekundach) wysyła do procesu rodzica
 SIGUSR1, co n-ty raz (określony parametrami) wysyła SIGUSR2. Proces rodzic czeka na otrzymanie sygnału SIGUSR2. Oba
 procesy zliczają i wypisują na bieżąco ilości wysłanych/odebranych SIGUSR2. Używamy część funkcji z poprzedniego
 zadania.
 
-Co student musi wiedzieć: 
+: Nowe strony z manuala
 - man 3p sigsuspend
 - Opis metod czekania na sygnał w glibc <a href="http://www.gnu.org/software/libc/manual/html_node/Waiting-for-a-Signal.html#Waiting-for-a-Signal"> tutaj</a>
-- man 3p getppid 
 - man 3p pthread_sigmask (tylko opis sigprocmask)
 - man 3p sigaddset
 - man 3p sigemptyset
