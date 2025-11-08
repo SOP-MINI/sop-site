@@ -19,10 +19,40 @@ Uwagi wstępne:
 - Tym razem część rozwiązań jest podzielone na 2 możliwe do uruchomienia etapy
 {{< /hint >}}
 
-## Zadanie 1 - procesy potomne
+## Zarządzanie procesami
 
-Cel: Program tworzy n procesów potomnych (n jest parametrem na pozycji 1), każdy z tych procesów czeka przez losowy czas [5-10] sekund po czym wypisuje na ekran  swój PID i się kończy. Proces rodzica co 3s ma wyświetlać na stdout ile jeszcze posiada pod-procesów.
-Co student musi wiedzieć: 
+### Tworzenie procesów
+Stworzenie procesu potomnego wykonawane jest za pomocą polecenia `fork`. Przyjrzymy się definicji tej funkcji: 
+
+```c
+pid_t fork(void)
+```
+
+Jak widać, zwraca ona obiekt typu `pid_t`, jest to typ całkowitoliczbowy ze znakiem. W procesie rodzica funkcja zwraca identyfikator nowo utworzonego procesu, natomiast w utworzonym procesie zwaracane jest `0`, pozwala to łatwo rozdzielić logikę na tę wykonywaną przez dzieci oraz na tę wykonywaną prez rodzica.
+
+
+Oczywiście stworzenie nowego procesu może się nie powieść (np. gdy systemowi zabraknie potrzebnych zasobów). W takim wypadku funkcja `fork` zwraca wartość `-1` i ustawia odpowiednią wartość zmiennej `errno`.
+
+Procesy utworzone przez dany proces nazywamy jego __dziećmi__, natomiast z perspektywy procesu potomnego, proces który go stworzył nazywamy __rodzicem__.
+
+### Identyfikacja procesów
+Każdy proces posiada unikatowy identyfikator typu `pid_t`. 
+Aby uzyskać informację o identyfikatorze procesu używamy funkcji `getpid()`, natomiast aby dowiedzieć się jaki jest idenyfikator procesu rodzica funkcji  `getppid()`. 
+Ich definicje są następujące: 
+
+```c
+pid_t getpid(void)
+pid_t getppid(void)
+```
+
+Zgodnie ze standardem POSIX obie funkcję __zawszę kończą się sukcesem__.
+
+
+### Zadanie 
+
+Napisz program tworzący n procesów potomnych (n jest parametrem na pozycji 1), każdy z tych procesów czeka przez losowy czas [5-10] sekund po czym wypisuje na ekran swój PID i się kończy. Proces rodzica co 3s ma wyświetlać na stdout ile jeszcze posiada pod-procesów.
+
+Nowe strony z Manuala: 
 - man 3p fork
 - man 3p getpid
 - man 3p wait
@@ -33,9 +63,9 @@ Co student musi wiedzieć:
 <em>rozwiązanie 1 etap <b>prog13a.c</b>:</em>
 {{< includecode "prog13a.c" >}}
 
-Do kompilacji używamy "make prog13a" ostatni plik Makefile z tutoriala nr 1
+#### Uwagi i pytania
 
-Upewnij się, że wiesz jak powstaje grupa procesów tzn. kiedy powłoka tworzy nową grupę i jakie procesy do niej należą
+Upewnij się, że wiesz jak powstaje grupa procesów tzn. kiedy powłoka tworzy nową grupę i jakie procesy do niej należą.
 
 Zwróć uwagę, że w makrze ERR dodano kill(0, SIGKILL). Chodzi o to aby w razie błędu zatrzymać cały program (wszystkie
 procesy danej grupy).
@@ -72,9 +102,45 @@ Co zwraca sleep?  Czy powinniśmy jakoś na to reagować?
 W kolejnym etapie dodamy czekanie i zliczanie procesów potomnych. Pytanie skąd mamy wiedzieć ile procesów potomnych w danej chwili istnieje?
 {{< details "Odpowiedź" >}} Można próbować zliczać sygnały SIGCHLD ale to zawodny sposób bo mogą się "sklejać" czyli mniej ich dostaniemy niż potomków się na prawdę zakończyło. Jedyną pewną metodą jest zliczanie udanych wywołań wait i waitpid. {{< /details >}}
 
-<em>rozwiązanie 2 etap <b>prog13b.c</b>:</em>
-{{< includecode "prog13b.c" >}}
+### Czekanie na procesy potomne
+Aby nie dopuścić do żadnego wycieku, przed zakończeniem procesu rodzica należy zaczekać na zakończenie wszystkich procesów potomnych, możemy to zrobić korzystając z funkcji `wait`, która czeka na dowolony proces potomny, lub funkcji `waitpid`, która umożliwia określenie na które procesy czekamy. 
+Przyjrzyjmy się ich definicjom:
 
+```c
+pid_t wait(int *stat_loc);
+pid_t waitpid(pid_t pid, int *stat_loc, int options);
+```
+
+Jak można zauważyć, obie funkcje zwracają obiekt typu `pid_t` będący identyfikatorem procesu, o którego stanie dostaniemy informację. 
+
+Obie funkcje przyjmują argument `stat_loc` typu `int*`, który wskazuje miejsce w pamięci, do którego ma zostać zapisana informacja o odczytanym stanie procesu (jeżeli informacja ta nie będzie nam potrzebna możemy wstawić w to miejsce `NULL`).
+
+Funkcja `waitpid` posiada dwa dodatkowe argumenty, kolejno `pid` typu `pid_t` oraz `options` typu `int`.
+
+ Argument `pid` określa, na które procesy chcemy czekać. Dla różnych wartości funkcja zachowuje się następująco:
+- `pid == -1` - czekamy na dowolny proces potomny,
+- `pid > 0` - czekamy na proces o identyfikatorze równym `pid`,
+- `pid == 0` - czekamy na dowolny proces którego identyfikator grupy jest równy identyfikatorowi grupy procesu wywołującego.
+- `pid < -1` czekamy na dowolny proces którego identyfikator grupy jest równy wartości bezwzględnej `pid`.
+
+argument `options` określa modyfikacje sposobu działania funkcji, i jest kombinacją następujących opcji:
+- `WCONTINUED` - funkcja powinna zwrócić również informacje o procesach, które zostały wznowione po zatrzymaniu
+- `WNOHANG` - funkcja `waitpid` nie powinna zatrzymywać wywołania biężącego procesu jeżeli żaden z procesów na które czekamy nie może natychmiast powiadomić o swoim statusie.
+- `WUNTRACED` - funkcja powinna zwrócić również informacje o procesach, które zostały zatrzymane.
+  
+W ramach laboratorium wystarczy znajomość opcji `WNOHANG`.
+
+Podsumowując możemy patrzeć na funkcję `waitpid` jako na bardziej rozbudowaną wersję funkcji `wait` - wywołanie funkcji `wait(stat_loc)` jest równażne wywołaniu `waitpid(-1, stat_loc, 0).
+
+Oczywiście obie te funkcję mogą się nie powieść, zwracają one wtedy `-1` i ustawiają odpowiednią zmienną wartość errno. 
+
+__Uwaga:__ Jeżeli wywołamy funkcję `wait` lub `waitpid` i pula procesów potomnych na,  które możemy czekać będzie pusta funkcja zwróci `-1` i ustawi wartość zmiennej `errno` na `ECHILD`. Warto z tego skorzystać by mieć pewność że nie osierocimy żadnych procesów przed zakończeniem procesu.
+
+### Zadanie
+
+Rozbuduj program z poprzedniego zadania o poprawne czekanie na procesy potomne.
+
+#### Uwagi i pytania
 Koniecznie trzeba rozróżnić kiedy waitpid informuje nas o chwilowym braku zakończonych potomków (wartość zwracana zero) od permanentnego braku potomków (błąd ECHILD). Ten ostatni przypadek nie jest w zasadzie błędem, tę sytuację trzeba normalnie obsłużyć. 
 
 Czemu wołamy waitpid w pętli?
