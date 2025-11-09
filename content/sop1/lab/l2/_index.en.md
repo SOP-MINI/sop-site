@@ -7,16 +7,8 @@ weight: 30
 # Tutorial 2 - Processes, Signals and Descriptors
 
 {{< hint info >}}
-Introduction notes:
-
-- Quick look at this material will not suffice, you should compile and run all the programs, check how they work, read additional materials like man pages. As you read the material please do all the exercises and questions. At the end you will find sample task similar to the one you will do during the labs, please do it at home.
-- You will find additional information in yellow sections, questions and tasks in blue ones. Under the question you will find the answer, to see it you have to click. Please try to answer on you own before checking. 
-- Full programs' codes are placed as attachments at the bottom of this page. On this page only vital parts of the code are displayed
-- Codes, information and tasks are organized in logical sequence, in order to fully understand it you should follow this sequence. Sometimes former task makes context for the next one and it is harder to comprehend it without the study of previous parts.  
-- Most of exercises require command line to practice, I usually assume that all the files are placed in the current working folder and that we do not need to add path parts to file names. 
-- Quite often you will find $ sign placed before commands you should run in the shell, obviously you do not need to rewrite this sight to command line, I put it there to remind you that it is a command to execute.problem with this material after the graded lab you can still ask teachers for help. 
-- This time some of the solutions are
-- What you learn and practice in this tutorial will be required for the next ones. If you have a  divided into two stages
+This tutorial contains the explanations for the used functions and their parameters.
+It is still only a surface-level tutorial and it is **vital that you read the man pages** to familiarize yourself and understand all of the details.
 {{< /hint >}}
 
 ## Process Management
