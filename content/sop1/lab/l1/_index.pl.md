@@ -275,6 +275,11 @@ Bez tej flagi, `nftw` przechodzi przez linki symboliczne do wskazywanych obiekt�
 analogicznie jak `stat`. 
 {{< /answer >}}
 
+- Dlaczego w przypadku gdy typ pliku zgłaszany przez `nftw` to `FTW_F` robimy dodatkowe sprawdzenie `S_ISREG` na strukturze `stat`?
+{{< answer >}} 
+Zgodnie z dokumentacją `FTW_F` oznacza tylko, że dany plik nie jest katalogiem (ani dowiązaniem w przypadku użycia `FTW_PHYS`).
+{{< /answer >}}
+
 - Sprawdź, jak inne flagi modyfikują zachowanie `nftw`.
 
 - Deklaracja `_XOPEN_SOURCE` jest na Linuksie niezbędna, inaczej nie widzi deklaracji funkcji `nftw` (ważna jest kolejność,

@@ -23,7 +23,10 @@ int walk(const char *name, const struct stat *s, int type, struct FTW *f)
             dirs++;
             break;
         case FTW_F:
-            files++;
+            if (S_ISREG(s->st_mode))
+                files++;
+            else
+                other++;
             break;
         case FTW_SL:
             links++;
