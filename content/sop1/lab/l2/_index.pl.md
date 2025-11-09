@@ -80,7 +80,7 @@ podejmujemy jak najmniej działań, zresztą co mielibyśmy zrobić wywołać re
 {{< details "Odpowiedź" >}} Zaraz po uruchomieniu wykonać np.: $ps -f, rodzicem procesów będzie proces o PID 1 czyli init/systemd. Dzieje się tak dlatego, że proces rodzic kończy się bez czekania na procesy potomne a te nie mogą "wisieć" poza drzewem procesów. Nie przechodzą pod powłokę ale właśnie pod proces po PID=1 {{< /details >}}
 
 - Zwróć uwagę na miejsce i sposób ustalenia ziarna liczb losowych. Czy jeśli przesuniemy srand z procesu dziecka do rodzica to zmieni to działanie programu? Jak?
-{{< details "Odpowiedź" >}}  Procesy potomne będą losowały te sam liczby ponieważ zaczynają z tym samym ziarnem, tak być nie może. {{< /details >}}
+{{< details "Odpowiedź" >}}  Procesy potomne będą losowały te same liczby ponieważ zaczynają z tym samym ziarnem, tak być nie może. {{< /details >}}
 
 - Czy można jako argument srand  podać time() zamiast getpid()?
 {{< details "Odpowiedź" >}}  Nie można, wywołania time() odbędą się w tej samej sekundzie wiec ziarna będą takie same, efekt taki sam jak poprzednio. {{< /details >}}
