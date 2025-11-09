@@ -14,16 +14,45 @@ Introduction notes:
 - Full programs' codes are placed as attachments at the bottom of this page. On this page only vital parts of the code are displayed
 - Codes, information and tasks are organized in logical sequence, in order to fully understand it you should follow this sequence. Sometimes former task makes context for the next one and it is harder to comprehend it without the study of previous parts.  
 - Most of exercises require command line to practice, I usually assume that all the files are placed in the current working folder and that we do not need to add path parts to file names. 
-- Quite often you will find $ sign placed before commands you should run in the shell, obviously you do not need to rewrite this sight to command line, I put it there to remind you that it is a command to execute.
-- What you learn and practice in this tutorial will be required for the next ones. If you have a problem with this material after the graded lab you can still ask teachers for help. 
-- This time some of the solutions are divided into two stages
+- Quite often you will find $ sign placed before commands you should run in the shell, obviously you do not need to rewrite this sight to command line, I put it there to remind you that it is a command to execute.problem with this material after the graded lab you can still ask teachers for help. 
+- This time some of the solutions are
+- What you learn and practice in this tutorial will be required for the next ones. If you have a  divided into two stages
 {{< /hint >}}
 
-## Task 1 - processes
+## Process Management
 
-Goal: 
-Program creates 'n' sub-processes (n is 1st program parameter), each of those processes waits for random [5-10]s time then prints its PID and terminates. Parent process prints the number of alive child processes every 3s.
-<em>What you need to know:</em> 
+### Creating Processes
+A child process is created using the `fork` command. Let’s take a look at the definition of this function:
+
+```
+pid_t fork(void)
+```
+
+As you can see, it returns an object of type `pid_t`, which is a signed integer type. In the parent process, the function returns the identifier of the newly created process, while in the child process it returns `0`. This makes it easy to distinguish between the logic executed by the child and the logic executed by the parent.
+
+Of course, creating a new process may fail (for example, when the system runs out of necessary resources). In such a case, the `fork` function returns `-1` and sets the appropriate value of the `errno` variable.
+
+Processes created by a given process are called its __children__, while from the perspective of a child process, the process that created it is called the __parent__.
+
+### Process Identification
+Each process has a unique identifier of type `pid_t`. To obtain information about the process identifier, we use the `getpid()` function, and to find out the identifier of the parent process, we use the `getppid()` function. Their definitions are as follows:
+
+```
+pid_t getpid(void)
+pid_t getppid(void)
+```
+
+As you can see, they do not take any arguments and return an object of type `pid_t`.
+
+According to the POSIX standard, both functions __always succeed__.
+
+### Exercise
+
+Write a program that creates 'n' sub-processes (n is 1st program parameter), each of those processes waits for random [5-10]s time then prints its PID and terminates. Parent process prints the number of alive child processes every 3s. For now, do not worry about waiting for child processes.
+
+### Solution
+
+New man pages
 - man 3p fork
 - man 3p getpid
 - man 3p wait
@@ -31,66 +60,109 @@ Program creates 'n' sub-processes (n is 1st program parameter), each of those pr
 - man 3p sleep
 - <a href="https://www.gnu.org/software/libc/manual/html_node/Job-Control.html">Job Control</a>
 
-<em>solution, 1st stage <b>prog13a.c</b>:</em>
+<em>solution <b>prog13a.c</b>:</em>
 {{< includecode "prog13a.c" >}}
 
-Use the general makefile (the last one) from the first tutorial, execute "make prog13a"
+### Notes and questions 
 
-Make sure you know how the process group is created by shell, what processes belong to it?
+- Make sure you know how the process group is created by shell, what processes belong to it?
 
-Please note that macro ERR was extended with kill(0, SIGKILL), it is meant to terminate the whole program (all other
+- Please note that macro ERR was extended with kill(0, SIGKILL), it is meant to terminate the whole program (all other
 processes) in case of error.
 
-Provide zero as pid argument of kill and you can send a signal to all the processes in the group. It is very useful not
+- Provide zero as pid argument of kill and you can send a signal to all the processes in the group. It is very useful not
 to keep the PID's list in your program.
 
-Please notice that we do not test for errors inside of ERR macro (during error reporting), it is so to keep the program
+- Please notice that we do not test for errors inside of ERR macro (during error reporting), it is so to keep the program
 action at minimal level at emergency exit. What else can we do ? Call ERR recursively and have the same errors again?
 
-Why after you run this program the command line returns immediately while processes are still working?
+- Why after you run this program the command line returns immediately while processes are still working?
 {{< details "Answer" >}} Parent process is not waiting for child processes, no wait or waitpid call. It will be fixed in the 2nd stage. {{< /details >}}
 
-How to check the current parent of the created sub-processes (after the initial parent quits)? Why this process?
+- How to check the current parent of the created sub-processes (after the initial parent quits)? Why this process?
 {{< details "Answer" >}}  Right after the command line returns run: $ps -f, you should see that the PPID (parent PID) is 1 (init/systemd). It is caused by premature end of parent process, the orphaned processes can not "hang" outside of process three so they have to be attached somewhere. To make it simple, it is not the shell but the first process in the system. {{< /details >}}
 
-Random number generator seed is set in child process, can it be moved to parent process? Will it affect the program?
+- Random number generator seed is set in child process, can it be moved to parent process? Will it affect the program?
 {{< details "Answer" >}} Child processes will get the same "random" numbers because they will have the same random seed. Seeding can not be moved to parent. {{< /details >}}
 
-Can we change the seed from PID to time() call?
+- Can we change the seed from PID to time() call?
 {{< details "Answer" >}} No. Time you get from time() is returned in seconds since 1970, in most cases all sub-processes  will have the same seed and will get the same (not random) numbers. {{< /details >}}
 
-Try to derive a formula to get random number from the range [A,B], it should be obvious.
+- Try to derive a formula to get random number from the range [A,B], it should be obvious.
 
-How this program works if you remove the exit call in child code (right after child_work call)?
+- How this program works if you remove the exit call in child code (right after child_work call)?
 {{< details "Answer" >}} Child process after exiting the child_work will continue back into forking loop! It will start it's own children. Grandchildren can start their children and so on. To mess it up a bit more child processes do not wait for their children.  {{< /details >}}
 
-How many processes will be started in above case if you supply 3 as starting parameter?
+- How many processes will be started in above case if you supply 3 as starting parameter?
 {{< details "Answer" >}}  1 parent 3 children,  3 grand children and 1 grand grand child, 8 in total, draw a process three for it, tag the branches with current (on fork) n value. {{< /details >}}
 
-What sleep returns? Should we react to this value somehow?
+- What sleep returns? Should we react to this value somehow?
 {{< details "Answer" >}} It returns the time left to sleep at the moment of interruption bu signal handling function. In this code child processes does not receive nor handle the signals so this interruption is not possible.  In other codes it may be vital to restart sleep with remaining time. {{< /details >}}
 
-In the next stage child waiting and child counting will be added. How can we know how many child processes have exited?
+- In the next stage child waiting and child counting will be added. How can we know how many child processes have exited?
 {{< details "Answer" >}} SIGCHLD counting will not be precise as signals can marge, the only sure method is to count successful calls to wait or waitpid. {{< /details >}}
 
-<em>solution 2nd stage <b>prog13b.c</b>:</em>
+### Waiting for Child Processes
+To prevent any leaks, before the parent process terminates, we must wait for all child processes to finish. We can do this using the `wait` function, which waits for any child process, or the `waitpid` function, which allows specifying which processes to wait for.  
+Let’s look at their definitions:
+
+```
+pid_t wait(int *stat_loc);
+pid_t waitpid(pid_t pid, int *stat_loc, int options);
+```
+
+
+As we can see, both functions return a `pid_t` object, which is the identifier of the process whose status we receive information about.
+
+Both functions take the `stat_loc` argument of type `int*`, which points to a memory location where the information about the process’s status will be stored (if we do not need this information, we can pass `NULL`).
+
+The `waitpid` function has two additional arguments: `pid` of type `pid_t` and `options` of type `int`.
+
+The `pid` argument specifies which processes we want to wait for. Depending on its value, the function behaves as follows:  
+- `pid == -1` - wait for any child process.
+- `pid > 0` - wait for the process with the identifier equal to `pid`.
+- `pid == 0` - wait for any process whose group ID is equal to the group ID of the calling process.
+- `pid < -1` - wait for any process whose group ID is equal to the absolute value of `pid`.
+
+The `options` argument specifies modifications to the function’s behavior and can be a combination of the following options:  
+- `WCONTINUED` - the function should also return information about processes that were resumed after being stopped.
+- `WNOHANG` - the `waitpid` function should not block the calling process if none of the processes we are waiting for can immediately report their status. In this case, the function returns `0`. 
+- `WUNTRACED` - the function should also return information about processes that were stopped.
+
+For the purposes of the lab, it is enough to know the `WNOHANG` option.
+
+In summary, we can consider the `waitpid` function as a more advanced version of the `wait` function: calling `wait(stat_loc)` is equivalent to calling `waitpid(-1, stat_loc, 0)`.
+
+Of course, both functions may fail, in which case they return `-1` and set the appropriate `errno` value.
+
+__Note:__ If we call `wait` or `waitpid` and the pool of child processes to wait for is empty, the function returns `-1` and sets `errno` to `ECHILD`. It is useful to handle this to ensure that no processes are left orphaned before the parent process terminates.
+
+### Exercise
+
+Extend the program from the previous exercise to correctly wait for child processes.
+
+### Solution
+
+<em>solution <b>prog13b.c</b>:</em>
 {{< includecode "prog13b.c" >}}
 
-It is worth knowing that waitpid can tell us about temporary lack of terminated children (returns zero) and about permanent lack of them (error ECHILD). The second case is not a critical error, your code should expect it.
+### Notes and questions
 
-Why waitpid is in a loop?
+- It is worth knowing that waitpid can tell us about temporary lack of terminated children (returns zero) and about permanent lack of them (error ECHILD). The second case is not a critical error, your code should expect it.
+
+- Why waitpid is in a loop?
 {{< details "Answer" >}} we do not know how many zombie processes are there to collect,  it can be from zero to n of them. {{< /details >}}
 
-Why waitpid has the WNOHANG flag on?
+- Why waitpid has the WNOHANG flag on?
 {{< details "Answer" >}} we do not want to wait for alive child processes as we have to report the counter every 3 sec. to the user {{< /details >}}
 
-Why zero in place of pid in waitpid call?
+- Why zero in place of pid in waitpid call?
 {{< details "Answer" >}} We want to wait for any child process, we do not need to know children pids, zero means any of them. {{< /details >}}
 
-Does this program encounter signals? 
+- Does this program encounter signals? 
 {{< details "Answer" >}} Yes - SIGCHILD. there is no handling routine but in this case it's alright, children are handled promptly by the above loop. {{< /details >}}
 
-Shouldn't we check sleep return value as we have signals in this code?
+- Shouldn't we check sleep return value as we have signals in this code?
 {{< details "Answer" >}} No, as we do not handle them. {{< /details >}}
 
 ## Task 2 - signals
@@ -204,18 +276,71 @@ Would shifting the setup of SIGCHLD handler past the fork change the program?
 Is wait call at the end of parent really needed? Parent waits long enough for children to finish, right?
 {{< details "Answer" >}} Calculated time may not suffice, in overloaded system expect lags of any duration (few seconds and more), without "wait" children can terminate after the parent because of those lags. {{< /details >}}
 
-## Task 3 - signal waiting
+## Waiting for a Signal
 
-Goal:
-Program starts one child process, which sends every "m" (parameter) microseconds a SIGUSR1 signal to the parent. Every
+Often, when writing programs, we encounter a situation where a process, before performing its work, must be informed that another process has completed its task.  
+As you might guess, this problem can be easily solved using __signals__. Inspired by the previous task, we could write logic where our process sleeps in a loop and checks whether the last signal it received is the one it is waiting for. Unfortunately, not only is this solution inelegant, but it is also __incorrect__, it could happen that the signal we are waiting for gets "merged" with another signal, and we would never actually know that our process can start its work.  
+
+Fortunately, the operating system provides tools to solve this problem.
+
+To block the program until it receives a signal, we use the `sigsuspend` function. Let’s look at its definition:
+
+```
+int sigsuspend(const sigset_t *sigmask);
+```
+
+As we can see, this function returns an `int` value, which is used to report a potential error (in that case, it returns `-1`). It takes an argument `sigmask` of type `const sigset_t *`, which is a pointer to a set of signals that the function will wait for.  
+
+The function works as follows: it sets the signal mask to the one provided in the argument, waits to catch one of these signals, then restores the previous signal mask and resumes the execution of the process.
+
+### Managing the Signal Mask
+
+A set of signals is called a signal mask. We will store the signal mask as an object of type `sigset_t`. The standard does not specify how this type should be implemented; it can be either an `int` or a structure.  
+
+To modify the signal mask, we use the functions `sigemptyset`, which initializes the mask as an empty set, and `sigaddset`, which adds a signal to the mask.  
+Let’s look at their definitions:
+
+```
+int sigemptyset(sigset_t *set);
+int sigaddset(sigset_t *set, int signo);
+```
+
+As we can see, both functions take `set` of type `sigset_t *` as the first argument, which is a pointer to the mask we want to edit.  
+The function `sigaddset` additionally takes the `signo` argument, which is the code of the signal that, we want to add to the mask.
+
+Both functions return an `int` value, used to indicate the operation's outcome: on success, they return `0`, and on error, they return `-1` and set the appropriate value of the `errno` variable.
+
+### Changing the Signal Mask
+
+Once we have defined a new signal mask, we want it to affect the operation of our process.  
+For this purpose, we use the `sigprocmask` function, which determines how the signal mask we defined should affect the current signal mask of the process.  
+Let’s look at its definition:
+```
+int sigprocmask(int how, const sigset_t *restrict set, sigset_t *restrict oset);
+```
+
+As we can see, this function takes the following arguments:  
+- `how` of type `int` specifies how the new mask should affect the current mask. Available options are:  
+  - `SIG_BLOCK` - the resulting signal mask is the union of the mask pointed to by `set` and the current signal mask (we specify which signals we want to __add__ to the mask).  
+  - `SIG_SETMASK` - the resulting signal mask is the signal mask pointed to by `set`.  
+  - `SIG_UNBLOCK` - the resulting signal mask is the intersection of the current mask and the complement of the mask pointed to by `set` (we specify which signals we want to __remove__ from the mask).  
+
+- `set` of type `const sigset_t *` is a pointer to the mask we want to use to modify the previous mask.  
+- `oset` of type `sigset_t *` is a pointer to an object where we want to save the signal mask before modification.
+
+
+### Exercise
+
+Write a program that starts one child process, which sends every "m" (parameter) microseconds a SIGUSR1 signal to the parent. Every
 n-th signal is changed to SIGUSR2. Parent anticipates SIGUSR2 and counts the amount of signals received. Child process
 also counts the amount of SIGUSR2 sent. Both processes print out the counted amounts at each signal operation. We reuse
 some functions from previous code.
 
-What you need to know:
+### Solution
+
+New man pages:
 - man 3p sigsuspend
 - Glibc signal waiting<a href="http://www.gnu.org/software/libc/manual/html_node/Waiting-for-a-Signal.html#Waiting-for-a-Signal"> here</a>
-- man 3p getppid 
 - man 3p pthread_sigmask (sigprocmask only)
 - man 3p sigaddset
 - man 3p sigemptyset
@@ -225,34 +350,36 @@ What you need to know:
 
 The program terminates on SIGINT (C-c)
 
-Try it with various parameters. The shorter microsecond brake and more frequent SIGUSER2 the faster growing gap between
+### Notes and questions 
+
+- Try it with various parameters. The shorter microsecond brake and more frequent SIGUSER2 the faster growing gap between
 counters should be observable. In a moment the difference in numbers will be explained. If you do not observe the shift
 between counters let the program run a bit longer - 1 minute should do.
 
-This code was written to show and explain certain problems, it can be easily improved, please keep this in mind when
+- This code was written to show and explain certain problems, it can be easily improved, please keep this in mind when
 reusing the code!
 
-Please do remember about getppid function. I have seen students programs passing parent pid as a parameter to the child
+- Please do remember about getppid function. I have seen students programs passing parent pid as a parameter to the child
 process function.
 
-Waiting for the signal with sigsuspend is a very common technique you must know. It is very well explained on GNU page
+- Waiting for the signal with sigsuspend is a very common technique you must know. It is very well explained on GNU page
 linked above. The rule of the thumb is to block the anticipated signal first and for most of the program time. It gets
 unblocked at the moment program can wait - at sigsuspend call. Now the signal can influence our main code only in well
 defined points when it is not processing. It is a great advantage for us to limit the signals to certain moments only.
 
-When above method is in use you can stop worrying about asynchronous codes, they are now synchronous and you can use
+- When above method is in use you can stop worrying about asynchronous codes, they are now synchronous and you can use
 more data types for communication via globals and have longer signal handlers.
 
-Which counter gets skewed? Parent's or child's?
+- Which counter gets skewed? Parent's or child's?
 {{< details "Answer" >}} It must be the slower one, program can not count not sent signals, it can only lose some. Only the receiver can miss some of the signal thus the problem is in the parent process. {{< /details >}}
 
-Why counters are shifted?
+- Why counters are shifted?
 {{< details "Answer" >}} You probably blame signal merging but it has small chance to make any impact. The source of the problem is within sigsuspend as THERE IS NO GUARANTEE THAT DURING ONE CALL TO IT ONLY ONE SIGNAL WILL BE HANDLED! It is a very common misconception! Right after program executes the handler for SIGUSR2 in the duration of the same sigsuspend it executes the handler for SIGUSR1, global variable gets overwritten and parent process has no chance to count the SIGUSR2!   {{< /details >}}
 
-How can we run the program to lower SIGUSR2 merging chances to zero and still observe skewed counter?
+- How can we run the program to lower SIGUSR2 merging chances to zero and still observe skewed counter?
 {{< details "Answer" >}} Run with short brakes between signals and lots of SIGUSR1 between SIGUSR2. Now SIGUSR2 are very unlikely to merge as signals are separated in time by a lot of SIGUSR1, short brakes between signals rises the chance to have multiple handlers run in one sigsuspend. {{< /details >}}
 
-Correct the above program to eliminate the above problem.
+- Correct the above program to eliminate the above problem.
 {{< details "Answer" >}} You can have a dedicated global variable only for SIGUSR2, increasing of the counter of SIGUSR2 can run in handler itself it will eliminate the problem of multiple SIGUSR2 handler call in one sigsuspend. Modify the counter printout and it is ready. {{< /details >}}
 
 ## Task 4 - low level file access and signals
