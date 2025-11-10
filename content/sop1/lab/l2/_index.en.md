@@ -157,116 +157,227 @@ Extend the program from the previous exercise to correctly wait for child proces
 - Shouldn't we check sleep return value as we have signals in this code?
 {{< details "Answer" >}} No, as we do not handle them. {{< /details >}}
 
-## Task 2 - signals
 
-Goal:
-Program takes 4 positional parameters (n,k,p i r) and creates n sub-processes. Parent process sends sequentially SIGUSR1
-and SIGUSR2 to all sub-processes in a loop with delays of k and p seconds (k sec. before SIGUSR1 and p sec. before
-SIGUSR2). Parent process terminates after all its sub-processes. Each sub-process determines its own random time
-delay [5,10] sec. and in a loop sleeps this time and prints SUCCESS on the stdout if the last signal received was
-SIGUSR1 or FAILURE if it was SIGUSER2. This loop iterates r times.
+## Signals
 
-What you need to know:
-- man 7 signal
-- man 3p sigaction
-- man 3p nanosleep
-- man 3p alarm
-- man 3p memset
-- man 3p kill
+Signals are an asynchronous event-handling mechanism used in Unix-like
+operating systems. They allow notifying processes about the occurrence
+of specific system events, exceptions, or requests to control execution.
 
-<em>solution <b>prog14.c</b>:</em>
-{{< highlight c >}}
-volatile sig_atomic_t last_signal = 0;
+### Sending signals
 
-void sethandler( void (*f)(int), int sigNo) {
-        struct sigaction act;
-        memset(&act, 0, sizeof(struct sigaction));
-        act.sa_handler = f;
-        if (-1==sigaction(sigNo, &act, NULL)) ERR("sigaction");
-}
+Signals are sent using the `kill` function:
 
-void sig_handler(int sig) {
-        printf("[%d] received signal %d\n", getpid(), sig);
-        last_signal = sig;
-}
+``` c
+#include <signal.h>
 
-void sigchld_handler(int sig) {
-        pid_t pid;
-        for(;;){
-                pid=waitpid(0, NULL, WNOHANG);
-                if(pid==0) return;
-                if(pid<=0) {
-                        if(errno==ECHILD) return;
-                        ERR("waitpid");
-                }
-        }
-}
-{{< / highlight >}}
+int kill(pid_t pid, int sig);
+```
 
-To exchange the data between signal handling routine and the main code we must use global variables, please remember
-that it is an exceptional situation as in general we do not use global variables. Also please remember that global
-variables are not shared between related processes. It should be obvious but sometimes students get confused.
+The `pid` argument specifies which process or group of processes the
+signal is directed to:
+ - `pid > 0` - the signal is sent to the process with PID equal to `pid`
+ - `pid = 0` - the signal is sent to processes belonging to the sender's process group (the sender also receives the signal)
+ - `pid = -1` - the signal is sent to all processes to which the sender has permission (including itself)
+ - `pid < -1` - the signal is sent to the process group whose ID equals the absolute value of `pid`
 
-The type of global variable used for this communication is fixed to be volatile sig_atomic_t, it is the only CORRECT and
-SAFE type you can use here. The reason for this originates from asynchronous nature of the interruption. Primo "
-volatile" means that compiler optimization is off, it is critical to not let the compiler eradicate the variable that is
-not changing in the loop from the loop condition. With the optimization on while(work) may become while(1) as the
-compiler in unable to determine the asynchronous change of "work" variable. Secundo sig_atomic_t is the biggest integer
-variable that can be calculated and compared in single CPU cycle. If you try bigger integer simple comparison a==0 can
-get interrupted and already compared bits may be altered during the comparison!
+The `sig` argument specifies which signal should be sent. It can take
+the following values:
+ - one of the macros defined in `<signal.h>`, such as `SIGTERM`, `SIGKILL`, or `SIGUSR1`. The full list can be found in the manual: 
+```bash 
+man 7 signal
+```
+ - value zero - in this case, no signal is sent the function only checks for potential execution errors.
 
-As you can see not much data can be exchanged between the handling function and the rest of the code, only simple
-integers/states. Additionally we should not interrupt the main code for long. Putting that all together, we should
-always keep the most of program logic in the main code, do not put much in the signal functions, it should be as short
-as possible, only very simple expressions, assignment, increments and alike.
+The function returns `0` on success. Otherwise, it returns `-1` and an appropriate value of `errno` is set.
 
-memset used to initialize the structures is quite often useful, especially if you do not know all the members of the
-structure (quite often only part of members is described in man page, internally used members are unknown).
+More information:
+```bash
+man 3p kill
+```
 
-SIGCHLD handling function has a very similar code to what you have seen in first stage.
+### Signal handling
 
-Do we expect more than one terminated child during SIGCHLD handling?
-{{< details "Answer" >}} Yes, signals can merge, another child can terminate at the very moment of signal handling. {{< /details >}}
+Each signal has a default behavior assigned to it. You can check the
+list of signals and their default behavior using:
 
-Do we expect zero terminated children at this handler? See ahead at the end of main.
-{{< details "Answer" >}} Yes,  wait at the end of main can catch the child before SIGCHLD function does, then the function is left with zero children.It is a race condition.  {{< /details >}}
+```
+man 7 signal
+```
+
+The way a signal is handled can be checked or changed using:
+
+``` c
+#include <signal.h>
+
+int sigaction(int sig, const struct sigaction *restrict act, struct sigaction *restrict oact);
+```
+
+Arguments:
+ - `sig` specifies which signal we are referring to and takes one of the macros from `<signal.h>`.
+ - `act` sets a new signal handler if it points to a `sigaction` structure. If it is `NULL`, the handler is not changed.
+ - `oact` - if set to `NULL`, this argument is ignored. Otherwise, the structure it points to is set to the old (or current) handler.
+
+According to POSIX, the `sigaction` structure must contain at least the following fields:
+ - `void(*) (int) sa_handler` - a pointer to the signal-handling function, or one of the values `SIG_IGN` or `SIG_DFL`. The handler function must accept an int (the code of the signal being handled) and return nothing. The macro `SIG_IGN` means that the signal will be ignored, while `SIG_DFL` selects the default handling behavior for that signal.
+ - `sigset_t sa_mask` -- the set of signals that will be blocked during execution of the handler
+ - `int sa_flags` -- flags modifying signal behavior
+ - `void(*) (int, siginfo_t *, void *) sa_sigaction` -- pointer to the alternative handler called when `SA_SIGINFO` flag in `sa_mask` is set
+
+The function returns `0` on success or `-1` on error, setting `errno`.
+
+Child processes created with `fork` inherit the parent's signal-handling
+settings.
+
+More information:
+
+```bash
+man 3p sigaction
+```
+
+### Task
+
+The program takes 4 positional parameters (`n`, `k`, `p`, and `r`). It creates `n` child processes. The parent alternately sends `SIGUSR1` and `SIGUSR2` to all children in a loop, waiting `k` and `p` seconds respectively. It terminates when all child processes end.
+
+Each child process randomly selects a sleep time between 5 and 10 seconds, then in a loop sleeps and prints **SUCCESS** if the last received signal was `SIGUSR1`, or **FAILURE** if it was `SIGUSR2`. This loop repeats `r` times.
+
+What the student must know:
+ - `man 7 signal`
+ - `man 3p sigaction`
+ - `man 3p nanosleep`
+ - `man 3p alarm`
+ - `man 3p memset`
+ - `man 3p kill`
+
+### Solution
 
 <em>solution <b>prog14.c</b>:</em>
 {{< includecode "prog14.c" >}}
 
-Please notice that sleep and alarm function can conflict, according to POSIX sleep can be implemented on SIGALRM and
-there is no way to nest signals. Never nest them or use nanosleep instead of sleep as in the code above.
 
-Kill function is invoked with zero pid, means it is sending signal to whole group of processes, we do not need to keep
-track of pids but do notice that the signal will be delivered to the sender as well!
+To communicate between the signal handler and the rest of the program,
+we must use global variables. Remember that this is an exceptional
+situation. Global variables are generally undesirable and, as should be
+obvious but students sometimes get confused, they are not shared between
+related processes.
 
-The location of setting of signal handling and blocking is not trivial, please analyze the example and answer the
-questions below. Always plan in advance the reactions to signals in your program, this is a common student mistake to
-overlook the problem.
+The type of the global variable `last_signal` is not accidental
+moreover, it is the only **SAFE and CORRECT** type. This results from
+the asynchronous nature of calling the signal handler function and more
+precisely:
+ - `volatile` disables compiler optimizations; it's important
+that the compiler does not assume the value of the variable is constant,
+because its changes do not result from the code and it could turn a
+readable loop `while(work)` where `work` is a global variable into
+`while(1)` after optimization.
+ - `sig_atomic_t` means the largest numerical type that is processed in a single CPU instruction. If we take
+a larger numerical type, an interrupt invoked by a signal handler may
+disrupt the resulting value even of a simple comparison `a==0`, if the
+interruption occurs during the comparison and changes already compared
+bytes.
 
-Why sleep is in a loop, can the sleep time be exact in this case?
-{{< details "Answer" >}} It gets interrupted by signal hadling, restart is a must. Sleep returns the remaining time rounded up to seconds so it can not be precise. {{< /details >}}
+From the above it follows that we do not pass anything between the
+handler and the main code besides simple numbers and states.
+Additionally, good practice dictates not interrupting the program for
+too long, which leaves very few correct, portable, and safe solutions
+regarding how to distribute program logic between the main code and the
+signal handler. The simplest rule is that handlers should be extremely
+short (assignment, variable increment, etc.) and all logic should remain
+in the main code.
 
-What is default  disposition of most of the signals (incl. SIGUSR1 and 2)?
-{{< details "Answer" >}} Most not handled signals will kill the receiver. In this example the lack of handling, ignoring  or blocking of SIGUSR1 and 2 would kill the children. {{< /details >}}
+The `memset` function can be necessary and is usually useful for
+initializing structures not fully known to us. In this case, POSIX
+explicitly states that the `sigaction` structure may contain more fields
+than required by the standard. These additional fields whose values we
+have not set may result in varying behavior on different systems, or
+even between program runs.
 
-How sending of SIGUSR1 and 2 to the process group affects the program?
-{{< details "Answer" >}} Parent process has to be immune to them, the simplest solution is to ignore them. {{< /details >}}
+Note that handling `SIGCHLD` in a loop is almost identical to the
+previous loop.
 
-What would happen if you turn this ignoring off?
-{{< details "Answer" >}} Parent would kill itself with first signal sent. {{< /details >}} 
+Can more than one child process be terminated when handling the
+`SIGCHLD` signal? Answer: Yes, signals may coalesce; a child may
+terminate during the handling of `SIGCHLD`.
 
-Can we shift the signal ignoring setup past the create_children? Child processes set their own signal disposition right at the start, do they need this ignoring?
-{{< details "Answer" >}} They do need it, if you shift the setup and there is no ignoring inherited from the parent process it may happen (rare case but possible) that child process gets created but didn't start its code yet. Immediately after the creation, CPU slice goes to the parent that continues its code and sends the SIGUSR1 signal to the children. If then CPU slice goes back to the child, signal default disposition will kill it before it has a chance to set up its own handler! {{< /details >}}
+Can we expect no terminated child during `SIGCHLD` handling? Look at the
+end of main.
+{{< details "Answer" >}} Yes, the final `wait` in main may "steal" waiting
+zombies, i.e., `wait` may execute before the handler. {{< /details >}}
 
-Can we modify this program to avoid ignoring in the code?
-{{< details "Answer" >}} In this program both child and a parent can have the same signal handling routines for SIGUSR1 and 2, you can set it just before fork and it will solve the problem. {{< /details >}}
+Remember the possible CONFLICT between `sleep` and `alarm` - according
+to POSIX, `sleep` may internally use `SIGALRM` and signals cannot be
+nested. Therefore code waiting for an alarm never uses `sleep` instead,
+you can use `nanosleep` like in the code above.
 
-Would shifting the setup of SIGCHLD handler past the fork change the program? 
-{{< details "Answer" >}} If one of offspring "dies" very quickly (before parent sets its SIGCHLD handler) it will be a zombi until another offspring terminates. It is not a mayor mistake but it's worth attention. {{< /details >}}
+In sending signals (`kill`), PID zero appears; this allows us not to
+know the exact PIDs of child processes but also means that we send a
+signal to ourselves!
 
-Is wait call at the end of parent really needed? Parent waits long enough for children to finish, right?
-{{< details "Answer" >}} Calculated time may not suffice, in overloaded system expect lags of any duration (few seconds and more), without "wait" children can terminate after the parent because of those lags. {{< /details >}}
+The placement of setting and blocking signal handlers in this program is
+very important. Note how it works and answer the questions below. Always
+carefully consider the order of these settings in your program - many
+student errors come from this!
+
+Note the `sleep` why is it in a loop? Can the sleep time be exact?
+{{< details "Answer" >}}
+`sleep` is interrupted by signal handling, so restart is
+necessary. Since `sleep` returns remaining sleep time as seconds,
+rounding means that exact timing cannot be achieved after restart.
+{{< /details >}}
+
+What is the default disposition of most signals (including `SIGUSR1` and
+`SIGUSR2`)?
+{{< details "Answer" >}}
+To kill the target process; in this program, lack of
+a handler, blocking, or ignoring `SIGUSR1` and `SIGUSR2` would cause
+premature termination.
+{{< /details >}}
+
+What is the consequence of the parent process sending
+`SIGUSR1`/`SIGUSR2` to the whole process group?
+{{< details "Answer" >}}
+The parent must react to these signals even though it does not need them thus it ignores them.
+{{< /details >}}
+
+What would happen if we did not enable ignoring of `SIGUSR1` and
+`SIGUSR2` in the parent?
+{{< details "Answer" >}}
+The parent would kill itself with the first sent signal.
+{{< /details >}}
+
+Can we move the ignoring of these signals after the `create_children`
+function? The children do not need ignoring - they get a handler on
+start.
+{{< details "Answer" >}}
+No. It could happen (rarely) that children are created
+but not yet started, and CPU time returns to the parent, which sends
+them a `SIGUSR1`. On the next CPU allocation for children, they would
+first handle the signal and thus terminate!
+{{< /details >}}
+
+Can we modify this program so that ignoring `SIGUSR1` and `SIGUSR2` is
+unnecessary?
+{{< details "Answer" >}}
+Yes. This specific program can have identical
+reactions to these signals in both parent and children, so the handler
+can be set before fork.
+{{< /details >}}
+
+What happens if we move the handling of `SIGCHLD` after fork?
+{{< details "Answer" >}}
+If a child dies before we enable the handler, it will stay a "zombie" until
+another child terminates. Not a major error, but worth attention.
+{{< /details >}}
+
+Is `wait` at the end of main necessary? Parent's work should last at
+least as long as the slowest child process.
+{{< details "Answer" >}}
+Timing in the parent
+loop is insufficient; in a loaded system, any delay is possible. Without
+`wait`, a race condition appears --- the parent or child may finish
+first.
+{{< /details >}}
+
 
 ## Waiting for a Signal
 

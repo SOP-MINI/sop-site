@@ -56,8 +56,8 @@ void child_work(int l)
 
     for (int i=0; i < l; i++)
     {
-        for (tt = t; tt > 0; tt = sleep(tt))
-            ;
+        for (tt = t; tt > 0; tt = sleep(tt)) {}
+
         if (last_signal == SIGUSR1)
             printf("Success [%d]\n", getpid());
         else
@@ -79,6 +79,7 @@ void parent_work(int k, int p, int l)
         nanosleep(&tk, NULL);
         if (kill(0, SIGUSR1) < 0)
             ERR("kill");
+
         nanosleep(&tp, NULL);
         if (kill(0, SIGUSR2) < 0)
             ERR("kill");
