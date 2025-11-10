@@ -485,122 +485,147 @@ more data types for communication via globals and have longer signal handlers.
 - Correct the above program to eliminate the above problem.
 {{< details "Answer" >}} You can have a dedicated global variable only for SIGUSR2, increasing of the counter of SIGUSR2 can run in handler itself it will eliminate the problem of multiple SIGUSR2 handler call in one sigsuspend. Modify the counter printout and it is ready. {{< /details >}}
 
-## Task 4 - low level file access and signals
 
-Goal:
-Modify task 3 code. Parent receives SIGUSR1 form child at set interval (1st parameter) and counts them. Additionally parent process creates a file of set (2nd parameter) amount of blocks of set size (3rd parameter) with a name given as 4th parameter. The content of the file is a copy of data read from /dev/urandom. Each block must be copied separately with sizes control. After each copy operation program prints the effective amount of data transferred and the amount of received signals on the stderr.
-<em>What you need to know:</em> 
-- man 4 urandom
+## Low-level file operations and signals
 
-{{< hint info >}}
-This task has two stages.
-{{< /hint >}}
+In this part of the tutorial, we will begin by showing what problems can arise during file operations while signals are being handled simultaneously, and then we will demonstrate how to deal with them.
 
-<em>solution 1st stage, parts of <b>prog16a.c</b>:</em>
+### Task
+
+Modify the previous program so that the parent process receives `SIGUSR1` signals sent at a specified interval (parameter `1`) and counts them. Additionally, the main process creates a file with a name given as parameter 4, containing a specified number of blocks of a given size (parameters 2 and 3). The content of the file should come from `/dev/urandom`. Each block should be copied separately, ensuring that the sizes are controlled. After copying a block, print to stderr the number of blocks actually copied and the state of the signal counters.
+
+What the student must know:
+- `man 4 urandom`
+
+### Incorrect solution
+
+*file **prog16a.c**:*
 {{< includecode "prog16a.c" >}}
 
-Do remember that you can read good quality really random bytes from /dev/random file but the amount is limited or read
-unlimited amount of data from /dev/urandom but these are pseudo random bytes.
+{{< hint info >}}
+Remember: from `/dev/random` you can obtain truly random bytes but only in small amounts; from `/dev/urandom` the numbers are pseudo-random but available in unlimited quantities.
+{{< /hint >}}
 
-You should see the following flaws if you run the program with 1 20 40 out.txt params:
+{{< hint info >}}
+Whenever memory is allocated in a correct program, it must also be freed!
+{{< /hint >}}
 
-Coping of blocks shorter than 40Mb, in my case it was at most 33554431, it is due to signal interruption DURING the IO
-operation
+{{< hint info >}}
+The permissions in the `open` function can also be given using constants (`man 3p mknod`). Due to strong tradition among programmers/administrators using octal notation and the ease of searching for such numbers in code, we do not consider this a stylistic error (“magic numbers” in this case are acceptable).
+{{< /hint >}}
 
-fprintf: Interrupted system call - function interrupted by signal handling BEFORE it did anything
+### Problems
 
-Similar messages for open and close - it may be hard to observe in this program but it is possible and described by
-POSIX documentation.
+After running the program with parameters `1 20 40 out.txt`, you should observe the following problems:
+ - Copying shorter blocks than expected. On my laptop, I never exceed 33,554,431 bytes even though it should be 40 MB, and shorter blocks sometimes occur as well. The reason is that the read operation is interrupted (DURING the transfer) by handling the signal.
+ - Possible appearance of the error `fprintf: Interrupted system call` — the signal handler interrupts `fprintf` BEFORE it can display anything.
+ - Similar messages may appear for `open` and `close`. This may be difficult to observe in this particular program, but according to POSIX, it is possible.
+ - You can see that the parent process counts fewer signals than the child sends. Since the summing happens directly in a non-blocking signal handler, it is easy to guess that signal coalescing is happening — but why is it so strong in this program?
+{{< details "Answer" >}}
+In this architecture (GNU/Linux), the CPU scheduler blocks the execution of signal handling during larger I/O operations, and during that time signals accumulate.
+{{< /details >}}
 
-How to get rid of those flows is explained in the 2nd stage.
+### Notes and questions
 
-If there is a memory allocation in your code, there also HAS to be a memory release! Always.
+Why does the parent process send `SIGUSR1` to the entire group at the end?
+{{< details "Answer" >}}
+To terminate the child process.
+{{< /details >}}
 
-Permissions passed to open function can also be expressed with predefined constants (man 3p mknod). As octal permission
-representation is well recognized by programmers and administrators it can also be noted in this way and will not be
-considered as "magic number" style mistake. It is fairly easy to trace those constants in the code.
+How can the child process terminate upon receiving `SIGUSR1` if it inherited the handler for this signal?
+{{< details "Answer" >}}
+Immediately after starting, the child restores the default action for that signal, which ensures the process is killed.
+{{< /details >}}
 
-Obviously the parent counts less signals than child sends, as summing runs inside the handler we can only blame merging for it. Can you tell why signal merging is so strong in this code?
-{{< details "Answer" >}} In this architecture (GNU/Linux) CPU planer blocks signals during IO operations (to some size as we can see) and  during IO signals have more time to merge. {{< /details >}}
-
-What for the SIGUSR1 is sent to the process group at the end of the parent process?
-{{< details "Answer" >}} To terminate the child. {{< /details >}}
-
-How come it works? SIGUSR1 handling is inherited from the parent?
-{{< details "Answer" >}} Child first action is to restore default signal disposition - killing of the receiver. {{< /details >}}
-
-Why parent does not kill itself with this signal?
-{{< details "Answer" >}} It sets the handler for SIGUSR1 before it sends it to the group. {{< /details >}}
+Why doesn’t the parent kill itself with that signal?
+{{< details "Answer" >}}
+It has the handler installed before it sends the signal to the group.
+{{< /details >}}
 
 Can this strategy fail?
-{{< details "Answer" >}} Yes, if parent process finishes it's job before child is able to even start the code and reset SIGUSR1 disposition. {{< /details >}}
+{{< details "Answer" >}}
+Yes, if the parent finishes its task before the child restores the default disposition for `SIGUSR1`.
+{{< /details >}}
 
-Can you improve it and at the same time not kill the parent with the signal from a child?
-{{< details "Answer" >}} send SIGUSR2 to the child. {{< /details >}} 
+Can this be improved? So that the parent always kills the child but does not risk killing itself prematurely?
+{{< details "Answer" >}}
+Send `SIGUSR2` to the child.
+{{< /details >}}
 
-Is this child (children) termination strategy  easy and correct at the same time in all possible programs?
-{{< details "Answer" >}} Only if child processe does not have resources to release, if it has something to release you must add proper signal handling and this may be complicated. {{< /details >}}
+Is this strategy for terminating a child always correct and easy to implement?
+{{< details "Answer" >}}
+Only if the process being killed has no resources. Otherwise you must implement a handler for the terminating signal, which may not be easy.
+{{< /details >}}
 
-Why to check if a pointer to newly allocated memory is not null?
-{{< details "Answer" >}} Operating system may not be able to grant your program additional memory, in this case it reports the error with the NULL. You must be prepared for it. The lack of this check is a common students' mistake. {{< /details >}}
+Why do we check whether the allocated pointer is `NULL` after a memory allocation?
+{{< details "Answer" >}}
+The system may be unable to allocate more memory; we must be prepared for this. Failing to check is a very common student mistake.
+{{< /details >}}
 
-Can you turn the allocated buffer into automatic variable and avoid the effort of allocating and releasing the memory?
-{{< details "Answer" >}} I don't know about OS architecture that uses stacks large enough to accommodate 40MB, typical stack has a few MB at most. For smaller buffers (a few KB) it can work. {{< /details >}}  
+Couldn’t we make this buffer an automatic variable and avoid the code related to allocation and freeing?
+{{< details "Answer" >}}
+Stacks on known architectures are not large enough for such huge variables (40 MB in the example). Typically the stack is only a few MB. If our buffer were small (a few KB) then we could do that.
+{{< /details >}}
 
-Why permissions of a newly created file are supposed to be full (0777)? Are they really full?
-{{< details "Answer" >}} umask will reduce the permissions, if no set  permissions are required it is a good idea to allow the umask to regulate the effective rights {{< /details >}}
+Why are the permissions for the new file set to full (0777)?
+{{< details "Answer" >}}
+`umask` will reduce the permissions. If we don’t require specific settings, this is a good strategy.
+{{< /details >}}
 
-<em>solution 2nd stage, parts of <b>prog16b.c</b>:</em>
+### Solving the problems
+
+During I/O operations, functions can be interrupted by the signal handler. In such a case, the functions return `-1` to indicate an error and set `errno` to `EINTR`. The POSIX standard states that in such a case, the function is interrupted before it achieves anything. Therefore, the correct and recommended response is to restart the function with the same parameters as before.
+
+Manually handling this error can become inconvenient over time (especially when performing many I/O operations). For this reason, we can use the macro `TEMP_FAILURE_RETRY`, which is an extension provided by the GNU C library.
+
+*solution, second stage, file **prog16b.c**:*
 {{< includecode "prog16b.c" >}}
 
-Run it with the same parameters as before - flaws are gone now.
+Run the program as before — the errors disappear.
 
-What error code  EINTR represents?
-{{< details "Answer" >}} This is not an error, it is a way for OS to inform the program that the signal handler has been invoked {{< /details >}}
+### Notes and questions
 
-How should you react to EINTR?
-{{< details "Answer" >}} Unlike real errors do not exit the program, in most cases  to recover the problem simply restart the interrupted function with the same set of parameters as in initial call. {{< /details >}}
+What other interruption in the program can the signal handler cause?
+{{< details "Answer" >}}
+It can interrupt I/O operations or sleeping; these are not reported through `EINTR`. In both cases, handling the event is not trivial.
+{{< /details >}}
 
-At what stage functions are interrupted if EINTR is reported
-{{< details "Answer" >}} Only before they start doing their job - in waiting stage. This means that you can safely restart with the same arguments all the functions used in OPS tutorials except "connect" (OPS2 sockets) {{< /details >}} 
-
-What are other types of interruption signal handler can cause?
-{{< details "Answer" >}} IO transfer can be interrupted in the middle, this case is not reported with EINTR. Sleep and nanosleep similar. In both cases restarting can not reuse the same parameters, it gets complicated. {{< /details >}}
-
-How do you know what function cat report EINTR?
-{{< details "Answer" >}}  Read man pages, error sections. It easy to guess those function must wait before they do their job. {{< /details >}}
+How do we know which functions can be interrupted before they achieve anything (EINTR)?
+{{< details "Answer" >}}
+The man pages, in the section about returned errors. It is easy to guess: these are functions that may or must wait before doing anything.
+{{< /details >}}
 
 Analyze how bulk_read and bulk_write work. You should know what cases are recognized in those functions, what types of interruption they can handle, how to recognize EOF on the descriptor.
+
 Unlike during L1 lab, during L2 and following labs you have to use these functions (or similar ones) when calling `read` or `write` (because we use signals now).
 If you do not use them, you wont get points for your solution.
 
-Both bulk_ functions can be useful not only on signals but also to "glue" IO transfers where data comes from not
-continuous data sources like pipe/fifo and the socket - it wile be covered by following tutorials.
+Both `bulk_` functions are useful not only when dealing with signal handling or large I/O transfers, but also in situations where data is not available continuously — pipes/FIFOs/sockets - it will be covered by following tutorials.
 
-Not only read/write can be interrupted in the described way, the problem applies to the related pairs like fread/fwrite
-and send/recv.
+All similar functions behave like `read`/`write`: `fread`/`fwrite`, `send`/`recv`.
 
-As you know SA_RESTART flag can cause automatic restarts on delivery of a signal if this flag is set in the handler, it
+As you know `SA_RESTART` flag can cause automatic restarts on delivery of a signal if this flag is set in the handler, it
 may not be apparent but this method has a lot of shortcomings:
-
-You must control all the signal handlers used in the code, they all must be set with this flag, if one does not use this
+ - You must control all the signal handlers used in the code, they all must be set with this flag, if one does not use this
 flag then you must handle EINTR as usual. It is easy to forget about this requirement if you extend/reuse the older
 code.
-
-If you try to make some library functions (like bulk_read and write) you can not assume anything about the signals in
+ - If you try to make some library functions (like bulk_read and write) you can not assume anything about the signals in
 the caller code.
-
-It is hard to reuse a code depending on SA_RESTART flag, it can only be transferred to the similar strict handler
+- It is hard to reuse a code depending on `SA_RESTART` flag, it can only be transferred to the similar strict handler
 control code.
+- Sometimes we want interruption notifications (e.g., `sigsuspend` loses meaning with `SA_RESTART`).
 
-Sometimes you wish to know about interruption ASAP to react quickly. Sigsuspend would not work if you use this flag!
-
-Why do we not react on other (apart from EINTR) errors of fprintf? If program can not write on stderr (most likely
-screen) then it cannot report errors.
+Why do we not check for errors other than `EINTR` after calling `fprintf`?
+{{< details "Answer" >}}
+If we cannot write to stderr (usually the screen), then reporting an error is pointless.
+{{< /details >}}
 
 Really big (f)printfs can get interrupted in the middle of the process (like write). Then it is difficult to restart the
 process especially if formatting is complicated. Avoid using printf where restarting would be critical (most cases
 except for the screen output) and the volume of transferred data is significant, use write instead.
+
+
+## Example tasks
 
 Do the example tasks. During the laboratory you will have more time and a starting code. If you do following tasks in the allotted time, it means that you are well-prepared.
 
