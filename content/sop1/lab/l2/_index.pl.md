@@ -176,7 +176,7 @@ Argument `pid` określa, do którego procesu lub grupy procesów kierowany jest 
  - `pid > 0` - sygnał jest wysyłany do procesu o PID równym `pid`
  - `pid = 0` - sygnał wysyłany jest do procesów należących do grupy procesów nadawcy (nadawca również otrzymuje sygnał)
  - `pid = -1` - sygnał wysyłany do wszystkich procesów, do których nadawca ma uprawnienia (w tym do samego siebie)
- - `pid < -1` — sygnał wysyłany jest do grupy procesów o identyfikatorze równym co do modułu `pid`
+ - `pid < -1` - sygnał wysyłany jest do grupy procesów o identyfikatorze równym co do modułu `pid`
 
 Argument `sig` specyfikuje jaki sygnał powinien być wysłany. Może on przyjmować następujące wartości:
  - jedno z makr zdefiniowanych w pliku nagłówkowym `<signal.h>` jak np. `SIGTERM`, `SIGKILL` czy `SIGUSR1`. Pełną liste można znaleźć w manualu
@@ -258,7 +258,7 @@ kompilatora, ważne żeby kompilator nie uznał wartości zmiennej za stałą bo
 się okazać, że czytelna dla nas pętla `while(work)` gdzie `work` jest zmienną globalną zmienia się na `while(1)` po
 optymizacji.
  - `sig_atomic_t` oznacza największy typ numeryczny, który jest przetwarzany w pojedynczej instrukcji
-CPU. Jeśli weźmiemy większy typ numeryczny przerwanie obsługą sygnału może zakłócić wartość wynikową nawet prostego
+CPU. Jeśli weźmiemy większy typ numeryczny przerwanie obsługą sygnału może zakłócić wartość wynikową nawet dla przykładowego prostego
 porównania `a==0` o ile przerwanie wypadnie w trakcie porównania i zmieni już porównane bajty.
 
 Z powyższego wynika, że nie przekazujemy pomiędzy funkcją obsługi a głównym kodem nic poza prostymi liczbami, stanami.
@@ -267,7 +267,7 @@ przenośnych i bezpiecznych rozwiązań w kwestii jak dzielić logikę programu 
 sygnału. Najprostsza zasada aby funkcje obsługi były ekstremalnie krótkie (przypisanie, inkrementacja zmiennej itp) a
 cała logika pozostała w głównym kodzie jest najlepsza.
 
-Funkcja `memset` bywa konieczna a zazwyczaj jest użyteczna przy inicjowaniu nie w pełni znanych nam struktur. W tym przypadku POSIX wyraźnie mówi, że struktura `sigaction` może zawierać więcej pól niż jest to wymagane przez standard. W takim przypadku te dodatkowe pola, których wartości nie ustawiliśmy mogą skutkować różnym działaniem na różnych systemach, a nawet różnym zachowaniem po między wywołaniami programu.
+Funkcja `memset` bywa konieczna a zazwyczaj jest użyteczna przy inicjowaniu nie w pełni znanych nam struktur. W tym przypadku POSIX wyraźnie mówi, że struktura `sigaction` może zawierać więcej pól niż jest to wymagane przez standard. W takim przypadku te dodatkowe pola, których wartości nie ustawilibyśmy (tutaj ze zerujemy za pomocą `memset`) mogą skutkować różnym działaniem na różnych systemach, a nawet różnym zachowaniem po między wywołaniami programu.
 
 Zwróć uwagę, że obsługa `SIGCHLD` w pętli jest prawie identyczna jak poprzednio w pętli.
 
@@ -415,7 +415,7 @@ czasu ich działania.
 - Popraw powyższy program tak aby wyeliminować problem wielu wywołań obsługi sygnału w obrębie jednego sigsuspend 
 {{< details "Odpowiedź" >}} Można to zrobić np. dodając drugą zmienną globalną tylko do obsługi SIGUSR2, zwiększanie zmiennej count też można przenieść do funkcji obsługi sygnału w ten sposób uniknie się potencjalnego problemu z obsługą dwóch SIGUSR2  w obrębie jednego sigsuspend. Trzeba jeszcze przebudować kod związany z wypisywaniem zmienionego licznika count w rodzicu i gotowe. {{< /details >}}
 
-## Operacje niskopoziomowe na plikach a sygnały
+## Operacje niskopoziomowe na plikach, a sygnały
 
 W tej części tutoriala na samym początku pokażemy z jakimi problemami można się spotkać przy okazji operacji na plikach przy jednoczesnej obsłudze sygnałów, a następnie pokażemy jak możemy sobie z nimi radzić.
 
@@ -449,8 +449,8 @@ kodzie wyszukać nie uznajemy tego za błąd stylu tzw. "magic numbers".
 
 Po wywołaniu programu z parametrami `1 20 40 out.txt` powinieneś obserwować następujące problemy:
  - Kopiowanie krótszych bloków niż zadano, na moim laptopie nigdy nie przekraczam 33554431 a powinno być 40MB, ale pojawiają się też i krótsze, powód to przerwanie odczytu (W TRAKCIE) obsługą sygnału
- - Możliwe wystąpienie błędu `fprintf: Interrupted system call` - przerwanie funkcją obsługi sygnału funkcji `fprintf` ZANIM ta coś wyświetli
- - Analogiczne komunikaty dla open i close - może to być trudno zaobserwować w tym programie ale jest to możliwe wg. POSIX
+ - Możliwe wystąpienie błędu `fprintf: Interrupted system call` - przerwanie funkcją obsługi sygnału funkcji `fprintf` **ZANIM** ta coś wyświetli
+ - Analogiczne komunikaty dla `open` i `close` - może to być trudno zaobserwować w tym programie ale jest to możliwe wg. POSIX
  - Widać, że zliczamy w rodzicu mniej sygnałów niż wysyła potomek, ponieważ sumowanie odbywa się bezpośrednio w nieblokowanej obsłudze sygnału to łatwo się domyślić, że w grę wchodzi sklejanie się sygnałów, pytanie czemu w tym programie to sklejanie jest aż tak silne?
 {{< details "Odpowiedź" >}}  w tej architekturze (GNU/Linux) planista procesora blokuje uruchomienie obsługi sygnału podczas większych operacji IO, w tym czasie sygnały się sklejają. {{< /details >}}
 
@@ -466,7 +466,7 @@ Czemu proces rodzic nie zabija się sam tym sygnałem?
 {{< details "Odpowiedź" >}} Ma włączoną obsługę tego sygnału zanim wyśle sygnał do grupy. {{< /details >}}
 
 Czy taka strategia może się  nie powieść?
-{{< details "Odpowiedź" >}} Tak, jeśli proces rodzic upora się ze swoim zadaniem zanim proces potomny zmieni dyspozycję odnośnie SIGUSR1 na domyślną. {{< /details >}}
+{{< details "Odpowiedź" >}} Tak, jeśli proces rodzic upora się ze swoim zadaniem zanim proces potomny zmieni dyspozycję odnośnie `SIGUSR1` na domyślną. {{< /details >}}
 
 Czy można to jakoś poprawić? Tzn. proces rodzic zawsze zabije potomka ale jednocześnie sam nie narazi się na przedwczesną śmierć?
 {{< details "Odpowiedź" >}} Wyślij do potomka `SIGUSR2`. {{< /details >}} 

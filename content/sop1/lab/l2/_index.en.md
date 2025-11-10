@@ -220,14 +220,13 @@ Arguments:
 
 According to POSIX, the `sigaction` structure must contain at least the following fields:
  - `void(*) (int) sa_handler` - a pointer to the signal-handling function, or one of the values `SIG_IGN` or `SIG_DFL`. The handler function must accept an int (the code of the signal being handled) and return nothing. The macro `SIG_IGN` means that the signal will be ignored, while `SIG_DFL` selects the default handling behavior for that signal.
- - `sigset_t sa_mask` -- the set of signals that will be blocked during execution of the handler
- - `int sa_flags` -- flags modifying signal behavior
+ - `sigset_t sa_mask` - the set of signals that will be blocked during execution of the handler
+ - `int sa_flags` - flags modifying signal behavior
  - `void(*) (int, siginfo_t *, void *) sa_sigaction` -- pointer to the alternative handler called when `SA_SIGINFO` flag in `sa_mask` is set
 
 The function returns `0` on success or `-1` on error, setting `errno`.
 
-Child processes created with `fork` inherit the parent's signal-handling
-settings.
+It is worth noting, that child processes created with `fork` inherit the parent's signal-handling settings.
 
 More information:
 
@@ -255,11 +254,7 @@ What the student must know:
 {{< includecode "prog14.c" >}}
 
 
-To communicate between the signal handler and the rest of the program,
-we must use global variables. Remember that this is an exceptional
-situation. Global variables are generally undesirable and, as should be
-obvious but students sometimes get confused, they are not shared between
-related processes.
+To exchange the data between signal handling routine and the main code we must use global variables, please remember that it is an exceptional situation as in general we do not use global variables. Also please remember that global variables are not shared between related processes. It should be obvious but sometimes students get confused.
 
 The type of the global variable `last_signal` is not accidental
 moreover, it is the only **SAFE and CORRECT** type. This results from
@@ -285,19 +280,15 @@ signal handler. The simplest rule is that handlers should be extremely
 short (assignment, variable increment, etc.) and all logic should remain
 in the main code.
 
-The `memset` function can be necessary and is usually useful for
-initializing structures not fully known to us. In this case, POSIX
-explicitly states that the `sigaction` structure may contain more fields
-than required by the standard. These additional fields whose values we
-have not set may result in varying behavior on different systems, or
-even between program runs.
+The memset function is sometimes necessary and usually useful when initializing structures whose full layout is not completely known to us. In this case, POSIX explicitly states that the sigaction structure may contain more fields than required by the standard. In such a situation, these additional fields—whose values we would not set (here we zero them using memset)—may cause different behavior on different systems, or even different behavior between program runs.
 
 Note that handling `SIGCHLD` in a loop is almost identical to the
 previous loop.
 
 Can more than one child process be terminated when handling the
-`SIGCHLD` signal? Answer: Yes, signals may coalesce; a child may
-terminate during the handling of `SIGCHLD`.
+`SIGCHLD` signal?
+{{< details "Answer" >}} Yes, signals may coalesce; a child may
+terminate during the handling of `SIGCHLD`. {{< /details >}}
 
 Can we expect no terminated child during `SIGCHLD` handling? Look at the
 end of main.
@@ -318,7 +309,7 @@ very important. Note how it works and answer the questions below. Always
 carefully consider the order of these settings in your program - many
 student errors come from this!
 
-Note the `sleep` why is it in a loop? Can the sleep time be exact?
+Note the `sleep`, why is it in a loop? Can the sleep time be exact?
 {{< details "Answer" >}}
 `sleep` is interrupted by signal handling, so restart is
 necessary. Since `sleep` returns remaining sleep time as seconds,
