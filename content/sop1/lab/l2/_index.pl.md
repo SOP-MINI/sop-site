@@ -176,7 +176,7 @@ Argument `pid` określa, do którego procesu lub grupy procesów kierowany jest 
  - `pid > 0` - sygnał jest wysyłany do procesu o PID równym `pid`
  - `pid = 0` - sygnał wysyłany jest do procesów należących do grupy procesów nadawcy (nadawca również otrzymuje sygnał)
  - `pid = -1` - sygnał wysyłany do wszystkich procesów, do których nadawca ma uprawnienia (w tym do samego siebie)
- - `pid < -1` - sygnał wysyłany jest do grupy procesów o identyfikatorze równym co do modułu `pid`
+ - `pid < -1` - sygnał wysyłany jest do procesów o identyfikatorze **grupy** równym co do modułu `pid`
 
 Argument `sig` specyfikuje jaki sygnał powinien być wysłany. Może on przyjmować następujące wartości:
  - jedno z makr zdefiniowanych w pliku nagłówkowym `<signal.h>` jak np. `SIGTERM`, `SIGKILL` czy `SIGUSR1`. Pełną liste można znaleźć w manualu
@@ -269,15 +269,13 @@ cała logika pozostała w głównym kodzie jest najlepsza.
 
 Funkcja `memset` bywa konieczna a zazwyczaj jest użyteczna przy inicjowaniu nie w pełni znanych nam struktur. W tym przypadku POSIX wyraźnie mówi, że struktura `sigaction` może zawierać więcej pól niż jest to wymagane przez standard. W takim przypadku te dodatkowe pola, których wartości nie ustawilibyśmy (tutaj ze zerujemy za pomocą `memset`) mogą skutkować różnym działaniem na różnych systemach, a nawet różnym zachowaniem po między wywołaniami programu.
 
-Zwróć uwagę, że obsługa `SIGCHLD` w pętli jest prawie identyczna jak poprzednio w pętli.
-
 Czy podczas obsługi sygnału `SIGCHLD` można się spodziewać więcej niż jednego zakończonego procesu dziecka?
-{{< details "Odpowiedź" >}}  Tak, sygnały mogą się skleić, dziecko może się zakończyć akurat w trakcie obsługi `SIGCHLD`. {{< /details >}}
+{{< details "Odpowiedź" >}}  Tak, sygnały mogą się skleić, dziecko może się zakończyć akurat w trakcie obsługi `SIGCHLD`. Stąd pętla w funkcji obsługi tego. {{< /details >}}
 
-Czy podczas obsługi sygnału `SIGCHLD` można się spodziewać braku zakończonego procesu dziecka? Zerknij na zakończenie main
+Czy podczas obsługi sygnału `SIGCHLD` można się spodziewać braku zakończonego procesu dziecka? Zerknij na zakończenie main.
 {{< details "Odpowiedź" >}}  Tak, `wait` na końcu main może "podkradać" te czekające zombie tj. wywoła się poprawnie `wait` zanim wykona się funkcja obsługi.  {{< /details >}}
 
-Pamiętaj o możliwym KONFLIKCIE `sleep` i `alarm` - wg. POSIX `sleep` może używać w implementacji `SIGALRM` a nie ma jak
+Pamiętaj o możliwym **KONFLIKCIE** `sleep` i `alarm` - wg. POSIX `sleep` może używać w implementacji `SIGALRM` a nie ma jak
 zagnieżdżać sygnałów, nigdy zatem w kodzie oczekującym na alarm nie używamy `sleep`, można za to użyć `nanosleep` tak jak w kodzie powyżej.
 
 W wysyłaniu sygnałów (`kill`) pojawia się jako PID zero, dzięki temu nie musimy znać pidów procesów potomnych ale też wysyłamy sygnał sami do siebie!
@@ -487,7 +485,7 @@ Czemu uprawnienia do nowego pliku są  pełne (0777)?
 
 W przypadu operacji I/O funkcje mogą być przerwane podczas swojego działania przez funkcję obługi sygnału. W takim wypadku funkcje zwracają wartość -1, która sygnalizuje błąd i ustwiają `errno` na `EINTR`. Standard POSIX mówi, że w takim przypadku wykananie funkcji zostaje przerwana zanim ta funkcja coś zrobi. Z tego powodu jak najbardziej poprawną i zalecaną reakcją na ten błąd jest restart funkcji z tymi samymi parametrami, jakie były podane przy pierwszym wywołaniu.
 
-Ręczna obsługa tego błędu może być z czasem nie wygodna (szczególnie, gdy wykonujemy dużo operacji I/O). Z tego powodu w tym celu wykorzystamy makro `TEMP_FAILURE_RETRY`, które jest rozszerzeniem biblioteki C projektu GNU. [Tutaj](https://www.gnu.org/software/libc/manual/html_node/Interrupted-Primitives.html) przeczytasz więcej o tym makrze.
+Ręczna obsługa tego błędu może być z czasem nie wygodna (szczególnie, gdy wykonujemy dużo operacji I/O). Z tego powodu w tym celu wykorzystamy makro `TEMP_FAILURE_RETRY`, które jest rozszerzeniem biblioteki C projektu GNU. [Tutaj](https://www.gnu.org/software/libc/manual/html_node/Interrupted-Primitives.html) przeczytasz więcej o tym makrze. Aby skorzystać makra musimy wcześniej zdefiniować makro `_GNU_SOURCE`, które daje nam dostęp do tego typu niestandardowych rozszerzeń.
 
 <em>rozwiązanie drugi etap, plik <b>prog16b.c</b>:</em>
 {{< includecode "prog16b.c" >}}

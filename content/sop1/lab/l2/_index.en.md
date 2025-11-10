@@ -179,7 +179,7 @@ signal is directed to:
  - `pid > 0` - the signal is sent to the process with PID equal to `pid`
  - `pid = 0` - the signal is sent to processes belonging to the sender's process group (the sender also receives the signal)
  - `pid = -1` - the signal is sent to all processes to which the sender has permission (including itself)
- - `pid < -1` - the signal is sent to the process group whose ID equals the absolute value of `pid`
+ - `pid < -1` - the signal is sent to the processes with **group ID** equal to the absolute value of `pid`
 
 The `sig` argument specifies which signal should be sent. It can take
 the following values:
@@ -280,22 +280,19 @@ signal handler. The simplest rule is that handlers should be extremely
 short (assignment, variable increment, etc.) and all logic should remain
 in the main code.
 
-The memset function is sometimes necessary and usually useful when initializing structures whose full layout is not completely known to us. In this case, POSIX explicitly states that the sigaction structure may contain more fields than required by the standard. In such a situation, these additional fields—whose values we would not set (here we zero them using memset)—may cause different behavior on different systems, or even different behavior between program runs.
-
-Note that handling `SIGCHLD` in a loop is almost identical to the
-previous loop.
+The `memset` function is sometimes necessary and usually useful when initializing structures whose full layout is not completely known to us. In this case, POSIX explicitly states that the `sigaction` structure may contain more fields than required by the standard. In such a situation, these additional fields—whose values we would not set (here we zero them using `memset`) - may cause different behavior on different systems, or even different behavior between program runs.
 
 Can more than one child process be terminated when handling the
 `SIGCHLD` signal?
 {{< details "Answer" >}} Yes, signals may coalesce; a child may
-terminate during the handling of `SIGCHLD`. {{< /details >}}
+terminate during the handling of `SIGCHLD`. Hence the loop in the handler function. {{< /details >}}
 
 Can we expect no terminated child during `SIGCHLD` handling? Look at the
 end of main.
 {{< details "Answer" >}} Yes, the final `wait` in main may "steal" waiting
 zombies, i.e., `wait` may execute before the handler. {{< /details >}}
 
-Remember the possible CONFLICT between `sleep` and `alarm` - according
+Remember the possible **CONFLICT** between `sleep` and `alarm` - according
 to POSIX, `sleep` may internally use `SIGALRM` and signals cannot be
 nested. Therefore code waiting for an alarm never uses `sleep` instead,
 you can use `nanosleep` like in the code above.
@@ -567,7 +564,7 @@ Why are the permissions for the new file set to full (0777)?
 
 During I/O operations, functions can be interrupted by the signal handler. In such a case, the functions return `-1` to indicate an error and set `errno` to `EINTR`. The POSIX standard states that in such a case, the function is interrupted before it achieves anything. Therefore, the correct and recommended response is to restart the function with the same parameters as before.
 
-Manually handling this error can become inconvenient over time (especially when performing many I/O operations). For this reason, we can use the macro `TEMP_FAILURE_RETRY`, which is an extension provided by the GNU C library.
+Manually handling this error can become inconvenient over time (especially when performing many I/O operations). For this reason, we can use the macro `TEMP_FAILURE_RETRY`, which is an extension provided by the GNU C library. [Here](https://www.gnu.org/software/libc/manual/html_node/Interrupted-Primitives.html) you can read more about this function. To use the macros, we first need to define the `_GNU_SOURCE`, which gives us access to this kind of non-standard extensions.
 
 *solution, second stage, file **prog16b.c**:*
 {{< includecode "prog16b.c" >}}
