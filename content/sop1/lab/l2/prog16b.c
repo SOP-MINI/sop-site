@@ -29,11 +29,15 @@ void child_work(int m)
 {
     struct timespec t = {0, m * 10000};
     sethandler(SIG_DFL, SIGUSR1);
+
+    int signals = 0
     while (1)
     {
         nanosleep(&t, NULL);
         if (kill(getppid(), SIGUSR1))
             ERR("kill");
+
+        signals
     }
 }
 
