@@ -160,21 +160,89 @@ Rozbuduj program z poprzedniego zadania o poprawne czekanie na procesy potomne.
 - Czy tym razem nie powinniśmy sprawdzać co zwraca sleep skoro są sygnały?
 {{< details "Odpowiedź" >}} Nie bo nie ma funkcji obsługi sygnału. {{< /details >}}
 
-## Zadanie 2 - sygnały
+## Sygnały
 
-Cel: Program przyjmuje 4 parametry pozycyjne (n,k,p i r). Tworzy n procesów potomnych. Proces rodzic wysyła
-naprzemiennie sygnały SIGUSR1 i SIGUSR2 do wszystkich procesów potomnych w pętli po odpowiednio k i p sekundach. Kończy
+Sygnały (ang. signals) są asynchronicznym mechanizmem obsługi zdarzeń w systemach operacyjnych z rodziny Unix. Umożliwiając powiadamianie procesów o wystąpieniu określonych zdarzeń systemowych, wyjątków lub żądań sterowania wykonaniem.
+
+### Wysyłanie sygnałów
+
+Do wysyłania sygnałów służy funkcja `kill`.
+```c
+#include <signal.h>
+
+int kill(pid_t pid, int sig);
+```
+Argument `pid` określa, do którego procesu lub grupy procesów kierowany jest sygnał:
+ - `pid > 0` - sygnał jest wysyłany do procesu o PID równym `pid`
+ - `pid = 0` - sygnał wysyłany jest do procesów należących do grupy procesów nadawcy (nadawca również otrzymuje sygnał)
+ - `pid = -1` - sygnał wysyłany do wszystkich procesów, do których nadawca ma uprawnienia (w tym do samego siebie)
+ - `pid < -1` - sygnał wysyłany jest do procesów o identyfikatorze **grupy** równym co do modułu `pid`
+
+Argument `sig` specyfikuje jaki sygnał powinien być wysłany. Może on przyjmować następujące wartości:
+ - jedno z makr zdefiniowanych w pliku nagłówkowym `<signal.h>` jak np. `SIGTERM`, `SIGKILL` czy `SIGUSR1`. Pełną liste można znaleźć w manualu
+  ```bash
+  man 7 signal
+  ```
+ - wartość zero - w takim przypadku żaden sygnał nie zostanie wysłany, a jedynie zajdzie sprawdzenie potencjalnych błędów wykonania funkcji.
+
+Funkcja zwraca `0` w przypadku poprawnego wykonania. W przeciwnym wypadu zwracana jest wartość `-1` i ustawiana jest odpowiednia wartość zmiennej `errno`.
+
+Więcej informacji można znaleźć w manualu
+```bash
+man 3p kill
+```
+
+### Obsługa sygnałów
+
+Każdy sygnał posiada swój domyślny sposób obsługi przez proces. Liste sygnałów i ich domyślny sposób obsługi możesz sprawdzić w manualu
+```bash
+man 7 signal
+```
+
+Sposób obsługi danego sygnału jesteśmy w stanie sprawdzić lub zmienić za pomocą funkcji
+```c
+#include <signal.h>
+
+int sigaction(int sig, const struct sigaction *restrict act, struct sigaction *restrict oact);
+```
+
+Argumenty:
+ - `sig` specyfikuje jaki o jaki sygnał nam chodzi i przyjmuje wartości makr z nagłówka `<signal.h>`.
+ - `act` może ustawić nowy sposób obsługi sygnału jeśli wskazuje na strukture typu `sigaction`. Jeśli wartość jest równa `NULL`, to obsługa się nie zmienia.
+ - `oact` - jeśli przy wywołaniu jest ustawiony na `NULL`, to argument ten jest ignorowany. W przeciwnym wypadku struktura na którą wskazuje ten wskaźnik jest ustawiana na stary sposób obsługi sygnału (gdy `act` nie jest `NULL`em) lub aktualny (gdy `act` jest `NULL`em)
+
+Zgodnie z POSIXem struktura `sigaction` musi posiadać co najmniej następujące pola:
+ - `void(*) (int) sa_handler` - wskaźnik na funkcje obsługującą sygnał lub jedna z wartości `SIG_IGN` lub `SIG_DFL`. Funkcja obsługująca musi przyjmować `int` (kod obsługiwanego sygnału) i nic nie zwracać. Makro `SIG_IGN` oznacza, że sygnał będzie ignorowany, a `SIG_DFL` domyślną obsługę sygnału.
+ - `sigset_t sa_mask` - zbiór sygnałów, które będą blokowane na czas wywołania funkcji obsługującej sygnał
+ - `int sa_flags` - specjalne flagi modyfikujące zachowanie sygnału
+ - `void(*) (int, siginfo_t *, void *) sa_sigaction` - wskaźnik na funkcje obsługującą sygnał. Różni się od `sa_handle` przyjmowanymi argumentami. Domyślnie wywoływana jest funkcja `sa_handle`, aby to zmienić należy do `sa_flags` dodać flagą `SA_SIGINFO`.
+
+Funkcja zwraca `0` w przypadku poprawnego wykonania. W przeciwnym wypadu zwracana jest wartość `-1` i ustawiana jest odpowiednia wartość zmiennej `errno`.
+
+Należy zaznaczyć, że procesy dzieci stworzone za pomocą funkcji `fork` dziedziczą sposób obsługi sygnału.
+
+Więcej informacji można znaleźć w manualu
+```bash
+man 3p sigaction
+```
+
+### Zadanie
+
+Program przyjmuje 4 parametry pozycyjne (`n`,`k`,`p` i `r`). Tworzy `n` procesów potomnych. Proces rodzic wysyła
+naprzemiennie sygnały `SIGUSR1` i `SIGUSR2` do wszystkich procesów potomnych w pętli po odpowiednio `k` i `p` sekundach. Kończy
 się gdy kończą się wszystkie procesy potomne. Każdy proces potomny losuje czas swojego spania z przedziału 5-10 sekund a
-następnie w pętli śpi i wypisuje na ekran SUKCES jeśli ostatnim otrzymanym przez niego sygnałem był SIGUSR1 lub FAILURE
-jeśli SIGUSER2. Taka pętla powtarza się r razy.
+następnie w pętli śpi i wypisuje na ekran **SUKCES** jeśli ostatnim otrzymanym przez niego sygnałem był `SIGUSR1` lub **FAILURE**
+jeśli `SIGUSER2`. Taka pętla powtarza się `r` razy.
 
 Co student musi wiedzieć:
-- man 7 signal
-- man 3p sigaction
-- man 3p nanosleep
-- man 3p alarm
-- man 3p memset
-- man 3p kill
+- `man 7 signal`
+- `man 3p sigaction`
+- `man 3p nanosleep`
+- `man 3p alarm`
+- `man 3p memset`
+- `man 3p kill`
+
+### Rozwiązanie zadania
 
 <em>plik <b>prog14.c</b>:</em>
 {{< includecode "prog14.c" >}}
@@ -183,13 +251,15 @@ Do komunikacji pomiędzy funkcją obsługi sygnału a resztą programu musimy u�
 jest to sytuacja wyjątkowa, zmienne globalne są jako takie niepożądane oraz, co powinno być oczywiste, ale czasem się
 studentom myli - nie są współdzielone pomiędzy procesami pokrewnymi.
 
-Typ zmiennej globalnej nie jest przypadkowy, co więcej jest to jedyny BEZPIECZNY i POPRAWNY typ. Wynika to z
-asynchronicznej natury wywołania f. obsługi sygnału a dokładniej: Primo "volatile" oznacza wyłączenie optymizacji
+Typ zmiennej globalnej `last_signal` nie jest przypadkowy, co więcej jest to jedyny **BEZPIECZNY i POPRAWNY** typ. Wynika to z
+asynchronicznej natury wywołania funkcji obsługi sygnału a dokładniej:
+ - `volatile` oznacza wyłączenie optymizacji
 kompilatora, ważne żeby kompilator nie uznał wartości zmiennej za stałą bo jej zmiany nie wynikają z kodu i tak mogłoby
-się okazać, że czytelna dla nas pętla while(work) gdzie work jest zmienną globalną zmienia się na while(1) po
-optymizacji. Secundo sig_atomic_t oznacza największy typ numeryczny, który jest przetwarzany w pojedynczej instrukcji
-CPU. Jeśli weźmiemy większy typ numeryczny przerwanie obsługą sygnału może zakłócić wartość wynikową nawet prostego
-porównania a==0 o ile przerwanie wypadnie w trakcie porównania i zmieni już porównane bajty.
+się okazać, że czytelna dla nas pętla `while(work)` gdzie `work` jest zmienną globalną zmienia się na `while(1)` po
+optymizacji.
+ - `sig_atomic_t` oznacza największy typ numeryczny, który jest przetwarzany w pojedynczej instrukcji
+CPU. Jeśli weźmiemy większy typ numeryczny przerwanie obsługą sygnału może zakłócić wartość wynikową nawet dla przykładowego prostego
+porównania `a==0` o ile przerwanie wypadnie w trakcie porównania i zmieni już porównane bajty.
 
 Z powyższego wynika, że nie przekazujemy pomiędzy funkcją obsługi a głównym kodem nic poza prostymi liczbami, stanami.
 Do tego dochodzi dobra praktyka nie przerywania programu na zbyt długo co pozostawia nam bardzo mało poprawnych,
@@ -197,54 +267,46 @@ przenośnych i bezpiecznych rozwiązań w kwestii jak dzielić logikę programu 
 sygnału. Najprostsza zasada aby funkcje obsługi były ekstremalnie krótkie (przypisanie, inkrementacja zmiennej itp) a
 cała logika pozostała w głównym kodzie jest najlepsza.
 
-Funkcja memset bywa konieczna a zazwyczaj jest użyteczna przy inicjowaniu nie w pełni znanych nam struktur (nie wiemy
-jakie tam są jeszcze pola w danej implementacji).
+Funkcja `memset` bywa konieczna a zazwyczaj jest użyteczna przy inicjowaniu nie w pełni znanych nam struktur. W tym przypadku POSIX wyraźnie mówi, że struktura `sigaction` może zawierać więcej pól niż jest to wymagane przez standard. W takim przypadku te dodatkowe pola, których wartości nie ustawilibyśmy (tutaj ze zerujemy za pomocą `memset`) mogą skutkować różnym działaniem na różnych systemach, a nawet różnym zachowaniem po między wywołaniami programu.
 
-Zwróć uwagę, że obsługa sigchild w pętli jest prawie identyczna jak poprzednio w pętli.
+Czy podczas obsługi sygnału `SIGCHLD` można się spodziewać więcej niż jednego zakończonego procesu dziecka?
+{{< details "Odpowiedź" >}}  Tak, sygnały mogą się skleić, dziecko może się zakończyć akurat w trakcie obsługi `SIGCHLD`. Stąd pętla w funkcji obsługi tego. {{< /details >}}
 
-Czy podczas obsługi sygnału SIGCHLD można się spodziewać więcej niż jednego zakończonego procesu dziecka?
-{{< details "Odpowiedź" >}}  Tak, sygnały mogą się skleić, dziecko może się zakończyć akurat w trakcie obsługi  {{< /details >}}
+Czy podczas obsługi sygnału `SIGCHLD` można się spodziewać braku zakończonego procesu dziecka? Zerknij na zakończenie main.
+{{< details "Odpowiedź" >}}  Tak, `wait` na końcu main może "podkradać" te czekające zombie tj. wywoła się poprawnie `wait` zanim wykona się funkcja obsługi.  {{< /details >}}
 
-Czy podczas obsługi sygnału SIGCHLD można się spodziewać braku zakończonego procesu dziecka? Zerknij na zakończenie main
-{{< details "Odpowiedź" >}}  Tak, wait na końcu main może "podkradać" te czekające zombie tj. wywoła się poprawnie wait zanim wykona się funkcja obsługi.  {{< /details >}}
+Pamiętaj o możliwym **KONFLIKCIE** `sleep` i `alarm` - wg. POSIX `sleep` może używać w implementacji `SIGALRM` a nie ma jak
+zagnieżdżać sygnałów, nigdy zatem w kodzie oczekującym na alarm nie używamy `sleep`, można za to użyć `nanosleep` tak jak w kodzie powyżej.
 
-<em>plik <b>prog14.c</b>:</em>
-{{< includecode "prog14.c" >}}
-
-Pamiętaj o możliwym KONFLIKCIE sleep i alarm - wg. POSIX sleep może używać w implementacji SIGALRM a nie ma jak
-zagnieżdżać sygnałów, nigdy zatem w kodzie oczekującym na alarm nie używamy sleep, można za to użyć nanosleep tak jak w
-kodzie powyżej.
-
-W wysyłaniu sygnałów (kill) pojawia się jako PID zero, dzięki temu nie musimy znać pidów procesów potomnych ale też
-wysyłamy sygnał sami do siebie!
+W wysyłaniu sygnałów (`kill`) pojawia się jako PID zero, dzięki temu nie musimy znać pidów procesów potomnych ale też wysyłamy sygnał sami do siebie!
 
 Miejsca ustawienia obsługi sygnałów i ich blokowania w tym programie są bardzo ważne, zwróć uwagę jak to działa i
 odpowiedz na pytania poniżej. Pamiętaj aby zawsze dobrze przemyśleć kolejność tych ustawień w swoim programie, z tym
 jest związanych sporo błędów w pracach studentów!
 
-Zwróć uwagę na sleep, czemu jest w pętli? Czy czas spania jest/mógłby być dokładny?
-{{< details "Odpowiedź" >}}  sleep jest przerywane przez obsługę sygnału, zatem restart jest konieczny. Ponieważ sleep zwraca pozostały czas spania w sekundach to z uwagi na zaokrąglenia nie można po restarcie uzyskać dokładnego czasu spania.   {{< /details >}}
+Zwróć uwagę na `sleep`, czemu jest w pętli? Czy czas spania jest/mógłby być dokładny?
+{{< details "Odpowiedź" >}}  `sleep` jest przerywane przez obsługę sygnału, zatem restart jest konieczny. Ponieważ sleep zwraca pozostały czas spania w sekundach to z uwagi na zaokrąglenia nie można po restarcie uzyskać dokładnego czasu spania.   {{< /details >}}
 
-Jaka jest domyślna dyspozycja znakomitej większości sygnałów (w tym SIGUSR1 i 2)?
-{{< details "Odpowiedź" >}} Zabicie procesu do którego wysyłamy, w tym programie brak reakcji (funkcji obsługi), blokowania lub ignorowania sygnałów SIGUSR1 i 2 skutkowałoby przedwczesnym zabiciem procesów. {{< /details >}}
+Jaka jest domyślna dyspozycja znakomitej większości sygnałów (w tym `SIGUSR1` i `SIGUSR2`)?
+{{< details "Odpowiedź" >}} Zabicie procesu do którego wysyłamy, w tym programie brak reakcji (funkcji obsługi), blokowania lub ignorowania sygnałów `SIGUSR1` i `SIGUSR2` skutkowałoby przedwczesnym zabiciem procesów. {{< /details >}}
 
-Jaka jest konsekwencja wysyłana przez proces rodzic sygnałów SIGUSR1/2 do całej grupy procesów?
+Jaka jest konsekwencja wysyłana przez proces rodzic sygnałów `SIGUSR1`/`2` do całej grupy procesów?
 {{< details "Odpowiedź" >}} Proces rodzic musi jakoś reagować na te sygnały mimo, że nie są one mu potrzebne do pracy, zatem je ignoruje. {{< /details >}}
 
-Co by się stało, gdyby nie było włączone ignorowanie SIGUSR1i2 w procesie rodzicu?
+Co by się stało, gdyby nie było włączone ignorowanie `SIGUSR1` i `SIGUSR2` w procesie rodzicu?
 {{< details "Odpowiedź" >}} Proces rodzic zabiłby się pierwszym wysyłanym sygnałem. {{< /details >}} 
 
-Czy można przesunąć ustawienie ignorowania sygnałów za funkcję create_children? Procesy potomne przecież nie potrzebują tego ignorowania, mają od razu po starcie ustawianą funkcję obsługi? 
-{{< details "Odpowiedź" >}} Nie można, mogłoby się zdarzyć (choć rzadko), że procesy potomne zostałyby tylko utworzone (a nie zaczęte) a przydział CPU po tym utworzeniu przeszedłby do procesu rodzica. który zdążyłby wysłać sygnał SIGUSR1 do dzieci. Kolejny przydział CPU do procesu dziecka/dzieci spowodowałby najpierw obsługę sygnału a to oznaczałoby zabicie! {{< /details >}}
+Czy można przesunąć ustawienie ignorowania sygnałów za funkcję `create_children`? Procesy potomne przecież nie potrzebują tego ignorowania, mają od razu po starcie ustawianą funkcję obsługi? 
+{{< details "Odpowiedź" >}} Nie można, mogłoby się zdarzyć (choć rzadko), że procesy potomne zostałyby tylko utworzone (a nie zaczęte) a przydział CPU po tym utworzeniu przeszedłby do procesu rodzica. który zdążyłby wysłać sygnał `SIGUSR1` do dzieci. Kolejny przydział CPU do procesu dziecka/dzieci spowodowałby najpierw obsługę sygnału a to oznaczałoby zabicie! {{< /details >}}
 
-Czy można jakoś zmienić ten program tak aby wykluczyć ignorowanie sygnałów SIGUSR1i2?
+Czy można jakoś zmienić ten program tak aby wykluczyć ignorowanie sygnałów `SIGUSR1` i `SIGUSR2`?
 {{< details "Odpowiedź" >}} Ten akurat program może mieć identyczną reakcję na te sygnały w rodzicu i potomkach, można zatem ustawić obsługę od razu w procesie rodzicielskim przed fork. {{< /details >}}
 
-A co się stanie jeśli za fork  przeniesiemy obsługę SIGCHLD? 
+A co się stanie jeśli za fork  przeniesiemy obsługę `SIGCHLD`? 
 {{< details "Odpowiedź" >}} Jeśli jeden z procesów potomnych "umrze" zanim włączymy tą obsługę to będzie on "zombie" aż do momentu gdy kolejny w pod-procesów  się zakończy. Nie jest to bardzo duży błąd ale warto i na takie zwracać uwagę. {{< /details >}}
 
-Pytanie, czy wait na końcu main jest potrzebny? Przecież i tak funkcja parent_work() powinna działać co najmniej tyle czasu co najdłuższy z podprocesów?
-{{< details "Odpowiedź" >}} Wyliczenie czasu w pętli rodzica nie wystarczy, w obciążonym systemie możliwe są dowolnie długie opóźnienia, bez wait powstaje zatem tzw. race condition - kto się pierwszy zakończy rodzic czy potomne procesy. {{< /details >}}
+Pytanie, czy wait na końcu main jest potrzebny? Przecież i tak funkcja `parent_work()` powinna działać co najmniej tyle czasu co najdłuższy z podprocesów?
+{{< details "Odpowiedź" >}} Wyliczenie czasu w pętli rodzica nie wystarczy, w obciążonym systemie możliwe są dowolnie długie opóźnienia, bez `wait` powstaje zatem tzw. race condition - kto się pierwszy zakończy rodzic czy potomne procesy. {{< /details >}}
 
 ## Czekanie na sygnał
 
@@ -351,56 +413,61 @@ czasu ich działania.
 - Popraw powyższy program tak aby wyeliminować problem wielu wywołań obsługi sygnału w obrębie jednego sigsuspend 
 {{< details "Odpowiedź" >}} Można to zrobić np. dodając drugą zmienną globalną tylko do obsługi SIGUSR2, zwiększanie zmiennej count też można przenieść do funkcji obsługi sygnału w ten sposób uniknie się potencjalnego problemu z obsługą dwóch SIGUSR2  w obrębie jednego sigsuspend. Trzeba jeszcze przebudować kod związany z wypisywaniem zmienionego licznika count w rodzicu i gotowe. {{< /details >}}
 
-## Zadanie 4 - operacje niskopoziomowe na plikach a sygnały
+## Operacje niskopoziomowe na plikach, a sygnały
 
-Cel: Zmodyfikować program z zadania 3 tak aby proces rodzic odbierał sygnały SIGUSR1 wysyłane co zadany czas (parametr 1) i zliczał je.  Dodatkowo proces główny tworzył plik o nazwie podanej jako parametr 4 o zadanej ilości bloków o zadanym rozmiarze (parametry 2 i 3). Zawartość pliku ma pochodzić z /dev/urandom. Każdy blok kopiujemy osobno, kontrolując rozmiary. Po skopiowaniu bloku należy podać na stderr realną ilość przepisanych bloków oraz stan liczników sygnałów.
+W tej części tutoriala na samym początku pokażemy z jakimi problemami można się spotkać przy okazji operacji na plikach przy jednoczesnej obsłudze sygnałów, a następnie pokażemy jak możemy sobie z nimi radzić.
+
+### Zadanie
+
+Zmodyfikować poprzedni program tak, aby proces rodzic odbierał sygnały `SIGUSR1` wysyłane co zadany czas (parametr `1`) i zliczał je.  Dodatkowo proces główny tworzy plik o nazwie podanej jako parametr 4 o zadanej ilości bloków o zadanym rozmiarze (parametry 2 i 3). Zawartość pliku ma pochodzić z /dev/urandom. Każdy blok kopiujemy osobno, kontrolując rozmiary. Po skopiowaniu bloku należy podać na stderr realną ilość przepisanych bloków oraz stan liczników sygnałów.
+
 Co student musi wiedzieć: 
-- man 4 urandom
+- `man 4 urandom`
 
-{{< hint info >}}
-Tym razem rozwiązanie jest podzielone na 2 możliwe do uruchomienia etapy.
-{{< /hint >}}
+### Niepoprawne rozwiązanie
 
-<em>rozwiązanie 1 etap, plik <b>prog16a.c</b>:</em>
+<em>plik <b>prog16a.c</b>:</em>
 {{< includecode "prog16a.c" >}}
 
-Pamiętaj, z pliku /dev/random możesz pobrać na prawdę losowe bajty ale w małych ilościach, z /dev/urandom odwrotnie,
-pseudo losowe liczby za to w dowolnych ilościach.
+{{< hint info >}}
+Pamiętaj, z pliku `/dev/random` możesz pobrać na prawdę losowe bajty ale w małych ilościach, z `/dev/urandom` odwrotnie, pseudo losowe liczby za to w dowolnych ilościach.
+{{< /hint >}}
 
-Powinieneś obserwować następujące problemy podczas uruchamiania z parametrami 1 20 40 out.txt :
-
-Kopiowanie krótszych bloków niż zadano, na moim laptopie nigdy nie przekraczam 33554431 a powinno być 40MB, ale
-pojawiają się też i krótsze, powód to przerwanie odczytu (W TRAKCIE) obsługą sygnału
-
-fprintf: Interrupted system call - przerwanie funkcją obsługi sygnału funkcji fprintf ZANIM ta coś wyświetli
-
-Analogiczne komunikaty dla open i close - może to być trudno zaobserwować w tym programie ale jest to możliwe wg. POSIX
-
-Jak sobie z tymi efektami radzić pokazujemy w następnym etapie.
-
+{{< hint info >}}
 Zawsze gdy w poprawnym programie pojawia się alokacja pamięci musi być też jej zwalnianie!
+{{< /hint >}}
 
-Uprawnienia podawane w funkcji open mogą być także podane przy użyciu stałych (man 3p mknod), wyjątkowo ze względu na
+{{< hint info >}}
+Uprawnienia podawane w funkcji `open` mogą być także podane przy użyciu stałych (`man 3p mknod`), wyjątkowo ze względu na
 bardzo silne zakorzenienie notacji oktalnej u programistów i administratorów oraz na fakt, że łatwo takie liczby w
 kodzie wyszukać nie uznajemy tego za błąd stylu tzw. "magic numbers".
+{{< /hint >}}
 
-Widać, że zliczamy w rodzicu mniej sygnałów niż wysyła potomek, ponieważ sumowanie odbywa się bezpośrednio w nieblokowanej obsłudze sygnału to łatwo się domyślić, że w grę wchodzi sklejanie się sygnałów, pytanie czemu w tym programie to sklejanie jest aż tak silne?
+### Problemy
+
+Po wywołaniu programu z parametrami `1 20 40 out.txt` powinieneś obserwować następujące problemy:
+ - Kopiowanie krótszych bloków niż zadano, na moim laptopie nigdy nie przekraczam 33554431 a powinno być 40MB, ale pojawiają się też i krótsze, powód to przerwanie odczytu (W TRAKCIE) obsługą sygnału
+ - Możliwe wystąpienie błędu `fprintf: Interrupted system call` - przerwanie funkcją obsługi sygnału funkcji `fprintf` **ZANIM** ta coś wyświetli
+ - Analogiczne komunikaty dla `open` i `close` - może to być trudno zaobserwować w tym programie ale jest to możliwe wg. POSIX
+ - Widać, że zliczamy w rodzicu mniej sygnałów niż wysyła potomek, ponieważ sumowanie odbywa się bezpośrednio w nieblokowanej obsłudze sygnału to łatwo się domyślić, że w grę wchodzi sklejanie się sygnałów, pytanie czemu w tym programie to sklejanie jest aż tak silne?
 {{< details "Odpowiedź" >}}  w tej architekturze (GNU/Linux) planista procesora blokuje uruchomienie obsługi sygnału podczas większych operacji IO, w tym czasie sygnały się sklejają. {{< /details >}}
 
-W jakim celu proces rodzic na zakończenie wysyła do całej grupy SIGUSR1?
+### Uwagi i pytania
+
+W jakim celu proces rodzic na zakończenie wysyła do całej grupy `SIGUSR1`?
 {{< details "Odpowiedź" >}} Aby zakończyć proces potomny. {{< /details >}}
 
-Jak proces potomny może się zakończyć po nadejściu SIGUSR1 skoro dziedziczy obsługę tego sygnału?
+Jak proces potomny może się zakończyć po nadejściu `SIGUSR1` skoro dziedziczy obsługę tego sygnału?
 {{< details "Odpowiedź" >}} Zaraz po starcie potomka przywracana jest domyślna reakcja na ten sygnał, która właśnie zapewnia zabicie procesu. {{< /details >}}
 
 Czemu proces rodzic nie zabija się sam tym sygnałem?
 {{< details "Odpowiedź" >}} Ma włączoną obsługę tego sygnału zanim wyśle sygnał do grupy. {{< /details >}}
 
 Czy taka strategia może się  nie powieść?
-{{< details "Odpowiedź" >}} Tak, jeśli proces rodzic upora się ze swoim zadaniem zanim proces potomny zmieni dyspozycję odnośnie SIGUSR1 na domyślną. {{< /details >}}
+{{< details "Odpowiedź" >}} Tak, jeśli proces rodzic upora się ze swoim zadaniem zanim proces potomny zmieni dyspozycję odnośnie `SIGUSR1` na domyślną. {{< /details >}}
 
 Czy można to jakoś poprawić? Tzn. proces rodzic zawsze zabije potomka ale jednocześnie sam nie narazi się na przedwczesną śmierć?
-{{< details "Odpowiedź" >}} Wyślij do potomka SIGUSR2. {{< /details >}} 
+{{< details "Odpowiedź" >}} Wyślij do potomka `SIGUSR2`. {{< /details >}} 
 
 Czy taka strategia zakończenia potomka zawsze jest poprawna i  łatwa do przeprowadzenia?
 {{< details "Odpowiedź" >}} Tylko jeśli proces zabijany nie posiada zasobów, jeśli by takowe posiadał to musisz dodać obsługę sygnału kończącego co nie musi być  łatwe. {{< /details >}}
@@ -414,19 +481,18 @@ Czy nie dałoby się tego bufora uczynić zmienną automatyczną i uniknąć kod
 Czemu uprawnienia do nowego pliku są  pełne (0777)? 
 {{< details "Odpowiedź" >}} umask zredukuje uprawnienia, jeśli nie chcemy mieć konkretnych ustawień to jest to dobra strategia {{< /details >}}
 
+### Rozwiązanie problemów
+
+W przypadu operacji I/O funkcje mogą być przerwane podczas swojego działania przez funkcję obługi sygnału. W takim wypadku funkcje zwracają wartość -1, która sygnalizuje błąd i ustwiają `errno` na `EINTR`. Standard POSIX mówi, że w takim przypadku wykananie funkcji zostaje przerwana zanim ta funkcja coś zrobi. Z tego powodu jak najbardziej poprawną i zalecaną reakcją na ten błąd jest restart funkcji z tymi samymi parametrami, jakie były podane przy pierwszym wywołaniu.
+
+Ręczna obsługa tego błędu może być z czasem niewygodna (szczególnie, gdy wykonujemy dużo operacji I/O). Z tego powodu w tym celu wykorzystamy makro `TEMP_FAILURE_RETRY`, które jest rozszerzeniem biblioteki C projektu GNU. [Tutaj](https://www.gnu.org/software/libc/manual/html_node/Interrupted-Primitives.html) przeczytasz więcej o tym makrze. Aby skorzystać makra musimy wcześniej zdefiniować makro `_GNU_SOURCE`, które daje nam dostęp do tego typu niestandardowych rozszerzeń.
+
 <em>rozwiązanie drugi etap, plik <b>prog16b.c</b>:</em>
 {{< includecode "prog16b.c" >}}
 
 Uruchamiamy jak poprzednio - błędy znikają.
 
-Co to jest błąd EINTR?
-{{< details "Odpowiedź" >}} To nie jest błąd, to tylko informacja o przerwaniu danej funkcji poprzez funkcję obsługi sygnału {{< /details >}}
-
-Jaka jest poprawna reakcja na ten błąd?
-{{< details "Odpowiedź" >}} Nie jest to wyjście z programu, prawie zawsze jest to restart funkcji z tymi samymi parametrami jakie były podane przy pierwszym wywołaniu. {{< /details >}}
-
-Kiedy dokładnie te funkcje są przerywane?
-{{< details "Odpowiedź" >}} EINTR oznacza przerwanie zanim funkcja coś zrobi! Można zatem bez obaw restartować, za jedynym używanym tu wyjątkiem funkcji przyłączania gniazda "connect" (SOP2) {{< /details >}} 
+### Uwagi i pytania
 
 Jakie inne przerwania w programie może spowodować funkcja obsługi sygnału?
 {{< details "Odpowiedź" >}} Może przerwać operacje IO lub spanie, nie jest to raportowane przez EINTR, w obu przypadkach reakcja na takie zdarzenie nie jest prosta.  {{< /details >}}
@@ -434,32 +500,27 @@ Jakie inne przerwania w programie może spowodować funkcja obsługi sygnału?
 Skąd wiemy, które funkcje mogą być przerwane zanim coś osiągną (EINTR)?
 {{< details "Odpowiedź" >}} Strony man pages, dział o zwracanych błędach. Łatwo zgadnąć, że to te funkcje, które mogą/muszą czekać zanim coś zrobią. {{< /details >}}
 
-Jako ważne ćwiczenie przeanalizuj jak działa bulk_read i bulk_write. Musisz rozumieć czemu uwzględniają tak dużo przypadków, jakie to przypadki, kiedy operacja IO może być przerwana, jak rozpoznać EOF.
+Jako ważne ćwiczenie przeanalizuj jak działa `bulk_read` i `bulk_write`. Musisz rozumieć czemu uwzględniają tak dużo przypadków, jakie to przypadki, kiedy operacja IO może być przerwana, jak rozpoznać EOF.
 W przeciwieństwie do laboratorium L1, na L2 i kolejnych trzeba używać tych funkcji (lub analogicznych) gdy używasz `read` lub `write` (ponieważ w programie mamy już sygnały).
 I brak będzie powodował odejmowanie punktów.
 
-Obie funkcje bulk_ mogą być pomocne nie tylko gdy chodzi o ochronę przed sygnałami lub sklejanie dużych transferów I/O,
+Obie funkcje `bulk_` mogą być pomocne nie tylko gdy chodzi o ochronę przed sygnałami lub sklejanie dużych transferów I/O,
 ale także tam gdzie dane nie są dostępne w sposób ciągły - pipe/fifo/gniazda które poznamy nieco później.
 
-Podobnie jak read/write zachowują się wszystkie funkcje pokrewne takie jak fread/fwrite czy send/recv
+Podobnie jak `read`/`write` zachowują się wszystkie funkcje pokrewne takie jak `fread`/`fwrite` czy `send`/`recv`
 
-Warto sobie uświadomić czemu użycie flagi SA_RESTART podczas instalowania funkcji obsługi sygnału nie rozwiązuje nam
-problemu z EINTR:
+Warto sobie uświadomić czemu użycie flagi `SA_RESTART` w `sa_flags` podczas ustawiania funkcji obsługi sygnału nie rozwiązuje nam problemu z `EINTR`:
+ - Z góry musimy wiedzieć jakie sygnały będą obsługiwane w naszym programie i wszystkie one muszą być włączone z tą flagą, wystarczy jeden bez tej niej i problem `EINTR` powraca. Łatwo o taki błąd jeśli powrócimy do starszego kodu, łatwo zapomnieć o tym wymogu.
 
-Z góry musimy wiedzieć jakie sygnały będą obsługiwane w naszym programie i wszystkie one muszą być włączone z tą flagą,
-wystarczy jeden bez tej niej i problem EINTR powraca. Łatwo o taki błąd jeśli powrócimy do starszego kodu, łatwo
-zapomnieć o tym wymogu.
-
-Jeśli chcemy napisać sobie funkcję biblioteczną (np. bulk_read) to nie możemy nic zakładać o obsłudze sygnałów w
+ - Jeśli chcemy napisać sobie funkcję biblioteczną (np. bulk_read) to nie możemy nic zakładać o obsłudze sygnałów w
 programie używającym naszej biblioteki.
 
-Nie możemy łatwo przenieść takiego kodu, w programie docelowym musiałaby być dokładnie taka sama obsługa sygnałów.
+ - Nie możemy łatwo przenieść takiego kodu, w programie docelowym musiałaby być dokładnie taka sama obsługa sygnałów.
 
-Czasem zależy nam na tym, aby właśnie być informowanym o przerwaniu, jaskrawym przykładem jest funkcja sigsuspend, która
-z tą flagą traci sens!
+ - Czasem zależy nam na tym, aby właśnie być informowanym o przerwaniu, jaskrawym przykładem jest funkcja sigsuspend, która z tą flagą traci sens!
 
-Po wywołaniu fprintf nie sprawdzamy błędów innych niż EINTR, czemu? Jeśli nie możemy pisać na stderr (zapewne ekran) to
-i tak nie zaraportujemy błędu.
+Po wywołaniu `fprintf` nie sprawdzamy błędów innych niż `EINTR`, czemu?
+{{< details "Odpowiedź" >}}Jeśli nie możemy pisać na stderr (zapewne ekran) to i tak nie zaraportujemy błędu. {{< /details >}}
 
 Zwróć uwagę, że naprawdę duże (f)printf'y mogą być przerwane także w trakcie wypisywania! Trudno będzie coś mądrego z
 tym zrobić, zwłaszcza jeśli do tego wypisywania używamy skomplikowanych formatów. Co prawda funkcja zwróci ile znaków

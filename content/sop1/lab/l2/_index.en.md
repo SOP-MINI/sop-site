@@ -157,116 +157,215 @@ Extend the program from the previous exercise to correctly wait for child proces
 - Shouldn't we check sleep return value as we have signals in this code?
 {{< details "Answer" >}} No, as we do not handle them. {{< /details >}}
 
-## Task 2 - signals
 
-Goal:
-Program takes 4 positional parameters (n,k,p i r) and creates n sub-processes. Parent process sends sequentially SIGUSR1
-and SIGUSR2 to all sub-processes in a loop with delays of k and p seconds (k sec. before SIGUSR1 and p sec. before
-SIGUSR2). Parent process terminates after all its sub-processes. Each sub-process determines its own random time
-delay [5,10] sec. and in a loop sleeps this time and prints SUCCESS on the stdout if the last signal received was
-SIGUSR1 or FAILURE if it was SIGUSER2. This loop iterates r times.
+## Signals
 
-What you need to know:
-- man 7 signal
-- man 3p sigaction
-- man 3p nanosleep
-- man 3p alarm
-- man 3p memset
-- man 3p kill
+Signals are an asynchronous event-handling mechanism used in Unix-like
+operating systems. They allow notifying processes about the occurrence
+of specific system events, exceptions, or requests to control execution.
 
-<em>solution <b>prog14.c</b>:</em>
-{{< highlight c >}}
-volatile sig_atomic_t last_signal = 0;
+### Sending signals
 
-void sethandler( void (*f)(int), int sigNo) {
-        struct sigaction act;
-        memset(&act, 0, sizeof(struct sigaction));
-        act.sa_handler = f;
-        if (-1==sigaction(sigNo, &act, NULL)) ERR("sigaction");
-}
+Signals are sent using the `kill` function:
 
-void sig_handler(int sig) {
-        printf("[%d] received signal %d\n", getpid(), sig);
-        last_signal = sig;
-}
+``` c
+#include <signal.h>
 
-void sigchld_handler(int sig) {
-        pid_t pid;
-        for(;;){
-                pid=waitpid(0, NULL, WNOHANG);
-                if(pid==0) return;
-                if(pid<=0) {
-                        if(errno==ECHILD) return;
-                        ERR("waitpid");
-                }
-        }
-}
-{{< / highlight >}}
+int kill(pid_t pid, int sig);
+```
 
-To exchange the data between signal handling routine and the main code we must use global variables, please remember
-that it is an exceptional situation as in general we do not use global variables. Also please remember that global
-variables are not shared between related processes. It should be obvious but sometimes students get confused.
+The `pid` argument specifies which process or group of processes the
+signal is directed to:
+ - `pid > 0` - the signal is sent to the process with PID equal to `pid`
+ - `pid = 0` - the signal is sent to processes belonging to the sender's process group (the sender also receives the signal)
+ - `pid = -1` - the signal is sent to all processes to which the sender has permission (including itself)
+ - `pid < -1` - the signal is sent to the processes with **group ID** equal to the absolute value of `pid`
 
-The type of global variable used for this communication is fixed to be volatile sig_atomic_t, it is the only CORRECT and
-SAFE type you can use here. The reason for this originates from asynchronous nature of the interruption. Primo "
-volatile" means that compiler optimization is off, it is critical to not let the compiler eradicate the variable that is
-not changing in the loop from the loop condition. With the optimization on while(work) may become while(1) as the
-compiler in unable to determine the asynchronous change of "work" variable. Secundo sig_atomic_t is the biggest integer
-variable that can be calculated and compared in single CPU cycle. If you try bigger integer simple comparison a==0 can
-get interrupted and already compared bits may be altered during the comparison!
+The `sig` argument specifies which signal should be sent. It can take
+the following values:
+ - one of the macros defined in `<signal.h>`, such as `SIGTERM`, `SIGKILL`, or `SIGUSR1`. The full list can be found in the manual: 
+```bash 
+man 7 signal
+```
+ - value zero - in this case, no signal is sent the function only checks for potential execution errors.
 
-As you can see not much data can be exchanged between the handling function and the rest of the code, only simple
-integers/states. Additionally we should not interrupt the main code for long. Putting that all together, we should
-always keep the most of program logic in the main code, do not put much in the signal functions, it should be as short
-as possible, only very simple expressions, assignment, increments and alike.
+The function returns `0` on success. Otherwise, it returns `-1` and an appropriate value of `errno` is set.
 
-memset used to initialize the structures is quite often useful, especially if you do not know all the members of the
-structure (quite often only part of members is described in man page, internally used members are unknown).
+More information:
+```bash
+man 3p kill
+```
 
-SIGCHLD handling function has a very similar code to what you have seen in first stage.
+### Signal handling
 
-Do we expect more than one terminated child during SIGCHLD handling?
-{{< details "Answer" >}} Yes, signals can merge, another child can terminate at the very moment of signal handling. {{< /details >}}
+Each signal has a default behavior assigned to it. You can check the
+list of signals and their default behavior using:
 
-Do we expect zero terminated children at this handler? See ahead at the end of main.
-{{< details "Answer" >}} Yes,  wait at the end of main can catch the child before SIGCHLD function does, then the function is left with zero children.It is a race condition.  {{< /details >}}
+```
+man 7 signal
+```
+
+The way a signal is handled can be checked or changed using:
+
+``` c
+#include <signal.h>
+
+int sigaction(int sig, const struct sigaction *restrict act, struct sigaction *restrict oact);
+```
+
+Arguments:
+ - `sig` specifies which signal we are referring to and takes one of the macros from `<signal.h>`.
+ - `act` sets a new signal handler if it points to a `sigaction` structure. If it is `NULL`, the handler is not changed.
+ - `oact` - if set to `NULL`, this argument is ignored. Otherwise, the structure it points to is set to the old (or current) handler.
+
+According to POSIX, the `sigaction` structure must contain at least the following fields:
+ - `void(*) (int) sa_handler` - a pointer to the signal-handling function, or one of the values `SIG_IGN` or `SIG_DFL`. The handler function must accept an int (the code of the signal being handled) and return nothing. The macro `SIG_IGN` means that the signal will be ignored, while `SIG_DFL` selects the default handling behavior for that signal.
+ - `sigset_t sa_mask` - the set of signals that will be blocked during execution of the handler
+ - `int sa_flags` - flags modifying signal behavior
+ - `void(*) (int, siginfo_t *, void *) sa_sigaction` -- pointer to the alternative handler called when `SA_SIGINFO` flag in `sa_mask` is set
+
+The function returns `0` on success or `-1` on error, setting `errno`.
+
+It is worth noting, that child processes created with `fork` inherit the parent's signal-handling settings.
+
+More information:
+
+```bash
+man 3p sigaction
+```
+
+### Task
+
+The program takes 4 positional parameters (`n`, `k`, `p`, and `r`). It creates `n` child processes. The parent alternately sends `SIGUSR1` and `SIGUSR2` to all children in a loop, waiting `k` and `p` seconds respectively. It terminates when all child processes end.
+
+Each child process randomly selects a sleep time between 5 and 10 seconds, then in a loop sleeps and prints **SUCCESS** if the last received signal was `SIGUSR1`, or **FAILURE** if it was `SIGUSR2`. This loop repeats `r` times.
+
+What the student must know:
+ - `man 7 signal`
+ - `man 3p sigaction`
+ - `man 3p nanosleep`
+ - `man 3p alarm`
+ - `man 3p memset`
+ - `man 3p kill`
+
+### Solution
 
 <em>solution <b>prog14.c</b>:</em>
 {{< includecode "prog14.c" >}}
 
-Please notice that sleep and alarm function can conflict, according to POSIX sleep can be implemented on SIGALRM and
-there is no way to nest signals. Never nest them or use nanosleep instead of sleep as in the code above.
 
-Kill function is invoked with zero pid, means it is sending signal to whole group of processes, we do not need to keep
-track of pids but do notice that the signal will be delivered to the sender as well!
+To exchange the data between signal handling routine and the main code we must use global variables, please remember that it is an exceptional situation as in general we do not use global variables. Also please remember that global variables are not shared between related processes. It should be obvious but sometimes students get confused.
 
-The location of setting of signal handling and blocking is not trivial, please analyze the example and answer the
-questions below. Always plan in advance the reactions to signals in your program, this is a common student mistake to
-overlook the problem.
+The type of the global variable `last_signal` is not accidental
+moreover, it is the only **SAFE and CORRECT** type. This results from
+the asynchronous nature of calling the signal handler function and more
+precisely:
+ - `volatile` disables compiler optimizations; it's important
+that the compiler does not assume the value of the variable is constant,
+because its changes do not result from the code and it could turn a
+readable loop `while(work)` where `work` is a global variable into
+`while(1)` after optimization.
+ - `sig_atomic_t` means the largest numerical type that is processed in a single CPU instruction. If we take
+a larger numerical type, an interrupt invoked by a signal handler may
+disrupt the resulting value even of a simple comparison `a==0`, if the
+interruption occurs during the comparison and changes already compared
+bytes.
 
-Why sleep is in a loop, can the sleep time be exact in this case?
-{{< details "Answer" >}} It gets interrupted by signal hadling, restart is a must. Sleep returns the remaining time rounded up to seconds so it can not be precise. {{< /details >}}
+From the above it follows that we do not pass anything between the
+handler and the main code besides simple numbers and states.
+Additionally, good practice dictates not interrupting the program for
+too long, which leaves very few correct, portable, and safe solutions
+regarding how to distribute program logic between the main code and the
+signal handler. The simplest rule is that handlers should be extremely
+short (assignment, variable increment, etc.) and all logic should remain
+in the main code.
 
-What is default  disposition of most of the signals (incl. SIGUSR1 and 2)?
-{{< details "Answer" >}} Most not handled signals will kill the receiver. In this example the lack of handling, ignoring  or blocking of SIGUSR1 and 2 would kill the children. {{< /details >}}
+The `memset` function is sometimes necessary and usually useful when initializing structures whose full layout is not completely known to us. In this case, POSIX explicitly states that the `sigaction` structure may contain more fields than required by the standard. In such a situation, these additional fields—whose values we would not set (here we zero them using `memset`) - may cause different behavior on different systems, or even different behavior between program runs.
 
-How sending of SIGUSR1 and 2 to the process group affects the program?
-{{< details "Answer" >}} Parent process has to be immune to them, the simplest solution is to ignore them. {{< /details >}}
+Can more than one child process be terminated when handling the
+`SIGCHLD` signal?
+{{< details "Answer" >}} Yes, signals may coalesce; a child may
+terminate during the handling of `SIGCHLD`. Hence the loop in the handler function. {{< /details >}}
 
-What would happen if you turn this ignoring off?
-{{< details "Answer" >}} Parent would kill itself with first signal sent. {{< /details >}} 
+Can we expect no terminated child during `SIGCHLD` handling? Look at the
+end of main.
+{{< details "Answer" >}} Yes, the final `wait` in main may "steal" waiting
+zombies, i.e., `wait` may execute before the handler. {{< /details >}}
 
-Can we shift the signal ignoring setup past the create_children? Child processes set their own signal disposition right at the start, do they need this ignoring?
-{{< details "Answer" >}} They do need it, if you shift the setup and there is no ignoring inherited from the parent process it may happen (rare case but possible) that child process gets created but didn't start its code yet. Immediately after the creation, CPU slice goes to the parent that continues its code and sends the SIGUSR1 signal to the children. If then CPU slice goes back to the child, signal default disposition will kill it before it has a chance to set up its own handler! {{< /details >}}
+Remember the possible **CONFLICT** between `sleep` and `alarm` - according
+to POSIX, `sleep` may internally use `SIGALRM` and signals cannot be
+nested. Therefore code waiting for an alarm never uses `sleep` instead,
+you can use `nanosleep` like in the code above.
 
-Can we modify this program to avoid ignoring in the code?
-{{< details "Answer" >}} In this program both child and a parent can have the same signal handling routines for SIGUSR1 and 2, you can set it just before fork and it will solve the problem. {{< /details >}}
+In sending signals (`kill`), PID zero appears; this allows us not to
+know the exact PIDs of child processes but also means that we send a
+signal to ourselves!
 
-Would shifting the setup of SIGCHLD handler past the fork change the program? 
-{{< details "Answer" >}} If one of offspring "dies" very quickly (before parent sets its SIGCHLD handler) it will be a zombi until another offspring terminates. It is not a mayor mistake but it's worth attention. {{< /details >}}
+The placement of setting and blocking signal handlers in this program is
+very important. Note how it works and answer the questions below. Always
+carefully consider the order of these settings in your program - many
+student errors come from this!
 
-Is wait call at the end of parent really needed? Parent waits long enough for children to finish, right?
-{{< details "Answer" >}} Calculated time may not suffice, in overloaded system expect lags of any duration (few seconds and more), without "wait" children can terminate after the parent because of those lags. {{< /details >}}
+Note the `sleep`, why is it in a loop? Can the sleep time be exact?
+{{< details "Answer" >}}
+`sleep` is interrupted by signal handling, so restart is
+necessary. Since `sleep` returns remaining sleep time as seconds,
+rounding means that exact timing cannot be achieved after restart.
+{{< /details >}}
+
+What is the default disposition of most signals (including `SIGUSR1` and
+`SIGUSR2`)?
+{{< details "Answer" >}}
+To kill the target process; in this program, lack of
+a handler, blocking, or ignoring `SIGUSR1` and `SIGUSR2` would cause
+premature termination.
+{{< /details >}}
+
+What is the consequence of the parent process sending
+`SIGUSR1`/`SIGUSR2` to the whole process group?
+{{< details "Answer" >}}
+The parent must react to these signals even though it does not need them thus it ignores them.
+{{< /details >}}
+
+What would happen if we did not enable ignoring of `SIGUSR1` and
+`SIGUSR2` in the parent?
+{{< details "Answer" >}}
+The parent would kill itself with the first sent signal.
+{{< /details >}}
+
+Can we move the ignoring of these signals after the `create_children`
+function? The children do not need ignoring - they get a handler on
+start.
+{{< details "Answer" >}}
+No. It could happen (rarely) that children are created
+but not yet started, and CPU time returns to the parent, which sends
+them a `SIGUSR1`. On the next CPU allocation for children, they would
+first handle the signal and thus terminate!
+{{< /details >}}
+
+Can we modify this program so that ignoring `SIGUSR1` and `SIGUSR2` is
+unnecessary?
+{{< details "Answer" >}}
+Yes. This specific program can have identical
+reactions to these signals in both parent and children, so the handler
+can be set before fork.
+{{< /details >}}
+
+What happens if we move the handling of `SIGCHLD` after fork?
+{{< details "Answer" >}}
+If a child dies before we enable the handler, it will stay a "zombie" until
+another child terminates. Not a major error, but worth attention.
+{{< /details >}}
+
+Is `wait` at the end of main necessary? Parent's work should last at
+least as long as the slowest child process.
+{{< details "Answer" >}}
+Timing in the parent
+loop is insufficient; in a loaded system, any delay is possible. Without
+`wait`, a race condition appears --- the parent or child may finish
+first.
+{{< /details >}}
+
 
 ## Waiting for a Signal
 
@@ -374,122 +473,147 @@ more data types for communication via globals and have longer signal handlers.
 - Correct the above program to eliminate the above problem.
 {{< details "Answer" >}} You can have a dedicated global variable only for SIGUSR2, increasing of the counter of SIGUSR2 can run in handler itself it will eliminate the problem of multiple SIGUSR2 handler call in one sigsuspend. Modify the counter printout and it is ready. {{< /details >}}
 
-## Task 4 - low level file access and signals
 
-Goal:
-Modify task 3 code. Parent receives SIGUSR1 form child at set interval (1st parameter) and counts them. Additionally parent process creates a file of set (2nd parameter) amount of blocks of set size (3rd parameter) with a name given as 4th parameter. The content of the file is a copy of data read from /dev/urandom. Each block must be copied separately with sizes control. After each copy operation program prints the effective amount of data transferred and the amount of received signals on the stderr.
-<em>What you need to know:</em> 
-- man 4 urandom
+## Low-level file operations and signals
 
-{{< hint info >}}
-This task has two stages.
-{{< /hint >}}
+In this part of the tutorial, we will begin by showing what problems can arise during file operations while signals are being handled simultaneously, and then we will demonstrate how to deal with them.
 
-<em>solution 1st stage, parts of <b>prog16a.c</b>:</em>
+### Task
+
+Modify the previous program so that the parent process receives `SIGUSR1` signals sent at a specified interval (parameter `1`) and counts them. Additionally, the main process creates a file with a name given as parameter 4, containing a specified number of blocks of a given size (parameters 2 and 3). The content of the file should come from `/dev/urandom`. Each block should be copied separately, ensuring that the sizes are controlled. After copying a block, print to stderr the number of blocks actually copied and the state of the signal counters.
+
+What the student must know:
+- `man 4 urandom`
+
+### Incorrect solution
+
+*file **prog16a.c**:*
 {{< includecode "prog16a.c" >}}
 
-Do remember that you can read good quality really random bytes from /dev/random file but the amount is limited or read
-unlimited amount of data from /dev/urandom but these are pseudo random bytes.
+{{< hint info >}}
+Remember: from `/dev/random` you can obtain truly random bytes but only in small amounts; from `/dev/urandom` the numbers are pseudo-random but available in unlimited quantities.
+{{< /hint >}}
 
-You should see the following flaws if you run the program with 1 20 40 out.txt params:
+{{< hint info >}}
+Whenever memory is allocated in a correct program, it must also be freed!
+{{< /hint >}}
 
-Coping of blocks shorter than 40Mb, in my case it was at most 33554431, it is due to signal interruption DURING the IO
-operation
+{{< hint info >}}
+The permissions in the `open` function can also be given using constants (`man 3p mknod`). Due to strong tradition among programmers/administrators using octal notation and the ease of searching for such numbers in code, we do not consider this a stylistic error (“magic numbers” in this case are acceptable).
+{{< /hint >}}
 
-fprintf: Interrupted system call - function interrupted by signal handling BEFORE it did anything
+### Problems
 
-Similar messages for open and close - it may be hard to observe in this program but it is possible and described by
-POSIX documentation.
+After running the program with parameters `1 20 40 out.txt`, you should observe the following problems:
+ - Copying shorter blocks than expected. On my laptop, I never exceed 33,554,431 bytes even though it should be 40 MB, and shorter blocks sometimes occur as well. The reason is that the read operation is interrupted (DURING the transfer) by handling the signal.
+ - Possible appearance of the error `fprintf: Interrupted system call` — the signal handler interrupts `fprintf` BEFORE it can display anything.
+ - Similar messages may appear for `open` and `close`. This may be difficult to observe in this particular program, but according to POSIX, it is possible.
+ - You can see that the parent process counts fewer signals than the child sends. Since the summing happens directly in a non-blocking signal handler, it is easy to guess that signal coalescing is happening — but why is it so strong in this program?
+{{< details "Answer" >}}
+In this architecture (GNU/Linux), the CPU scheduler blocks the execution of signal handling during larger I/O operations, and during that time signals accumulate.
+{{< /details >}}
 
-How to get rid of those flows is explained in the 2nd stage.
+### Notes and questions
 
-If there is a memory allocation in your code, there also HAS to be a memory release! Always.
+Why does the parent process send `SIGUSR1` to the entire group at the end?
+{{< details "Answer" >}}
+To terminate the child process.
+{{< /details >}}
 
-Permissions passed to open function can also be expressed with predefined constants (man 3p mknod). As octal permission
-representation is well recognized by programmers and administrators it can also be noted in this way and will not be
-considered as "magic number" style mistake. It is fairly easy to trace those constants in the code.
+How can the child process terminate upon receiving `SIGUSR1` if it inherited the handler for this signal?
+{{< details "Answer" >}}
+Immediately after starting, the child restores the default action for that signal, which ensures the process is killed.
+{{< /details >}}
 
-Obviously the parent counts less signals than child sends, as summing runs inside the handler we can only blame merging for it. Can you tell why signal merging is so strong in this code?
-{{< details "Answer" >}} In this architecture (GNU/Linux) CPU planer blocks signals during IO operations (to some size as we can see) and  during IO signals have more time to merge. {{< /details >}}
-
-What for the SIGUSR1 is sent to the process group at the end of the parent process?
-{{< details "Answer" >}} To terminate the child. {{< /details >}}
-
-How come it works? SIGUSR1 handling is inherited from the parent?
-{{< details "Answer" >}} Child first action is to restore default signal disposition - killing of the receiver. {{< /details >}}
-
-Why parent does not kill itself with this signal?
-{{< details "Answer" >}} It sets the handler for SIGUSR1 before it sends it to the group. {{< /details >}}
+Why doesn’t the parent kill itself with that signal?
+{{< details "Answer" >}}
+It has the handler installed before it sends the signal to the group.
+{{< /details >}}
 
 Can this strategy fail?
-{{< details "Answer" >}} Yes, if parent process finishes it's job before child is able to even start the code and reset SIGUSR1 disposition. {{< /details >}}
+{{< details "Answer" >}}
+Yes, if the parent finishes its task before the child restores the default disposition for `SIGUSR1`.
+{{< /details >}}
 
-Can you improve it and at the same time not kill the parent with the signal from a child?
-{{< details "Answer" >}} send SIGUSR2 to the child. {{< /details >}} 
+Can this be improved? So that the parent always kills the child but does not risk killing itself prematurely?
+{{< details "Answer" >}}
+Send `SIGUSR2` to the child.
+{{< /details >}}
 
-Is this child (children) termination strategy  easy and correct at the same time in all possible programs?
-{{< details "Answer" >}} Only if child processe does not have resources to release, if it has something to release you must add proper signal handling and this may be complicated. {{< /details >}}
+Is this strategy for terminating a child always correct and easy to implement?
+{{< details "Answer" >}}
+Only if the process being killed has no resources. Otherwise you must implement a handler for the terminating signal, which may not be easy.
+{{< /details >}}
 
-Why to check if a pointer to newly allocated memory is not null?
-{{< details "Answer" >}} Operating system may not be able to grant your program additional memory, in this case it reports the error with the NULL. You must be prepared for it. The lack of this check is a common students' mistake. {{< /details >}}
+Why do we check whether the allocated pointer is `NULL` after a memory allocation?
+{{< details "Answer" >}}
+The system may be unable to allocate more memory; we must be prepared for this. Failing to check is a very common student mistake.
+{{< /details >}}
 
-Can you turn the allocated buffer into automatic variable and avoid the effort of allocating and releasing the memory?
-{{< details "Answer" >}} I don't know about OS architecture that uses stacks large enough to accommodate 40MB, typical stack has a few MB at most. For smaller buffers (a few KB) it can work. {{< /details >}}  
+Couldn’t we make this buffer an automatic variable and avoid the code related to allocation and freeing?
+{{< details "Answer" >}}
+Stacks on known architectures are not large enough for such huge variables (40 MB in the example). Typically the stack is only a few MB. If our buffer were small (a few KB) then we could do that.
+{{< /details >}}
 
-Why permissions of a newly created file are supposed to be full (0777)? Are they really full?
-{{< details "Answer" >}} umask will reduce the permissions, if no set  permissions are required it is a good idea to allow the umask to regulate the effective rights {{< /details >}}
+Why are the permissions for the new file set to full (0777)?
+{{< details "Answer" >}}
+`umask` will reduce the permissions. If we don’t require specific settings, this is a good strategy.
+{{< /details >}}
 
-<em>solution 2nd stage, parts of <b>prog16b.c</b>:</em>
+### Solving the problems
+
+During I/O operations, functions can be interrupted by the signal handler. In such a case, the functions return `-1` to indicate an error and set `errno` to `EINTR`. The POSIX standard states that in such a case, the function is interrupted before it achieves anything. Therefore, the correct and recommended response is to restart the function with the same parameters as before.
+
+Manually handling this error can become inconvenient over time (especially when performing many I/O operations). For this reason, we can use the macro `TEMP_FAILURE_RETRY`, which is an extension provided by the GNU C library. [Here](https://www.gnu.org/software/libc/manual/html_node/Interrupted-Primitives.html) you can read more about this function. To use the macros, we first need to define the `_GNU_SOURCE`, which gives us access to this kind of non-standard extensions.
+
+*solution, second stage, file **prog16b.c**:*
 {{< includecode "prog16b.c" >}}
 
-Run it with the same parameters as before - flaws are gone now.
+Run the program as before — the errors disappear.
 
-What error code  EINTR represents?
-{{< details "Answer" >}} This is not an error, it is a way for OS to inform the program that the signal handler has been invoked {{< /details >}}
+### Notes and questions
 
-How should you react to EINTR?
-{{< details "Answer" >}} Unlike real errors do not exit the program, in most cases  to recover the problem simply restart the interrupted function with the same set of parameters as in initial call. {{< /details >}}
+What other interruption in the program can the signal handler cause?
+{{< details "Answer" >}}
+It can interrupt I/O operations or sleeping; these are not reported through `EINTR`. In both cases, handling the event is not trivial.
+{{< /details >}}
 
-At what stage functions are interrupted if EINTR is reported
-{{< details "Answer" >}} Only before they start doing their job - in waiting stage. This means that you can safely restart with the same arguments all the functions used in OPS tutorials except "connect" (OPS2 sockets) {{< /details >}} 
-
-What are other types of interruption signal handler can cause?
-{{< details "Answer" >}} IO transfer can be interrupted in the middle, this case is not reported with EINTR. Sleep and nanosleep similar. In both cases restarting can not reuse the same parameters, it gets complicated. {{< /details >}}
-
-How do you know what function cat report EINTR?
-{{< details "Answer" >}}  Read man pages, error sections. It easy to guess those function must wait before they do their job. {{< /details >}}
+How do we know which functions can be interrupted before they achieve anything (EINTR)?
+{{< details "Answer" >}}
+The man pages, in the section about returned errors. It is easy to guess: these are functions that may or must wait before doing anything.
+{{< /details >}}
 
 Analyze how bulk_read and bulk_write work. You should know what cases are recognized in those functions, what types of interruption they can handle, how to recognize EOF on the descriptor.
+
 Unlike during L1 lab, during L2 and following labs you have to use these functions (or similar ones) when calling `read` or `write` (because we use signals now).
 If you do not use them, you wont get points for your solution.
 
-Both bulk_ functions can be useful not only on signals but also to "glue" IO transfers where data comes from not
-continuous data sources like pipe/fifo and the socket - it wile be covered by following tutorials.
+Both `bulk_` functions are useful not only when dealing with signal handling or large I/O transfers, but also in situations where data is not available continuously — pipes/FIFOs/sockets - it will be covered by following tutorials.
 
-Not only read/write can be interrupted in the described way, the problem applies to the related pairs like fread/fwrite
-and send/recv.
+All similar functions behave like `read`/`write`: `fread`/`fwrite`, `send`/`recv`.
 
-As you know SA_RESTART flag can cause automatic restarts on delivery of a signal if this flag is set in the handler, it
+As you know `SA_RESTART` flag can cause automatic restarts on delivery of a signal if this flag is set in the handler, it
 may not be apparent but this method has a lot of shortcomings:
-
-You must control all the signal handlers used in the code, they all must be set with this flag, if one does not use this
+ - You must control all the signal handlers used in the code, they all must be set with this flag, if one does not use this
 flag then you must handle EINTR as usual. It is easy to forget about this requirement if you extend/reuse the older
 code.
-
-If you try to make some library functions (like bulk_read and write) you can not assume anything about the signals in
+ - If you try to make some library functions (like bulk_read and write) you can not assume anything about the signals in
 the caller code.
-
-It is hard to reuse a code depending on SA_RESTART flag, it can only be transferred to the similar strict handler
+- It is hard to reuse a code depending on `SA_RESTART` flag, it can only be transferred to the similar strict handler
 control code.
+- Sometimes we want interruption notifications (e.g., `sigsuspend` loses meaning with `SA_RESTART`).
 
-Sometimes you wish to know about interruption ASAP to react quickly. Sigsuspend would not work if you use this flag!
-
-Why do we not react on other (apart from EINTR) errors of fprintf? If program can not write on stderr (most likely
-screen) then it cannot report errors.
+Why do we not check for errors other than `EINTR` after calling `fprintf`?
+{{< details "Answer" >}}
+If we cannot write to stderr (usually the screen), then reporting an error is pointless.
+{{< /details >}}
 
 Really big (f)printfs can get interrupted in the middle of the process (like write). Then it is difficult to restart the
 process especially if formatting is complicated. Avoid using printf where restarting would be critical (most cases
 except for the screen output) and the volume of transferred data is significant, use write instead.
+
+
+## Example tasks
 
 Do the example tasks. During the laboratory you will have more time and a starting code. If you do following tasks in the allotted time, it means that you are well-prepared.
 
