@@ -6,7 +6,6 @@
 #include <time.h>
 #include <unistd.h>
 
-#define IS_CHILD 0
 #define ERR(source) \
     (fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), perror(source), kill(0, SIGKILL), exit(EXIT_FAILURE))
 
@@ -106,7 +105,7 @@ int main(int argc, char **argv)
     pid_t pid;
     if ((pid = fork()) < 0)
         ERR("fork");
-    if (IS_CHILD == pid)
+    if (pid == 0)
         child_work(m, p);
     else
     {

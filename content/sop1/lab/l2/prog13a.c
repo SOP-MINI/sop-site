@@ -7,7 +7,6 @@
 #include <time.h>
 #include <unistd.h>
 
-#define IS_CHILD 0
 #define ERR(source) \
     (fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), perror(source), kill(0, SIGKILL), exit(EXIT_FAILURE))
 
@@ -27,7 +26,7 @@ void create_children(int n)
         if ((s = fork()) < 0)
             ERR("Fork:");
 
-        if (s == IS_CHILD)
+        if (s == 0)
         {
             child_work(n);
             exit(EXIT_SUCCESS);
