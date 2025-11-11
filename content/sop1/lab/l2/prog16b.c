@@ -75,7 +75,7 @@ ssize_t bulk_write(int fd, char *buf, size_t count)
         len += c;
         count -= c;
     } while (count > 0);
-    
+
     return len;
 }
 
@@ -102,7 +102,8 @@ void parent_work(int b, int s, char *name)
         if ((count = bulk_write(out, buf, count)) < 0)
             ERR("read");
 
-        if (TEMP_FAILURE_RETRY(fprintf(stderr, "Block of %ld bytes transferred. Signals RX:%d\n", count, sig_count)) < 0)
+        if (TEMP_FAILURE_RETRY(fprintf(stderr, "Block of %ld bytes transferred. Signals RX:%d\n", count, sig_count)) <
+            0)
             ERR("fprintf");
     }
 
@@ -153,7 +154,9 @@ int main(int argc, char **argv)
     else
     {
         parent_work(b, s * 1024 * 1024, name);
-        while (wait(NULL) > 0) {}
+        while (wait(NULL) > 0)
+        {
+        }
     }
 
     return EXIT_SUCCESS;

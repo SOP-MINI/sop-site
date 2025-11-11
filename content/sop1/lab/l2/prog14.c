@@ -16,7 +16,7 @@ void sethandler(void (*f)(int), int sigNo)
     struct sigaction act;
     memset(&act, 0, sizeof(struct sigaction));
     act.sa_handler = f;
-    
+
     if (-1 == sigaction(sigNo, &act, NULL))
         ERR("sigaction");
 }
@@ -31,7 +31,7 @@ void sigchld_handler(int sig)
 {
     pid_t pid;
 
-    while(1)
+    while (1)
     {
         pid = waitpid(0, NULL, WNOHANG);
 
@@ -54,9 +54,11 @@ void child_work(int l)
     srand(getpid());
     t = rand() % 6 + 5;
 
-    for (int i=0; i < l; i++)
+    for (int i = 0; i < l; i++)
     {
-        for (tt = t; tt > 0; tt = sleep(tt)) {}
+        for (tt = t; tt > 0; tt = sleep(tt))
+        {
+        }
 
         if (last_signal == SIGUSR1)
             printf("Success [%d]\n", getpid());
@@ -90,7 +92,7 @@ void parent_work(int k, int p, int l)
 
 void create_children(int n, int l)
 {
-    for (int i=0; i < n; i++)
+    for (int i = 0; i < n; i++)
     {
         switch (fork())
         {
@@ -137,7 +139,9 @@ int main(int argc, char **argv)
     create_children(n, l);
     parent_work(k, p, l);
 
-    while (wait(NULL) > 0) {}
+    while (wait(NULL) > 0)
+    {
+    }
 
     return EXIT_SUCCESS;
 }

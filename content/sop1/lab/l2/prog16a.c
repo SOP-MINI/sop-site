@@ -18,15 +18,12 @@ void sethandler(void (*f)(int), int sigNo)
     struct sigaction act;
     memset(&act, 0, sizeof(struct sigaction));
     act.sa_handler = f;
-    
+
     if (-1 == sigaction(sigNo, &act, NULL))
         ERR("sigaction");
 }
 
-void sig_handler(int sig)
-{
-    sig_count++;
-}
+void sig_handler(int sig) { sig_count++; }
 
 void child_work(int m)
 {
@@ -114,7 +111,9 @@ int main(int argc, char **argv)
     else
     {
         parent_work(b, s * 1024 * 1024, name);
-        while (wait(NULL) > 0) {}
+        while (wait(NULL) > 0)
+        {
+        }
     }
 
     return EXIT_SUCCESS;
