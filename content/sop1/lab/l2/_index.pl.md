@@ -485,7 +485,7 @@ Czemu uprawnienia do nowego pliku są  pełne (0777)?
 
 W przypadu operacji I/O funkcje mogą być przerwane podczas swojego działania przez funkcję obługi sygnału. W takim wypadku funkcje zwracają wartość -1, która sygnalizuje błąd i ustwiają `errno` na `EINTR`. Standard POSIX mówi, że w takim przypadku wykananie funkcji zostaje przerwana zanim ta funkcja coś zrobi. Z tego powodu jak najbardziej poprawną i zalecaną reakcją na ten błąd jest restart funkcji z tymi samymi parametrami, jakie były podane przy pierwszym wywołaniu.
 
-Ręczna obsługa tego błędu może być z czasem nie wygodna (szczególnie, gdy wykonujemy dużo operacji I/O). Z tego powodu w tym celu wykorzystamy makro `TEMP_FAILURE_RETRY`, które jest rozszerzeniem biblioteki C projektu GNU. [Tutaj](https://www.gnu.org/software/libc/manual/html_node/Interrupted-Primitives.html) przeczytasz więcej o tym makrze. Aby skorzystać makra musimy wcześniej zdefiniować makro `_GNU_SOURCE`, które daje nam dostęp do tego typu niestandardowych rozszerzeń.
+Ręczna obsługa tego błędu może być z czasem niewygodna (szczególnie, gdy wykonujemy dużo operacji I/O). Z tego powodu w tym celu wykorzystamy makro `TEMP_FAILURE_RETRY`, które jest rozszerzeniem biblioteki C projektu GNU. [Tutaj](https://www.gnu.org/software/libc/manual/html_node/Interrupted-Primitives.html) przeczytasz więcej o tym makrze. Aby skorzystać makra musimy wcześniej zdefiniować makro `_GNU_SOURCE`, które daje nam dostęp do tego typu niestandardowych rozszerzeń.
 
 <em>rozwiązanie drugi etap, plik <b>prog16b.c</b>:</em>
 {{< includecode "prog16b.c" >}}
