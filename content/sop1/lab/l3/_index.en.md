@@ -27,7 +27,7 @@ Introduction notes:
   on purpose and explain them in comments). Some repeating flaws not mentioned in tasks are:
   - Main functions are too long, it should be easy to split them
   - Bool data type requires extra header and can be easily avoided by using integers (0 and 1)
-  - So called  "magic numbers" are left in code - those numerical constants should be replaced with "C" preprocesor macro
+  - So called  "magic numbers" are left in code - those numerical constants should be replaced with "C" preprocessor macro
 {{< /hint >}}
 
 _This tutorial is based on tasks and code examples provided by student Mariusz Kowalski._
@@ -176,7 +176,7 @@ Do all the threads created in this program really work?
 Goal: 
 The program takes sole 'k' parameter and prints the list of numbers form 1 to k at each second. It must handle two signals in dedicated thread, the following action must be taken upon the signal arrival:
 - SIGINT  (C-c) ... removes random number from the list (do nothing if empty),
-- SIGQUIT  (C-\) ... set program 'STOP'  flag (both threads end).
+- SIGQUIT  (C-\\) ... set program 'STOP'  flag (both threads end).
 
 What you need to know:
 
@@ -227,7 +227,7 @@ The program stores the counters of students studding on year 1,2,3 and the final
 
 Main Thread: Initiate students, then for 4 seconds at random intervals (100-300ms) strike off one of the students (cancel thread). After the 4s period waits for the students threads and prints the counters. 
 
-Students threads: Student (thread) adds itself to the counter of the first year, after a second it removes itself from it and adds to the second year counter and so on until it reaches the BSc counter.  The thread must be always prepared for cacellation.
+Students threads: Student (thread) adds itself to the counter of the first year, after a second it removes itself from it and adds to the second year counter and so on until it reaches the BSc counter.  The thread must be always prepared for cancellation.
 
 What you need to know:
 

@@ -101,7 +101,7 @@ Czy moglibyśmy mieć jedną strukturę z parametrami startowymi programu? Czemu
 {{< details "Odpowiedź" >}} Nie, ze względu na pole z ziarnem losowości, to musi być inne dla wszystkich wątków {{< /details >}}
 
 Czy tablica z strukturami startowymi mogłaby być zmienna automatyczną a nie dynamiczną ? 
-{{< details "Odpowiedź" >}} Tyko jeśli dodalibyśmy istotne ograniczenie na ilość wątków (np.: do tysiąca), w przeciwnym wypadku tablica ta może zająć cały stos.  {{< /details >}}
+{{< details "Odpowiedź" >}} Tylko jeśli dodalibyśmy istotne ograniczenie na ilość wątków (np.: do tysiąca), w przeciwnym wypadku tablica ta może zająć cały stos.  {{< /details >}}
 
 Czemu służy zwalnianie pamięci danych zwróconych przez wątek?
 {{< details "Odpowiedź" >}} Pamięć na te dane te została przydzielona dynamicznie, sterta jest wspólna dla wątków więc musimy zwolnić tą pamięć, zakończenie się wątku nie zrobi tego za nas. {{< /details >}}
@@ -179,7 +179,7 @@ Cel:
 Napisać program, który przyjmuje jeden parametr 'k' i co sekundę wyświetla listę liczb, początkowo od 1 do k. 
 Program ma obsługiwać dwa sygnały za pomocą oddzielnego wątku. Wątek ten po otrzymaniu sygnału podejmuje następujące akcje:
 - SIGINT  (C-c) ... usuwa losową liczbę z listy (jeżeli lista jest pusta to nic nie robi),
-- SIGQUIT  (C-\) ... ustawia flagę 'STOP' i kończy swoje działanie.
+- SIGQUIT  (C-\\) ... ustawia flagę 'STOP' i kończy swoje działanie.
 
 Wątek główny ma za zadanie co sekundę wyświetlić listę lub, jeżeli ustawiona jest flaga 'STOP', poprawnie zakończyć swoje działanie.
 
@@ -282,7 +282,7 @@ Co oznacza jedynka w wywołaniu: pthread_cleanup_pop(1); ?
 {{< details "Odpowiedź" >}} Oznacza, że poza zdjęciem handlera ze stosu jest on też wykonywany. {{< /details >}}
 
 Kiedy jest zmniejszany liczniku roku?
-{{< details "Odpowiedź" >}} W dwu przypadkach, podczas anulowania (rzadki przypadek) oraz  podczas zdjęcia handlera decrement_counter ze stosu cleanup handlerów. {{< /details >}}
+{{< details "Odpowiedź" >}} W dwóch przypadkach, podczas anulowania (rzadki przypadek) oraz  podczas zdjęcia handlera decrement_counter ze stosu cleanup handlerów. {{< /details >}}
 
 W algorytmie losowania wątku do anulowania jest spory błąd logiczny, gdzie i jakie niesie zagrożenie?
 {{< details "Odpowiedź" >}} Losowy  wybór wątku do anulowania  może trwać bardzo długo gdy na dużej liście wątków zostanie np. tylko 1 nie anulowany.  Można to zaobserwować, jeśli wywołać program z parametrem 10. {{< /details >}}
