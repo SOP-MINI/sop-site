@@ -20,7 +20,7 @@ If you have any questions, please feel free to ask after class or via email.
 
 ## SSH tunneling
 
-SSH tunnel allows you to connect to a server that you do not have direct access to via an access server. In our case, the git server (`vl01`) is in the faculty's local network and cannot be accessed from outside. However, we can log in from outside to the department's ssh server (`ssh.mini.pw.edu.pl`), which in has access to the local network.
+SSH tunnel allows you to connect to a server that you do not have direct access to via an access server. In our case, the git server (`vl01`) is in the faculty's local network and cannot be accessed from outside. However, we can log in from outside to the department's ssh server (`ssh.mini.pw.edu.pl`), which has access to the local network.
 
 To push your changes to a server from outside of the faculty, follow these steps:
 
@@ -28,7 +28,7 @@ To push your changes to a server from outside of the faculty, follow these steps
 
 2. Confirm that you can log in to the ssh server - `ssh <login>@ssh.mini.pw.edu.pl` (use faculty credentials, i.e. those for lab computers)
 
-3. Of course connecting to the `vl01` server is only possible when it is turned on - so these steps below should be performed at the specific times described above.
+3. Of course, connecting to the `vl01` server is only possible when it is turned on - so these steps below should be performed at the specific times described above.
 
 4. Create a tunnel: 
 ```
@@ -50,7 +50,7 @@ should return an address beginning with `ssh://gitolite@localhost:22222`, and al
 
 ## Direct copy to ssh server
 
-This method is not as elegant and convenient as a tunnel described above, but it is very simple:
+This method is not as elegant and convenient as the tunnel described above, but it is very simple:
 
 1. Copy your solution to the ssh server:
 ```
