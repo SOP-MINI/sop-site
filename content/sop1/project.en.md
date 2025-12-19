@@ -26,7 +26,7 @@ To push your changes to a server from outside of the faculty, follow these steps
 
 1. Make sure that you have correctly configured ssh keys - as during the labs, they must be downloaded from LeON.
 
-2. Confirm that you can log in to the ssh server - `ssh <login>@ssh.mini.pw.edu.pl`
+2. Confirm that you can log in to the ssh server - `ssh <login>@ssh.mini.pw.edu.pl` (use faculty credentials, i.e. those for lab computers)
 
 3. Of course connecting to the `vl01` server is only possible when it is turned on - so these steps below should be performed at the specific times described above.
 

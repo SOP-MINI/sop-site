@@ -24,7 +24,7 @@ Aby móc wypchnąć zmiany na serwer spoza wydziału należy wykonać następuj�
 
 1. Upewnić się, że mamy poprawnie skonfigurowane klucze ssh - tak jak na laboratoriach, trzeba je ściągnąć z LeONa
 
-2. Potwierdzić, że możemy się zalogować na serwer ssh - `ssh <login>@ssh.mini.pw.edu.pl`
+2. Potwierdzić, że możemy się zalogować na serwer ssh - `ssh <login>@ssh.mini.pw.edu.pl` (używamy loginu i hasła wydziałowego, tj. takiego jak do komputerów w laboratorium)
 
 3. Oczywiście połączenie z serwerem `vl01` jest możliwe tylko, gdy jest on włączony - kroki opisane niżej należy więc wykonywać w określonych porach opisanych wyżej.
 
