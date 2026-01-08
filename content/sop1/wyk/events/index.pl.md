@@ -1,7 +1,7 @@
 ---
 title: "Zdarzenia"
 date: 2025-11-18T22:35:27+01:00
-weight: 45
+ weight: 55
 ---
 
 # Programowanie zdarzeniowe
