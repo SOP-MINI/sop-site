@@ -73,7 +73,7 @@ Can a condition of conditional variable be based on file content?
 {{< details "Answer" >}} Yes. {{< /details >}}
 
 Can a condition of conditional variable be based on file existence?
-{{{< details "Answer" >}} Yes. {{< /details >}}
+{{< details "Answer" >}} Yes. {{< /details >}}
 
 What are the limitations for the condition of conditional variable?
 {{< details "Answer" >}} Everything you can code that will return true or false, coder imagination defines the limit. {{< /details >}}
@@ -97,7 +97,7 @@ Who should check for the condition to be true? The thread that wakes or maybe th
 {{< details "Answer" >}} The condition must be always checked by the thread being wakened. Even if the one that wakes checked it before it could have changed in meantime as the mutex was released and could have been acquired by some other thread to invalidate the condition! Generally it is better if the condition is checked also before signaling but sometimes it is not possible as wakening thread may not have access to all the condition components. {{< /details >}}
 
 What is cleanup handler in working thread used for?
-{{< details "Answer" >}} It is essential not to end the working thread without releasing the mutext that blocks the conditional (it would freeze entire program) . This handler releases the mutex in case of emergency exit. {{< /details >}}
+{{< details "Answer" >}} It is essential not to end the working thread without releasing the mutex that blocks the conditional (it would freeze entire program) . This handler releases the mutex in case of emergency exit. {{< /details >}}
 
 ## Dice game - barrier
 
