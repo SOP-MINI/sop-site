@@ -3,7 +3,7 @@ title: "Syllabus"
 ---
 
  - Lecture: 30h
- - Laboratory: 15h
+ - Laboratory: 30h
  - Excercise: none
  - Project: none
  - ECTS: 3

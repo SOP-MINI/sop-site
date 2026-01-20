@@ -3,7 +3,7 @@ title: "Program przedmiotu"
 ---
 
  - Wykład: 30h
- - Laboratorium: 15h
+ - Laboratorium: 30h
  - Ćwiczenia: brak
  - Projekt: brak
  - ECTS: 3
