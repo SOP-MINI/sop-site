@@ -95,7 +95,7 @@ Czemu służy cleanup handler w wątku roboczym?
 ## Dice game - barrier
 
 Zasymuluj następującą grę w kości:
-Każdy uczestnik jednocześnie rzuca kością sześcienną przez 10 rund. Po każdym rzucie gracza, jeden z graczy posumowuje rundę i przypisuje punkty. Gracz z najwyższym wynikiem w danej rundzie otrzymuje jeden punkt. W przypadku remisu, wszyscy zremisowani gracze otrzymują punkt. Gra kończy się po 10 rundach, a zwycięzcą zostaje gracz z najwyższą sumą punktów.
+Każdy uczestnik jednocześnie rzuca kością sześcienną przez 10 rund. Po każdym rzucie gracza, jeden z graczy podsumowuje rundę i przypisuje punkty. Gracz z najwyższym wynikiem w danej rundzie otrzymuje jeden punkt. W przypadku remisu, wszyscy zremisowani gracze otrzymują punkt. Gra kończy się po 10 rundach, a zwycięzcą zostaje gracz z najwyższą sumą punktów.
 Reprezentuj każdego gracza za pomocą wątku i użyj bariery do synchronizacji gry.
 
 <em>solution <b>prog23.c</b>:</em>
@@ -107,7 +107,7 @@ Jak działa bariera w tym programie?
 Które części funkcji wątku są wywoływane współbieżnie?
 {{< details "Answer" >}} Każdy wątek niezależnie rzuca sześcienną kością, a wyniki są przechowywane w tablicy args->rolls. Ten fragment kodu jest wykonywany równocześnie przez wszystkie wątki. {{< /details >}}
 
-Jak jest wybierany wątek jednego gracza do posumowania rundy?
+Jak jest wybierany wątek jednego gracza do podsumowania rundy?
 {{< details "Answer" >}} pthread_barrier_wait zwraca PTHREAD_BARRIER_SERIAL_THREAD tylko dla jednego wątku (standard nie określa, który to wątek), a dla innych wątków zwraca 0. Ten mechanizm zapewnia, że akcja jest wykonywana tylko przez jeden wątek w każdej rundzie, uniemożliwiając wielokrotne równoczesne wykonanie tego samego kodu, który powinien być wykonany tylko raz. {{< /details >}}
 
 Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy, że jesteś dobrze przygotowany do zajęć.
