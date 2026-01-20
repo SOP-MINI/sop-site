@@ -66,7 +66,7 @@ Czy warunek dla zmiennej warunkowej może być oparty na zawartości pliku?
 {{< details "Answer" >}} Tak. {{< /details >}}
 
 Czy warunek dla zmiennej warunkowej może być oparty na istnieniu pliku?
-{{{< details "Answer" >}} Tak. {{< /details >}}
+{{< details "Answer" >}} Tak. {{< /details >}}
 
 Jak można ogólnie określić na czym może być oparty warunek zmiennej warunkowej
 {{< details "Answer" >}} Warunek może być absolutnie dowolny, to kod napisany przez programistę o tym decyduję więc granicą tego czym może być warunek jest tylko wyobraźnia kodującego. {{< /details >}}
