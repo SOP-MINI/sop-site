@@ -8,7 +8,7 @@ weight: 20
 
 {{< hint info >}}
 Ten tutorial zawiera wyjaśnienia działania funkcji wymaganych na laboratoriach oraz ich parametrów.
-Jest to jednak wciąż zbiór jedynie poglądowy najważniejszych informacji -- 
+Jest to jednak wciąż jedynie poglądowy zbiór najważniejszych informacji -- 
 należy **koniecznie przeczytać wskazane strony manuala**, aby dobrze poznać i zrozumieć wszystkie szczegóły.
 
 {{< /hint >}}
@@ -37,7 +37,7 @@ char   d_name[]    -> nazwa pliku
 ```
 
 Pozostałe dane o pliku można odczytać używając funkcji `stat` lub `lstat` z pliku nagłówkowego `<sys/stat.h>` (`man 3p fstatat`).
-Ich definicje są nastepujące:
+Ich definicje są następujące:
 
 ```
 int  stat(const char *restrict path, struct stat *restrict buf);
@@ -52,10 +52,10 @@ mówiąca, że dany argument musi być blokiem pamięci rozłącznym z innymi ar
 podanie tego samego bloku pamięci (np. tego samego wskaźnika) jest poważnym błędem i może spowodować 
 SEGFAULT lub nieprawidłowe działanie programu. 
 
-Jedyną różnicą w działaniu funkcji `stat` i `lstat` jest obługa linków. `stat` zwróci informacje o pliku, do 
+Jedyną różnicą w działaniu funkcji `stat` i `lstat` jest obsługa linków. `stat` zwróci informacje o pliku, do 
 którego dany link prowadzi, natomiast `lstat` zwróci informacje o samym linku. 
 
-Struktura `stat` zawiera m.in. informacje o rozmiarze pliku, właścielu, czy dacie ostatniej modyfikacji. Dostępne
+Struktura `stat` zawiera m.in. informacje o rozmiarze pliku, właścicielu, czy dacie ostatniej modyfikacji. Dostępne
 są też makra sprawdzające typ pliku. Poniżej znajdują się ważniejsze przykłady takich makr:
 - Makra przyjmujące `buf->st_mode` (pole typu `mode_t`):
    - `S_ISREG(m)` -- czy mamy do czynienia ze zwykłym plikiem,
@@ -66,7 +66,7 @@ semafory czy pamięć dzielona (więcej o tym będzie w przyszłym semestrze).
 Szczegóły znajdują się w manualu `man sys_stat.h`. Warto się zapoznać ze wszystkimi atrybutami struktury `stat` 
 i makrami, jest tego dość dużo.
 
-Po przejrzeniu katalogu, należy (będąc dobrym programistą i chcąc zdać przedmiot) pamiętać o zwolnieniu zasobów 
+Po przejrzeniu katalogu należy (będąc dobrym programistą i chcąc zdać przedmiot) pamiętać o zwolnieniu zasobów 
 za pomocą funkcji `closedir`.
 
 ### Informacje techniczne
@@ -75,7 +75,7 @@ W celu przejrzenia całego katalogu, funkcję `readdir` należy wywoływać tyle
 W przypadku wystąpienia błędu, zarówno `opendir`, jak i `readdir` zwracają `NULL`. Wynika z tego ważny wniosek
 w przypadku funkcji `readdir`: przed jej wywołaniem należy wyzerować zmienną `errno`, a w razie zwrócenia `NULL`
 sprawdzić, czy ta zmienna nie została ustawiona na niezerową wartość (oznaczającą błąd).
-`errno` jest zmienną globalną używana przez funkcje systemowe do wskazania kodu napotkanego błędu.
+`errno` jest zmienną globalną używaną przez funkcje systemowe do wskazania kodu napotkanego błędu.
 
 Funkcje `stat`, `lstat` i `closedir` zwracają `0` w razie sukcesu, inna wartość oznacza błąd.
 
@@ -103,7 +103,7 @@ rozwiązanie `l1-1.c`:
 
 - Uruchom ten program w katalogu, w którym nie ma żadnych podkatalogów, czy wyniki zgadzają się z tym czego oczekujemy tj. zero katalogów i, ewentualnie, pliki?
 {{< answer >}} 
-Nie, są dwa katalogi, program policzył katalogi `.` i  `..`. Każdy katalog ma *hardlinka* na samego siebie (`.`) i katalog nadrzędny (`..`). 
+Nie, są dwa katalogi, program policzył katalogi `.` i `..`. Każdy katalog ma *hardlinka* na samego siebie (`.`) i katalog nadrzędny (`..`). 
 {{< /answer >}}
 
 - Jak utworzyć link symboliczny do testów? 
@@ -239,7 +239,7 @@ W funkcji `fn` powinniśmy zwykle zwrócić `0`, jeśli zwrócimy coś innego, `
 używany jest co najwyżej jeden deskryptor, zatem podana wartość jest też dolnym ograniczeniem na głębokość drzewa, do której dojdzie przeszukanie,
 - `flags` oznacza flagi modyfikujące działanie funkcji, z czego ciekawsze to:
    - `FTW_CHDIR`: zmienia katalog roboczy na aktualnie przeglądany katalog w trakcie wykonywania funkcji,
-   - `FTW_DEPTH`: przeszukanie wgłąb (domyślnie `nftw` przeszukuje wszerz),
+   - `FTW_DEPTH`: przeszukanie w głąb (domyślnie `nftw` przeszukuje wszerz),
    - `FTW_PHYS`: jeśli obecna, odwiedzane będą linki same w sobie, domyślnie odwiedzane są pliki, do których link prowadzi.
 Flagi te można łączyć ze sobą operatorem logicznym `|`.
 
@@ -391,8 +391,8 @@ Wyrażenie 'A'+(i%('Z'-'A'+1)) powinno być zrozumiałe, jeśli nie poświęć m
 {{< answer >}}
 Prawie zawsze rozmiary są różne w obu przypadkach wynika to ze sposobu tworzenia pliku,
 który jest na początku pusty a potem w losowych lokalizacjach wstawiane są znaki, 
-nie zawsze będzie wylosowany znak na ostatniej pozycji. Losowanie podlega limitowi 2 bajtowego RAND_MAX, 
-wiec w dużych plikach losowane są znaki na pozycjach do granicy RAND_MAX.
+nie zawsze będzie wylosowany znak na ostatniej pozycji. Losowanie podlega limitowi 2-bajtowego RAND_MAX, 
+więc w dużych plikach losowane są znaki na pozycjach do granicy RAND_MAX.
 {{< /answer >}}
 
 - Przerób program tak, aby rozmiar zawsze był zgodny z założonym.
@@ -404,7 +404,7 @@ ale to nie przeszkadza programowi, w tym kontekście to nie jest błąd.
 Bez tego wyjątku moglibyśmy tylko nadpisywać istniejące pliki a nie tworzyć nowe.
 {{< /answer >}}
 
-- Zwrócić uwagę na wyłączenie z `main` funkcji do tworzenia pliku, im więcej kodu tym ważniejszy podział na użyteczne funkcję. Przy okazji krótko omówmy cechy dobrej funkcji:
+- Zwrócić uwagę na wyłączenie z `main` funkcji do tworzenia pliku, im więcej kodu tym ważniejszy jest jego podział na funkcje. Przy okazji krótko omówmy cechy dobrej funkcji:
    - robi jedną rzecz na raz (krótki kod)
    - możliwie duży stopień generalizacji problemu (dodano procent jako parametr)
    - wszystkie dane wejściowe dostaje przez parametry (nie używamy zmiennych globalnych)
@@ -554,7 +554,7 @@ Co student musi wiedzieć:
 ### Uwagi i pytania
 
 Aby dostępne było makro `TEMP_FAILURE_RETRY` trzeba najpierw zdefiniować `GNU_SOURCE` a następnie dołączyć plik
-nagłówkowy `unistd.h`. Nie musisz jeszcze w pełni rozumieć działania tego makra, będzie on ważniejsze w trakcie kolejnego laboratorium gdy zajmiemy się sygnałami.
+nagłówkowy `unistd.h`. Nie musisz jeszcze w pełni rozumieć działania tego makra, będzie ono ważniejsze w trakcie kolejnego laboratorium gdy zajmiemy się sygnałami.
 
 - Dlaczego w powyższym programie używane są funkcje `bulk_read` i `bulk_write`?
 Czy nie wystarczyłoby po prostu użyć `read` i `write`

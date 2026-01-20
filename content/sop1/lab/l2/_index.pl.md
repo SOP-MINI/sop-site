@@ -15,13 +15,13 @@ należy **koniecznie przeczytać wskazane strony manuala**, aby dobrze poznać i
 ## Zarządzanie procesami
 
 ### Tworzenie procesów
-Stworzenie procesu potomnego wykonawane jest za pomocą polecenia `fork`. Przyjrzymy się definicji tej funkcji: 
+Stworzenie procesu potomnego wykonywane jest za pomocą polecenia `fork`. Przyjrzymy się definicji tej funkcji: 
 
 ```
 pid_t fork(void)
 ```
 
-Jak widać, zwraca ona obiekt typu `pid_t`, jest to typ całkowitoliczbowy ze znakiem. W procesie rodzica funkcja zwraca identyfikator nowo utworzonego procesu, natomiast w utworzonym procesie zwracane jest `0`, pozwala to łatwo rozdzielić logikę na tę wykonywaną przez dzieci oraz na tę wykonywaną prez rodzica.
+Jak widać, zwraca ona obiekt typu `pid_t`, jest to typ całkowitoliczbowy ze znakiem. W procesie rodzica funkcja zwraca identyfikator nowo utworzonego procesu, natomiast w utworzonym procesie zwracane jest `0`, pozwala to łatwo rozdzielić logikę na tę wykonywaną przez dzieci oraz na tę wykonywaną przez rodzica.
 
 
 Oczywiście stworzenie nowego procesu może się nie powieść (np. gdy systemowi zabraknie potrzebnych zasobów). W takim wypadku funkcja `fork` zwraca wartość `-1` i ustawia odpowiednią wartość zmiennej `errno`.
@@ -46,12 +46,12 @@ pid_t getppid(void)
 
 Jak widać nie przyjmują one żadnych argumentów i zwracają obiekt typu `pid_t`.:
 
-Zgodnie ze standardem POSIX obie funkcję __zawszę kończą się sukcesem__ (`man 3p getpid`).
+Zgodnie ze standardem POSIX obie funkcje __zawsze kończą się sukcesem__ (`man 3p getpid`).
 
 
 ### Zadanie 
 
-Napisz program tworzący n procesów potomnych (n jest parametrem na pozycji 1), każdy z tych procesów czeka przez losowy czas [5-10] sekund po czym wypisuje na ekran swój PID i się kończy. Proces rodzica co 3s ma wyświetlać na stdout ile jeszcze posiada pod-procesów. Narazie nie przejmuj się czekaniem na zakończenie procesów potomnych.
+Napisz program tworzący n procesów potomnych (n jest parametrem na pozycji 1), każdy z tych procesów czeka przez losowy czas [5, 10] sekund po czym wypisuje na ekran swój PID i się kończy. Proces rodzica co 3s ma wyświetlać na stdout ile jeszcze posiada podprocesów. Na razie nie przejmuj się czekaniem na zakończenie procesów potomnych.
 
 Nowe strony z manuala: 
 - man 3p fork
@@ -74,7 +74,7 @@ procesy danej grupy).
 - `0` jako argument `kill` jest bardzo użyteczne, odnosi się do wszystkich procesów danej grupy, nie musimy przechowywać
 listy PID'ów.
 
-- Zwróć uwagę, że nie analizujemy błędów funkcji `kill` w makrze `ERR`, to dla tego, że w przypadku sytuacji krytycznej
+- Zwróć uwagę, że nie analizujemy błędów funkcji `kill` w makrze `ERR`, to dlatego, że w przypadku sytuacji krytycznej
 podejmujemy jak najmniej działań, zresztą co mielibyśmy zrobić wywołać rekurencyjnie `ERR`?
 
 - Pytanie czemu po uruchomieniu wraca linia poleceń?
@@ -94,14 +94,14 @@ podejmujemy jak najmniej działań, zresztą co mielibyśmy zrobić wywołać re
 - Jak zachowa się program bez `exit`  wywołanym zaraz po `child_work` w procesie potomnym?
 {{< details "Odpowiedź" >}} Procesy potomne po zakończeniu wykonania kodu funkcji child_work przechodzą dalej w kodzie czyli wracają do pętli forkującej i tworzą własne procesy potomne, które to też mogą utworzyć swoje potomne itd. Niezły bałagan, do tego procesy dzieci nie czekają na swoje dzieci.  {{< /details >}}
 
-- Ile procesów (w sumie) zostanie utworzonych jeśli jako parametr uruchomienia podamy 3 przy założeniu, że nie ma `exit` wspomnianego w poprzenim pytaniu?
+- Ile procesów (w sumie) zostanie utworzonych jeśli jako parametr uruchomienia podamy 3 przy założeniu, że nie ma `exit` wspomnianego w poprzednim pytaniu?
 {{< details "Odpowiedź" >}}  1 rodzic 3 potomne 1 poziomu,  3 drugiego i  1 trzeciego poziomu, w sumie 8 procesów, narysuj sobie drzewko, opisz gałęzie wartością n w momencie wykonania forka. {{< /details >}}
 
 - Co zwraca `sleep`?  Czy powinniśmy jakoś na to reagować? 
 {{< details "Odpowiedź" >}} zwraca czas "niedospany" w przypadku przerwania funkcją obsługi sygnału w tym programie proces dziecka nie dostaje sygnałów i ich nie obsługuje więc nie musimy się tym martwić. W innych programach często będziemy restartować sleep z nowym czasem spania tak aby w sumie przespać tyle ile było założone. {{< /details >}}
 
 - W kolejnym etapie dodamy czekanie i zliczanie procesów potomnych. Pytanie skąd mamy wiedzieć ile procesów potomnych w danej chwili istnieje?
-{{< details "Odpowiedź" >}} Można próbować zliczać sygnały SIGCHLD ale to zawodny sposób bo mogą się "sklejać" czyli mniej ich dostaniemy niż potomków się na prawdę zakończyło. Jedyną pewną metodą jest zliczanie udanych wywołań wait i waitpid. {{< /details >}}
+{{< details "Odpowiedź" >}} Można próbować zliczać sygnały SIGCHLD ale to zawodny sposób bo mogą się "sklejać" czyli mniej ich dostaniemy niż potomków się naprawdę zakończyło. Jedyną pewną metodą jest zliczanie udanych wywołań wait i waitpid. {{< /details >}}
 
 ### Czekanie na procesy potomne
 Po zakończeniu wykonywania wszystkich swoich instrukcji proces potomny przechodzi w stan **zombie** (jego identyfikator dalej widnieje w tablicy procesów) i pozostaje w nim do momentu, aż proces rodzic odbierze informację o jego stanie (`Status Information` z `man 3p wait`). Dopiero wtedy zasoby procesu potomnego są **całkowicie zwalniane** z systemu. 
@@ -128,7 +128,7 @@ Funkcja `waitpid` posiada dwa dodatkowe argumenty, kolejno `pid` typu `pid_t` or
 
 argument `options` określa modyfikacje sposobu działania funkcji, i jest kombinacją następujących opcji:
 - `WCONTINUED` - funkcja powinna zwrócić również informacje o procesach, które zostały wznowione po zatrzymaniu.
-- `WNOHANG` - funkcja `waitpid` nie powinna zatrzymywać wywołania biężącego procesu jeżeli żaden z procesów na które czekamy nie może natychmiast powiadomić o swoim statusie. W takiej sytuacji funkcja zwaraca wartość `0`.
+- `WNOHANG` - funkcja `waitpid` nie powinna zatrzymywać wywołania bieżącego procesu jeżeli żaden z procesów na które czekamy nie może natychmiast powiadomić o swoim statusie. W takiej sytuacji funkcja zwraca wartość `0`.
 - `WUNTRACED` - funkcja powinna zwrócić również informacje o procesach, które zostały zatrzymane.
   
 W ramach laboratorium wystarczy znajomość opcji `WNOHANG`.
@@ -139,7 +139,7 @@ man 3p wait
 ```
 
 
-Podsumowując możemy traktować funkcję `waitpid` jako bardziej rozbudowaną wersję funkcji `wait` - wywołanie funkcji `wait(stat_loc)` jest równażne wywołaniu `waitpid(-1, stat_loc, 0)`.
+Podsumowując możemy traktować funkcję `waitpid` jako bardziej rozbudowaną wersję funkcji `wait` - wywołanie funkcji `wait(stat_loc)` jest równoważne wywołaniu `waitpid(-1, stat_loc, 0)`.
 
 Oczywiście obie te funkcję mogą się nie powieść, zwracają one wtedy `-1` i ustawiają odpowiednią wartość zmiennej errno. 
 
@@ -171,7 +171,7 @@ Nowe strony z manuala:
 {{< details "Odpowiedź" >}} Czekamy na dowolny proces potomny, nie musimy znać jego PID, zero oznacza dowolny z potomków. {{< /details >}}
 
 - Czy w tym programie występują sygnały? 
-{{< details "Odpowiedź" >}} `SIGCHILD`, nie ma f. obsługi ale to nie szkodzi, w pewnym sensie jest obsługiwany przez waitpid {{< /details >}}
+{{< details "Odpowiedź" >}} `SIGCHLD`, nie ma f. obsługi ale to nie szkodzi, w pewnym sensie jest obsługiwany przez waitpid {{< /details >}}
 
 - Czy tym razem nie powinniśmy sprawdzać co zwraca sleep skoro są sygnały?
 {{< details "Odpowiedź" >}} Nie bo nie ma funkcji obsługi sygnału. {{< /details >}}
@@ -248,7 +248,7 @@ Program przyjmuje 4 parametry pozycyjne (`n`,`k`,`p` i `r`). Tworzy `n` procesó
 naprzemiennie sygnały `SIGUSR1` i `SIGUSR2` do wszystkich procesów potomnych w pętli po odpowiednio `k` i `p` sekundach. Kończy
 się gdy kończą się wszystkie procesy potomne. Każdy proces potomny losuje czas swojego spania z przedziału 5-10 sekund a
 następnie w pętli śpi i wypisuje na ekran **SUKCES** jeśli ostatnim otrzymanym przez niego sygnałem był `SIGUSR1` lub **FAILURE**
-jeśli `SIGUSER2`. Taka pętla powtarza się `r` razy.
+jeśli `SIGUSR2`. Taka pętla powtarza się `r` razy.
 
 Co student musi wiedzieć:
 - `man 7 signal`
@@ -283,7 +283,7 @@ przenośnych i bezpiecznych rozwiązań w kwestii jak dzielić logikę programu 
 sygnału. Najprostsza zasada aby funkcje obsługi były ekstremalnie krótkie (przypisanie, inkrementacja zmiennej itp) a
 cała logika pozostała w głównym kodzie jest najlepsza.
 
-Funkcja `memset` bywa konieczna a zazwyczaj jest użyteczna przy inicjowaniu nie w pełni znanych nam struktur. W tym przypadku POSIX wyraźnie mówi, że struktura `sigaction` może zawierać więcej pól niż jest to wymagane przez standard. W takim przypadku te dodatkowe pola, których wartości nie ustawilibyśmy (tutaj ze zerujemy za pomocą `memset`) mogą skutkować różnym działaniem na różnych systemach, a nawet różnym zachowaniem po między wywołaniami programu.
+Funkcja `memset` bywa konieczna a zazwyczaj jest użyteczna przy inicjowaniu nie w pełni znanych nam struktur. W tym przypadku POSIX wyraźnie mówi, że struktura `sigaction` może zawierać więcej pól niż jest to wymagane przez standard. W takim przypadku te dodatkowe pola, których wartości nie ustawilibyśmy (tutaj zzerujemy za pomocą `memset`) mogą skutkować różnym działaniem na różnych systemach, a nawet różnym zachowaniem po między wywołaniami programu.
 
 Czy podczas obsługi sygnału `SIGCHLD` można się spodziewać więcej niż jednego zakończonego procesu dziecka?
 {{< details "Odpowiedź" >}}  Tak, sygnały mogą się skleić, dziecko może się zakończyć akurat w trakcie obsługi `SIGCHLD`. Stąd pętla w funkcji obsługi tego. {{< /details >}}
@@ -319,7 +319,7 @@ Czy można jakoś zmienić ten program tak aby wykluczyć ignorowanie sygnałów
 {{< details "Odpowiedź" >}} Ten akurat program może mieć identyczną reakcję na te sygnały w rodzicu i potomkach, można zatem ustawić obsługę od razu w procesie rodzicielskim przed fork. {{< /details >}}
 
 A co się stanie jeśli za fork  przeniesiemy obsługę `SIGCHLD`? 
-{{< details "Odpowiedź" >}} Jeśli jeden z procesów potomnych "umrze" zanim włączymy tą obsługę to będzie on "zombie" aż do momentu gdy kolejny w pod-procesów  się zakończy. Nie jest to bardzo duży błąd ale warto i na takie zwracać uwagę. {{< /details >}}
+{{< details "Odpowiedź" >}} Jeśli jeden z procesów potomnych "umrze" zanim włączymy tą obsługę to będzie on "zombie" aż do momentu gdy kolejny z podprocesów się zakończy. Nie jest to bardzo duży błąd ale warto i na takie zwracać uwagę. {{< /details >}}
 
 Pytanie, czy wait na końcu main jest potrzebny? Przecież i tak funkcja `parent_work()` powinna działać co najmniej tyle czasu co najdłuższy z podprocesów?
 {{< details "Odpowiedź" >}} Wyliczenie czasu w pętli rodzica nie wystarczy, w obciążonym systemie możliwe są dowolnie długie opóźnienia, bez `wait` powstaje zatem tzw. race condition - kto się pierwszy zakończy rodzic czy potomne procesy. {{< /details >}}
@@ -349,15 +349,15 @@ man 3p sigsuspend
 ### Zarządzanie maską sygnałów
 
 Zbiór sygnałów będziemy nazywać maską sygnałów. Maskę sygnałów będziemy przechowywać jako obiekt o typie `sigset_t`. Standard nie określa w jaki sposób ma być zaimplementowany ten typ, może być to zarówno `int`, jak i struktura. 
-W celu modyfikacji maski sygnałów będziemy używac funcji `sigsemptyset`, inicjalizującej maskę jako zbiór pusty, oraz `sigaddset` ,dodającej sygnał do maski. 
-Przyjrzyjmy się ich definicją:
+W celu modyfikacji maski sygnałów będziemy używac funkcji `sigsemptyset`, inicjalizującej maskę jako zbiór pusty, oraz `sigaddset` ,dodającej sygnał do maski. 
+Przyjrzyjmy się ich definicjom:
 
 ```
 int sigemptyset(sigset_t *set);
 int sigaddset(sigset_t *set, int signo);
 ```
 
-Jak możemy zauważyć, obie funkcję przyjmują jako pierwszy argument `set` typu `sigset_t *`, jest to wskaźnik na maskę, którą chcemy edytować. 
+Jak możemy zauważyć, obie funkcje przyjmują jako pierwszy argument `set` typu `sigset_t *`, jest to wskaźnik na maskę, którą chcemy edytować. 
 funkcja `sigaddset` dodatkowo przyjmuje argument `signo` będący kodem sygnału, który chcemy dodać do maski.
 
 Obie funkcje zwracają wartość typu int, służącą do sygnalizacji przebiegu operacji: w razie sukcesu zwracają `0`, a w razie błędu `-1`, ustawiając odpowiednią wartość zmiennej `errno`.
@@ -371,7 +371,7 @@ man 3p sigemptyset
 ### Zmiana maski sygnałów
 
 Skoro już zdefiniowaliśmy nową maskę sygnałów, chcielibśmy sprawić, by wpłynęła ona na działanie naszego procesu. 
-W tym celu będziemy używać funkcji `sigprocmask`, która określa, w jaki sposób zdefiniowana przez nas maska sygnałów ma wpłynąć na aktulaną maskę sygnałów procesu.
+W tym celu będziemy używać funkcji `sigprocmask`, która określa, w jaki sposób zdefiniowana przez nas maska sygnałów ma wpłynąć na aktualaną maskę sygnałów procesu.
 Przyjrzyjmy się jej definicji:
 ```
 int sigprocmask(int how, const sigset_t *restrict set,
@@ -380,9 +380,9 @@ int sigprocmask(int how, const sigset_t *restrict set,
 
 Jak możemy zauważyć funkcja ta przyjmuje kolejno argumenty:
 - `how` typu `int` określa w jaki sposób nowa maska ma wpłynąć na aktualną maskę. Dostępne opcje:
-  - `SIG_BLOCK` - wynikowa maska sygnałów jest sumą zbiorów maski wskazanej przez `set` i aktualnej maski sygnałów (określamy jakie sygnały checmy __dodać__ do maski).
+  - `SIG_BLOCK` - wynikowa maska sygnałów jest sumą zbiorów maski wskazanej przez `set` i aktualnej maski sygnałów (określamy jakie sygnały chcemy __dodać__ do maski).
   - `SIG_SETMASK` - wynikowa maska sygnałów jest maską sygnałów wskazywaną przez `set`.
-  - `SIG_UNBLOCK` - wynikowa maska sygnałów jest przecięciem aktualnej maski i dopełnieiem zbioru maski wskazanej przez `set` (Określamy jakie sygnały chcemy __usunąć__ z maski).
+  - `SIG_UNBLOCK` - wynikowa maska sygnałów jest przecięciem aktualnej maski i dopełnieniem zbioru maski wskazanej przez `set` (Określamy jakie sygnały chcemy __usunąć__ z maski).
 
 - `set` typu `const sigset_t` to wskaźnik na maskę, na podstawie której chcemy modyfikować poprzednią maskę.
 - `oset` typu `sigset_t *` jest wskaźnikiem na obiekt do którego chcemy zapisać maskę sygnałów sprzed edycji.
@@ -438,7 +438,7 @@ czasu ich działania.
 - Pytanie czemu liczniki się różnią ? 
 {{< details "Odpowiedź" >}} 1. sklejanie sygnałów ale to ma mały wpływ, 2.  fakt, że sigsuspend NIE GWARANTUJE WYKONANIA MAKSYMALNIE JEDNEJ OBSŁUGI SYGNAŁU! To częsty błąd w rozumowaniu! Zaraz po wywołaniu obsługi SIGUSR2 jeszcze w obrębie jednego wykonania sigsuspend następuje obsługa SIGUSR1, zmienna globalna jest nadpisywana i proces rodzic nie ma szansy zliczyć SIGUSR2!!! {{< /details >}}
 
-- Jak uruchomić ten program aby zminimalizować szansę na sklejanie się `SIGUSER2` i jednocześnie obserwować  różnice w licznikach?
+- Jak uruchomić ten program aby zminimalizować szansę na sklejanie się `SIGUSR2` i jednocześnie obserwować  różnice w licznikach?
 {{< details "Odpowiedź" >}} Uruchomić dla małych czasów i dużych ilości SIGUSR1 między SIGUSR2, teraz jest prawie zerowa szansa na sklejenie SIGUSR2, za to duża na wykonanie wiele razy funkcji obsługi sygnału w obrębie jednego sigsuspend {{< /details >}}
 
 - Popraw powyższy program tak aby wyeliminować problem wielu wywołań obsługi sygnału w obrębie jednego `sigsuspend` 
@@ -461,7 +461,7 @@ Co student musi wiedzieć:
 {{< includecode "prog16a.c" >}}
 
 {{< hint info >}}
-Pamiętaj, z pliku `/dev/random` możesz pobrać na prawdę losowe bajty ale w małych ilościach, z `/dev/urandom` odwrotnie, pseudo losowe liczby za to w dowolnych ilościach.
+Pamiętaj, z pliku `/dev/random` możesz pobrać naprawdę losowe bajty ale w małych ilościach, z `/dev/urandom` odwrotnie, pseudolosowe liczby za to w dowolnych ilościach.
 {{< /hint >}}
 
 {{< hint info >}}
@@ -514,7 +514,7 @@ Czemu uprawnienia do nowego pliku są  pełne (0777)?
 
 ### Rozwiązanie problemów
 
-W przypadu operacji I/O funkcje mogą być przerwane podczas swojego działania przez funkcję obługi sygnału. W takim wypadku funkcje zwracają wartość -1, która sygnalizuje błąd i ustwiają `errno` na `EINTR`. Standard POSIX mówi, że w takim przypadku wykananie funkcji zostaje przerwana zanim ta funkcja coś zrobi. Z tego powodu jak najbardziej poprawną i zalecaną reakcją na ten błąd jest restart funkcji z tymi samymi parametrami, jakie były podane przy pierwszym wywołaniu.
+W przypadku operacji I/O funkcje mogą być przerwane podczas swojego działania przez funkcję obsługi sygnału. W takim wypadku funkcje zwracają wartość -1, która sygnalizuje błąd i ustawiają `errno` na `EINTR`. Standard POSIX mówi, że w takim przypadku wykonanie funkcji zostaje przerwana zanim ta funkcja coś zrobi. Z tego powodu jak najbardziej poprawną i zalecaną reakcją na ten błąd jest restart funkcji z tymi samymi parametrami, jakie były podane przy pierwszym wywołaniu.
 
 Ręczna obsługa tego błędu może być z czasem niewygodna (szczególnie, gdy wykonujemy dużo operacji I/O). Z tego powodu w tym celu wykorzystamy makro `TEMP_FAILURE_RETRY`, które jest rozszerzeniem biblioteki C projektu GNU. [Tutaj](https://www.gnu.org/software/libc/manual/html_node/Interrupted-Primitives.html) przeczytasz więcej o tym makrze. Aby skorzystać makra musimy wcześniej zdefiniować makro `_GNU_SOURCE`, które daje nam dostęp do tego typu niestandardowych rozszerzeń.
 
@@ -541,7 +541,7 @@ ale także tam gdzie dane nie są dostępne w sposób ciągły - pipe/fifo/gniaz
 Podobnie jak `read`/`write` zachowują się wszystkie funkcje pokrewne takie jak `fread`/`fwrite` czy `send`/`recv`
 
 Warto sobie uświadomić czemu użycie flagi `SA_RESTART` w `sa_flags` podczas ustawiania funkcji obsługi sygnału nie rozwiązuje nam problemu z `EINTR`:
- - Z góry musimy wiedzieć jakie sygnały będą obsługiwane w naszym programie i wszystkie one muszą być włączone z tą flagą, wystarczy jeden bez tej niej i problem `EINTR` powraca. Łatwo o taki błąd jeśli powrócimy do starszego kodu, łatwo zapomnieć o tym wymogu.
+ - Z góry musimy wiedzieć jakie sygnały będą obsługiwane w naszym programie i wszystkie one muszą być włączone z tą flagą, wystarczy jeden bez niej i problem `EINTR` powraca. Łatwo o taki błąd jeśli powrócimy do starszego kodu, łatwo zapomnieć o tym wymogu.
 
  - Jeśli chcemy napisać sobie funkcję biblioteczną (np. bulk_read) to nie możemy nic zakładać o obsłudze sygnałów w
 programie używającym naszej biblioteki.
