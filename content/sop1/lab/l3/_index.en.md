@@ -31,6 +31,54 @@ Introduction notes:
 {{< /hint >}}
 
 _This tutorial is based on tasks and code examples provided by student Mariusz Kowalski._
+## Thread Management
+
+### Creating Threads
+A thread is created using the `pthread_create` command. Let's take a look at the declaration of this function:
+
+```
+int pthread_create(pthread_t *restrict thread,
+                  const pthread_attr_t *restrict attr,
+                  typeof(void *(void *)) *start_routine,
+                  void *restrict arg);
+```
+
+Unlike `fork`, this function returns an integer that is used to determine whether it has succeeded or failed. On success, it writes the newly created thread's handle to `thread`.
+
+The second argument is for attributes. It can be left NULL to use the default attributes. (See `man 3p pthread_attr_destroy` and `man -k pthread_attr_set` for additional info)
+
+When creating a thread, you have to supply a function pointer to a function of the following signature:
+
+```
+void *function(void *args);
+```
+
+This function is the function that will be executed by the newly created thread. You pass the arguments to the function via the last argument `arg`.
+
+In C, a `void*` is a pointer to anything. You can not use it without casting to another type, e.g `int*`.
+
+`pthread_t` is implementation defined and should be treated as such. (i.e you can't use it like an integer)
+
+More information:
+```
+man 3p pthread_create
+```
+
+### Thread Joining
+Much like child processes, a thread should also be collected after it finishes it's work. This can be achieved using the `pthread_join` command.
+
+```
+int pthread_join(pthread_t thread, void **value_ptr);
+```
+
+Like `pthread_create`, this function returns an integer for the purpose of differentiating success from failure. The function's return value is written to `value_ptr`.
+
+Unlike with processes, you can't join on any finished thread. You have to pass a valid thread's handle to `pthread_join`.
+
+More information:
+```
+man 3p pthread_join
+```
 
 ## Task 1 - simple joinable threads, synchronization and threads return values
 
@@ -47,7 +95,7 @@ What you need to know:
 - man 3p pthread_create
 - man 3p pthread_join
 - man 3p rand (especially  rand_r)
-- Monte-Carlo method, in paragraph "Monte Carlo methods" on this <a href="https://en.wikipedia.org/wiki/Pi#Use"> site.</a>
+- Monte-Carlo method, in paragraph "Monte Carlo methods" on this <a href="https://en.wikipedia.org/wiki/Pi#Monte_Carlo_methods"> site.</a>
 
 <em>Solution <b>Makefile</b>:</em>
 
@@ -55,25 +103,20 @@ What you need to know:
 CC=gcc
 CFLAGS=-std=gnu99 -Wall -fsanitize=address,undefined
 LDFLAGS=-fsanitize=address,undefined
-LDLIBS=-lpthread -lm
+LDLIBS=-lpthread
 ```
 
 Flag `-lpthread` is mandatory for all compilations in this tutorial. Linked library is called libpthread.so (after -l we
 write the name of the library without first "lib" part)
 
-Flag `-lm` adds math library, this library is called lm.so  (not libmath.so as you could have guessed)
-
 <em>Solution <b>prog17.c</b>:</em>
 {{< includecode "prog17.c" >}}
-
-This and following programs do not show USAGE information, the default parameters values are assumed if options are
-missing. Run it without parameters to see how it works.
 
 Functions' declarations at the beginning of the code (not the functions definitions) are quite useful, sometimes
 mandatory. If you do not know the difference please
 read <a href="http://en.cppreference.com/w/c/language/function_declaration"> this</a>.
 
-In multi threaded processes you can not correctly use rand() function, use rand_r() instead. The later one requires
+In multi threaded processes you can not correctly use `rand()` function, use `rand_r()` instead. The later one requires
 individual seed for every thread.
 
 This program uses the simplest schema for threads lifetime. It creates some threads and then immediately waits for them
@@ -82,34 +125,34 @@ to finish. More complex scenarios are possible
 Please keep in mind that nearly every call to system function (and most calls to library functions) should be followed
 with the test on errors and if necessary by the proper reaction on the error.
 
-ERR macro does not send "kill" signal as in multi-process program, why ?
+ERR macro does not send "kill" signal as in multi-process program, why?
 {{< details "Answer"  >}} Call to exit terminates all the threads in current process, there is no need to "kill" other processes. {{< /details  >}}
 
-How input data is passed to the new  threads?
-{{< details "Answer"  >}} Exclusively by the pointer to structure  argsEstimation_t that is passed as thread function arguments. There is no need (nor the excuse) to use global variables! {{< /details  >}}
+How is input data passed to the new threads?
+{{< details "Answer"  >}} Exclusively by the pointer to structure targs_t that is passed as thread function arguments. There is no need (nor the excuse) to use global variables! {{< /details  >}}
 
 Is the thread input data shared between the threads?
 {{< details "Answer"  >}} Not in this program. In this case there is no need to synchronize the access to this data. Each thread gets a pointer to the private copy of the structure. {{< /details  >}}
 
-How the random seed for rand_r() is prepared for each thread?
-{{< details "Answer"  >}} It is randomized in the main thread and passed as a part of input data in  argsEstimation_t . {{< /details  >}}
+How the random seed for `rand_r()` is prepared for each thread?
+{{< details "Answer"  >}} It is randomized in the main thread and passed as a part of input data in targs_t. {{< /details  >}}
 
 In this multi thread program we see srand/rand calls, is this correct? It contradicts what was said a few lines above.
-{{< details "Answer"  >}} Only one thread is using srand/rand and those functions are called before working threads come to life. The problem with  srand/rand and threads originates from one global variable used in the library to hold the current seed. In this code only on thread access this seed thus it is correct. {{< /details  >}}
+{{< details "Answer"  >}} Only one thread is using srand/rand and those functions are called before working threads come to life. The problem with srand/rand and threads originates from one global variable used in the library to hold the current seed. In this code only on thread access this seed thus it is correct. {{< /details  >}}
 
 Can we share one input data structure for all the threads instead of having a copy for every thread?
-{{< details "Answer"  >}} No due to random seed, it must be different for all the threads. {{< /details  >}}
+{{< details "Answer"  >}} Not in this program due to random seed, it must be different for all the threads. {{< /details  >}}
 
 Can we make the array with the thread input data automatic variable (not allocated)? 
 {{< details "Answer"  >}} Only if we add some limit on the number of working threads (up to 1000) otherwise this array may use all the stack of the main thread. {{< /details  >}}
 
 Why do we need to release the memory returned from the working thread?
-{{< details "Answer"  >}} This memory was allocated in the thread and has to be released somewhere in the same process, The heap is sheared by all the threads if you do not release it you will leak the memory. It will not be released automatically on the thread termination. {{< /details  >}}
+{{< details "Answer"  >}} This memory was allocated in the thread and has to be released somewhere in the same process, The heap is shared by all the threads if you do not release it you will leak the memory. It will not be released automatically on the thread termination. {{< /details  >}}
 
 Why can't we return the data as the address of local (to the thread) automatic variable? 
 {{< details "Answer"  >}} The moment thread terminates is the moment of its stack memory release. If you have a pointer to this released stack you should not use it as this memory can be overwritten immediately. What worse, in most cases this memory will stil be the same and faulty program will work in 90% of cases. If you make this kind of mistake it is later very hard to find out why sometimes your code fails. Please be careful and try to avoid this flaw. {{< /details  >}}
 
-can we avoid memory allocation in the working thread?
+Can we avoid memory allocation in the working thread?
 {{< details "Answer"  >}} Yes, if we add extra variable to the input structure of the thread. The result can then be stored in this variable.  {{< /details  >}}
 
 ## Task 2 - simple detachable threads with common variables and access mutex
