@@ -13,9 +13,9 @@ typedef struct shared_state
     int balls_waiting;
     int bins[BIN_COUNT];
     int balls_thrown;
-    pthread_mutex_t mtx_bins[BIN_COUNT];
-    pthread_mutex_t mtx_balls_waiting;
-    pthread_mutex_t mtx_balls_thrown;
+    pthread_mutex_t bins_mtx[BIN_COUNT];
+    pthread_mutex_t balls_waiting_mtx;
+    pthread_mutex_t balls_thrown_mtx;
 } shared_state_t;
 
 typedef struct thrower_args
@@ -50,8 +50,8 @@ int main(int argc, char** argv)
     shared_state_t shared = {
         .balls_waiting = balls_count,
         .balls_thrown = 0,
-        .mtx_balls_waiting = PTHREAD_MUTEX_INITIALIZER,
-        .mtx_balls_thrown = PTHREAD_MUTEX_INITIALIZER,
+        .balls_waiting_mtx = PTHREAD_MUTEX_INITIALIZER,
+        .balls_thrown_mtx = PTHREAD_MUTEX_INITIALIZER,
         .bins = {0},
     };
 
@@ -59,7 +59,7 @@ int main(int argc, char** argv)
 
     for (int i = 0; i < BIN_COUNT; i++)
     {
-        if (pthread_mutex_init(&shared.mtx_bins[i], NULL))
+        if (pthread_mutex_init(&shared.bins_mtx[i], NULL))
             ERR("pthread_mutex_init");
     }
 
@@ -69,9 +69,9 @@ int main(int argc, char** argv)
     while (balls_thrown < balls_count)
     {
         sleep(1);
-        pthread_mutex_lock(&shared.mtx_balls_thrown);
+        pthread_mutex_lock(&shared.balls_thrown_mtx);
         balls_thrown = shared.balls_thrown;
-        pthread_mutex_unlock(&shared.mtx_balls_thrown);
+        pthread_mutex_unlock(&shared.balls_thrown_mtx);
     }
 
     int final_balls_count = 0;
@@ -125,25 +125,25 @@ void* throwing_func(void* void_args)
     thrower_args_t* args = void_args;
     while (1)
     {
-        pthread_mutex_lock(&args->shared->mtx_balls_waiting);
+        pthread_mutex_lock(&args->shared->balls_waiting_mtx);
         if (args->shared->balls_waiting > 0)
         {
             args->shared->balls_waiting--;
-            pthread_mutex_unlock(&args->shared->mtx_balls_waiting);
+            pthread_mutex_unlock(&args->shared->balls_waiting_mtx);
         }
         else
         {
-            pthread_mutex_unlock(&args->shared->mtx_balls_waiting);
+            pthread_mutex_unlock(&args->shared->balls_waiting_mtx);
             break;
         }
 
         int binno = throw_ball(&args->seed);
-        pthread_mutex_lock(&args->shared->mtx_bins[binno]);
+        pthread_mutex_lock(&args->shared->bins_mtx[binno]);
         args->shared->bins[binno]++;
-        pthread_mutex_unlock(&args->shared->mtx_bins[binno]);
-        pthread_mutex_lock(&args->shared->mtx_balls_thrown);
+        pthread_mutex_unlock(&args->shared->bins_mtx[binno]);
+        pthread_mutex_lock(&args->shared->balls_thrown_mtx);
         args->shared->balls_thrown++;
-        pthread_mutex_unlock(&args->shared->mtx_balls_thrown);
+        pthread_mutex_unlock(&args->shared->balls_thrown_mtx);
     }
     return NULL;
 }
