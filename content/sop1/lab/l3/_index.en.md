@@ -39,7 +39,7 @@ A thread is created using the `pthread_create` command. Let's take a look at the
 ```
 int pthread_create(pthread_t *restrict thread,
                   const pthread_attr_t *restrict attr,
-                  typeof(void *(void *)) *start_routine,
+                  void *(*start_routine)(void*),
                   void *restrict arg);
 ```
 
@@ -55,7 +55,7 @@ void *function(void *args);
 
 This function is the function that will be executed by the newly created thread. You pass the arguments to the function via the last argument `arg`.
 
-In C, a `void*` is a pointer to anything. You can not use it without casting to another type, e.g `int*`.
+In C, a `void*` is a pointer to anything. You can not refer to the underlying value without casting to the actual type, e.g `int*`.
 
 `pthread_t` is implementation defined and should be treated as such. (i.e you can't use it like an integer)
 
@@ -65,15 +65,17 @@ man 3p pthread_create
 ```
 
 ### Thread Joining
-Much like child processes, a thread should also be collected after it finishes it's work. This can be achieved using the `pthread_join` command.
+Much like child processes, a thread should also be joined after it finishes its work. This can be achieved using the `pthread_join` command.
 
 ```
 int pthread_join(pthread_t thread, void **value_ptr);
 ```
 
-Like `pthread_create`, this function returns an integer for the purpose of differentiating success from failure. The function's return value is written to `value_ptr`.
+`pthread_join` functions similarly to `wait`, blocking until the thread finishes. POSIX doesn't define a non-blocking join function.
 
-Unlike with processes, you can't join on any finished thread. You have to pass a valid thread's handle to `pthread_join`.
+Like `pthread_create`, this function returns an integer to indicate success or failure. The thread function's return value is written to `value_ptr` if non-NULL storage was provided.
+
+Unlike with processes, you have to precisely specify which thread you're waiting for by providing a valid thread identifier.
 
 More information:
 ```
@@ -163,11 +165,15 @@ Can we avoid memory allocation in the working thread?
 
 ### Overview
 
-A detached thread is a thread that you need not collect. While it's convenient, it also has downsides, such as not knowing when thread execution ends(it is not joinable) and not being able to obtain anything from it without extra synchronization. There are two ways to obtain a detached thread, those being either spawning a detached thread or manually detaching an already running thread.
+A detached thread is a thread that you need not join. While it's convenient, it also has downsides, such as not knowing when thread execution ends, as it is not joinable. Because of that, you can't be sure that a thread has actually terminated, which can lead to problems when exiting from the main thread.
+
+Another issue with detached threads is not being able to obtain anything from them without extra synchronization.
+
+There are two ways to obtain a detached thread, those being either spawning a detached thread or manually detaching an already running thread.
 
 ### Spawning a detached thread
 
-In order to spawn a detached thread, you must first create a `pthread_attr_t` object that will later be passed to the `pthread_create` function. In order to initialize one to the default state, you must call `pthread_attr_init`. Then, you have to set it's detached state to `PTHREAD_CREATE_DETACHED` using the `pthread_attr_setdetachstate` function. Since you have to init the attributes structure, you also have to destroy it later using `pthread_attr_destroy`.
+In order to spawn a detached thread, you must first create a `pthread_attr_t` object that will later be passed to the `pthread_create` function. In order to initialize one to the default state, you must call `pthread_attr_init`. Then, you have to set its detached state to `PTHREAD_CREATE_DETACHED` using the `pthread_attr_setdetachstate` function. Since you have to initialize the attributes structure, you also have to destroy it later using `pthread_attr_destroy`.
 
 More information:
 ```
@@ -178,7 +184,7 @@ man 3p pthread_create
 
 ### Detaching a running thread
 
-As mentioned above, you may also detach a running thread. You can do it by calling `pthread_detach` with the thread's handle. A thread may detach itself in this way by first obtaining it's own handle via a `pthread_self` call, and then calling `pthread_detach`. Attempting to detach a thread that's already detached results in undefined behavior and shouldn't be done.
+As mentioned above, you may also detach a running thread. You can do it by calling `pthread_detach` with the thread's handle. A thread may detach itself in this way by first obtaining its own handle via a `pthread_self` call, and then calling `pthread_detach`. Attempting to detach a thread that's already detached results in undefined behavior and shouldn't be done.
 
 More information:
 ```
@@ -187,7 +193,7 @@ man 3p pthread_self
 ```
 
 ### Mutual exclusion
-Since a detached thread on it's own is effectively useless, we are introducing shared state between the threads. It means, that two or more threads have to work on the same structure. This is problematic, as we currently have no way of ensuring that a thread won't write to a field that is currently being read by another thread. (and vice versa)
+Since a detached thread on its own is effectively useless, we are introducing shared state between the threads. It means that two or more threads have to work on the same structure. This is problematic, as we currently have no way of ensuring that a thread won't write to a field that is currently being read by another thread. (and vice versa)
 
 This is where mutexes come into play. In short - a mutex is a special object that prevents two or more threads from holding it at the same time. It is recommended to read more about mutexes if you don't know what a mutex is.
 
@@ -200,7 +206,7 @@ Like `pthread_create`, `pthread_mutex_init` also accepts an attributes object. S
 
 
 
-Just creating a mutex isn't enough, you also need to acquire it when accessing shared state. That can be done using `pthread_mutex_lock`. This function blocks until it can acquire the mutex, then tries to acquire it. While it can fail, it's failure usually indicates serious memory corruption, and thus the return value of this function won't be checked in the further examples.
+Just creating a mutex isn't enough, you also need to acquire it when accessing shared state. That can be done using `pthread_mutex_lock`. This function blocks until it can acquire the mutex, then tries to acquire it. While it can fail, its failure usually indicates serious memory corruption, and thus the return value of this function won't be checked in the further examples.
 
 After you have acquired the mutex, you should not attempt to re-acquire it before releasing. This results in a deadlock in the majority of cases.
 
@@ -349,7 +355,7 @@ int pthread_setcanceltype(int type, int *oldtype);
 Cancelation requests can be ignored by setting the cancel state to `PTHREAD_CANCEL_DISABLE` and then later re-enabled by setting it to `PTHREAD_CANCEL_ENABLE`.
 Cancelation is enabled by default.
 
-The cancel type determines when the thread exits upon recieving a cancelation request.
+The cancel type determines when the thread exits upon receiving a cancelation request.
 It is set to `PTHREAD_CANCEL_DEFERRED` by default, in which case the thread exits at a cancelation point.
 If it is set to `PTHREAD_CANCEL_ASYNCHRONOUS`, the thread will exit as soon as possible.
 
