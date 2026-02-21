@@ -30,7 +30,6 @@ Introduction notes:
   - So called  "magic numbers" are left in code - those numerical constants should be replaced with "C" preprocessor macro
 {{< /hint >}}
 
-_This tutorial is based on tasks and code examples provided by student Mariusz Kowalski._
 ## Thread Management
 
 ### Creating Threads
@@ -45,7 +44,7 @@ int pthread_create(pthread_t *restrict thread,
 
 Unlike `fork`, this function returns an integer that is used to determine whether it has succeeded or failed. On success, it writes the newly created thread's handle to `thread`.
 
-The second argument is for attributes. It can be left NULL to use the default attributes. (See `man 3p pthread_attr_destroy` and `man -k pthread_attr_set` for additional info)
+The second argument is for attributes. It can be left `NULL` to use the default attributes. (See `man 3p pthread_attr_destroy` and `man -k pthread_attr_set` for additional info)
 
 When creating a thread, you have to supply a function pointer to a function of the following signature:
 
@@ -101,7 +100,7 @@ What you need to know:
 
 ### Solution
 
-<em><b>Makefile</b>:</em>
+**Makefile**:
 
 ```makefile
 CC=gcc
@@ -113,7 +112,7 @@ LDLIBS=-lpthread
 Flag `-lpthread` is mandatory for all compilations in this tutorial. Linked library is called libpthread.so (after -l we
 write the name of the library without first "lib" part)
 
-<em>Solution <b>prog17.c</b>:</em>
+**prog17.c**:
 {{< includecode "prog17.c" >}}
 
 ### Notes and questions
@@ -206,17 +205,14 @@ Like `pthread_create`, `pthread_mutex_init` also accepts an attributes object. S
 
 
 
-Just creating a mutex isn't enough, you also need to acquire it when accessing shared state. That can be done using `pthread_mutex_lock`. This function blocks until it can acquire the mutex, then tries to acquire it. While it can fail, its failure usually indicates serious memory corruption, and thus the return value of this function won't be checked in the further examples.
+Just creating a mutex isn't enough, you also need to acquire it when accessing shared state. That can be done using `pthread_mutex_lock`. This function blocks until it can acquire the mutex, then tries to acquire it. While it can fail, its failure usually indicates serious memory corruption or very specyfic situation (more on this on OPS2), and thus the return value of this function won't be checked in the further examples and we don't require it during labs.
 
 After you have acquired the mutex, you should not attempt to re-acquire it before releasing. This results in a deadlock in the majority of cases.
 
 After you are done modifying the shared state, you should release the mutex by calling `pthread_mutex_unlock`, so that another thread can lock it. Ideally, you should minimize the time you're holding the mutex for, as it slows down other threads that use it.
 
-{{< details "Note"  >}} 
 Please note that you should NEVER make copies of a mutex (e.g `pthread_mutex_t mtx1_copy = mtx1`).
-
 POSIX forbids that. A copy of a mutex does not have to be a working mutex! Even if it would work, it should be quite obvious, that a copy would be a different mutex.
-{{< /details  >}}
 
 More information:
 ```
@@ -246,7 +242,7 @@ What you need to know:
 - Bean machine on this <a href="https://en.wikipedia.org/wiki/Bean_machine"> site.</a>
 
 ### Solution
-<em>Solution <b>prog18.c</b>:</em>
+**prog18.c**:
 {{< includecode "prog18.c" >}}
 
 ### Notes and questions
@@ -268,9 +264,6 @@ coding (initiation and removal) but the amount of mutexes also is dynamic.
 Is data passed to threads in `thrower_args_t` structure shared between them?
 {{< details "Answer"  >}} Some of it, counters and bins are shared and thus protected with mutexes. {{< /details  >}}
 
-Is structure `thrower_args_t` optimal?
-{{< details "Answer"  >}} Yes, aside from the fact that we store the thread handles despite not using them. {{< /details  >}}
-
 Why do we use a pointer to the `shared_state_t` structure?
 {{< details "Answer"  >}}  We share the data, without the pointer we would have independent copies of those variables in each thread. {{< /details  >}}
 
@@ -283,7 +276,7 @@ To check if the working threads terminated, the main threads periodically  check
 Do all the threads created in this program really work?
 {{< details "Answer"  >}} No, especially when there is a lot of threads. It is possible that some of threads "starve". The work code for the thread is very fast, thread creation is rather slow, it is possible that last threads created will have no beans left to throw. To check it please add per thread thrown beans counters and print them on stdout at the thread termination. The problem can be avoided if we add synchronization on threads start - make them start at the same time but this again requires the methods that will be introduced later. (barier or conditional variable) {{< /details  >}}
 
-## Signals
+## Threads and Signals
 
 ### Excercise
 Goal: 
@@ -296,7 +289,7 @@ What you need to know:
 - man 3p pthread_sigmask
 - man 3p sigwait
 
-<em>Solution <b>prog19.c</b>:</em>
+**prog19.c**
 {{< includecode "prog19.c" >}}
 
 ### Notes and questions
@@ -359,9 +352,9 @@ The cancel type determines when the thread exits upon receiving a cancelation re
 It is set to `PTHREAD_CANCEL_DEFERRED` by default, in which case the thread exits at a cancelation point.
 If it is set to `PTHREAD_CANCEL_ASYNCHRONOUS`, the thread will exit as soon as possible.
 
-{{< details "Note"  >}} Generally, it is safer to keep the cancel type as PTHREAD_CANCEL_DEFERRED,
+Generally, it is safer to keep the cancel type as `PTHREAD_CANCEL_DEFERRED`,
 as you may have an unpreventable race condition in the case of asynchronous cancelation
-(e.g a thread gets canceled after you lock a mutex but before you add a cleanup function) {{< /details  >}}
+(e.g a thread gets canceled after you lock a mutex but before you add a cleanup function)
 
 More information:
 ```
@@ -396,7 +389,7 @@ void pthread_cleanup_pop(int execute);
 This function removes the handlers in the same order as they would be executed. 
 The `execute` parameter allows for optional execution of the handler.
 
-{{< details "Note"  >}} For every instance of pthread_cleanup_push in a scope there must be an instance of pthread_cleanup_pop {{< /details  >}}
+For every instance of pthread_cleanup_push in a scope there must be an instance of pthread_cleanup_pop.
 
 More information:
 ```
@@ -435,7 +428,7 @@ What you need to know:
 - man 7 time
 - man 3p clock_getres
 
-<em>Solution <b>prog20.c</b>:</em>
+**prog20.c**:
 {{< includecode "prog20.c" >}}
 
 ### Notes and questions
