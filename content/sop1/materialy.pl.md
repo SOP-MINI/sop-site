@@ -2,26 +2,7 @@
 title: "Materiały pomocnicze"
 ---
 
-## Materiały wykładowe
-
-- [Wstęp. Systemy komputerowe i operacyjne.]({{< ref "wyk/w1">}})
-- [Interfejs systemu plików.]({{< ref "wyk/w2">}})
-- [Procesy]({{< ref "wyk/w4">}})
-- [Procesy i sygnały POSIX]({{< ref "wyk/w5">}})
-- [Zdarzenia]({{< ref "wyk/events">}})
-- [Wątki. P-wątki i muteksy]({{< ref "wyk/w6">}})
-- [Synchronizacja]({{< ref "wyk/w7" >}})
-
-## Opisy ćwiczeń laboratoryjnych
-
-- ćwiczenie wstępne: [L0 - Środowisko wykonania programu POSIX]({{< ref "lab/l0">}})
-- ćwiczenia oceniane:
-    - [L1 - System plików]({{< ref "lab/l1">}})
-    - [L2 - Procesy i sygnały]({{< ref "lab/l2">}})
-    - [L3 - Wątki i muteksy]({{< ref "lab/l3">}})
-    - [L4 - Synchronizacja]({{< ref "lab/l4">}})
-
-## Inne materiały
+## Materiały pomocnicze
 
 - [The GNU C library manual](http://www.gnu.org/software/libc/manual/).
 - [The Single UNIX specification, Version 3](http://www.unix.org/version3/online.html) (zawiera IEEE Std 1003.1 and
