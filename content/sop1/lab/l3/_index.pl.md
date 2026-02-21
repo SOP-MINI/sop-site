@@ -31,9 +31,54 @@ Uwagi wstępne:
   - Pojawiają się "magic numbers" - stałe liczbowe zamiast zdefiniowanych makr
 {{< /hint >}}
 
-_Ten tutorial został przygotowany w oparciu o pomysły na zadania i ich rozwiązania przygotowane przez studenta Mariusza Kowalskiego._
+## Tworzenie wątków
+Wątek tworzymy używając funkcji `pthread_create`:
 
-## Zadanie 1 - proste wątki typu joinable, synchronizacja, zwracanie wyników przez wątek
+```
+int pthread_create(pthread_t *restrict thread,
+                  const pthread_attr_t *restrict attr,
+                  void *(*start_routine)(void*),
+                  void *restrict arg);
+```
+
+W przeciwieństwie do funkcji `fork`, wartość zwracana przez `pthread_create` niesie informacje jedynie o poprawnym wykonaniu funkcji lub błędzie. Identyfikator nowego wątku zostaje zapisany do pierwszego argumentu.
+
+Drugi argument pozwala wyspecyfikować atrybuty wątku - zobacz  `man 3p pthread_attr_destroy` it `man -k pthread_attr_set`. Przekazując `NULL` ustawimy domyślne wartości artybutów.
+
+Trzecim argumentem `pthread_create` jest wskaźnik na funkcję o sygnaturze:
+
+```
+void *function(void *args);
+```
+
+która będzie wykonywana przez nowoutworzony wątek.
+
+Ostatni argument służy do przekazania argumentów do funkcji. Jest typu `void*`, co w C oznacza wskaźnik o nieustalonym typie - na cokolwiek. Żeby go użyć musimy zrzutować go właściwy typ.
+
+
+```
+man 3p pthread_create
+```
+
+### Czekanie na zakończenie wątków
+
+Podobnie jak przy procesach, najczęściej chcemy, żeby główny wątek poczekał na zakończeniu nowoutworzonych wątków. Służy do tego funkcja `pthread_join`:
+
+```
+int pthread_join(pthread_t thread, void **value_ptr);
+```
+
+działająca podobnie do `wait` przy procesach. Jej wywołanie blokuje wykonanie programu do czasu aż dany wątek się zakończy.
+
+Podobnie jak przy `pthread_create` wartość zwracania służy tu tylko da sygnalizowania błędów. Wartość zwracana przez wątek (czyli przez funkcję, którą wykonuje) zostanie zapisana do drugie argumentu `pthread_join`.
+
+W przeciwieństwie do funkcji `wait` nie mamy tu możliwości czekania na dowolny wątek - zawsze musimy podać konkretny identyfikator wątku, na który czekamy.
+
+```
+man 3p pthread_join
+```
+
+### Zadanie
 
 Cel:
 Napisać program przybliżający wartość PI metodą Monte Carlo. Program przyjmuje dwa parametry:
@@ -48,32 +93,32 @@ Co student musi wiedzieć:
 - man 3p pthread_create
 - man 3p pthread_join
 - man 3p rand (informacja o rand_r)
-- metoda Monte-Carlo, w paragrafie "Monte Carlo methods" na <a href="https://en.wikipedia.org/wiki/Pi#Use"> stronie.</a>
+- metoda Monte-Carlo, w paragrafie "Monte Carlo methods" na <a href="https://en.wikipedia.org/wiki/Pi#Monte_Carlo_methods"> stronie.</a>
 
-<em>rozwiązanie <b>Makefile</b>:</em>
+### Rozwiązanie
+
+**Makefile**
 
 ```makefile
 CC=gcc
 CFLAGS=-std=gnu99 -Wall -fsanitize=address,undefined
 LDFLAGS=-fsanitize=address,undefined
-LDLIBS=-lpthread -lm
+LDLIBS=-lpthread
 ```
 
 Flaga `-lpthread` będzie nam potrzebna w całym tutorialu, biblioteka nazywa się libpthread.so (po -l podajemy nazwę z
 odciętym początkowym lib)
 
-Flaga `-lm` włącza bibliotekę math plik biblioteki to lm.so a nie libmath.so jak moglibyśmy zgadywać
-
-<em>rozwiązanie, cały <b>prog17.c</b>:</em>
+**prog17.c**:
 {{< includecode "prog17.c" >}}
 
-Program ten (i następne) nie pokazuje usage, zamiast tego ma zdefiniowane wartości domyślne dla parametrów pracy,
-wywołaj go bez parametrów w celu sprawdzenia.
+
+### Uwagi i pytania
 
 Deklaracje zapowiadające (nie definicje) funkcji mogą być bardzo użyteczne, czasem są wręcz niezbędne, jeśli nie wiesz o
 czym mowa poczytaj <a href="http://en.cppreference.com/w/c/language/function_declaration"> tutaj</a>.
 
-W programach wielowątkowych nie można poprawnie używać funkcji rand(), zamiast tego używamy rand_r, jednak ta funkcja
+W programach wielowątkowych nie można poprawnie używać funkcji `rand`, zamiast tego używamy `rand_r`, jednak ta funkcja
 wymaga indywidualnego ziarna dla każdego z wątków.
 
 W tym programie wykorzystanie wątków jest bardzo proste, program główny czeka zaraz po utworzeniu na ich zakończenie,
@@ -86,12 +131,12 @@ Makro ERR nie wysyła sygnału jak w programie wieloprocesowym, czemu?
 {{< details "Odpowiedź" >}} Funkcja exit zamyka cały proces tzn. wszystkie wątki w jego obrębie. {{< /details >}}
 
 Jak dane są przekazywane do nowo tworzonych wątków?
-{{< details "Odpowiedź" >}} Wyłącznie przez strukturę argsEstimation_t do której wskaźnik jest argumentem funkcji wątku, nie ma żadnego powodu aby użyć zmiennych globalnych. {{< /details >}}
+{{< details "Odpowiedź" >}} Wyłącznie przez strukturę `targs_t` do której wskaźnik jest argumentem funkcji wątku, nie ma żadnego powodu aby użyć zmiennych globalnych. {{< /details >}}
 
 Czy dane na których pracują wątki są współdzielone pomiędzy nimi?
 {{< details "Odpowiedź" >}} W tym programie nie, zatem nie ma też konieczności niczego synchronizować, każdy wątek dostaje tylko swoje dane. {{< /details >}}
 
-Skąd wątki biorą "ziarno" do swoich wywołań rand_r?
+Skąd wątki biorą "ziarno" do swoich wywołań `rand_r`?
 {{< details "Odpowiedź" >}} Dostają to ziarno jako jedno z pól struktury z danymi wątku. {{< /details >}}
 
 Czemu w kodzie używamy srand/rand czy to nie przeczy uwadze podanej kilka punktów powyżej? 
@@ -110,8 +155,66 @@ Czy można zwrócić z wątku adres lokalnej (dla wątku) zmiennej automatycznej
 {{< details "Odpowiedź" >}} Nie, w momencie końca wątku jego stos jest zwalniany, więc jakikolwiek wskaźnik na tą pamięć przestaje być wiarygodny. Co gorsza, w wielu przypadkach to będzie wyglądać jakby działało, bo do "zepsucia" potrzeba aby program napisał sobie tą pamięć. Należy być wyjątkowo wyczulonym na tego rodzaju błędy bo są one potem bardzo trudne do wyszukania! {{< /details >}}
 
 Czy można jakoś uniknąć dodatkowej alokacji w funkcji wątku?
+{{< details "Odpowiedź"  >}} Tak, możemy dodać pole na wynik w strukturze `targs_t`. {{< /details  >}}
 
-## Zadanie 2 - proste wątki typu detachable z wspólnymi zmiennymi i mutexem do synchronizacji
+## Wątki typu detached i synchronizacja mutexem
+
+Co do zasady przy zwykłych wątkach musimy wywołać `pthread_join`. Wyjątek stanowią wątki typu "detached" (ang. _detached thread_) - czyli wątki "odłączone" od głownego. Taki typ wątków może być użyteczny, ma jednak dwie wady - skoro nie możemy na nim użyć `pthread_join` nie mamy jak poczekać na jego zakończenie oraz jak przekazać z niego dane do wątku głównego.
+
+Wątek "detached" możemy uzyskać przez podanie odpowiednich atrybutów przy `pthread_create` albo poprzez "odłączenie" już uruchomionego wątku.
+
+Pierwsza metoda polega na inicjalizacji obiektu typu `pthread_attr_t` używając `pthread_attr_init`. Następnie używając funkcji `pthread_attr_setdetachstate` ustawiamy `PTHREAD_CREATE_DETACHED`. Potem tworzymy wątek funkcją `pthread_create` przekazując utworzone atrybuty jak parametr. Należe pamiętać, żeby po użyciu usunąć stworzone atrybuty funkcją `pthread_attr_destroy`.
+
+```
+man 3p pthread_attr_destroy
+man 3p pthread_attr_getdetachstate
+man 3p pthread_create
+```
+
+Druga metoda polega na wywołaniu funkcji `pthread_detach` podając identyfikator wątku. Tym sposobe wątek może też sam się "odłączyć" - uzyskując swój identyfikator dzięki `pthread_self`. Próba "odłączenia" już "odłączonego" wątku to UB.
+
+```
+man 3p pthread_detach
+man 3p pthread_self
+```
+
+### Mutex
+
+Żeby z wątków tego typu dało się zwrócić dane potrzebujemy zmiennych współdzielonych między wątkami. Jednak sytuacja, w której kilka wątków na raz zmienia współdzieloną zmienną prowadzi do błędów, jeśli nie zapewnimy odpowiedniej synchronizacji.
+
+Podstawowym sposobem na zapewninie tejże jest użycie mutexu, czyli obiektu pozwalającemu tylko jednemu wątkowi na raz wejść do danej sekcji krytycznej (więcej o tym w wykładzie). 
+
+
+Mutex inicjalizujemy funkcją `pthread_mutex_init`, a gdy skończymy go używać niszczymy `pthread_mutex_destroy`.
+
+```
+int pthread_mutex_init(pthread_mutex_t *restrict mutex,
+   const pthread_mutexattr_t *restrict attr);
+```
+
+Podobnie jak przy `pthread_create` możemy tu podać dodatkowe atrybuty - dla uzyskania domyślnego zachowaniu po prostu przekazujemy `NULL`
+
+Mając utworzony mutex wątek może go zająć używając funkcji `pthread_mutex_lock`. Ta funkcja blokuje wykonanie programu do czasu, aż mutex nie będzie wolny - po czym zajmuje go dla jednego z czekających wątków. Funkcja ta może zakończyć się błędem tylko w bardzo specyficznych sytuacjach (więcej o nich na SOP2), dlatego w programach niżej nie będziemy tego sprawdzać i nie jest to wymagane na laboratorium.
+
+Po zajęciu mutexu i wykonaniu niezbędnych operacji w sekcji krytycznej wątek powinien zwolnić mutex funkcją `pthread_mutex_unlock`. Warto pamiętać o tym, żeby w programie sekcja krytyczna była możliwie krótka - jej wydłużenie sprawie, że pozostałe wątki muszą dłużej czekać.
+
+Z mutexami trzeba bardzo uważać. Łatwo o zakleszczenie, np. gdy dany wątek spróbuje zająć dany mutex dwa razy pod rząd (bez zwolnienia go pomiędzy). Dodatkowo mutex może być odblokowany tylko przez ten sam wątek, który go zablokował - próba odblokowania z innego wątku to UB.
+
+{{< details "Uwaga"  >}}
+Nigdy nie należy kopiować mutexów (np. `pthread_mutex_t mtx1_copy = mtx1`)
+
+POSIX tego zabrania, taki skopiowany mutex może nie działać poprawnie, jego zachowanie może być bardzo nieprzewidywalne.
+{{< /details  >}}
+
+
+```
+man 3p pthread_mutex_destroy
+man 3p pthread_mutexattr_destroy
+man -k pthread_mutexattr_set
+man 3p pthread_mutex_lock
+```
+
+### Zadanie
 
 Cel:
 Napisać program symulujący wizualizację rozkładu dwumianowego za pomocą deski Galtona (Galton Board) z 11 pojemnikami na kulki.
@@ -135,10 +238,12 @@ Co student musi wiedzieć:
 - man 3p pthread_attr_getdetachstate
 - deska Galtona na <a href="https://pl.wikipedia.org/wiki/Deska_Galtona"> stronie.</a>
 
-<em>rozwiązanie, cały <b>prog18.c</b>:</em>
+**prog18.c**:
 {{< includecode "prog18.c" >}}
 
-Wszystkie dane konieczne do pracy wątku są przekazywane przez strukturę argsThrower_t, wynik jego pracy to modyfikacja w
+### Uwagi i pytania
+
+Wszystkie dane konieczne do pracy wątku są przekazywane przez strukturę `thrower_args_t`, wynik jego pracy to modyfikacja w
 tablicy bins, znowu nic nie jest przekazywane przez zmienne globalne.
 
 W programie mamy dwa muteksy chroniące dostęp do liczników oraz całą tablice muteksów chroniących dostęp do komórek
@@ -151,18 +256,11 @@ W programie muteksy są inicjowane zarówno automatycznie jak i dynamicznie, jak
 w tworzeniu ale trzeba z góry znać ilość muteksów. Muteksy jako zmienne dynamicznie nie mają tego ograniczenia ale
 trzeba inicjować i usuwać mutex w kodzie.
 
-Czy dane przekazane przez argsThrower_t są współdzielone pomiędzy wątki?
+Czy dane przekazane przez `thrower_args_t` są współdzielone pomiędzy wątki?
 {{< details "Odpowiedź" >}} Częściowo tak, wspólne dane muszą być chronione przy wielodostępie, stąd muteksy dla liczników i koszy. {{< /details >}}
 
-Czy struktura argsThrower_t  jest optymalna?
-{{< details "Odpowiedź" >}} Nie 
-wiele pól kopiujemy dla każdego wątku, chociaż te wskaźniki są takie same. Wspólne elementy można przenieść do drugiej struktury i tylko podawać jeden wskaźnik każdemu wątkowi zamiast 6 jak w kodzie. Dodatkowo przechowujmy w tej strukturze tid'y wątków, ale z tego nigdzie nie korzystamy.   {{< /details >}}
-
-Czemu używamy głównie wskaźników do przekazania danych do wątków?
+Czemu używamy wskaźnika  do przekazania `shared_state_t`?
 {{< details "Odpowiedź" >}}  Współdzielimy te dane, nie chcemy mieć lokalnych kopi zupełnie niezależnych od innych wątków, chcemy mieć jedną kopię tych danych dla wszystkich wątków. {{< /details >}}
-
-Czy mutex'y można przekazać nie przez wskaźnik?
-{{< details "Odpowiedź" >}}  NIE, TO ZABRONIONE PRZEZ POSIX, kopia muteksu nie musi być muteksem, a już zupełnie oczywiste, że nie byłaby tym samym muteksem {{< /details >}}
 
 Ten program używa  dużo muteksów, czy może być ich mniej?
 {{< details "Odpowiedź" >}}  Tak, w skrajnym wypadku wystarczyłby 1 ale kosztem równoległości, możliwe są też rozwiązania pośrednie np. po jednym na liczniki i jeden wspólny na kosze. To ostatnie rozwiązanie, pomimo zmniejszenia równoległości, może okazać się szybsze bo liczne operacje na muteksach są dodatkowych obciążeniem dla systemu. {{< /details >}}
@@ -173,6 +271,8 @@ Metoda czekania na zakończenie się  wątków liczących polega na okresowym sp
 Czy wszystkie wątki w tym programie na prawdę pracują?
 {{< details "Odpowiedź" >}}   Nie, zwłaszcza gdy będzie ich dużo. Możliwe jest tzw. zagłodzenie wątku, czyli nie danie mu szansy na pracę. W tym programie działania wątku są na prawdę szybkie a tworzenie nowych wątków dość czasochłonne, może się tak stać, że wątki utworzone jako ostatnie nie będą miały co robić bo te wcześniejsze przerzucą wszystkie kulki wcześniej. Jako sprawdzenie dodaj do wątków liczniki ile kulek przerzucił dany wątek i wypisz je na koniec na ekran. Można zapobiec temu zjawisku synchronizując moment rozpoczęcia pracy przez wątki, ale tu znowu nie wystarczy muteks, najlepiej taką synchronizację zrobić na barierze lub zmiennej warunkowej, a te mechanizmy poznacie w przyszłym semestrze. {{< /details >}}
 
+
+## Wątki i sygnały
 ## Zadanie 3 - wątki i sygnały z czekaniem na sygnał za pomocą funkcji sigwait
 
 Cel:
@@ -186,11 +286,12 @@ Wątek główny ma za zadanie co sekundę wyświetlić listę lub, jeżeli ustaw
 Co student musi wiedzieć:
 
 - man 3p pthread_sigmask
-- man 3p sigprocmask
 - man 3p sigwait
 
-<em>rozwiązanie, cały <b>prog19.c</b>:</em>
+**prog19.c**:
 {{< includecode "prog19.c" >}}
+
+### Uwagi i pytania
 
 W strukturze argumentów argsSignalHandler_t przekazujemy wskazania na dane współdzielone przez oba wątki czyli tablicę i
 flagę STOP oraz muteksy je chroniące. Dodatkowo maskę sygnałów i tid wątku obsługi sygnałów, które to dane nie są
@@ -224,9 +325,75 @@ Czy w tym programie można użyć sigprocmask zamiast pthread_sigmask?
 Czemu nie sprawdzamy błędów wywołań funkcji systemowych związanych pozyskaniem i zwolnieniem muteksów
 {{< details "Odpowiedź" >}} Podstawowy typ muteksu (a taki używamy w programie) nie sprawdza i nie raportuje błędów. Dodanie sprawdzania nie byłoby wcale złe, łatwiej można potem zmienić muteks na typ raportujący błędy.  {{< /details >}}
 
+## Anulowanie wątków
 
-## Zadanie 4 - anulowanie wątków, cleanup handlers
+Program może anulować wątek poprzez użycie funkcji `pthread_cancel`.
 
+```
+man 3p pthread_cancel
+```
+
+To jak wątek zareaguje na `pthread_cancel` zależy od jego ustawień, ustawianych funkcjami:
+
+```
+int pthread_setcancelstate(int state, int *oldstate);
+int pthread_setcanceltype(int type, int *oldtype);
+man 7 pthreads (specifically the "Cancelation Points" section)
+```
+
+W szczególności wątek może ignorować anulowanie poprzez ustawienie `PTHREAD_CANCEL_DISABLE` jak również z powrotem na nie reagować poprzez `PTHREAD_CANCEL_ENABLE`. Domyślnie anulowanie jest włączone.
+
+Typ anulacji (__cancelacion type__) definiuje w jaki sposób wątek się zakończy po anulowaniu.
+W przypadku `PTHREAD_CANCEL_DEFERRED` (domyślna wartość) wątek zakończy się na najbliższym "cancelation point".
+W przypadku `PTHREAD_CANCEL_ASYNCHRONOUS` wątek zakończy się tak szybko, jak to możliwe.
+
+Ogólnie rzecz biorąc bezpieczniej jest używać `PTHREAD_CANCEL_DEFERRED` jako że anulowanie asynchroniczne może prowadzić do nieoczywistych błędów, wątek nie ma jak po sobie "posprzątać" (o czym niżej).
+
+### Cleanup handlers
+
+Zwykle zakończenie wątku w trakcie może prowadzić do problemów, takich jak zakleszczenia (wątek zablokował mutex i już go nie odblokuje), resource leak (nie zwolnił zasobów), itd.
+
+Aby temu zapobiec możliwe jest zdefiniowane tzw. "funkcji czyszczących" (ang. __cleanup handlers__), które zostaną wywołane, gdy wątek zakończy się w niestandardowy sposób (przez anulowanie lub `pthread_exit`). Taka funkcja ma syngaturę:
+
+```
+void function(void* arg);
+```
+
+i może zostać przypisana do wątku poprzez wywołanie `pthread_cleanup_push`.
+
+```
+void pthread_cleanup_push(void (*routine)(void*), void *arg);
+```
+
+Jak widać, jest nieco podobna do `pthread_create` - poza samą funkcją przekazujemy też jej parametry jako `void*`.
+
+Przy zakończeniu wątku wszystkie funkcje czyszczące zostaną wywołane w odwrotnej kolejności niż były dodawane.
+
+Funkcje czyszczące mogą być też usunięte przez przez wywołanie:
+
+```
+void pthread_cleanup_pop(int execute);
+```
+
+Ciekawostką jest tutaj argument `execute`, który pozwala wywołać usuwaną funkcję przed usunięciem.
+
+Na każde wywołanie `pthread_cleanup_push` musi przypadać odpowiadające mu `pthread_cleanup_pop`.
+
+```
+man 3p pthread_cleanup_pop
+```
+
+### Czekanie na anulowane wątki
+
+Na anulowane wątki możemy czekać używając `pthread_join`. Jeśli wątek został anulowany wskaźnik przekazany jako `value_ptr` zostanie ustawiony na `PTHREAD_CANCELED`.
+
+```
+man 3p pthread_join
+man 3p pthread_exit (sekcja RATIONALE)
+```
+
+
+### Zadanie
 Cel:
 Napisać program symulujący losy studentów wydziału MiNI. Program ma następujące argumenty:
 - n <= 100 ... liczba nowych studentów,
@@ -247,8 +414,10 @@ Co student musi wiedzieć:
 - man 7 time
 - man 3p clock_getres
 
-<em>rozwiązanie, cały <b>prog20.c</b>:</em>
+**prog20.c**
 {{< includecode "prog20.c" >}}
+
+### Uwagi i pytania
 
 Wątkom przekazuje się strukturę z aktualnym rokiem oraz z wskazaniem na 4 liczniki z muteksami, struktura argsModify_t
 nie powiela błędu z zadania 2 czyli nie przekazuje indywidualnych kopii zbyt wielu wskaźników.
