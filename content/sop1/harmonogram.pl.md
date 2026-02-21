@@ -19,9 +19,9 @@ title: "Harmonogram"
 | 3.12.2025  | [Synchronizacja]({{< ref "wyk/w7" >}})                           |
 | 10.12.2025 | [Synchronizacja]({{< ref "wyk/w7" >}})                           |
 | 17.12.2025 | _Konsultacje_                                                    |
-| 7.01.2026  | Scheduling                                                       |
-| 14.01.2026 | Łącza                                                            |
-| 21.01.2026 | Kolejki komunikatów                                              |
+| 7.01.2026  | [Scheduling]({{< ref "wyk/scheduling" >}})                       |
+| 14.01.2026 | _AlkOS_ - Wykład gościnny                                        |
+| 21.01.2026 | [Łącza]({{< ref "wyk/pipe" >}})                                  |
 | 28.01.2026 | _Konsultacje_                                                    |
 
 ## Zajęcia laboratoryjne

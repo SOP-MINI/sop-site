@@ -19,8 +19,8 @@ Wednesdays, 4:15 - 6:00 PM, room 103
 | 3.12.2025  | [Synchronization]({{< ref "wyk/w7" >}})                               |
 | 10.12.2025 | [Synchronization]({{< ref "wyk/w7" >}})                               |
 | 17.12.2025 | _Office hours_                                                        |
-| 7.01.2026  | Scheduling                                                            |
-| 14.01.2026 | Pipes and FIFOs                                                       |
+| 7.01.2026  | [Scheduling]({{< ref "wyk/scheduling" >}})                            |
+| 14.01.2026 | [Pipes and FIFOs]({{< ref "wyk/pipe" >}})                             |
 | 21.01.2026 | Message queues                                                        |
 | 28.01.2026 | _Office hours_                                                        |
 

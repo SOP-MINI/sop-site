@@ -1,10 +1,10 @@
 ---
-title: "Pipes and FIFOs"
+title: "Pipes"
 date: 2022-02-10T10:00:00+01:00
-weight: 10
+weight: 90
 ---
 
-# Lecture 1 - Introduction to interprocess communication (IPC), IPC with pipes/FIFOs
+# IPC with pipes/FIFOs
 
 ## Scope
   
