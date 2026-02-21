@@ -1,59 +1,115 @@
 ---
-title: "Task on shared memory and mmap"
+title: "Task on network"
 bookHidden: true
-math: true
 ---
 
-## Shared Integration
+## Imperial Election
 
-The goal of this task is to write a program for numerical integration using the Monte Carlo method for the function:
+It is the year 1519.  
+The Holy Roman Emperor Maximilian I has passed away,  
+and the time has come for the election of a new emperor.  
 
-{{< katex >}}\int_a^b{e^{-x^2}dx}{{< /katex >}}
+There are 3 candidates:
 
-The program should utilize shared memory to enable multiple processes to cooperate.  
-Each newly launched program should join the calculations and speed them up.
+1. Francis I, King of France  
+2. Charles V, Archduke of Austria and King of Spain  
+3. Henry VIII, King of England
 
-Each process maintains its own private computation.  
-After evaluating `N` randomly sampled points, the program should update the counters for total samples and successful hits (`batch processing`).
+The election is decided by 7 electors from different Holy Roman Empire member states:
 
-To coordinate calculations in shared memory, the program must store not only the computed result but also a counter of cooperating processes.  
-At startup, each process should increase this counter and decrease it upon proper termination.  
-When a process decreases the counter to zero, it should summarize the calculation results and display the final approximation on the screen.
+1. Mainz  
+2. Trier  
+3. Cologne  
+4. Bohemia  
+5. Palantinate  
+6. Saxony  
+7. Brandenburg
+
+This year, to facilitate the election process,  
+it has been decided to set up a TCP server handling and counting the votes.  
+Your task is to write this server.  
+Each elector will connect to it,
+cast their vote,
+possibly change their vote,
+and disconnect.  
+You can use `netcat` as a client program.
 
 ## Stages
 
-1. Use a named shared memory object for inter-process cooperation.  
-   Prepare a shared memory structure containing a process counter protected by a shared mutex.
-
-   Write a procedure for initializing shared memory with correct counter incrementation when new processes start.  
-   To prevent race conditions between shared memory creation and initialization, use a named semaphore.
-
-   After properly initializing shared memory, the process should print the number of collaborating processes, sleep for 2 seconds, and then terminate.  
-   Before a process exits, it should destroy the shared memory object if it is the last process to detach.
-
-2. Implement three batches of `N` Monte Carlo sample evaluations.  
-   Accept program parameters as described in the `usage` function.  
-   Use the provided `randomize_points` function to compute one batch of samples.
-
-   Extend the shared memory structure with two counters describing the number of total samples and successful hits.  
-   After computing each batch, update the counters and print their status to standard output.  
-   After completing three computation iterations, the program should terminate, following the shared memory destruction logic from Stage 1.
-
-   > **It is advisable to store the integration limits in shared memory to avoid a process joining with different integration bounds. Such a scenario would cause approximation results to be meaningless.**
-
-3. Add handling for the `SIGINT` signal, which interrupts further batch computation.
-
-   In this stage, the program should continue approximating the integral until it receives the signal.  
-   A sufficiently good implementation is to finish computing the current batch and skip taking another one.
-
-   If the process is the last to detach from shared memory, it should print the result to standard output.
-
-4. Add handling for process termination while holding a mutex in shared memory outside of the initialization procedure.  
-   Change mutexes to be robust and handle the situation when the owner process dies.  
-   Upon detecting such a situation, assume that the process counter should be decremented to ensure proper finalization of the program.
-
-   To simulate an abrupt process termination, use the `random_death_lock` function, which should be called when locking any mutex outside shared memory initialization.
-  
-## Starting code
-
-{{< includecode "example2-code.c" >}}
+1. Implement accepting a single connection to the server.  
+   The server accepts one argument: the port number.  
+   
+   Example server execution:
+   
+   ```shell
+   ./sop-hre 8888 
+   ```
+   
+   After starting, the server waits for a single TCP connection.  
+   After establishing a connection,  
+   the server prints `Client connected`, closes the connection, and ends.
+   
+2. Implement connections from multiple clients.  
+   
+   After a client connects,  
+   send them back a message: `Welcome, elector!`  
+   Then, print each message the client sends to the server on `stdout`.  
+   Use `epoll` to implement this stage (or, alternatively, `ppoll` or `pselect`).  
+   
+   Remember to correctly handle disconnecting clients.
+3. Implement the voting process and keep a list of connected electors.  
+   
+   When a new client connects, wait for a single digit (in the range [1, 7]).  
+   This digit is the number of the elector connecting to the server.  
+   If a different character is received from the client,
+   close their connection.  
+   
+   While the server is waiting for this identification message,  
+   other clients should still be able to connect.  
+   
+   If another client identifying as elector E tries to connect to the server,  
+   they should be disconnected.  
+   
+   The message sent back to the client should now be sent after identification and should say:  
+   `Welcome, elector of X!`,  
+   where `X` is the member state the elector is from.  
+   
+   After receiving the identification message,  
+   the connected client should be able to cast votes in the election  
+   by sending a number in the range [1, 3], signifying the preferred candidate.  
+   Other characters should be ignored.  
+   Any elector can change their mind and vote multiple times.  
+   Successive votes override previous ones.  
+   
+   Correctly handle clients disconnecting from the server,  
+   including electors disconnecting and reconnecting!
+   
+4. Implement an additional thread sending out UDP messages.  
+   
+   The program should now accept two arguments in total:  
+   - the TCP server port  
+   - the UDP client port
+   
+   Example server execution:
+   
+   ```shell
+   ./sop-hre 8888 9999 
+   ```
+   
+   All functionality from the previous stages should still work.  
+   
+   Upon starting the server,  
+   create an additional thread with a UDP client that sends a message  
+   with the current election results each second to the given port  
+   on `localhost`.  
+   
+   Remember to protect the election results with a mutex,  
+   or avoid a data race in some other way.
+   
+5. Handle the `SIGINT` signal.  
+   
+   After receiving it:
+   
+   - Close all active connections with the electors  
+   - Free all resources, including the UDP thread  
+   - Count and print the votes for each candidate.

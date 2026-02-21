@@ -1,100 +1,92 @@
-#define _GNU_SOURCE
+#include "l7_common.h"
 
-#include <errno.h>
-#include <fcntl.h>
-#include <pthread.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
+#define MAXBUF 576
+volatile sig_atomic_t last_signal = 0;
 
-#define ERR(source) \
-    (fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), perror(source), kill(0, SIGKILL), exit(EXIT_FAILURE))
+void sigalrm_handler(int sig) { last_signal = sig; }
 
-#define SHM_SIZE 1024
-
-void usage(char* name)
+int make_socket(void)
 {
-    fprintf(stderr, "USAGE: %s server_pid\n", name);
-    exit(EXIT_FAILURE);
+    int sock;
+    sock = socket(PF_INET, SOCK_DGRAM, 0);
+    if (sock < 0)
+        ERR("socket");
+    return sock;
 }
 
-int main(int argc, char* argv[])
+void usage(char *name) { fprintf(stderr, "USAGE: %s domain port file \n", name); }
+
+void sendAndConfirm(int fd, struct sockaddr_in addr, char *buf1, char *buf2, ssize_t size)
 {
-    if (argc != 2)
-        usage(argv[0]);
-
-    const int server_pid = atoi(argv[1]);
-    if (server_pid == 0)
-        usage(argv[0]);
-
-    srand(getpid());
-
-    int shm_fd;
-    char shm_name[32];
-    sprintf(shm_name, "/%d-board", server_pid);
-
-    if ((shm_fd = shm_open(shm_name, O_RDWR, 0666)) == -1)
-        ERR("shm_open");
-
-    char* shm_ptr;
-    if ((shm_ptr = (char*)mmap(NULL, SHM_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0)) == MAP_FAILED)
-        ERR("mmap");
-
-    pthread_mutex_t* mutex = (pthread_mutex_t*)shm_ptr;
-    char* N_shared = (shm_ptr + sizeof(pthread_mutex_t));
-    char* board = (shm_ptr + sizeof(pthread_mutex_t)) + 1;
-    const int N = N_shared[0];
-
-    int score = 0;
-    while (1)
+    struct itimerval ts;
+    if (TEMP_FAILURE_RETRY(sendto(fd, buf1, size, 0, &addr, sizeof(addr))) < 0)
+        ERR("sendto:");
+    memset(&ts, 0, sizeof(struct itimerval));
+    ts.it_value.tv_usec = 500000;
+    setitimer(ITIMER_REAL, &ts, NULL);
+    last_signal = 0;
+    while (recv(fd, buf2, size, 0) < 0)
     {
-        int error;
-        if ((error = pthread_mutex_lock(mutex)) != 0)
-        {
-            if (error == EOWNERDEAD)
-            {
-                pthread_mutex_consistent(mutex);
-            }
-            else
-            {
-                ERR("pthread_mutex_lock");
-            }
-        }
-
-        const int D = 1 + rand() % 9;
-        if (D == 1)
-        {
-            printf("Ops...\n");
-            exit(EXIT_SUCCESS);
-        }
-
-        int x = rand() % N, y = rand() % N;
-        printf("trying to search field (%d,%d)\n", x, y);
-        const int p = board[N * y + x];
-        if (p == 0)
-        {
-            printf("GAME OVER: score %d\n", score);
-            pthread_mutex_unlock(mutex);
+        if (EINTR != errno)
+            ERR("recv:");
+        if (SIGALRM == last_signal)
             break;
-        }
-        else
-        {
-            printf("found %d points\n", p);
-            score += p;
-            board[N * y + x] = 0;
-        }
-
-        pthread_mutex_unlock(mutex);
-        struct timespec t = {1, 0};
-        nanosleep(&t, &t);
     }
+}
 
-    munmap(shm_ptr, SHM_SIZE);
+void doClient(int fd, struct sockaddr_in addr, int file)
+{
+    char buf[MAXBUF];
+    char buf2[MAXBUF];
+    int offset = 2 * sizeof(int32_t);
+    int32_t chunkNo = 0;
+    int32_t last = 0;
+    ssize_t size;
+    int counter;
+    do
+    {
+        if ((size = bulk_read(file, buf + offset, MAXBUF - offset)) < 0)
+            ERR("read from file:");
+        *((int32_t *)buf) = htonl(++chunkNo);
+        if (size < MAXBUF - offset)
+        {
+            last = 1;
+            memset(buf + offset + size, 0, MAXBUF - offset - size);
+        }
+        *(((int32_t *)buf) + 1) = htonl(last);
+        memset(buf2, 0, MAXBUF);
+        counter = 0;
+        do
+        {
+            counter++;
+            sendAndConfirm(fd, addr, buf, buf2, MAXBUF);
+        } while (*((int32_t *)buf2) != (int32_t)htonl(chunkNo) && counter <= 5);
+        if (*((int32_t *)buf2) != (int32_t)htonl(chunkNo) && counter > 5)
+            break;
+    } while (size == MAXBUF - offset);
+}
 
+int main(int argc, char **argv)
+{
+    int fd, file;
+    struct sockaddr_in addr;
+    if (argc != 4)
+    {
+        usage(argv[0]);
+        return EXIT_FAILURE;
+    }
+    if (sethandler(SIG_IGN, SIGPIPE))
+        ERR("Seting SIGPIPE:");
+    if (sethandler(sigalrm_handler, SIGALRM))
+        ERR("Seting SIGALRM:");
+    if ((file = TEMP_FAILURE_RETRY(open(argv[3], O_RDONLY))) < 0)
+        ERR("open:");
+    fd = make_socket();
+    addr = make_address(argv[1], argv[2]);
+    doClient(fd, addr, file);
+    if (TEMP_FAILURE_RETRY(close(fd)) < 0)
+        ERR("close");
+    if (TEMP_FAILURE_RETRY(close(file)) < 0)
+        ERR("close");
     return EXIT_SUCCESS;
 }

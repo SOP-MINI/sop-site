@@ -1,74 +1,57 @@
 ---
-title: "Zadanie testowe z tematu kolejek POSIX"
-date: 2022-02-01T19:36:27+01:00
+title: "Zadanie testowe z tematu pamięć dzielona i mmap"
 bookHidden: true
+math: true
 ---
 
-## Pracownicy
+## Wspólne całkowanie
 
-Stwórz system dystrybucji zadań dla procesów pracowników z wykorzystaniem kolejek wiadomości POSIX.  
-System będzie symulować pracę przez dodawanie dwóch losowych liczb zmiennoprzecinkowych (zakres 0-100.0) oraz uśpienie procesu na losowy czas (500 ms - 2000 ms).  
+Celem zadania jest napisanie programu do całkowania numerycznego metodą Monte Carlo funkcji:
 
-Główny proces (serwer) co losowy czas (`T₁` - `T₂` ms, gdzie `100 <= T₁ < T₂ <= 5000`) dodaje nowe zadanie do kolejki.  
-Każde zadanie to para losowych liczb zmiennoprzecinkowych z zakresu `[0.0, 100.0]`.  
+{{< katex >}}\int_a^b{e^{-x^2}dx}{{< /katex >}}
 
-Na początku tworzone są procesy dzieci (N pracowników, gdzie `2 <= N <= 20`), które rejestrują się w kolejce zadań o nazwie `"task_queue_{server_pid}"`.  
+Program powinien wykorzystać pamięć dzieloną do współpracy z większą ilością procesów.
+Każdy kolejny uruchomiony program powinien przyłączyć się do obliczeń i je przyśpieszyć.
 
-Pracownicy, oczekując na zadania, pobierają je z kolejki, gdy są dostępne i nie są zajęci.  
-Każdy pracownik zwraca wyniki przez swoją własną kolejkę o nazwie `"result_queue_{server_pid}_{worker_id}"`.  
+Obliczenia to prywatna część pamięci każdego procesu.
+Po sprawdzeniu `N` wylosowanych próbek program powinien zaktualizować liczniki wylosowanych oraz trafionych próbek (`batch processing`).
 
-**Uwaga:** Program powinien obsługiwać wiele instancji bez kolizji nazw kolejek!  
+W celu koordynacji obliczeń w pamięci dzielonej poza informacją o wyniku obliczeń należy przetrzymywać licznik współpracujących procesów. 
+Przy rozpoczęciu pracy każdy proces powinien zwiększać licznik oraz zmniejszać go po prawidłowym zakończeniu pracy.
+Kiedy proces zmniejsza go do zera, należy podsumować wyniki obliczeń i wypisać na ekran wynik aproksymacji.
 
-### Etapy:
+## Etapy
 
-1. Główny proces tworzy N pracowników, którzy po wykonaniu losowego uśpienia (500 ms - 2000 ms) kończą pracę.  
-   Na starcie, serwer wypisuje `"Server is starting..."` a po zakończeniu pracy wszystkich pracowników: `"All child processes have finished."`  
-   Pracownicy przy starcie wypisują `"[{worker_pid}] Worker ready!"` i `"[{worker_pid}] Exits!"` przy zakończeniu.  
+1. Do współpracy między procesami wykorzystaj obiekt nazwanej pamięci dzielonej.  
+   Przygotuj strukturę pamięci dzielonej zawierającą licznik procesów chronionym współdzielonym mutexem.
 
-2. Serwer tworzy `5 * N` zadań, każde w losowych odstępach czasu (`T₁` do `T₂` ms), i dodaje je do kolejki.  
-   Serwer informuje o dodaniu zadania: `"New task queued: [{v1}, {v2}]"` lub o pełnej kolejce: `"Queue is full!"`.   
-   Pracownicy przy otrzymaniu zadania informują: `"[{worker_pid}] Received task [{v1}, {v2}]"` śpią losowo (500-2000ms), 
-   wypisują wynik `"[{worker_pid}] Result [{result_value}]"` i oczekują na kolejne zadanie. Kończą pracę po wykonaniu 5 zadań.  
+   Napisz procedurę inicjalizacji pamięci dzielonej z prawidłowa inkrementacją liczników przy uruchomieniu kolejnych procesów.  
+   Do wyeliminowania wyścigu pomiędzy stworzeniem pamięci dzielonej a jej inicjalizacją, użyj semafora nazwanego.
 
-3. Pracownicy wysyłają wyniki do serwera przez indywidualne kolejki i informują o tym na standardowym wyjściu: `"[{worker_pid}] Result sent [{value}]"`  
-   Serwer odbiera wyniki i wyświetla: `"Result from worker {worker_pid}: {value}"`  
+   Po prawidłowej inicjalizacji pamięci dzielonej proces wypisuje ilość współpracujących procesów, śpi 2 sekundy, a następnie kończy się.  
+   Przed zakończeniem procesu należy zniszczyć obiekt pamięci dzielonej w przypadku odłączania się ostatniego procesu.
 
-4. Główny proces kontynuuje tworzenie zadań aż do otrzymania sygnału `SIGINT`, po czym informuje pracowników o zakończeniu pracy (poprzez kolejkę).  
-   Serwer czeka na zakończenie aktualnych zadań pracowników, a następnie kończy działanie.  
-   Pracownicy kończą pracę po otrzymaniu informacji o zakończeniu od serwera (doliczają do końca jedynie rozpoczęte zadania - zadania z kolejki są ignorowane).  
-   Wszystkie zasoby są poprawnie zwalniane.  
+2. Zaimplementuj obliczenia trzech paczek (ang. *batches*) obliczeń `N` punktów metodą Monte Carlo.  
+   Pobierz parametry do programu w taki sposób jak opisuje funkcja `usage`.  
+   Wykorzystaj dostarczoną funkcję `randomize_points` do obliczenia jednej paczki próbek.
 
-### Przykładowe działanie programu:
+   Dodaj do struktury pamięci dzielonej dwa liczniki opisujące ilość próbek wylosowanych oraz trafionych.  
+   Po obliczeniu każdej paczki zaktualizuj liczniki oraz wyświetl ich stan na standardowe wyjście.  
+   Po wykonaniu trzech iteracji obliczeń program powinien się skończyć z logiką niszczenia pamięci dzielonej jak w etapie pierwszym.
 
-```sh
-./sop-qwp 3 500 2000
-Server is starting...
-[5831] Worker ready!
-[5832] Worker ready!
-New task queued: [84.65, 17.80]
-[5831] Received task [84.65, 17.80]
-[5833] Worker ready!
-[5831] Result sent [102.46]
-Result from worker 0: 102.46
-New task queued: [25.87, 10.67]
-[5832] Received task [25.87, 10.67]
-New task queued: [84.04, 7.21]
-[5833] Received task [84.04, 7.21]
-[5832] Result sent [36.55]
-Result from worker 1: 36.55
-[5833] Result sent [91.25]
-Result from worker 2: 91.25
-New task queued: [83.46, 35.65]
-[5831] Received task [83.46, 35.65]
-New task queued: [38.44, 27.78]
-[5832] Received task [38.44, 27.78]
-[5831] Result sent [119.12]
-Result from worker 0: 119.12
-^CClosing server...
-[5833] Exits
-[5831] Exits
-[5832] Result sent [66.23]
-[5832] Exits
-Result from worker 1: 66.23
-All child processes have finished.
-```
+   > **W pamięci dzielonej warto przechować zakresy całkowania, aby uniknąć przyłączenia się procesu z innymi granicami całkowania. Taki scenariusz spowoduje, że wyniki aproksymacji nie będą miały sensu.**
+3. Dodaj obsługę sygnału `SIGINT`, który przerwie obliczanie kolejnych paczek punktów.
+
+   W tym etapie program powinien przybliżać całkę do momentu otrzymania sygnału.  
+   Wystarczająco dobrą implementacją jest dokończenie aktualnie obliczanej paczki i zaniechanie wzięcia kolejnej.
+
+   Jeżeli proces odłącza się ostatni z pamięci dzielonej, wypisz wynik na standardowe wyjście.
+
+4. Dodaj obsługę śmierci procesu w momencie blokowania mutexu w pamięci dzielonej poza procedurą inicjalizacji.  
+   Zmień mutexy, aby były typu robust oraz obsłuż sytuację śmierci właściciela.  
+   Przy natrafieniu na taka sytuację załóż, że należy zdekrementować licznik procesów, aby nadal prawidłowo wykonać podsumowanie na końcu pracy programu.  
+   Aby zasymulować nagłą śmierć procesu, użyj funkcji `random_death_lock`, która należy zablokować każdy mutex poza inicjalizacją pamięci dzielonej.
+  
+## Kod początkowy
+
+{{< includecode "example2-code.c" >}}

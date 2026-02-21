@@ -1,150 +1,125 @@
-#define _GNU_SOURCE
+#include "l7_common.h"
 
-#include <errno.h>
-#include <fcntl.h>
-#include <pthread.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
+#define BACKLOG 3
+#define MAXBUF 576
+#define MAXADDR 5
 
-#define ERR(source) \
-    (fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), perror(source), kill(0, SIGKILL), exit(EXIT_FAILURE))
-
-#define SHM_SIZE 1024
-
-void usage(char* name)
+struct connections
 {
-    fprintf(stderr, "USAGE: %s N\n", name);
-    fprintf(stderr, "3 < N <= 30 - board size\n");
-    exit(EXIT_FAILURE);
+    int free;
+    int32_t chunkNo;
+    struct sockaddr_in addr;
+};
+
+int make_socket(int domain, int type)
+{
+    int sock;
+    sock = socket(domain, type, 0);
+    if (sock < 0)
+        ERR("socket");
+    return sock;
 }
 
-typedef struct
+int bind_inet_socket(uint16_t port, int type)
 {
-    int running;
-    pthread_mutex_t mutex;
-    sigset_t old_mask, new_mask;
-} sighandling_args_t;
-
-void* sighandling(void* args)
-{
-    sighandling_args_t* sighandling_args = (sighandling_args_t*)args;
-    int signo;
-    if (sigwait(&sighandling_args->new_mask, &signo))
-        ERR("sigwait failed.");
-    if (signo != SIGINT)
-    {
-        ERR("unexpected signal");
-    }
-
-    pthread_mutex_lock(&sighandling_args->mutex);
-    sighandling_args->running = 0;
-    pthread_mutex_unlock(&sighandling_args->mutex);
-    return NULL;
+    struct sockaddr_in addr;
+    int socketfd, t = 1;
+    socketfd = make_socket(PF_INET, type);
+    memset(&addr, 0, sizeof(struct sockaddr_in));
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    if (setsockopt(socketfd, SOL_SOCKET, SO_REUSEADDR, &t, sizeof(t)))
+        ERR("setsockopt");
+    if (bind(socketfd, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+        ERR("bind");
+    if (SOCK_STREAM == type)
+        if (listen(socketfd, BACKLOG) < 0)
+            ERR("listen");
+    return socketfd;
 }
 
-int main(int argc, char* argv[])
+int findIndex(struct sockaddr_in addr, struct connections con[MAXADDR])
 {
-    if (argc != 2)
-        usage(argv[0]);
-
-    const int N = atoi(argv[1]);
-    if (N < 3 || N >= 100)
-        usage(argv[0]);
-
-    const pid_t pid = getpid();
-    srand(pid);
-
-    printf("My PID is %d\n", pid);
-    int shm_fd;
-    char shm_name[32];
-    sprintf(shm_name, "/%d-board", pid);
-
-    if ((shm_fd = shm_open(shm_name, O_CREAT | O_EXCL | O_RDWR, 0666)) == -1)
-        ERR("shm_open");
-    if (ftruncate(shm_fd, SHM_SIZE) == -1)
-        ERR("ftruncate");
-
-    char* shm_ptr;
-    if ((shm_ptr = (char*)mmap(NULL, SHM_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0)) == MAP_FAILED)
-        ERR("mmap");
-
-    pthread_mutex_t* mutex = (pthread_mutex_t*)shm_ptr;
-    char* N_shared = (shm_ptr + sizeof(pthread_mutex_t));
-    char* board = (shm_ptr + sizeof(pthread_mutex_t)) + 1;
-    N_shared[0] = N;
-
-    for (int i = 0; i < N; i++)
+    int i, empty = -1, pos = -1;
+    for (i = 0; i < MAXADDR; i++)
     {
-        for (int j = 0; j < N; j++)
+        if (con[i].free)
+            empty = i;
+        else if (0 == memcmp(&addr, &(con[i].addr), sizeof(struct sockaddr_in)))
         {
-            board[i * N + j] = 1 + rand() % 9;
-        }
-    }
-
-    pthread_mutexattr_t mutex_attr;
-    pthread_mutexattr_init(&mutex_attr);
-    pthread_mutexattr_setpshared(&mutex_attr, PTHREAD_PROCESS_SHARED);
-    pthread_mutexattr_setrobust(&mutex_attr, PTHREAD_MUTEX_ROBUST);
-    pthread_mutex_init(mutex, &mutex_attr);
-
-    sighandling_args_t sighandling_args = {1, PTHREAD_MUTEX_INITIALIZER};
-
-    sigemptyset(&sighandling_args.new_mask);
-    sigaddset(&sighandling_args.new_mask, SIGINT);
-    if (pthread_sigmask(SIG_BLOCK, &sighandling_args.new_mask, &sighandling_args.old_mask))
-        ERR("SIG_BLOCK error");
-
-    pthread_t sighandling_thread;
-    pthread_create(&sighandling_thread, NULL, sighandling, &sighandling_args);
-
-    while (1)
-    {
-        pthread_mutex_lock(&sighandling_args.mutex);
-        if (!sighandling_args.running)
+            pos = i;
             break;
-
-        pthread_mutex_unlock(&sighandling_args.mutex);
-
-        int error;
-        if ((error = pthread_mutex_lock(mutex)) != 0)
-        {
-            if (error == EOWNERDEAD)
-            {
-                pthread_mutex_consistent(mutex);
-            }
-            else
-            {
-                ERR("pthread_mutex_lock");
-            }
         }
-
-        for (int i = 0; i < N; i++)
-        {
-            for (int j = 0; j < N; j++)
-            {
-                printf("%d", board[i * N + j]);
-            }
-            putchar('\n');
-        }
-        putchar('\n');
-        pthread_mutex_unlock(mutex);
-        struct timespec t = {3, 0};
-        nanosleep(&t, &t);
     }
+    if (-1 == pos && empty != -1)
+    {
+        con[empty].free = 0;
+        con[empty].chunkNo = 0;
+        con[empty].addr = addr;
+        pos = empty;
+    }
+    return pos;
+}
 
-    pthread_join(sighandling_thread, NULL);
+void doServer(int fd)
+{
+    struct sockaddr_in addr;
+    struct connections con[MAXADDR];
+    char buf[MAXBUF];
+    socklen_t size = sizeof(addr);
+    int i;
+    int32_t chunkNo, last;
+    for (i = 0; i < MAXADDR; i++)
+        con[i].free = 1;
+    for (;;)
+    {
+        if (TEMP_FAILURE_RETRY(recvfrom(fd, buf, MAXBUF, 0, &addr, &size) < 0))
+            ERR("read:");
+        if ((i = findIndex(addr, con)) >= 0)
+        {
+            chunkNo = ntohl(*((int32_t *)buf));
+            last = ntohl(*(((int32_t *)buf) + 1));
+            if (chunkNo > con[i].chunkNo + 1)
+                continue;
+            else if (chunkNo == con[i].chunkNo + 1)
+            {
+                if (last)
+                {
+                    printf("Last Part %d\n%s\n", chunkNo, buf + 2 * sizeof(int32_t));
+                    con[i].free = 1;
+                }
+                else
+                    printf("Part %d\n%s\n", chunkNo, buf + 2 * sizeof(int32_t));
+                con[i].chunkNo++;
+            }
+            if (TEMP_FAILURE_RETRY(sendto(fd, buf, MAXBUF, 0, &addr, size)) < 0)
+            {
+                if (EPIPE == errno)
+                    con[i].free = 1;
+                else
+                    ERR("send:");
+            }
+        }
+    }
+}
 
-    pthread_mutexattr_destroy(&mutex_attr);
-    pthread_mutex_destroy(mutex);
+void usage(char *name) { fprintf(stderr, "USAGE: %s port\n", name); }
 
-    munmap(shm_ptr, SHM_SIZE);
-    shm_unlink(shm_name);
-
+int main(int argc, char **argv)
+{
+    int fd;
+    if (argc != 2)
+    {
+        usage(argv[0]);
+        return EXIT_FAILURE;
+    }
+    if (sethandler(SIG_IGN, SIGPIPE))
+        ERR("Seting SIGPIPE:");
+    fd = bind_inet_socket(atoi(argv[1]), SOCK_DGRAM);
+    doServer(fd);
+    if (TEMP_FAILURE_RETRY(close(fd)) < 0)
+        ERR("close");
+    fprintf(stderr, "Server has terminated.\n");
     return EXIT_SUCCESS;
 }

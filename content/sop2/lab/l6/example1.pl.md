@@ -1,22 +1,29 @@
 ---
-title: "Zadanie testowe z tematu kolejek POSIX"
-date: 2022-02-01T19:36:27+01:00
+title: "Zadanie testowe z tematu pamięć dzielona i mmap"
 bookHidden: true
 ---
 
 ## Treść
 
-Napisz dwa programy: klienta i serwera, komunikujące się przy użyciu kolejek POSIX.
+Celem jest napisanie programu do zliczania wystąpień pojedynczych znaków w zadanym pliku.
+Przy pisaniu programu możesz założyć, że każdy znak jest reprezentowany przez jeden bajt.
 
-Serwer tworzy 3 kolejki nazwane `PID_s`, `PID_d` i `PID_m`, gdzie `PID` to identyfikator procesu. Następnie wypisuje nazwy utworzonych kolejek.
-
-Serwer czeka na następujące dane z dowolnej kolejki: PID klienta oraz dwie liczby całkowite. Następnie oblicza wynik - sumę dla kolejki `PID_s`, iloraz dla `PID_d` oraz resztę z dzielenia dla `PID_m`. Wynik jest zapisywany do kolejki klienta (patrz niżej opis klienta). Po otrzymaniu sygnału `SIGINT`, serwer usuwa swoje kolejki i kończy działanie.
-
-Program klienta jest wywoływany z jednym parametrem - nazwą kolejki serwera (jedną z trzech). Klient tworzy swoją własną kolejkę nazwaną swoim `PID`-em. Następnie, aż do odczytania `EOF`, odczytuje linie zawierające dwie liczby ze standardowego wejścia. Po odczytaniu linii klient wysyła wiadomość składającą się ze swojego numeru `PID` oraz odczytanych dwóch liczb do kolejki serwera i oczekuje na odpowiedź w swojej kolejce. Po otrzymaniu odpowiedzi wypisuje ją. Jeśli nie otrzyma odpowiedzi w ciągu 100ms, kończy swoje działanie. Przy zakończeniu się program usuwa swoją kolejkę.
+W celu przyśpieszenia obliczeń program powinien wykorzystywać pamięć dzieloną do synchronizacji miedzy wieloma procesami.
+Dla ułatwienia przetwarzania zawartości plik powinien być zmapowany do pamięci procesu przy pomocy funkcji `mmap`.
 
 ## Etapy
 
-1. Serwer tworzy swoje kolejki i wypisuje ich nazwy. Po upływie sekundy usuwa je i kończy działanie. Klient tworzy swoją kolejkę, czeka 1 sekundę, usuwa ją i kończy działanie.
-2. Serwer odczytuje pierwszą wiadomość z kolejki `PID_s`, po czym odsyła odpowiedź do klienta. Na tym etapie program ignoruje wszystkie błędy. Klient odczytuje 2 liczby ze standardowego wejścia i wysyła wiadomość do serwera. Czeka na odpowiedź i wypisuje ją.
-3. Serwer obsługuje wszystkie kolejki. Kończy działanie po otrzymaniu `SIGINT`. Klient wysyła swoje wiadomości do momentu odczytania `EOF` albo przekroczenia czasu oczekiwania na odpowiedź.
-4. Kolejki są usuwane przy zamykaniu programów. Pełna obsługa błędów.
+1. Otwórz plik przy pomocy funkcji `mmap` w procesie rodzica.  
+   Wypisz jego zawartość na standardowe wyjście.  
+   Zakazane jest użycie strumieni oraz funkcji `read`.  
+2. Zaimplementuj logikę zliczania znaków występujących w pliku.  
+   Na końcu działania programu wypisz podsumowanie ile znalazło się poszczególnych znaków w pliku.  
+3. Podziel pracę na pliku pomiędzy `N` procesów potomnych.  
+   Przenieś otwieranie pliku do procesu potomnego.  
+   Każdy z procesów powinien zliczyć znaki niezależnie od pozostałych.  
+   Użyj pamięci dzielonej do przekazania wyników obliczeń do procesu rodzica.  
+   Proces rodzica powinien wypisać podsumowanie po zakończeniu działania wszystkich procesów potomnych.  
+4. Dodaj obsługę przypadku śmierci procesu potomnego.  
+   W takim wypadku proces rodzica powinien zaniechać wypisania podsumowania.  
+   Zamiast tego powinien wypisać informację, że obliczenia się nie powiodły.  
+   Każdy proces potomny powinien mieć `3\%` szans na nagłą śmierć w momencie zgłaszania wyników do procesu rodzica (implementowane jako `abort`).  

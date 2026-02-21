@@ -1,84 +1,100 @@
 ---
-title: "Zadanie testowe z tematu pamięć dzielona i mmap"
+title: "Zadanie testowe z sieci"
 bookHidden: true
 ---
 
+# Οἱ ἄγγελοι (Posłańcy)
 
-## Kanał danych
+Jest rok 480 p.n.e.  
+Perski król Kserkses (staroperski: 𐎧𐏁𐎹𐎠𐎾𐏁𐎠, Khshayārsha) właśnie najechał greckie państwa-miasta.  
+To niefortunne wydarzenie spowodowało, że wielu posłańców podróżujących po Grecji, zaczyna działać w charakterze zwiadowców.  
+Odwiedzają oni różnorakie miasta. Niektóre osady kontrolowane są przez Greków, inne zostały przechwycone przez Persów.  
 
-Twoim zadaniem na dzisiejszych laboratoriach jest zaimplementowanie struktury kanału wewnątrz pamięci współdzielonej.  
-Jest to miejsce, gdzie jeden proces *Producent* może umieszczać dane, a jeden z wielu procesów *Konsumentów* może je odczytywać.  
-Jest to coś podobnego do rury z wodą w rzeczywistym świecie.
+Aby uzyskać przewagę informacyjną, obywatele Sparty (grecki dorycki: Σπάρτα) decydują się na otwarcie biblioteki połączonej z najnowszą siecią telekomunikacyjną posłańców.
 
-![Schemat kanału](/channel_schematic.png)
+Każdy z posłańców otrzymuje aplikację klienta TCP, która może łączyć się z serwerem biblioteki.  
+Biblioteka zawiera listę państw-miast oraz informacje, czy są one kontrolowane przez Greków, czy przez Persów.  
+Podobną listę utrzymuje też każdy z posłańców, aktualizując ją, gdy otrzyma nowe informacje z centralnej biblioteki.  
+Jest 20 państw-miast. Każde z nich jest oznaczone liczbą ze zbioru [1, 20].  
+Twoim zadaniem jest **napisanie serwera** biblioteki kompatybilnego z klientem.  
 
-Ta struktura ma dwie podstawowe funkcje: `produce()` i `consume()`.  
-Wywołanie `consume()` w momencie, gdy nie ma danych do przetworzenia, zablokuje wywołujący proces.  
-Z drugiej strony, wywołanie `produce()` w momencie, gdy w kanale wciąż znajdują się dane, również zablokuje proces.  
-Jeśli jeden proces wywoła `produce()` z jednej strony, a inny `consume()` z drugiej strony, dane zaczną *płynąć* (tak jak dane w `łączu` z L5).
+Program klienta dostarczony jest w postaci pliku wykonywalnego. Można go uruchomić przez:
 
-Na naszych laboratoriach kanał może przechowywać **pojedynczy** ciąg znaków.  
-Aby umieścić nowy ciąg znaków, poprzedni musi zostać odczytany przez konsumenta.  
-Maksymalna długość przechowywanego ciągu wynosi 4096 bajtów.  
-Twoim zadaniem jest zaimplementowanie programu (`ops-double-processor.c`), który:
-1. Pobiera dane z kanału wejściowego (ta operacja może blokować, jeśli w kanale nie ma danych)
-2. Podwaja każdy znak wejściowy (np. `"abc cda" -> "aabbcc  ccddaa"`)
-3. Umieszcza zmodyfikowane dane w kanale wyjściowym (ta operacja może blokować, jeśli w kanale są już dane)
+```shell
+./client <ADRES SERWERA> <NUMER PORTU>
+```
 
-Dla ułatwienia masz dostęp do trzech programów: `ops-generator`, `ops-printer` i `ops-cleanup`.  
-Pierwszy z nich odczytuje plik linia po linii i przesyła dane do kanału wyjściowego.  
-Drugi pobiera dane z kanału wejściowego i wypisuje je na standardowe wyjście.  
-Ostatni usuwa semafory i kanały o podanych nazwach.  
-Uruchomienie tych programów bez argumentów pokazuje, jak ich używać.
+Dostarczony jest też plik wykonywalny przykładowej implementacji serwera.
 
-## Etapy
-1. Zaimplementuj funkcje otwierania (`channel_open`) i zamykania (`channel_close`) kanału (obiektu pamięci współdzielonej).  
-   Jeśli obiekt pamięci współdzielonej o danej nazwie nie istnieje, powinien zostać utworzony i poprawnie zainicjalizowany.  
-   Aby wyeliminować wyścig między `shm_open` a inicjalizacją kanału, użyj nazwanego semafora.
+## Etapy:
 
-   > **Sprawdzenie:** `$ ./ops-double-process ch1 ch1 && ./ops-cleanup ch1 && ls /dev/shm`
+1. Zaimplementuj przyłączanie pojedynczego klienta do serwera TCP.
    
-   > **Wskazówka:** Po `mmap` struktury kanału możesz sprawdzić pole `status`, czy ma wartość  
-   > `CHANNEL_UNINITIALIZED`, aby dowiedzieć się, czy wymaga inicjalizacji.
+   Serwer akceptuje jako argument wejściowy numer portu.
+   
+   Przykładowe wykonanie serwera:
+   
+   ```shell
+   ./server 8888
+   ```
+   
+   Po uruchomieniu serwer nasłuchuje na przyłączających klientów.
+   
+   Gdy ustanowione zostanie połączenie z pierwszym klientem, serwer czeka na odbiór 4 bajtów, wypisuje je na stdout, zamyka połączenie, a następnie się kończy.
+   
+2. Zaimplementuj obsługę wielu klientów i odbieranie danych.
+   
+   - Po przyłączeniu się nowego klienta, zostaje on dodany do listy aktualnych klientów.
+   - Maksymalna liczba klientów to 4.
+   - Jeśli przyłączy się maksymalna liczba klientów, należy odrzucać nowe połączenia.
+   - Kiedy serwer otrzyma dane o długości 4 bajtów od któregokolwiek klienta, wyświetla je w terminalu.
+   
+   Do implementacji tego etapu użyj funkcji epoll  
+   (alternatywnie można użyć pselect lub ppoll).
+   
+   > ⚠️ **Uwaga: w tym etapie nie trzeba poprawnie obsługiwać rozłączania klientów.**
 
-2. Zaimplementuj funkcję `channel_consume()`.  
-   Powinna ona oczekiwać na `consumer_cv`, dopóki kanał nie zmieni statusu na `CHANNEL_OCCUPIED`.  
-   Następnie kopiować dane z kanału do lokalnej pamięci procesu i sygnalizować inne procesy poprzez `producer_cv`.  
-   Ta funkcja powinna zwracać `0`, jeśli dane zostały poprawnie odczytane.  
-   Jeśli kanał jest wyczerpany (`status == CHANNEL_DEPLETED`), powinna zwrócić `1`.  
-   Wypisz odebrane dane na standardowe wyjście.
+3. Dodaj do serwera tablicę zawierającą informacje, które miasto należy do której ze stron konfliktu.
+   
+   - Na samym początku wszystkie miasta należą do Greków.
+   - Za każdym razem, gdy serwer otrzyma wiadomość postaci:
+   
+   ```
+   pXX\n
+   ```
+   
+   lub
+   
+   ```
+   gXX\n
+   ```
+   
+   gdzie `XX` jest dwucyfrową liczbą oznaczającą numer miasta, oznacza to, że miasto `XX` należy do odpowiednio Persów lub Greków.
+   
+   - Jeśli właściciel miasta się nie zmienił, nie należy podejmować żadnych akcji.
+   - Jeśli właściciel miasta się zmienił, należy:
+     - zaktualizować tablicę miast,
+     - a wiadomość otrzymaną od klienta rozesłać do wszystkich innych połączonych klientów.
+   
+   Założenia:
+   - W tym etapie nadal nie trzeba poprawnie obsługiwać rozłączania klientów.
+   - Można też założyć, że przychodzące wiadomości są w poprawnym formacie.
+   
+4. Po otrzymaniu sygnału `SIGINT`, serwer:
+   
+   - zamyka wszystkie połączenia,
+   - wypisuje na ekran do kogo należy każde z miast,
+   - zwalnia zasoby i kończy pracę.
+   
+   Dodaj poprawną obsługę rozłączania klientów w następujących przypadkach:
+   
+   - Czytanie z deskryptora danego klienta zwraca wiadomość długości 0.
+   - Pisanie do deskryptora danego klienta zgłasza błąd `EPIPE`.
+   - Wiadomość otrzymana od klienta nie jest w odpowiednim formacie lub numer miasta nie jest w zakresie [1, 20].
+   - Serwer otrzymał C-c.
+   
+   > ⚠️ **Uwaga: Klienci rozłączający się zwalniają miejsce dla kolejnych, nowych klientów.**
 
-   > **Sprawdzenie:** `$ ./ops-generator ops-generator.c ch1 & ./ops-double-processor ch1 ch1`
+## Client and server executables:
 
-   > **Wskazówka:** Powinno to wyglądać niemal identycznie jak uruchomienie:  
-   > `$ ./ops-generator ops-generator.c ch1 & ./ops-printer ch1`
-
-3. Zaimplementuj funkcję `channel_produce()`.  
-   Powinna ona oczekiwać na `producer_cv`, dopóki kanał nie zmieni statusu na `CHANNEL_EMPTY`.  
-   Następnie skopiować dane z prywatnej pamięci procesu do pola `data` i zasygnalizować jeden proces przez `consumer_cv`.
-
-   Teraz zamiast wypisywać na standardowe wyjście, umieść otrzymane dane w kanale wyjściowym.  
-   Po pobraniu ostatniego elementu z kanału wejściowego (`consume` zwróciło wyczerpanie kanału wejściowego)  
-   oznacz kanał wyjściowy jako wyczerpany.
-
-   > **Sprawdzenie:** `$ ./ops-generator ops-generator.c ch1 & ./ops-double-processor ch1 ch2 & ./ops-printer ch2`
-
-   > **Wskazówka:** Po oznaczeniu kanału wyjściowego jako wyczerpanego pamiętaj o sygnalizacji wszystkich konsumentów na drugim końcu.
-
-4. Zaimplementuj logikę duplikacji danych wejściowych.
-
-   > **Sprawdzenie:** 
-   > ```
-   > $ ./ops-generator ops-generator.c ch1 & ./ops-double-processor ch1 ch2 & \
-   >   ./ops-printer ch2
-   > $ ./ops-generator ops-generator.c ch1 & ./ops-double-processor ch1 ch2 & \
-   >   ./ops-printer ch2 & ./ops-printer ch2 & ./ops-printer ch2
-   > ```
-
-   > **Wskazówka:** Pamiętaj o ograniczeniach rozmiaru kanału.  
-   > Wynik duplikacji będzie dwa razy dłuższy niż wejście.  
-   > Rozważ podział na więcej wywołań `produce`.
-
-## Kod początkowy
-
-- [sop2l7e3.zip](/files/sop2l7e3.zip)
+- [sop2l7e3-4.zip](/files/sop2l8e3-4.zip)

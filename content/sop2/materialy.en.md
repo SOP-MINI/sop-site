@@ -19,13 +19,6 @@ title: "Reference material"
 - [Real-time systems.]({{< ref "wyk/w13" >}})
 - [Protection and security.]({{< ref "wyk/w14" >}})
 
-## Laboratory reference
-
-- [Lab 5 FIFO/pipe ]({{< ref "lab/l5" >}})
-- [Lab 6 POSIX queues ]({{< ref "lab/l6" >}})
-- [Lab 7 Network sockets, pselect]({{< ref "lab/l7" >}})
-- [Lab 8 Sockets, threads, shared memory, synchronization]({{< ref "lab/l8" >}})
-
 ## Other links
 
 - The Single UNIX [specification](http://www.unix.org/version3/online.html), Version 3 (includes IEEE Std 1003.1 and ISO/ICE 9945)

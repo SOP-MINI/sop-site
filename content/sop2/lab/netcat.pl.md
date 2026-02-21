@@ -4,7 +4,7 @@ title: "Netcat"
 
 # Wstęp
 
-`netcat` jest programem, który potrafi nawiązywać różne rodzaje połączeń sieciowych (TCP, UDP i nie tylko) i przesyłać dane ze swojego standardowego wejścia do połączenia sieciowego oraz wypisywać na standardowe wyjście dane otrzymane z sieci. Ten program można wykorzystać do wysyłania wiadomości do programów, które komunikują się przez sieć z użyciem zwykłego tekstu. Na zajęciach z SOP2 `netcat` może się przydać na laboratorium, w trakcie którego wykorzystywane są połączenia sieciowe ([L8]({{< ref "l8">}})) do testowania programów.
+`netcat` jest programem, który potrafi nawiązywać różne rodzaje połączeń sieciowych (TCP, UDP i nie tylko) i przesyłać dane ze swojego standardowego wejścia do połączenia sieciowego oraz wypisywać na standardowe wyjście dane otrzymane z sieci. Ten program można wykorzystać do wysyłania wiadomości do programów, które komunikują się przez sieć z użyciem zwykłego tekstu. Na zajęciach z SOP2 `netcat` może się przydać na laboratorium, w trakcie którego wykorzystywane są połączenia sieciowe ([L7]({{< ref "l7">}})) do testowania programów.
 
 # Warianty programu netcat
 

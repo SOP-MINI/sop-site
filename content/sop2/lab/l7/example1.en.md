@@ -1,32 +1,29 @@
 ---
-title: "Task on shared memory and mmap"
+title: "Task on network"
 bookHidden: true
 ---
 
 ## Goal
 
-The goal is to write a program that counts the occurrences of individual characters in a given file.
-When writing the program, you can assume that each character is represented by a single byte.
+Write client server TCP application. Client prints its PID on stdout, connects to the server and sends its PID at a text. Server sends back the sum of digits in the PID as int16_t. Client prints the result and exits. Server accepts clients until C-c. On SIGINT it exits and prints the highest sum it calculated. Example:
 
-To speed up computations, the program should use shared memory for synchronization between multiple processes.
-For easier file processing, the file should be mapped into the process memory using the mmap function.
+## Example
+
+```
+./server 2000&
+./client localhost 2000
+PID=1244
+SUM=11
+./client localhost 2000
+PID=1245
+SUM=12
+killall -s SIGINT server
+HIGH SUM=12
+```
 
 ## Stages
 
-1. Open the file using the mmap function in the parent process.  
-   Print its contents to the standard output.  
-   The use of streams and the read function is prohibited.  
-
-2. Implement the logic for counting character occurrences in the file.  
-   At the end of the program execution, print a summary of how many times each character appeared in the file.  
-
-3. Distribute the workload across N child processes.  
-   Move the file opening operation to the child process.  
-   Each process should count characters independently of the others.  
-   Use shared memory to transfer the computation results to the parent process.  
-   The parent process should print the summary after all child processes have finished execution.  
-
-4. Add handling for the case where a child process terminates unexpectedly.  
-   In such a case, the parent process should skip printing the summary.  
-   Instead, it should print a message stating that the computation failed.  
-   Each child process should have a 3% chance of sudden termination when reporting results to the parent process (implemented using abort).  
+1. Server accepts only one connection, reads text data from the client and prints it on the stdout. Client connects and sends text data
+2. Server accepts many connections, counts the sum of digits and sends the numer (int16_t) back to the client, client prints the result
+3. Server properly handles C-c, prints maximum sum.
+4. All types of broken connection on the socket are properly checked and handled. 

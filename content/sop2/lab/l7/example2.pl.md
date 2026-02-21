@@ -1,57 +1,107 @@
 ---
-title: "Zadanie testowe z tematu pamięć dzielona i mmap"
+title: "Zadanie testowe z sieci"
 bookHidden: true
-math: true
 ---
 
-## Wspólne całkowanie
+## Wybory cesarskie
 
-Celem zadania jest napisanie programu do całkowania numerycznego metodą Monte Carlo funkcji:
+Jest rok 1519.  
+Wraz ze śmiercią cesarza Świętego Cesarstwa Rzymskiego  
+Maksymiliana I nadszedł czas wyboru nowego cesarza.  
 
-{{< katex >}}\int_a^b{e^{-x^2}dx}{{< /katex >}}
+Jest trzech kandydatów:
 
-Program powinien wykorzystać pamięć dzieloną do współpracy z większą ilością procesów.
-Każdy kolejny uruchomiony program powinien przyłączyć się do obliczeń i je przyśpieszyć.
+1. Franciszek I, król Francji,  
+2. Karol V, arcyksiążę Austrii i król Hiszpanii,  
+3. Henryk VIII, król Anglii.
 
-Obliczenia to prywatna część pamięci każdego procesu.
-Po sprawdzeniu `N` wylosowanych próbek program powinien zaktualizować liczniki wylosowanych oraz trafionych próbek (`batch processing`).
+W wyborze udział bierze siedmiu elektorów z różnych państw członkowskich Świętego Cesarstwa Rzymskiego:
 
-W celu koordynacji obliczeń w pamięci dzielonej poza informacją o wyniku obliczeń należy przetrzymywać licznik współpracujących procesów. 
-Przy rozpoczęciu pracy każdy proces powinien zwiększać licznik oraz zmniejszać go po prawidłowym zakończeniu pracy.
-Kiedy proces zmniejsza go do zera, należy podsumować wyniki obliczeń i wypisać na ekran wynik aproksymacji.
+1. Moguncja  
+2. Trewir  
+3. Kolonia  
+4. Czechy  
+5. Palatynat  
+6. Saksonia  
+7. Brandenburgia
+
+W tym roku, aby ułatwić proces elekcji,
+postanowiono utworzyć serwer TCP przyjmujący i liczący głosy.  
+Twoim zadaniem jest napisanie tego serwera.  
+Każdy elektor będzie się z nim łączył,
+oddawał swój głos,
+ewentualnie zmieniał swój głos,
+a następnie rozłączał się.  
+Możesz użyć `netcat` jako programu klienta.
 
 ## Etapy
 
-1. Do współpracy między procesami wykorzystaj obiekt nazwanej pamięci dzielonej.  
-   Przygotuj strukturę pamięci dzielonej zawierającą licznik procesów chronionym współdzielonym mutexem.
+1. Zaimplementuj przyjmowanie pojedynczego połączenia do serwera.  
+   Serwer przyjmuje jeden argument, numer portu.  
+   Przykładowe uruchomienie serwera:
+   
+   ```shell
+   ./sop-hre 8888
+   ```
+   
+   Po uruchomieniu serwer oczekuje na pojedyncze połączenie TCP.  
+   Po nawiązaniu połączenia serwer wypisuje `Klient połączony`, zamyka połączenie i kończy działanie.
 
-   Napisz procedurę inicjalizacji pamięci dzielonej z prawidłowa inkrementacją liczników przy uruchomieniu kolejnych procesów.  
-   Do wyeliminowania wyścigu pomiędzy stworzeniem pamięci dzielonej a jej inicjalizacją, użyj semafora nazwanego.
+2. Zaimplementuj połączenia od wielu klientów.
 
-   Po prawidłowej inicjalizacji pamięci dzielonej proces wypisuje ilość współpracujących procesów, śpi 2 sekundy, a następnie kończy się.  
-   Przed zakończeniem procesu należy zniszczyć obiekt pamięci dzielonej w przypadku odłączania się ostatniego procesu.
+   Po połączeniu klienta wyślij mu wiadomość powitalną `Welcome, elector!`.  
+   Następnie wypisz każdą wiadomość, którą klient przesyła do serwera, na `stdout`.  
+   Użyj `epoll` do zaimplementowania tego etapu (lub, alternatywnie, `ppoll` lub `pselect`).
 
-2. Zaimplementuj obliczenia trzech paczek (ang. *batches*) obliczeń `N` punktów metodą Monte Carlo.  
-   Pobierz parametry do programu w taki sposób jak opisuje funkcja `usage`.  
-   Wykorzystaj dostarczoną funkcję `randomize_points` do obliczenia jednej paczki próbek.
+   Pamiętaj o poprawnym obsługiwaniu rozłączających się klientów.
 
-   Dodaj do struktury pamięci dzielonej dwa liczniki opisujące ilość próbek wylosowanych oraz trafionych.  
-   Po obliczeniu każdej paczki zaktualizuj liczniki oraz wyświetl ich stan na standardowe wyjście.  
-   Po wykonaniu trzech iteracji obliczeń program powinien się skończyć z logiką niszczenia pamięci dzielonej jak w etapie pierwszym.
+3. Zaimplementuj proces głosowania i przechowywanie listy połączonych elektorów.  
+   Gdy nowy klient się połączy, czekaj na pojedynczą cyfrę (w zakresie [1, 7]).  
+   Ta cyfra to numer elektora łączącego się z serwerem.  
+   Jeśli od klienta otrzymano inny znak, zakończ jego połączenie.  
+   
+   Podczas oczekiwania na wiadomość identyfikującą,  
+   inni klienci powinni nadal móc się łączyć z serwerem.  
+   
+   Jeśli inny klient identyfikujący się jako elektor *E* próbuje połączyć się z serwerem,  
+   powinien zostać odłączony.  
+   
+   Wiadomość wysłana do klienta powinna zostać wysłana po identyfikacji i powinna zawierać:  
+   `Welcome, elector of X!`,  
+   gdzie `X` to państwo członkowskie, z którego pochodzi elektor.
+   
+   Po otrzymaniu wiadomości identyfikującej,  
+   połączony klient powinien móc oddawać głosy w wyborach,  
+   przesyłając liczbę z zakresu `[1, 3]`, oznaczającą preferowanego kandydata.  
+   Inne znaki powinny być ignorowane.  
+   Dowolny elektor może zmienić zdanie i zagłosować wielokrotnie.  
+   Kolejne głosy nadpisują poprzednie.
+   
+   Poprawnie obsługuj rozłączających się klientów z serwera,  
+   w tym rozłączających się i ponownie łączących się elektorów!
 
-   > **W pamięci dzielonej warto przechować zakresy całkowania, aby uniknąć przyłączenia się procesu z innymi granicami całkowania. Taki scenariusz spowoduje, że wyniki aproksymacji nie będą miały sensu.**
-3. Dodaj obsługę sygnału `SIGINT`, który przerwie obliczanie kolejnych paczek punktów.
+4. Zaimplementuj dodatkowy wątek wysyłający wiadomości UDP.  
+   Program powinien teraz akceptować łącznie dwa argumenty:  
+   port serwera TCP i port klienta UDP.  
+   
+   Przykładowe wykonanie serwera:
+   
+   ```shell
+   ./sop-hre 8888 9999
+   ```
+   
+   Cała funkcjonalność z poprzednich etapów nadal powinna działać.  
+   
+   Po uruchomieniu serwera utwórz dodatkowy wątek z klientem UDP  
+   wysyłającym co sekundę wiadomość z obecnym wynikiem elekcji  
+   na podany port na `localhost`.  
+   
+   Pamiętaj aby zabezpieczyć wyniki elekcji mutexem lub w inny sposób  
+   zabezpieczyć się przed data race.
 
-   W tym etapie program powinien przybliżać całkę do momentu otrzymania sygnału.  
-   Wystarczająco dobrą implementacją jest dokończenie aktualnie obliczanej paczki i zaniechanie wzięcia kolejnej.
-
-   Jeżeli proces odłącza się ostatni z pamięci dzielonej, wypisz wynik na standardowe wyjście.
-
-4. Dodaj obsługę śmierci procesu w momencie blokowania mutexu w pamięci dzielonej poza procedurą inicjalizacji.  
-   Zmień mutexy, aby były typu robust oraz obsłuż sytuację śmierci właściciela.  
-   Przy natrafieniu na taka sytuację załóż, że należy zdekrementować licznik procesów, aby nadal prawidłowo wykonać podsumowanie na końcu pracy programu.  
-   Aby zasymulować nagłą śmierć procesu, użyj funkcji `random_death_lock`, która należy zablokować każdy mutex poza inicjalizacją pamięci dzielonej.
-  
-## Kod początkowy
-
-{{< includecode "example2-code.c" >}}
+5. Obsłuż sygnał `SIGINT`.  
+   Po jego otrzymaniu:
+   
+   - zakończ wszystkie aktywne połączenia z elektorami  
+   - zwolnij wszystkie zasoby, włączając w to wątek UDP  
+   - policz i wydrukuj głosy dla każdego kandydata.

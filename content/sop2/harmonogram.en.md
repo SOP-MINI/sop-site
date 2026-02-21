@@ -28,10 +28,13 @@ Tuesdays, 16:15-17:45, room 328
 
 Thursdays, 14:15 - 16:30
 
-| Date  | Topic                                                |
-|-------|------------------------------------------------------|
-| 20.03 | [Lab5 FIFO/pipe]({{< ref "lab/l5">}})                |
-| 3.04  | [Lab6 POSIX queues]({{< ref "lab/l6">}})             |
-| 24.04 | [Lab7 Shared memory and mmap]({{< ref "lab/l7">}})   |
-| 22.05 | [Lab8 Sockets, TCP, UDP, epoll]({{< ref "lab/l8">}}) |
-| 29.05 | Retakes                                              |
+| Data  | Tytuł                                               |
+|-------|-----------------------------------------------------|
+|  5.03 | [W4 FIFO/pipe]({{< ref "lab/l5" >}})                |
+| 19.03 | [L5 FIFO/pipe]({{< ref "lab/l5" >}})                |
+|  9.04 | [W5 Shared memory and mmap]({{< ref "lab/l6" >}})   |
+| 23.04 | [L6 Shared memory and mmap]({{< ref "lab/l6" >}})   |
+|  7.05 | [W6 TCP sockets and epoll]({{< ref "lab/l7" >}})    |
+| 21.05 | [L7 TCP sockets and epoll]({{< ref "lab/l7" >}})    |
+|  4.06 | L8                                                  |
+| 11.06 | Retake                                              |

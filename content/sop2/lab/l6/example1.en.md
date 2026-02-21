@@ -1,22 +1,32 @@
 ---
-title: "Task on POSIX message queues"
-date: 2022-02-01T19:36:27+01:00
+title: "Task on shared memory and mmap"
 bookHidden: true
 ---
 
 ## Goal
 
-Write 2 programs, client and server, that communicate via POSIX message queues.
+The goal is to write a program that counts the occurrences of individual characters in a given file.
+When writing the program, you can assume that each character is represented by a single byte.
 
-The server program creates 3 message queues with names `PID_s`, `PID_d` and `PID_m` where `PID` is the server process ID. The server program prints the names of all queues to stdout.
-
-The server waits for data in any of its queues, receiving a client PID and two integers. Then, computes the result: sum for `PID_s` queue, division for `PID_d`, and modulo for `PID_m`. The result is sent to the corresponding client queue (see below). The server should not terminate if the client queue is unavailable. After receiving `SIGINT` the server destroys its queues and terminates.
-
-The client process is called with a single argument: the name of the server queue. The client creates its own queue (the name is the client's PID) and continues to read lines containing two integers until it encounters `EOF`. After receiving a line the client sends a message containing its PID and the two integers to the server queue and waits for a reply. The reply is displayed on stdout. If the reply does not arrive within 100 ms, the program terminates. While terminating, the program destroys its queue.
+To speed up computations, the program should use shared memory for synchronization between multiple processes.
+For easier file processing, the file should be mapped into the process memory using the mmap function.
 
 ## Stages
 
-1. The server creates its queues and displays the names of the queues. After 1 second, it destroys those queues and terminates. The client process creates its own queue, waits for 1 second, destroys its queue, and terminates.
-2. Server reads the first message from `PID_s` queue. Sends the first answer back to the client. Ignores all errors. The client reads 2 integers from stdin and sends a single message to the server. It waits for the result and displays it.
-3. The server handles all queues and calculates the proper results. Terminates at `SIGINT`. The client sends the messages until `EOF` is read or reply timeout occurs.
-4. The queues should be removed on program termination. Full error handling.
+1. Open the file using the mmap function in the parent process.  
+   Print its contents to the standard output.  
+   The use of streams and the read function is prohibited.  
+
+2. Implement the logic for counting character occurrences in the file.  
+   At the end of the program execution, print a summary of how many times each character appeared in the file.  
+
+3. Distribute the workload across N child processes.  
+   Move the file opening operation to the child process.  
+   Each process should count characters independently of the others.  
+   Use shared memory to transfer the computation results to the parent process.  
+   The parent process should print the summary after all child processes have finished execution.  
+
+4. Add handling for the case where a child process terminates unexpectedly.  
+   In such a case, the parent process should skip printing the summary.  
+   Instead, it should print a message stating that the computation failed.  
+   Each child process should have a 3% chance of sudden termination when reporting results to the parent process (implemented using abort).  

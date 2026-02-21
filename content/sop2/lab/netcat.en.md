@@ -4,7 +4,7 @@ title: "Netcat"
 
 # Introduction
 
-`netcat` is a program that can be used to perform a variety of network connections (TCP, UDP and others) and send data read from `stdin` to the connection as well as printing the data from the network connection to `stdout`. You can use netcat to communicate with programs that use plaintext based network protocol. During OPS2 classes `netcat` is a useful tool during lab that cover networking: ([L8]({{< ref "l8">}})). This way you can test your programs.
+`netcat` is a program that can be used to perform a variety of network connections (TCP, UDP and others) and send data read from `stdin` to the connection as well as printing the data from the network connection to `stdout`. You can use netcat to communicate with programs that use plaintext based network protocol. During OPS2 classes `netcat` is a useful tool during lab that cover networking: ([L7]({{< ref "l7">}})). This way you can test your programs.
 
 # netcat versions
 

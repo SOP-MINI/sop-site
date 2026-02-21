@@ -28,10 +28,27 @@ Wtorki, g. 18:00 - 19:30, s. 328
 
 Czwartki, 14:15 - 16:30
 
+
+Grupy 1-5:
 | Data  | Tytuł                                               |
 |-------|-----------------------------------------------------|
-| 13.03 | [L5 FIFO/pipe]({{< ref "lab/l5" >}})                |
-| 27.03 | [L6 Kolejki POSIX]({{< ref "lab/l6" >}})            |
-| 10.04 | [L7 Pamięć dzielona i mmap]({{< ref "lab/l7" >}})   |
-| 15.05 | [L8 Gniazda, TCP, UDP, epoll]({{< ref "lab/l8" >}}) |
-| 29.05 | Poprawa                                             |
+| 26.02 | [W4 FIFO/pipe]({{< ref "lab/l5" >}})                |
+| 12.03 | [L5 FIFO/pipe]({{< ref "lab/l5" >}})                |
+| 26.03 | [W5 Pamięć dzielona i mmap]({{< ref "lab/l6" >}})   |
+| 16.04 | [L6 Pamięć dzielona i mmap]({{< ref "lab/l6" >}})   |
+| 30.04 | [W6 Gniazda TCP,  epoll]({{< ref "lab/l7" >}})      |
+| 14.05 | [L7 Gniazda TCP, epoll]({{< ref "lab/l7" >}})       |
+| 28.05 | L8                                                  |
+| 11.06 | Poprawa                                             |
+
+Grupy 6, 6a:
+| Data  | Tytuł                                               |
+|-------|-----------------------------------------------------|
+|  5.03 | [W4 FIFO/pipe]({{< ref "lab/l5" >}})                |
+| 19.03 | [L5 FIFO/pipe]({{< ref "lab/l5" >}})                |
+|  9.04 | [W5 Pamięć dzielona i mmap]({{< ref "lab/l6" >}})   |
+| 23.04 | [L6 Pamięć dzielona i mmap]({{< ref "lab/l6" >}})   |
+|  7.05 | [W6 Gniazda TCP,  epoll]({{< ref "lab/l7" >}})      |
+| 21.05 | [L7 Gniazda TCP, epoll]({{< ref "lab/l7" >}})       |
+|  4.06 | L8                                                  |
+| 11.06 | Poprawa                                             |

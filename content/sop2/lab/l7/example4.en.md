@@ -71,4 +71,4 @@ An executable file of an example client implementation is also provided.
 
 ## Client and server executables
 
-- [sop2l8e3-4.zip](/files/sop2l8e3-4.zip)
+- [sop2l7e3-4.zip](/files/sop2l8e3-4.zip)

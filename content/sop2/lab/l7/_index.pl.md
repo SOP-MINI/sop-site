@@ -1,135 +1,196 @@
 ---
-title: "L7 - Pamięć dzielona i mmap"
-weight: 30
+title: "L7 - gniazda sieciowe i epoll"
+weight: 40
 ---
 
-# Tutorial 7 - Pamięc dzielona i mmap
+# Tutorial 7 - Gniazda sieciowe i epoll
 
-{{< hint info >}}
-
-Jest to pierwszy z serii tutoriali w "nowej formule". Zawiera więcej wyjaśnień działania użytych funkcji oraz ich parametrów. Mamy nadzieję, że w ten sposób będzie wam łatwiej "wejść w temat". Jest to jednak wciąż zbiór jedynie poglądowy najważniejszych informacji - należy **koniecznie przeczytać wskazane strony manuala** aby dobrze poznać i zrozumieć wszystkie szczegóły.
-
+{{< hint warning >}}
+W tym tutorialu do czekania na wielu deskryptorach używamy funkcji z rodziny `epoll`, które nie są częścią standardu POSIX, ale rozszerzeniem Linuxa. Przy pisaniu kodu przenośnego między systemami należy użyć funkcji z rodziny `select` lub `poll`, które jednak cechują się gorszą wydajnością a ich użycie jest mniej wygodne. 
 {{< /hint >}}
 
+Uwagi wstępne:
 
-## mmap
+1. W trakcie tych zajęć przydatny jest [program netcat]({{< ref "/sop2/lab/netcat" >}})
+1. Obowiązują wszystkie materiały z SOP1 i SOP2 jakie były do tej pory, szczególnie ważne są te dotyczące wątków i procesów!
+1. Szybkie przejrzenie tutoriala prawdopodobnie nic nie pomoże, należy samodzielnie uruchomić programy, sprawdzić jak działają, poczytać materiały dodatkowe takie jak strony man. W trakcie czytania sugeruję wykonywać ćwiczenia a na koniec przykładowe zadanie.
+1. Materiały i ćwiczenia są ułożone w pewną logiczną całość, czasem do wykonania ćwiczenia konieczny jest stan osiągnięty poprzednim ćwiczeniem dlatego zalecam wykonywanie ćwiczeń w miarę przyswajania materiału.
+1. Większość ćwiczeń wymaga użycia konsoli poleceń, zazwyczaj zakładam, ze pracujemy w jednym i tym samym katalogu roboczym więc wszystkie potrzebne pliki są "pod ręką" tzn. nie ma potrzeby podawania ścieżek dostępu.
+1. Czasem podaję znak $ aby podkreślić, że chodzi o polecenie konsolowe, nie piszemy go jednak w konsoli np.: piszę "$make" w konsoli wpisujemy samo "make".
+1. To co ćwiczymy wróci podczas kolejnych zajęć. Jeśli po zajęciach i teście coś nadal pozostaje niejasne proszę to poćwiczyć a jeśli trzeba dopytać się u prowadzących.
+1. W wielu miejscach w kodzie dodano obsługę przerwania sygnałem (makro TEMP_FAILURE_RETRY), nawet jeśli w danym programie to nie ma uzasadnienia bo brak w nim obsługi sygnałów. Duża część prezentowanego kodu będzie przez studentów przenoszona do ich rozwiązań, zwłaszcza gotowe funkcję biblioteczne,  w których to rozwiązaniach mogą się pojawiać sygnały. Jest to zabieg zwiększający przenośność kodu.
+1. Podczas planowania w jakiej postaci dane będą przesyłane przez sieć bardzo ważne jest aby zawsze pamiętać o tym, że komunikują się programy działające (być może) na różnych architekturach sprzętowych, trzeba mieć wzgląd na następujące kwestie:
+1. byte order - czyli w jakiej kolejności w pamięci są przechowywane liczby całkowite, jeśli przesyłamy liczby binarnie pomiędzy programami działającymi na różnych architekturach to zmiana tej kolejności będzie katastrofalna, równoznaczna ze zmianą liczby, np: 0x00FF zmienia się nam na 0xFF00! Nie musimy znać byte orderu architektury na której działamy, wystarczy pamiętać o zasadzie, że do sieci wysyłamy wszystkie liczby całkowite zakodowane w tzw. network byte order. Do konwersji do tej postaci mamy makra htons i htonl (dla 16 bitowego shorta i 32 bitowego integera). Po odebraniu danych z sieci następuje odwrotna konwersja z byte orderu sieciowego na lokalny, makra ntohs i ntohl.
+1. Nie ma uniwersalnego kodowania dla liczb zmiennopozycyjnych, różne mogą być ich implementacje na różnych platformach więc albo musimy przesłać je jako tekst lub jako liczby o ustalonej precyzji (czyli jako liczby całkowite tak naprawdę).
+1. Pamiętamy oczywiście, że problem byte order nie dotyczy danych jedno-bajtowych w tym przede wszystkim tekstu. Przesłanie danych w formie tekstowej jest prawie zawsze poprawnym rozwiązaniem.
+1. Różne mogą być rozmiary typów int,short czy long na różnych architekturach. Aby uniknąć problemów najlepiej jest używać typów o ustalonym wymiarze takich jak np.: int32_t czy uint16_t
+1. Niezbyt wygodne będzie też przesyłanie struktur ze względu na różne ułożenie ich pól w pamięci na różnych platformach . Występują różne przerwy pomiędzy polami wynikające z optymizacji adresowania  - adresy podzielne przez różne zależne od architektury potęgi 2 są szybciej pobierane z pamięci.  Aby to obejść, należy zadbać aby kompilator nie optymizował tych struktur tylko "pakował" je bez żadnych przerw. Nie zawsze da się to osiągnąć z poziomu kodu, zazwyczaj konieczne są dyrektywy kompilatora co czyni to rozwiązanie mniej przenośnym. Jak się da to unikamy przesyłania całych struktur binarnie, możemy przesyłać strukturę pole po polu. 
 
-Na poprzednich zajęciach omówiliśmy już kilka sposobów synchronizacji oraz współdzielenia danych między procesami. Wszystkie jednak wydają się być zawsze bardziej skomplikowane, niż jest to w przypadku wątków - gdzie możemy po prostu mieć współdzielone zmienne. Gdy jednak używamy funkcji `fork()` procesy potomne otrzymują własną kopią wszystkich danych procesu rodzica. Tak więc, jeśli np. w procesie dziecka zmodyfikujemy tablicę stworzoną przed wywołaniem `fork()`, zmiany te zajdą jedynie w obrębie procesu dziecka.
+ 
+## Zadanie local + TCP
+Napisz prosty sieciowy kalkulator liczb całkowitych. Dane przesyłane pomiędzy klientami a serwerem mają postać:
+- operand 1
+- operand 2
+- wynik
+- operator (+,-,*,/)
+- status
 
-Możliwe jest jednak zadeklarowanie tak zwanego "mapowania" między pamięcią programu a tak zwanym "obiektem pamięci" (ang. "memory object"). Wszelkie zmiany zrobione w tak zmapowanym obszarze zostaną przeniesione na wspomniany "obiekt pamięci", który jest zarządzany przez system operacyjny. Do stworzenia takiego mapowaniu służy polecenie `mmap` (`man 3p mmap`, `man 2 mmap`).
+Wszystko przekonwertowane do postaci 32 bitowych liczb w tablicy.
 
-Funkcja ta ma z naszego punktu widzenia kilka głównych zastosowań:
+Serwer wylicza wynik i odsyła go do klienta. Jeśli wyliczenie przebiegło pomyślnie pole status przyjmuje wartość 1, jeśli nie (np. dzielenie przez zero) wartość 0. Komunikacja z serwerem jest możliwa na 2 sposoby:
+- gniazda lokalne
+- gniazda sieciowe tcp
 
-- Pozwala stworzyć mapowanie między fragmentem pamięci a plikiem - dzięki temu możemy w wygodny sposób modyfikować zawartość pliku, tak jak zwykłą tablicę.
-- Stworzyć obszar pamięci współdzielony z procesami potomnymi.
-- Zmapować obszar pamięci dzielonej (o tym w drugiej części tego tutoriala).
+Serwer ma być jednoprocesowy i jednowątkowy, przyjmuje następujące argumenty:
+- nazwa lokalnego gniazda
+- port
+	
+Należy napisać 2 programy klientów, po jednym dla każdego typu połączenia, programy te pobierają następujące parametry:
+- adres gniazda serwera (nazwa domenowa dla tcp, nazwa pliku specjalnego dla połączenia lokalnego)
+- numer portu
+- operand 1
+- operand 2
+- operator (+,-,*,/)
 
-Przyjrzyjmy się sygnaturze i parametrom tej funkcji:
+Jeśli wyliczenie się uda należy wyświetlić wynik. 
+Wszystkie 3 programy można przerwać C-c, nie wolno po sobie zostawiać pliku połączenia lokalnego.
+		
+### Rozwiązanie
+
+Co student musi wiedzieć:
+```
+man 7 socket
+man 7 epoll
+man 7 unix
+man 7 tcp
+man 3p socket
+man 3p bind
+man 3p listen
+man 3p connect
+man 3p accept
+man 2 epoll_create
+man 2 epoll_ctl
+man 2 epoll_wait
+man 3p freeaddrinfo (obie funkcje, getaddrinfo też)
+man 3p gai_strerror
+```
+
+Zwróć uwagę zwłaszcza na sekcję Q&A w `man 7 epoll`. Ponieważ jest bardzo dobrze przygotowana, nie będziemy jej tutaj powtarzać.
+
+
+Wspólna biblioteka dla wszystkich kodów w tym tutorialu:
+{{< includecode "l7_common.h" >}}
+
+serwer `l7-1_server.c`:
+{{< includecode "l7-1_server.c" >}}
+klient lokalny `l7-1_client_local.c`:
+{{< includecode "l7-1_client_local.c" >}}
+klient TCP `l7-1_client_tcp.c`:
+{{< includecode "l7-1_client_tcp.c" >}}
+
+Uruchomienie:
+```
+$ ./l7-1_server a 2000&
+$ ./l7-1_client_local a 2 1 +
+$ ./l7-1_client_local a 2 1 '*'
+$ ./l7-1_client_local a 2 0 /
+$ ./l7-1_client_tcp localhost 2000 234 17  /
+
+$ killall -s `SIGINT` prog23a_s
 
 ```
-void *mmap(void *addr, size_t len, int prot, int flags,
-           int fildes, off_t off);
-```
 
-- `addr` - ten parametr pozwala poinformować system operacyjny, jaki obszar pamięci chcemy zmapować (po stronie systemu). W naszych zastosowaniach zwykle przekazujemy tutaj po prostu `NULL` żeby system sam o tym zdecydował.
-- `len` - oznacza oczywiście wielkość pamięci
-- `prot` - oznacza operacje (odczyt/zapis/wykonanie - patrz manual) jakie będziemy wykonywać na pamięci - trochę jak w przypadku plików.
-- `flags` - ten parametr determinuje rodzaj mapowania stworzonego przez `mmap`. Poniżej opisane zostały najważniejsze flagi, koniecznie przeczytaj `man 2 mmap` żeby zapoznać się z pełną listą oraz szczegółowymi informacjami.
-  - `MAP_ANONYMOUS` - oznacza, że nie mapujemy pliku a tworzymy nowy, anonimowy obszar pamięci. W takiej sytuacji parametr `filedes` powinien być ustawiony na `-1`. W przypadku, gdy nie użyjemy tej flagi funkcja działa domyślnie w trybie mapowania pliku.
-  - `MAP_SHARED` - oznacza, że mapowanie jest współdzielone z innymi procesami. W naszym przypadku prawie zawsze chcemy użyć tej flagi.
-  - `MAP_PRIVATE` - przeciwieństwo powyższej flagi - mapowanie nie jest współdzielone, pamięć zostanie skopiowana w procesach potomnych. Mało przydatne do naszych zastosowań, ale również ważne. Czy nie zastanawiało cię kiedyś jak działa `malloc`?
-- `filedes` - deskryptor pliku, który chcemy zmapować.
-- `off` - offset w pliku, który chcemy zmapować. Przy `MAP_ANONYMOUS` powinien zawsze być ustawiony na 0.
+W tym rozwiązaniu (a także następnego zadania) wszystkie programy korzystają ze wspólnej biblioteki - inaczej każdy z nich musiałby implementować funkcje w rodzaju `bulk_read` co bardzo zwiększyłoby objętość kodu.
 
-To tak naprawdę tyle - wskaźnik na pamięć otrzymany z wywołania `mmap` z flagą `MAP_SHARED` będzie mógł być użyty w dowolnym procesie potomnym a zmiany będą widoczne we wszystkich pozostałych procesach. Ważnym zagadnieniem jest jednak zadbanie o synchronizację albo o to, żeby każdy proces działał tylko w ściśle wyznaczonym dla siebie obszarze wspólnej pamięci.
+Może zastanawiać czemu stała `BACKLOG` jest ustalona na 3 a nie 5, 7 czy 9? To może być dowolna mała liczna, to tylko wskazówka dla systemu, ten program nie będzie obsługiwał dużego ruchu i kolejka czekających połączeń nie będzie nigdy duża, w praktyce połączenia są tu od razu realizowane. Przy większym ruchu trzeba empirycznie sprawdzać jaka wartość tego parametru dobrze się spisze i niestety będzie ona inna na różnych systemach.
 
-Z `mmap` wiążą się jeszcze dwie funkcje:
+W programie używamy makra `SUN_LEN`, czemu nie sizeof? Oba rozwiązania działają poprawnie. Warto wiedzieć, że użycie zwykłego sizeof zwróci większy rozmiar niż makro a to dlatego, że rozmiar liczony przez makro to suma pól struktury (czyli typ i string) a rozmiar podany przez sizeof dodaje jeszcze kilka bajtów przerwy pomiędzy tymi polami. Implementacja oczekuje mniejszej z tych dwóch wartości ale podanie większej nic nie zepsuje ponieważ sam adres jest w postaci ciągu znaków zakończonego zerem. Co zatem wybrać? W materiałach wybieramy zgodność ze standardem czyli makro zatem oszczędzamy te kilka bajtów kosztem nieco dłuższego wyliczania rozmiaru. Jeśli użyjesz sizeof to nie będzie to traktowane jako błąd.
 
-- `msync` - przydatna przy mapowaniu plików, pozwala wymusić na systemie operacyjnym wykonanie modyfikacji mapowanego pliku. Ze względu na wydajność (modyfikacje plików na dysku są wolne) w momencie gdy zmodyfikujemy fragment pamięci zmapowanej do pliku, system od razu nie odzwierciedli tych zmian. Inaczej tworzyłoby to bardzo wiele bardzo małych modyfikacji, co bardzo spowolniłoby działanie systemu. Jeśli chcemy mieć pewność, że zmiany zostaną odwzorowane należy użyć funkcji `msync`. Można o tym myśleć, jako o funkcji analogicznej do `fflush` dla strumieni. Patrz `man 3p msync`.
-- `munmap` - zmapowaną pamięć trzeba kiedyś "odmapować" - służy do tego to polecenie - patrz `man 3p munmap`. Warto wspomnieć, że przy zmapowanych plikach `munmap` nie gwarantuje synchronizacji - konieczne jest wywołanie wcześniej `msync`.
+Standard POSIX mówi, że nawiązanie połączenia sieciowego nie może być przerwane (co jest dość logiczne ponieważ biorą w nim udział dwie strony). Zatem jeśli funkcja obsług sygnału przerwie `connect` to tak naprawdę jego nawiązywanie nadal trwa asynchronicznie względem głównego kodu. Próba restartu funkcji np. makrem `TEMP_FAILURE_RETRY` nie jest już możliwa (spowoduje błąd `EALREADY`). W kodzie naszego klienta nie obsługujemy sygnałów, co jednak, gdybyśmy to robili? Należy sprawdzić, czy `errno` jest równe `EINTR` i w takim wypadku użyć funkcji `select`, `poll` albo `epoll*` żeby poczekać aż będzie możliwy zapis.
+
+Można od razy zażyczyć sobie asynchronicznego połączenia, wystarczy przed wywołaniem connect ustawić na deskryptorze gniazda flagę `O_NONBLOC`. Nawiązywanie połączenia jest dość czasochłonne i jest to sposób aby w czasie oczekiwania program mógł coś wykonać.
+
+W programie przepływ danych jest trywialny, klient łączy się, wysyła zapytanie i od razy dostaje odpowiedź po czym się rozłącza. Możliwe są oczywiście znacznie bardziej złożone scenariusze wymiany komunikatów (protokoły).
+W danym momencie komunikacji pomiędzy programami to co zostało przesłane wcześniej tworzy "kontekst" dla tego co wysyłamy. W zależności od protokołu, kontekst może być bardziej lub mniej złożony. W tym programie zapytanie jest kontekstem dla odpowiedzi, czyli odpowiedź wynika z kontekstu komunikacji (pytania).
+
+Warto zapytać czemu służą makra ntohl i htonl użyte do konwersji byte orderu liczb skoro połączenie jest lokalne? W tym programie sporo kodu w drugim etapie będzie współdzielone z połączeniem sieciowym tcp, które takiej konwersji wymaga. Połączeniu lokalnemu taka konwersja nie przeszkadza. Warto też dodać, że nic w standardzie POSIX nie zabrania aby powstały w przyszłości gniazda lokalne działające na sieciowym systemie plików, czyli takie które będą tej konwersji jednak wymagać, nasz program jest na to gotowy.
+
+W kodzie używana jest funkcja `bulk_read`, trzeba wiedzieć, że w takiej postaci jak powyżej ta funkcja nie potrafi sobie poradzić z deskryptorem w trybie nieblokującym - zwróci błąd `EAGAIN`. Czy w tym przypadku mamy taki deskryptor? Nowo otwarte (przez f. accept) połączenie dostaje  nowy deskryptor, jego flagi nie muszą być dziedziczone (na Linuksie nie są) z deskryptora gniazda nasłuchującego. W tym programie nie będzie problemu bo wiemy, że dane już czekają na odbiór i pod Linuksem mamy tryb blokujący ale warto może przerobić funkcję bulk_read tak aby czekała na dane gdy gniazdo jest w trybie nieblokującym.
+
+Obowiązuje Państwa użycie funkcji getaddrinfo, starsza funkcja gethostbyname  jest w dokumentacji oznaczona jako przestarzała i ma nie być używana w pracach studenckich.
 
 
-### Zadanie
+Jak po uruchomieniu serwera można podejrzeć plik gniazda? 
+{{% answer %}} `$ls -l a`  {{% /answer %}}
 
-Napisz program obliczający liczbę PI metodą Monte Carlo. Program ma jeden argument - `0 < N < 30` - liczbę procesów obliczeniowych. Każdy proces obliczeniowy wykonuje `100 000` iteracji Monte Carlo.
+Czym jest w programie wywołanie `epoll_pwait`?
+{{< answer >}} Jest punktem w którym program czeka na dostępność danych na wielu deskryptorach oraz na nadejście sygnału `SIGINT` {{< /answer >}}
 
-Proces główny mapuje dwa obszary pamięci. Pierwszy obszar służy do współdzielenia wyników obliczeń procesów potomnych. Ma rozmiar N*4 bajtów. Każdy proces potomny zapisuje wynik swoich obliczeń do jednej 4-bajtowej komórki pamięci jako float. Drugi obszar pamięci jest mapowanie pliku `log.txt`. Proces główny ustawia rozmiar tego pliku na `N*8`. Następnie procesy dzieci zapisują tam swoje wyniki końcowe w postaci tekstowej - każdy w jendej linii o szerokości 7 (+ósmy znak to `\n`).
+Czy można użyć tu `epoll_wait` a zamiast `epoll_pwait`?
+{{< answer >}} Można ale nie warto bo dodanie poprawnej obsługi `SIGINT` będzie wtedy bardziej pracochłonne {{< /answer >}}
 
-### Rozwiązanie zadania
+Czemu gniazdo sieciowe jest w trybie nieblokującym? 
+{{< answer >}} Bez tego trybu mogłoby się zdarzyć, że klient który chce się połączyć "zginie" pomiędzy `epoll_pwait`, które potwierdzi gotowość do połączenia a `accept`, które faktycznie przyjmie to połączenie. Wtedy na blokującym gnieździe program zatrzymałby się aż do nadejścia kolejnego połączenia nie reagując na sygnał `SIGINT`. {{< /answer >}}
 
-Nowe strony z manuala:
-```
-man 3p mmap
-man 2 mmap
-man 3p munmap
-man 3p msync
-man 0p sys_mman.h
-man 3p ftruncate
-```
+Czemu użyto `int32_t` (stdint.h) a nie zwykły int? 
+{{< answer >}} Ze względu na różne rozmiary int'a  na różnych architekturach. {{< /answer >}}
 
-rozwiązanie `l7-1.c`:
-{{< includecode "l7-1.c" >}}
+Czemu ignorujemy `SIGPIPE` w serwerze?
+{{< answer >}} Łatwiej obsłużyć błąd `EPIPE` niż sygnał, zwłaszcza, że informacja o przedwczesnym zakończeniu się klienta nie może prowadzić do zamknięcia serwera. {{< /answer >}}
 
-### Uwagi i pytania
+Czemu w programie użyto bulk_read i bulk_write? Nie ma obsługi sygnałów poza `SIGINT`, który i tak kończy działanie programu. 
+{{< answer >}} Z tego samego powodu dla którego tak często `EINTR` jest obsłużony - przenośność kodu do innych rozwiązań. {{< /answer >}}
 
-- Czemu w zadaniu nie występuje żadna synchronizacja?
-{{< answer >}} Każdy z procesów potomnych piszę do własnego wydzielonego fragmentu pamięci dzielonej a dopiero rodzic na końcu łączy wyniki. Z tego powodu nie występuje  żaden konflikt wymagający synchronizacji. {{< /answer >}}
+Czemu służy unlink w kodzie serwera? 
+{{< answer >}} Usuwamy gniazdo lokalne tak samo jak usuwamy plik -  funkcja porządkowa. {{< /answer >}}
 
-- Do czego konieczne jest wywołanie `ftruncate`?
-{{< answer >}} Bez tego wywołania otwarty plik `log.txt` miałby rozmiar 0, ponieważ jest otwierany z flagą `O_TRUNC`, która powoduje skasowanie jego zawartości. Z kolei bez tej flagi rozmiar zależałby od poprzedniej zawartości pliku, byłoby więc to nieprzewidywalne. {{< /answer >}}
+Czemu służy opcja gniazda SO_REUSEADDR? 
+{{< answer >}} Dodanie tej opcji pozwala na szybkie ponowne wykorzystanie tego samego portu serwera, jest to ważne gdy chcemy szybko poprawić jakiś błąd w kodzie i ponownie uruchomić program. Bez tej opcji system blokuje dostęp do portu na kilka minut. {{< /answer >}}
 
-## Pamięć dzielona i robust mutex
+Czy powyższa opcja nie naraża nas na błędy komunikacji wynikające z możliwości otrzymania jakichś pozostałości po poprzednim połączeniu?
+{{< answer >}} Nie, protokół tcp jest na takie "śmieci" uodporniony. Gdyby połączenie było typu udp wtedy odpowiedź byłaby twierdząca. {{< /answer >}}
 
-### shm_*
+Co to za adres INADDR_ANY i czemu jest często używany jako adres lokalny?
+{{< answer >}} To adres specjalny postaci 0.0.0.0, który ma szczególne znaczenie w adresacji. Oznacza dowolny adres. Jeśli gniazdu serwera (nasłuchującemu) damy taki adres to oznacza, że jakiekolwiek połączenie nadejdzie do serwera, niezależnie jak zaadresowane to będzie przyjęte. To oczywiście nie oznacza, że przechwycimy wszystkie połączenia  w sieci, to oznacza, że nie jest ważne jaki adres w sieci ma serwer (może mieć nawet kilka) jeśli tylko ustawienia sieci spowodują, że połączenie będzie kierowane na dany serwer to nasz program na nim będzie mógł je przyjąć nie znając swojego faktycznego lokalnego adresu!  {{< /answer >}}
 
-W przykładzie wyżej dzięki `mmap` tworzyliśmy obszar pamięci, który współdzieliła ze sobą grupa procesów stworzona przez `fork()`. Co jednak, gdy procesy są od siebie niezależne? W takiej sytuacji możemy stworzyć nazwany obiekt pamięci dzielonej, która każdy proces może zmapować po unikalnej nazwie. Jest więc to rzecz bardzo podobna i analogiczna w różnicach co pipe i FIFO omawiane na L5.
+Kod klienta jest bardzo podobny do klienta lokalnego, jako ćwiczenie proponuję zintegrowanie tych kodów do jednego programu z przełącznikiem -p local|tcp
 
-Do tworzenia nazwanego obiektu pamięci dzielonej służy funkcja `shm_open` (patrz `man 3p shm_open`). Jej użycie jest bardzo proste, a parametry analogiczne do zwykłego `open` albo `mq_open`, tak więc po prostu przeczytaj stronę manuala.
 
-`shm_open` zwróci deskryptor, zachowujący się bardzo podobnie co deskryptor pliku. Na początku stworzona pamięć ma zerowy rozmiar, dlatego należy ją powiększyć używająć np. `ftruncate`. Następnie wystarczy użyć funkcji `mmap`. 
 
-Gdy wszystkie procesy skończą działać z pamięcią dzieloną należy ją usunąć funkcją `shm_unlink`, co również jest bardzo proste, więc po prostu sprawdź `man 3p shm_unlink`.
+		
+## Zadanie 2 - UDP
 
-### Współdzielenie obiektów synchronizacji i robust mutex
+Cel:
 
-Mając współdzieloną pamięć możemy synchronizować procesom dostęp do niej (albo wykonanie innych operacji) przy pomocy poznanych już pipe-ów, fifo i kolejek komunikatów. Możliwe jest jednak również umieszczenie semaforów oraz mutexów w pamięci dzielonej tak, aby wszystkie procesy miały do nich dostęp.
+Napisz dwa programy pracujące w architekturze klient-serwer poprzez
+połączenie UDP. Zadanie programu klienta polega na wysłaniu pliku
+podzielonego na datagramy. Zadanie programu serwera polega na
+odbieraniu plików przesyłanych przez socket i wypisywaniu ich na
+ekran (bez informacji o pliku z którego dane pochodzą).
 
-W przypadku semaforów sprawa jest prosta. Zobacz `man 3p sem_init` - jeśli drugi parametr, `pshared`, zostanie ustawiony na wartość inną niż zero, semafor może być dzielony między procesami. Tak więc, wystarczy wybrać pewien obszar pamięci dzielonej o rozmiarze `sizeof(sem_t)` i zainicjalizować tam semafor w ten sposób a wszystkie procesy będą mogły z niego korzystać.
+Każdy wysłany do serwera pakiet musi być potwierdzony odpowiednim
+komunikatem zwrotnym, w razie braku takiego zwrotnego komunikatu
+(czekamy 0,5s) należy ponawiać wysłanie pakietu. W razie 5 kolejnych
+niepowodzeń program klienta powinien zakończyć działanie. Potwierdzenia
+też mogą zaginąć w sieci, ale program powinien sobie i z tym radzić -
+serwer nie może dwa razy wypisać tego samego fragmentu tekstu.
 
-Nieco bardziej skomplikowane jest współdzielenie mutexów. Ustawianie specjalnych właściwości mutexa również odbywa się przy jego inicjalizacji (`pthread_mutex_init`, ale patrz `man 3p pthread_mutex_destroy`) - jako drugi parametr możemy podać specjalne atrybuty - `pthread_mutexattr_t`. Tak więc, żeby mutex mógł być współdzielony między procesami należy stworzyć obiekt atrybutów mutexa (`pthread_mutexattr_init`) a następnie wywołać na tak zainicjalizowanych atrybutach `pthread_mutexattr_setpshared` (patrz `man 3p pthread_mutexattr_getpshared`). Następnie wystarczy przekazać te atrybuty do `pthread_mutex_init`.
+Wszystkie dodatkowe dane (wszystko poza tekstem z pliku) przesyłane
+między serwerem i klientem mają mieć postać liczb typu int32_t.  Należ
+przyjąć, że rozmiar przesyłanych jednorazowo danych (tekst z pliku i
+dane sterujące)  nie może przekroczyć 576B. Naraz serwer może odbierać
+maksymalnie 5 plików, 6 jednoczesna transmisja ma być zignorowana.
 
-Stworzony w ten sposób mutex będzie mógł być poprawnie współdzielony między procesami, to jednak nie koniec problemów. Wciąż bowiem obowiązuje nas podstawowe ograniczenie - mutex musi zostać odblokowany w tym samym wątku, który go zablokował. Stwarza to problem, gdy w wyniku błędu albo awarii proces zablokuje mutex i zakończy się przed jego odblokowaniem. Mutex znajdzie się wtedy w niepoprawnym stanie. Aby zaradzić takim sytuacjom należy stworzyć tzw. "niezawodny mutex" (ang. "robust mutex").
+Program serwer jako parametr przyjmuje numer portu na którym będzie
+pracował, program klient przyjmuje jako parametry adres i port serwera
+oraz nazwę pliku.
 
-Tworzenie "robust mutexa" polega na dodaniu mu odpowiedniego atrybytu przy użyciu `pthread_mutexattr_setrobust` (patrz `man 3p pthread_mutexattr_getrobust`) - podobnie jak to było ze współdzieleniem. Gdy spróbujemy zablokować mutex (`pthread_mutex_lock`), który jest w niepoprawnym stanie (został zablokowany przez inny proces, który zakończył się i go nie odblokował) otrzymamy błąd `EOWNERDEAD` (patrz `man 3p pthread_mutex_lock`) - ale mutex zostanie mimo wszystko **zablokowany**. Żeby naprawić stan mutexu należy dodatkowo wywołać funkcję `pthread_mutex_consistent` (`man 3p pthread_mutex_consistent`).
-
-Podobnie jak mutex inicjalizowane są równie zmienne warunkowe i bariery. One również mogą być współdzielone między procesami, dzięki ustawieniu odpowiednich atrybutów. Zobacz `man 3p pthread_condattr_getpshared` i `man 3p pthread_barrierattr_getpshared`. W przypadku tych obiektów na szczęście nie występują dodatkowe problemy, które trzeba rozwiązać, tak jak przy mutexie.
-
-Zobacz, jak współdzielona pamięć oraz robust mutex zostały wykorzystane w poniższym zadaniu.
-
-### Zadanie
-
-Napisz dwa programy - klienta i serwera. Proces serwera ma jeden parametr - `3 < N <= 20`. Po uruchomieniu najpierw wypisuje komunikat `My PID is: <pid>`. Następnie tworzy segment pamięci dzielonej o nazwie `<pid>-board` i rozmiarze 1024 bajtów. W pamięci dzielonej umieszcza mutex, `N` oraz planszę - tablicę bajtów rozmiaru NxN wypełnioną losowymi liczbami z zakresu `[1,9]`. Następnie co trzy sekundy wypisuje stan planszy. Po otrzymaniu `SIGINT` wypisuje stan planszy po raz ostatni i się kończy.
-
-Program klienta przyjmuje jeden parametr - `PID` serwera. Otwiera obszar pamięci stworzone przez serwer. Następnie wykonuje następującą procedurę:
-
-1. Blokuje mutex
-2. Losuje liczbę z zakresu `[1,10]`. W przypadku wylosowani `1` wypisuje `Ops...` i się kończy.
-3. Losuje dwie liczby `x` i `y` z zakresu od `0` do `N-1` i wypisuje `trying to search field (x,y)`
-4. Sprawdza jaka liczba znajduje się na planszy na polu o współrzędnych `(x,y)`
-5. Jeśli nie jest to zero program dodaje tę liczbę do sumy swoich punktów, wypisuje `found <P> points`, zeruje to pole, odblokowywuje mutex, czeka sekundę i wraca do kroku 1.
-6. Jeśli jest to zero program odblokowywuje mutex, wypisuje `GAME OVER: score <X>` (gdzie `X` to zdobyta suma punktów) i się kończy.
-
-### Rozwiązanie zadania
-
-Nowe strony z manuala:
-```
-man 3p shm_open
-man 3p shm_unlink
-man 3p pthread_mutexattr_destroy
-man 3p pthread_mutexattr_setpshared
-man 3p pthread_mutexattr_setrobust
-man 3p pthread_mutex_consistent
-```
+Co student musi wiedzieć:
+- man 7 udp
+- man 3p sendto
+- man 3p recvfrom
+- man 3p recv
+- man 3p send
 
 rozwiązanie `l7-2_server.c`:
 {{< includecode "l7-2_server.c" >}}
@@ -137,43 +198,64 @@ rozwiązanie `l7-2_server.c`:
 rozwiązanie `l7-2_client.c`:
 {{< includecode "l7-2_client.c" >}}
 
-### Uwagi i pytania
 
-- Zwróć uwagę w jaki sposób w programie obsługiwane są sygnały. Dzięki użyciu dedykowanego wątku problematyczny kod do obsługi sygnałów jest ograniczony do jednej funkcji, nie ma zmiennych globalnych i nie musimy używać wszędzie `TEMP_FAILURE_RETRY`. Ma to znaczenie zwłaszcza w bardziej złożonych projektach.
+Zwróć uwagę, że w protokole UDP nie nawiązujemy połączenia, gniazda komunikują się ze sobą "ad hoc". Nie ma gniazda nasłuchującego. Możliwe są straty, duplikaty i zmiany kolejności datagramów.
+W przykładzie występują kolejne przydatne do biblioteki wariacje funkcji: make_socket, bind_inet_socket, ponieważ mają te same nazwy co funkcje użyte w poprzednim zadaniu trzeba je inaczej ponazywać.
 
-- Czy gdyby nie nasze losowe zamykanie procesu potomnego po wylosowaniu 1 robust mutex byłby potrzebny?
-{{< answer >}} Tak, proces i tak mógłby się zakończyć w tym miejscu, np. z powodu otrzymania sygnału `SIGKILL`. Generalnie przy współdzieleniu mutexu z innymi procesami, najlepiej żeby zawsze był to robust mutex.  {{< /answer >}}
+W tym zadaniu  kontekst połączenia jest ważny i wymaga wysiłku aby go utrzymać. Co jest kontekstem połączenia?
+{{< answer >}} Kontekstem jest ilość poprawnie przesłanych pakietów do danej chwili. {{< /answer >}}
 
-- Czy robust mutex sprawia, że nie może dojśc do deadlocka z powodu błędu w jednym z procesów?
-{{< answer >}} Niestety nie. Proces wciąż może np. nie zwalniać mutexa albo mieć inny błąd. Należy zwrócić szczególną uwagę na sytuację, w której proces robiłby `unmap` przed zwolnieniem mutexu. W takiej sytuacji mechanizm "robustness" nie zadziała! {{< /answer >}}
+Jakie dane są przesyłane w pojedynczym datagramie? Czemu służą przesyłane metadane?</br>
+{{< answer >}} Pakiet składa się z (1) 32 bitowego numeru fragmentu, (2) 32 bitowej informacji czy to ostatni fragment oraz (3) z fragmentu pliku. Metadane służą do kontroli kontekstu (1) oraz do zakończenia transmisji (2).   {{< /answer >}}
 
-- Do czego konieczne jest wywołanie `ftruncate`?
-{{< answer >}} Stworzony obiekt pamięci dzielonej ma na początku rozmiar 0 i musi być powiększony. {{< /answer >}}
+Czemu i na jakich deskryptorach są używane funkcje bulk_read i bulk_write, czy nie powinno się rozszerzyć tego użycia na wszystkie deskryptory?/br>
+{{< answer >}}  Funkcje są potrzebne do restartowania read i write  w sytuacji przerwania w trakcie operacji IO ( w odróżnieniu od `EINTR` czyli przerwania przed operacją). Funkcje te są używane tylko do działań na plikach ponieważ przesyłanie datagramów jest ATOMOWE i nie może być przerwane w trakcie. W tym programie występuje obsługa sygnałów ale tam gdzie się ich spodziewamy nie dokonujemy operacji na plikach. To zabezpieczenie jest nadmiarowe, dodane z myślą o przenoszeniu tego kodu do innych programów.  {{< /answer >}}
+
+Czy może wystąpić sytuacja zerwania połączenia? Czy nie powinniśmy tego rozpoznawać?
+{{< answer >}} Nie może, udp nie wytwarza połączenia, które mogłoby być zerwane. {{< /answer >}}
+
+Przeanalizuj jak działa findIndex w serwerze, zwłaszcza jak są porównywane adresy. W jakim byte orderze są? Jak zachowa się ta funkcja jeśli adres jest nowy? 
+{{< answer >}} Porównywane adresy są w byte order sieci, nie mamy potrzeby ich konwertować skoro jedynie je porównujemy a nie np. wyświetlamy. Funkcja dla nowego adresu zakłada nowy rekord (o ile ma jeszcze wolne miejsce w tablicy). {{< /answer >}}
+
+Jak sobie poradzimy z duplikatami datagramów?
+{{< answer >}} Trzymamy tablice stanu połączeń "struct connections", wiemy, który fragment już wypisaliśmy i nie powtarzamy go. {{< /answer >}}
+
+Jak sobie poradzimy, z odwrotną kolejnością datagramów, czyli gdy otrzymamy fragment dalszy niż aktualnie oczekiwany?
+{{< answer >}} Odwrócenie nie  może się zdarzyć, bo klient nie prześle dalszych części dopóki nie potwierdzimy wcześniejszych. {{< /answer >}}
+
+Jak sobie poradzimy z ginącymi pakietami ?
+{{< answer >}} Obsługuje to retransmisja po stronie klienta. {{< /answer >}}
+
+Co się stanie jeśli zaginie potwierdzenie pakietu a nie sam pakiet?
+{{< answer >}} Klient uzna, że pakiet nie dotarł i prześle go ponownie. Serwer nie wyświetli pakietu drugi raz ale odeśle potwierdzenie po raz kolejny.  {{< /answer >}}
+
+Co zawierają potwierdzenia?
+{{< answer >}} Odsyłamy to co dostaliśmy, cały pakiet bez zmiany. {{< /answer >}}
+
+Jak jest zaimplementowany timeout na odpowiedź od serwera? 
+{{< answer >}} W funkcji sendAndConfirm najpierw ustawiamy alarm na 0.5 sekundy (setitimer) następnie program stara się odebrać potwierdzenie. Brak restartu funkcji recv makrem nie  jest przypadkowy, po ew. przerwaniu musimy móc sprawdzić czy to nie był oczekiwany timeout.  {{< /answer >}}
+
+Czemu konwertujemy tylko byte order numeru fragmentu i znacznika ostatniego elementu a reszta danych nie jest odwracana?
+{{< answer >}} Tylko te dwie dane są przesyłane jako liczby binarne,  reszta to tekst, który nie wymaga tego zabiegu.  {{< /answer >}}
+
+Przeanalizuj jak działa limitowanie do 5 połączeń, zwróć uwagę na pole free w strukturze i znaczenie znacznika ostatniego fragmentu przesyłanego przez klienta.
 
 
+## Przykładowe zadanie
 
-## Nazwany semafor
+Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
 
-Nazwane semafory były już wspomniane na SOP1, jednak warto je powtórzyć. Nazwany semafor ma się do zwykłego semafora podobnie jak fifo do pipe. Tworzymy go przy pomocy funkcji `sem_open` (patrz `man 3p sem_open`) przekazując flagę `O_CREAT`, uprawnienia oraz początkową wartość, np:
-
-```
-sem_t *semaphore = sem_open("SOP-semaphore", O_CREAT, 0666, 5);
-```
-
-utworzy semafor o nazwie `SOP-semaphore` i zainicjalizuje go wartością 5. Wykonanie potem tego samego wywołania (albo prostszego, bez `O_CREATE`: `sem_open("SOP-semaphore", 0);`) w innym procesie zwróci ten sam, już istniejący semafor. Jak widać jest to zupełnie analogiczne do fifo albo kolejek komunikatów.
-
-Nazwane semafory dzięki swojej prostocie są wygodne w użyciu do zapewniania synchronizacji dla procesów korzystających z pamięci dzielonej. Gdy kilka niezależnych procesów zamierza korzystać z jednego obiektu pamięci dzielonej tylko jeden będzie ją inicjalizował. Istotne jest więc, żeby pozostałe procesy wtedy czekały, aż inicjalizacja zostanie zakończona - co można właśnie prosto zrealizować przy użyciu semafora.
-
+- [Zadanie 1]({{< ref "/sop2/lab/l7/example1" >}}) ~60 minut
+- [Zadanie 2]({{< ref "/sop2/lab/l7/example2" >}}) ~120 minut
+- [Zadanie 3]({{< ref "/sop2/lab/l7/example3" >}}) ~120 minut
+- [Zadanie 4]({{< ref "/sop2/lab/l7/example4" >}}) ~120 minut
 
 ## Kody źródłowe z treści tutoriala
+
 {{% codeattachments %}}
 
 ## Materiały dodatkowe
 
-Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
-
-- [Zadanie 1]({{% ref "/sop2/lab/l7/example1" %}}) ~120 minut
-- [Zadanie 2]({{% ref "/sop2/lab/l7/example2" %}}) ~120 minut
-- [Zadanie 3]({{< ref "/sop2/lab/l7/example3" >}}) ~120 minut
-- Spróbuj rozwiązać przykładowe [zadanie z L5]({{% ref "/sop2/lab/l5/example2" %}}) używając pamięci dzielonej. Zamiast wysyłania wiadomości o nowej rundzie synchronizacja może odbywać się przy pomocy semafora (rodzic wywołuje `sem_post` odpowiednią ilość razy na początku rundy). Przetestuj semafor współdzielony w pamięci dzielonej oraz nazwany semafor otwierany niezależnie przez procesy potomne. Zamiast wysyłania kart przez łącza gracze mogą umieszczać je w odpowiednim obszarze pamięci dzielonej. Do zasygnalizowania serwerowi, że gracze wystawili już swoje karty możesz użyć współdzielonej bariery albo ponownie semafora.
-- <http://cs341.cs.illinois.edu/coursebook/Ipc#mmap>
+ - <http://cs341.cs.illinois.edu/coursebook/Networking#layer-4-tcp-and-client>
+ - <http://cs341.cs.illinois.edu/coursebook/Networking#layer-4-tcp-server>
+ - <http://cs341.cs.illinois.edu/coursebook/Networking#non-blocking-io>

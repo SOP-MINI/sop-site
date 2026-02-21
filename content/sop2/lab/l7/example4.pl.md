@@ -71,4 +71,4 @@ Dostarczony jest też plik wykonywalny przykładowej implementacji programu klie
 
 ## Client and server executables:
 
-- [sop2l8e3-4.zip](/files/sop2l8e3-4.zip)
+- [sop2l7e3-4.zip](/files/sop2l8e3-4.zip)

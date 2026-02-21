@@ -19,13 +19,6 @@ title: "Materiały do przedmiotu"
 - [Systemy czasu rzeczywistego.]({{< ref "wyk/w13" >}})
 - [Ochrona i bezpieczeństwo.]({{< ref "wyk/w14" >}})
 
-## Opisy ćwiczeń laboratoryjnych
-
-- [L5 FIFO/pipe]({{< ref "lab/l5" >}})
-- [L6 kolejki POSIX]({{< ref "lab/l6" >}})
-- [L7 Gniazda pselect]({{< ref "lab/l7" >}})
-- [L8 Gniazda, wątki, pamięć wspólna, synchronizacja]({{< ref "lab/l8" >}})
-
 ## Inne materiały
 
 - [The Single UNIX specification, Version 3 (zawiera IEEE Std 1003.1 and ISO/IEC 9945)](http://www.unix.org/version3/online.html)
