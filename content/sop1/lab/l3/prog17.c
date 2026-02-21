@@ -1,105 +1,93 @@
-#include <math.h>
 #include <pthread.h>
-#include <stdarg.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#define MAXLINE 4096
-#define DEFAULT_THREADCOUNT 10
-#define DEFAULT_SAMPLESIZE 100
+#include <time.h>
 
 #define ERR(source) (perror(source), fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), exit(EXIT_FAILURE))
 
-typedef unsigned int UINT;
-typedef struct argsEstimation
+typedef struct targs
 {
     pthread_t tid;
-    UINT seed;
-    int samplesCount;
-} argsEstimation_t;
+    unsigned int seed;
+    int samples_count;
+} targs_t;
 
-void ReadArguments(int argc, char **argv, int *threadCount, int *samplesCount);
-void *pi_estimation(void *args);
+void* pi_estimation(void* args);
 
-int main(int argc, char **argv)
+void usage(char* pname)
 {
-    int threadCount, samplesCount;
-    double *subresult;
-    ReadArguments(argc, argv, &threadCount, &samplesCount);
-    argsEstimation_t *estimations = (argsEstimation_t *)malloc(sizeof(argsEstimation_t) * threadCount);
+    fprintf(stderr, "Usage: %s [num_threads > 0] [num_samples > 0]\n", pname);
+    exit(EXIT_FAILURE);
+}
+
+void create_threads(int thread_count, int samples_count, targs_t** estimations)
+{
+    *estimations = malloc(sizeof(targs_t) * thread_count);
     if (estimations == NULL)
-        ERR("Malloc error for estimation arguments!");
+        ERR("malloc");
+
+    targs_t* targs = *estimations;
+
     srand(time(NULL));
-    for (int i = 0; i < threadCount; i++)
+    for (int i = 0; i < thread_count; i++)
     {
-        estimations[i].seed = rand();
-        estimations[i].samplesCount = samplesCount;
+        targs[i].seed = rand();
+        targs[i].samples_count = samples_count;
+
+        if (pthread_create(&(targs[i].tid), NULL, pi_estimation, &targs[i]) != 0)
+            ERR("pthread_create");
     }
-    for (int i = 0; i < threadCount; i++)
+}
+
+int main(int argc, char** argv)
+{
+    if (argc != 3)
+        usage(argv[0]);
+
+    int thread_count = atoi(argv[1]);
+    int samples_count = atoi(argv[2]);
+
+    if (thread_count <= 0 || samples_count <= 0)
+        usage(argv[0]);
+
+    targs_t* estimations;
+    create_threads(thread_count, samples_count, &estimations);
+
+    int* subresult = NULL;
+    int cumulative_result = 0;
+    for (int i = 0; i < thread_count; i++)
     {
-        int err = pthread_create(&(estimations[i].tid), NULL, pi_estimation, &estimations[i]);
-        if (err != 0)
-            ERR("Couldn't create thread");
-    }
-    double cumulativeResult = 0.0;
-    for (int i = 0; i < threadCount; i++)
-    {
-        int err = pthread_join(estimations[i].tid, (void *)&subresult);
-        if (err != 0)
-            ERR("Can't join with a thread");
+        if (pthread_join(estimations[i].tid, (void**)&subresult) != 0)
+            ERR("pthread_join");
+
         if (NULL != subresult)
         {
-            cumulativeResult += *subresult;
+            cumulative_result += *subresult;
             free(subresult);
         }
     }
-    double result = cumulativeResult / threadCount;
-    printf("PI ~= %f\n", result);
+
+    const double sum_avg = (double)cumulative_result / (double)thread_count;
+    const double pi_estimate = (2.0 * (double)samples_count) / (sum_avg * sum_avg);
+    printf("Estimated value of PI is %f\n", pi_estimate);
+
     free(estimations);
 }
 
-void ReadArguments(int argc, char **argv, int *threadCount, int *samplesCount)
+void* pi_estimation(void* void_ptr)
 {
-    *threadCount = DEFAULT_THREADCOUNT;
-    *samplesCount = DEFAULT_SAMPLESIZE;
-
-    if (argc >= 2)
-    {
-        *threadCount = atoi(argv[1]);
-        if (*threadCount <= 0)
-        {
-            printf("Invalid value for 'threadCount'");
-            exit(EXIT_FAILURE);
-        }
-    }
-    if (argc >= 3)
-    {
-        *samplesCount = atoi(argv[2]);
-        if (*samplesCount <= 0)
-        {
-            printf("Invalid value for 'samplesCount'");
-            exit(EXIT_FAILURE);
-        }
-    }
-}
-
-void *pi_estimation(void *voidPtr)
-{
-    argsEstimation_t *args = voidPtr;
-    double *result;
-    if (NULL == (result = malloc(sizeof(double))))
+    targs_t* args = void_ptr;
+    int* result = malloc(sizeof(int));
+    if (result == NULL)
         ERR("malloc");
 
-    int insideCount = 0;
-    for (int i = 0; i < args->samplesCount; i++)
+    int inner_count = 0;
+    for (int i = 0; i < args->samples_count; i++)
     {
-        double x = ((double)rand_r(&args->seed) / (double)RAND_MAX);
-        double y = ((double)rand_r(&args->seed) / (double)RAND_MAX);
-        if (sqrt(x * x + y * y) <= 1.0)
-            insideCount++;
+        inner_count += (rand_r(&args->seed) % 2) ? 1 : -1;
     }
-    *result = 4.0 * (double)insideCount / (double)args->samplesCount;
+
+    *result = abs(inner_count);
+
     return result;
 }

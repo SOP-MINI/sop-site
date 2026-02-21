@@ -31,8 +31,58 @@ Introduction notes:
 {{< /hint >}}
 
 _This tutorial is based on tasks and code examples provided by student Mariusz Kowalski._
+## Thread Management
 
-## Task 1 - simple joinable threads, synchronization and threads return values
+### Creating Threads
+A thread is created using the `pthread_create` command. Let's take a look at the declaration of this function:
+
+```
+int pthread_create(pthread_t *restrict thread,
+                  const pthread_attr_t *restrict attr,
+                  void *(*start_routine)(void*),
+                  void *restrict arg);
+```
+
+Unlike `fork`, this function returns an integer that is used to determine whether it has succeeded or failed. On success, it writes the newly created thread's handle to `thread`.
+
+The second argument is for attributes. It can be left NULL to use the default attributes. (See `man 3p pthread_attr_destroy` and `man -k pthread_attr_set` for additional info)
+
+When creating a thread, you have to supply a function pointer to a function of the following signature:
+
+```
+void *function(void *args);
+```
+
+This function is the function that will be executed by the newly created thread. You pass the arguments to the function via the last argument `arg`.
+
+In C, a `void*` is a pointer to anything. You can not refer to the underlying value without casting to the actual type, e.g `int*`.
+
+`pthread_t` is implementation defined and should be treated as such. (i.e you can't use it like an integer)
+
+More information:
+```
+man 3p pthread_create
+```
+
+### Thread Joining
+Much like child processes, a thread should also be joined after it finishes its work. This can be achieved using the `pthread_join` command.
+
+```
+int pthread_join(pthread_t thread, void **value_ptr);
+```
+
+`pthread_join` functions similarly to `wait`, blocking until the thread finishes. POSIX doesn't define a non-blocking join function.
+
+Like `pthread_create`, this function returns an integer to indicate success or failure. The thread function's return value is written to `value_ptr` if non-NULL storage was provided.
+
+Unlike with processes, you have to precisely specify which thread you're waiting for by providing a valid thread identifier.
+
+More information:
+```
+man 3p pthread_join
+```
+
+### Excercise
 
 Goal: 
 Write a program to approximate PI value with Monte Carlo method, program takes the following parameters:
@@ -47,33 +97,32 @@ What you need to know:
 - man 3p pthread_create
 - man 3p pthread_join
 - man 3p rand (especially  rand_r)
-- Monte-Carlo method, in paragraph "Monte Carlo methods" on this <a href="https://en.wikipedia.org/wiki/Pi#Use"> site.</a>
+- Monte-Carlo method, in paragraph "Monte Carlo methods" on this <a href="https://en.wikipedia.org/wiki/Pi#Monte_Carlo_methods"> site.</a>
 
-<em>Solution <b>Makefile</b>:</em>
+### Solution
+
+<em><b>Makefile</b>:</em>
 
 ```makefile
 CC=gcc
 CFLAGS=-std=gnu99 -Wall -fsanitize=address,undefined
 LDFLAGS=-fsanitize=address,undefined
-LDLIBS=-lpthread -lm
+LDLIBS=-lpthread
 ```
 
 Flag `-lpthread` is mandatory for all compilations in this tutorial. Linked library is called libpthread.so (after -l we
 write the name of the library without first "lib" part)
 
-Flag `-lm` adds math library, this library is called lm.so  (not libmath.so as you could have guessed)
-
 <em>Solution <b>prog17.c</b>:</em>
 {{< includecode "prog17.c" >}}
 
-This and following programs do not show USAGE information, the default parameters values are assumed if options are
-missing. Run it without parameters to see how it works.
+### Notes and questions
 
 Functions' declarations at the beginning of the code (not the functions definitions) are quite useful, sometimes
 mandatory. If you do not know the difference please
 read <a href="http://en.cppreference.com/w/c/language/function_declaration"> this</a>.
 
-In multi threaded processes you can not correctly use rand() function, use rand_r() instead. The later one requires
+In multi threaded processes you can not correctly use `rand()` function, use `rand_r()` instead. The later one requires
 individual seed for every thread.
 
 This program uses the simplest schema for threads lifetime. It creates some threads and then immediately waits for them
@@ -82,37 +131,100 @@ to finish. More complex scenarios are possible
 Please keep in mind that nearly every call to system function (and most calls to library functions) should be followed
 with the test on errors and if necessary by the proper reaction on the error.
 
-ERR macro does not send "kill" signal as in multi-process program, why ?
+ERR macro does not send "kill" signal as in multi-process program, why?
 {{< details "Answer"  >}} Call to exit terminates all the threads in current process, there is no need to "kill" other processes. {{< /details  >}}
 
-How input data is passed to the new  threads?
-{{< details "Answer"  >}} Exclusively by the pointer to structure  argsEstimation_t that is passed as thread function arguments. There is no need (nor the excuse) to use global variables! {{< /details  >}}
+How is input data passed to the new threads?
+{{< details "Answer"  >}} Exclusively by the pointer to structure targs_t that is passed as thread function arguments. There is no need (nor the excuse) to use global variables! {{< /details  >}}
 
 Is the thread input data shared between the threads?
 {{< details "Answer"  >}} Not in this program. In this case there is no need to synchronize the access to this data. Each thread gets a pointer to the private copy of the structure. {{< /details  >}}
 
-How the random seed for rand_r() is prepared for each thread?
-{{< details "Answer"  >}} It is randomized in the main thread and passed as a part of input data in  argsEstimation_t . {{< /details  >}}
+How the random seed for `rand_r()` is prepared for each thread?
+{{< details "Answer"  >}} It is randomized in the main thread and passed as a part of input data in targs_t. {{< /details  >}}
 
 In this multi thread program we see srand/rand calls, is this correct? It contradicts what was said a few lines above.
-{{< details "Answer"  >}} Only one thread is using srand/rand and those functions are called before working threads come to life. The problem with  srand/rand and threads originates from one global variable used in the library to hold the current seed. In this code only on thread access this seed thus it is correct. {{< /details  >}}
+{{< details "Answer"  >}} Only one thread is using srand/rand and those functions are called before working threads come to life. The problem with srand/rand and threads originates from one global variable used in the library to hold the current seed. In this code only on thread access this seed thus it is correct. {{< /details  >}}
 
 Can we share one input data structure for all the threads instead of having a copy for every thread?
-{{< details "Answer"  >}} No due to random seed, it must be different for all the threads. {{< /details  >}}
+{{< details "Answer"  >}} Not in this program due to random seed, it must be different for all the threads. {{< /details  >}}
 
 Can we make the array with the thread input data automatic variable (not allocated)? 
 {{< details "Answer"  >}} Only if we add some limit on the number of working threads (up to 1000) otherwise this array may use all the stack of the main thread. {{< /details  >}}
 
 Why do we need to release the memory returned from the working thread?
-{{< details "Answer"  >}} This memory was allocated in the thread and has to be released somewhere in the same process, The heap is sheared by all the threads if you do not release it you will leak the memory. It will not be released automatically on the thread termination. {{< /details  >}}
+{{< details "Answer"  >}} This memory was allocated in the thread and has to be released somewhere in the same process, The heap is shared by all the threads if you do not release it you will leak the memory. It will not be released automatically on the thread termination. {{< /details  >}}
 
 Why can't we return the data as the address of local (to the thread) automatic variable? 
 {{< details "Answer"  >}} The moment thread terminates is the moment of its stack memory release. If you have a pointer to this released stack you should not use it as this memory can be overwritten immediately. What worse, in most cases this memory will stil be the same and faulty program will work in 90% of cases. If you make this kind of mistake it is later very hard to find out why sometimes your code fails. Please be careful and try to avoid this flaw. {{< /details  >}}
 
-can we avoid memory allocation in the working thread?
+Can we avoid memory allocation in the working thread?
 {{< details "Answer"  >}} Yes, if we add extra variable to the input structure of the thread. The result can then be stored in this variable.  {{< /details  >}}
 
-## Task 2 - simple detachable threads with common variables and access mutex
+## Detachable threads & Synchronization
+
+### Overview
+
+A detached thread is a thread that you need not join. While it's convenient, it also has downsides, such as not knowing when thread execution ends, as it is not joinable. Because of that, you can't be sure that a thread has actually terminated, which can lead to problems when exiting from the main thread.
+
+Another issue with detached threads is not being able to obtain anything from them without extra synchronization.
+
+There are two ways to obtain a detached thread, those being either spawning a detached thread or manually detaching an already running thread.
+
+### Spawning a detached thread
+
+In order to spawn a detached thread, you must first create a `pthread_attr_t` object that will later be passed to the `pthread_create` function. In order to initialize one to the default state, you must call `pthread_attr_init`. Then, you have to set its detached state to `PTHREAD_CREATE_DETACHED` using the `pthread_attr_setdetachstate` function. Since you have to initialize the attributes structure, you also have to destroy it later using `pthread_attr_destroy`.
+
+More information:
+```
+man 3p pthread_attr_destroy
+man 3p pthread_attr_getdetachstate
+man 3p pthread_create
+```
+
+### Detaching a running thread
+
+As mentioned above, you may also detach a running thread. You can do it by calling `pthread_detach` with the thread's handle. A thread may detach itself in this way by first obtaining its own handle via a `pthread_self` call, and then calling `pthread_detach`. Attempting to detach a thread that's already detached results in undefined behavior and shouldn't be done.
+
+More information:
+```
+man 3p pthread_detach
+man 3p pthread_self
+```
+
+### Mutual exclusion
+Since a detached thread on its own is effectively useless, we are introducing shared state between the threads. It means that two or more threads have to work on the same structure. This is problematic, as we currently have no way of ensuring that a thread won't write to a field that is currently being read by another thread. (and vice versa)
+
+This is where mutexes come into play. In short - a mutex is a special object that prevents two or more threads from holding it at the same time. It is recommended to read more about mutexes if you don't know what a mutex is.
+
+You initialize a mutex by calling the `pthread_mutex_init` function. You would later destroy it by calling the `pthread_mutex_destroy` function.
+```
+int pthread_mutex_init(pthread_mutex_t *restrict mutex,
+   const pthread_mutexattr_t *restrict attr);
+```
+Like `pthread_create`, `pthread_mutex_init` also accepts an attributes object. Similarly, it can be `NULL` to use the default attributes. (See `man 3p pthread_mutexattr_destroy` and `man -k pthread_mutexattr_set` for additional info)
+
+
+
+Just creating a mutex isn't enough, you also need to acquire it when accessing shared state. That can be done using `pthread_mutex_lock`. This function blocks until it can acquire the mutex, then tries to acquire it. While it can fail, its failure usually indicates serious memory corruption, and thus the return value of this function won't be checked in the further examples.
+
+After you have acquired the mutex, you should not attempt to re-acquire it before releasing. This results in a deadlock in the majority of cases.
+
+After you are done modifying the shared state, you should release the mutex by calling `pthread_mutex_unlock`, so that another thread can lock it. Ideally, you should minimize the time you're holding the mutex for, as it slows down other threads that use it.
+
+{{< details "Note"  >}} 
+Please note that you should NEVER make copies of a mutex (e.g `pthread_mutex_t mtx1_copy = mtx1`).
+
+POSIX forbids that. A copy of a mutex does not have to be a working mutex! Even if it would work, it should be quite obvious, that a copy would be a different mutex.
+{{< /details  >}}
+
+More information:
+```
+man 3p pthread_mutex_destroy
+man 3p pthread_mutex_lock
+```
+
+### Excercise
 
 Goal: 
 Write binomial distribution visualization program, use Bean Machine (Galton board) method with 11 bins for bens. The program takes two parameters:
@@ -133,46 +245,47 @@ What you need to know:
 - man 3p pthread_attr_getdetachstate
 - Bean machine on this <a href="https://en.wikipedia.org/wiki/Bean_machine"> site.</a>
 
+### Solution
 <em>Solution <b>prog18.c</b>:</em>
 {{< includecode "prog18.c" >}}
 
-Once again all thread input data is passed as pointer to the structure (Thrower_t), treads results modify bins array (
+### Notes and questions
+
+Once again, all thread input data is passed as pointer to the structure `thrower_args_t`, treads results modify bins array (
 pointer in the same structure), no global variables used.
 
 In this code two mutexes protect two counters and an array of mutexes protects the bins' array (one mutex for every cell
 in the array). In total we have BIN_COUNT+2 mutexes.
 
-In this program we use detachable threads. There is now need (nor option) to wait for working threads to finish and thus
-lack of pthread_join. As we do not join the threads a different method must be deployed to test if the main program can
+In this program we use detachable threads. There is no need (nor option) to wait for working threads to finish, thus
+the lack of pthread_join. As we do not join the threads, a different method must be deployed to test if the main program can
 exit.
 
 In this example mutexes are created in two ways - as automatic and dynamic variables. The first method is simpler in
 coding but you need to know exactly how many mutexes you need at coding time. The dynamic creation requires more
 coding (initiation and removal) but the amount of mutexes also is dynamic.
 
-Is data passed to threads in argsThrower_t structure shared between them?
+Is data passed to threads in `thrower_args_t` structure shared between them?
 {{< details "Answer"  >}} Some of it, counters and bins are shared and thus protected with mutexes. {{< /details  >}}
 
-Is structure argsThrower_t  optimal?
-{{< details "Answer"  >}} No - some fields point the same data for every thread. Common parts can be moved to additional structure and one pointer for this structure instead of 6 will be stored in  argsThrower_t. Additionally we store tids in this structure while it is not used in the thread code. {{< /details  >}}
+Is structure `thrower_args_t` optimal?
+{{< details "Answer"  >}} Yes, aside from the fact that we store the thread handles despite not using them. {{< /details  >}}
 
-Why do we mostly use pointers in the threads input data?
-{{< details "Answer"  >}}  We share the data, without the pointers we would have independent copies of those variables in each thread. {{< /details  >}}
-
-Can we pass mutexes as variables? Not as pointers?
-{{< details "Answer"  >}} NO, POSIX FORBIDS, copy of a mutex does not have to be a working mutex! Even if it would work, it should be quite obvious that, a copy would be a different  mutex. {{< /details  >}}
+Why do we use a pointer to the `shared_state_t` structure?
+{{< details "Answer"  >}}  We share the data, without the pointer we would have independent copies of those variables in each thread. {{< /details  >}}
 
 This program uses a lot of mutexes, can we reduce the number of them?
-{{< details "Answer"  >}} Yes, in extreme case it can be reduced to only one mutex but at the cost of concurrency. In more reasonable approach you can have 2 mutexes for the counters and one for all the bins, although the concurrency is lower in this case  the running time of a program can be a bit shorter as operations on mutexes are quite time consuming for the OS. {{< /details  >}}
+{{< details "Answer"  >}} Yes, in extreme case it can be reduced to only one mutex but at the cost of concurrency. In more reasonable approach you can have 2 mutexes for the counters and one for all the bins, although the concurrency is lower in this case the running time of a program can be a bit shorter as operations on mutexes are quite time consuming for the OS. {{< /details  >}}
 
 To check if the working threads terminated, the main threads periodically  checks if the numer of thrown beans is equal to the number of beans in total. Is this optimal solution?
 {{< details "Answer"  >}} No, it is so called "soft busy waiting" but without synchronization tool like conditional variable it can not be solved better. {{< /details  >}}
 
 Do all the threads created in this program really work?
-{{< details "Answer"  >}} No ,especially when there is a lot of threads. It is possible that some of threads "starve". The work code for the thread is very fast, thread creation is rather slow, it is possible that last threads created will have no beans left to throw. To check it please add per thread thrown beans counters and print them on stdout at the thread termination. The problem can be avoided if we add synchronization on threads start - make them start at the same time but this again requires the methods that will be introduced during OPS2 (barier or conditional variable). {{< /details  >}}
+{{< details "Answer"  >}} No, especially when there is a lot of threads. It is possible that some of threads "starve". The work code for the thread is very fast, thread creation is rather slow, it is possible that last threads created will have no beans left to throw. To check it please add per thread thrown beans counters and print them on stdout at the thread termination. The problem can be avoided if we add synchronization on threads start - make them start at the same time but this again requires the methods that will be introduced later. (barier or conditional variable) {{< /details  >}}
 
-## Task 3 - threads and signals, waiting for a thread with sigwait function
+## Signals
 
+### Excercise
 Goal: 
 The program takes sole 'k' parameter and prints the list of numbers form 1 to k at each second. It must handle two signals in dedicated thread, the following action must be taken upon the signal arrival:
 - SIGINT  (C-c) ... removes random number from the list (do nothing if empty),
@@ -181,11 +294,12 @@ The program takes sole 'k' parameter and prints the list of numbers form 1 to k 
 What you need to know:
 
 - man 3p pthread_sigmask
-- man 3p sigprocmask
 - man 3p sigwait
 
 <em>Solution <b>prog19.c</b>:</em>
 {{< includecode "prog19.c" >}}
+
+### Notes and questions
 
 Thread input structure argsSignalHandler_t holds the shared threads data (an array and STOP flag) with protective
 mutexes and not shared (signal mask and tid of thread designated to handle the signals).
@@ -217,7 +331,91 @@ Why system calls to functions operating on mutex (acquire, release)  are not tes
 {{< details "Answer"  >}} Basic mutex type (the type used in this program, default one) is not checking nor reporting errors. Adding those checks would not be such a bad idea as they are not harming the code and if you decide to later change the mutex type to error checking it will not require many changes in the code. {{< /details  >}}
 
 
-## Task 4 - threads cancellation, cleanup handlers
+## Thread cancelation
+
+### Canceling a thread
+
+A thread can be canceled using the `pthread_cancel` function.
+This is useful when the program has to exit before it finishes its work, for example due to a signal.
+
+More information:
+```
+man 3p pthread_cancel
+```
+
+### Setting cancelability
+
+A thread can choose how it will respond to cancelation requests using the following functions:
+
+```
+int pthread_setcancelstate(int state, int *oldstate);
+int pthread_setcanceltype(int type, int *oldtype);
+```
+
+Cancelation requests can be ignored by setting the cancel state to `PTHREAD_CANCEL_DISABLE` and then later re-enabled by setting it to `PTHREAD_CANCEL_ENABLE`.
+Cancelation is enabled by default.
+
+The cancel type determines when the thread exits upon receiving a cancelation request.
+It is set to `PTHREAD_CANCEL_DEFERRED` by default, in which case the thread exits at a cancelation point.
+If it is set to `PTHREAD_CANCEL_ASYNCHRONOUS`, the thread will exit as soon as possible.
+
+{{< details "Note"  >}} Generally, it is safer to keep the cancel type as PTHREAD_CANCEL_DEFERRED,
+as you may have an unpreventable race condition in the case of asynchronous cancelation
+(e.g a thread gets canceled after you lock a mutex but before you add a cleanup function) {{< /details  >}}
+
+More information:
+```
+man 3p pthread_setcancelstate
+man 7 pthreads (specifically the "Cancelation Points" section)
+```
+
+### Cleanup functions
+
+In a lot of cases, exiting a thread mid-execution leaks resources.
+This is problematic, especially if a thread is holding a mutex - as it won't be released.
+
+To solve this issue, POSIX allows creating cleanup handlers that run when the thread has to exit abruptly. (i.e due to being cancelled or calling `pthread_exit`)
+
+Those take form of a function with the following signature:
+```
+void function(void* arg);
+```
+
+You can add this function as a cleanup handle by issuing the `pthread_cleanup_push` call. Let's take a look at the function declaration.
+```
+void pthread_cleanup_push(void (*routine)(void*), void *arg);
+```
+As you can see, the function accepts the aforementioned function along with the argument that will be passed to it.
+
+When a thread exits abruptly, all of the cleanup functions are executed in the reverse order of their addition.
+
+You also can remove cleanup handlers by issuing `pthread_cleanup_pop`.
+```
+void pthread_cleanup_pop(int execute);
+```
+This function removes the handlers in the same order as they would be executed. 
+The `execute` parameter allows for optional execution of the handler.
+
+{{< details "Note"  >}} For every instance of pthread_cleanup_push in a scope there must be an instance of pthread_cleanup_pop {{< /details  >}}
+
+More information:
+```
+man 3p pthread_cleanup_pop
+```
+
+### Joining canceled threads
+
+Canceled threads remain joinable, since a cancel request isn't guaranteed to be processed.
+
+If a thread gets canceled, the value pointer passed to `pthread_join` will be set to `PTHREAD_CANCELED`
+
+More information:
+```
+man 3p pthread_join
+man 3p pthread_exit (specifically the last paragraph of the RATIONALE section)
+```
+
+### Excercise
 
 Goal: 
 Program simulates the faith of MiNI students, it takes the following parameter:
@@ -240,6 +438,7 @@ What you need to know:
 <em>Solution <b>prog20.c</b>:</em>
 {{< includecode "prog20.c" >}}
 
+### Notes and questions
 Threads receive the pointer to the structure with current year and pointer to years counters, structure argsModify_t
 does not have the same flow as one in task 2 of this tutorial i.e. program is not making too many unnecessary references
 to the same data.
