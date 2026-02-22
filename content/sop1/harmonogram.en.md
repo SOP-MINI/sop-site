@@ -21,7 +21,7 @@ Wednesdays, 4:15 - 6:00 PM, room 103
 | 17.12.2025 | _Office hours_                                                        |
 | 7.01.2026  | [Scheduling]({{< ref "wyk/scheduling" >}})                            |
 | 14.01.2026 | [Pipes and FIFOs]({{< ref "wyk/pipe" >}})                             |
-| 21.01.2026 | Message queues                                                        |
+| 21.01.2026 | [Message queues]({{ ref "wyk/mqueue" >}})                             |
 | 28.01.2026 | _Office hours_                                                        |
 
 ## Laboratories

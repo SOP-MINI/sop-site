@@ -22,7 +22,7 @@ title: "Harmonogram"
 | 7.01.2026  | [Scheduling]({{< ref "wyk/scheduling" >}})                       |
 | 14.01.2026 | _AlkOS_ - Wykład gościnny                                        |
 | 21.01.2026 | [Łącza]({{< ref "wyk/pipe" >}})                                  |
-| 28.01.2026 | _Konsultacje_                                                    |
+| 28.01.2026 | [Kolejki komunikatów]({{< ref "wyk/mqueue" >}})                  |
 
 ## Zajęcia laboratoryjne
 
