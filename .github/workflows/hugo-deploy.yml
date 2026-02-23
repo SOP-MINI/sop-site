@@ -14,6 +14,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+          lfs: true
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
@@ -27,6 +28,7 @@ jobs:
       - name: Deploy to Server
         run: |
           mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           rsync -avz --delete public/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:public_html
