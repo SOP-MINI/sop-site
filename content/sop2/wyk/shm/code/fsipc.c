@@ -23,7 +23,7 @@ int main(int argc, char** argv)
     }
 
     // We only need space for a single integer
-    size_t length = sizeof(int);
+    ssize_t length = sizeof(int);
 
     struct stat sb;
     if (fstat(fd, &sb) < 0)

@@ -33,7 +33,7 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    size_t length = sizeof(Record) * NUM_RECORDS;
+    ssize_t length = sizeof(Record) * NUM_RECORDS;
     struct stat sb;
     fstat(fd, &sb);
 

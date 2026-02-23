@@ -1,0 +1,8 @@
+*/code/*
+
+!*/code/*.c
+!*/code/*.h
+!*/code/*.S
+!*/code/Makefile
+!*/code/*.md
+!*/code/*.txt
