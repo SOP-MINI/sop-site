@@ -5,7 +5,7 @@ weight: 99
 
 [View on GitHub]({{< github_url >}})
 
-## Basic file mapping
+### Basic file mapping
 
 Source: [basic.c]({{< github_url "basic.c" >}})
 
@@ -37,7 +37,7 @@ Try experimenting:
 - try to read past end of the mapping
 - try to write past end of the mapping
 
-## Binary file mapping
+### Binary file mapping
 
 Source: [binary.c]({{< github_url "binary.c" >}})
 
@@ -58,7 +58,7 @@ cat /tmp/database.bin
 xxd -c 40 /tmp/database.bin
 ```
 
-## IPC through file mappings
+### IPC through file mappings
 
 Source: [fsipc.c]({{< github_url "fsipc.c" >}})
 
