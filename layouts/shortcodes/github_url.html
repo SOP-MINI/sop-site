@@ -1,0 +1,2 @@
+{{- $bookFilePath := (strings.TrimPrefix hugo.WorkingDir .Page.File.Dir | path.Join) -}}
+{{- .Site.Params.BookRepo -}}/tree/master/content/{{- $bookFilePath -}}/{{- .Get 0 -}}

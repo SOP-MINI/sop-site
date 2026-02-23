@@ -22,7 +22,8 @@ weight: 10
 
 ## Materiały
 
-1. [Slajdy wykładowe]({{< ref path="slides" lang="en" >}})
+1. [Slajdy wykładowe](slides)
+1. [Programy przykładowe](code)
 2. Litera uzupełniająca: W.R. Stevens, Unix programowanie usług sieciowych, t. 2, wyd. 2: Komunikacja międzyprocesowa
    Rozdziały:
     - 12 (Podstawy na temat pamięci wspólnej)

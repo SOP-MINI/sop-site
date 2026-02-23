@@ -23,8 +23,9 @@ weight: 10
 
 ## Reference
 
-1. [Lecture Slides]({{< ref "slides" >}})
-2. Supplementary reading: W.R. Stevens, Unix Network Programming, Vol. 2, 2nd Ed.: Interprocess Communications,
+1. [Lecture Slides](slides)
+2. [Code samples](code)
+3. Supplementary reading: W.R. Stevens, Unix Network Programming, Vol. 2, 2nd Ed.: Interprocess Communications,
    Chapters: 
    - 12 (Shared Memory Introduction)
    - 13 (Posix Shared Memory)
