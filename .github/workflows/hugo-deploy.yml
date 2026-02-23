@@ -16,6 +16,10 @@ jobs:
           submodules: recursive
           lfs: true
 
+      # Checkout action bug: https://github.com/actions/checkout/pull/1392
+      - name: Git LFS Pull
+        run: git lfs pull
+
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:

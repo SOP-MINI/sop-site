@@ -1,4 +1,4 @@
-name: Check lfs
+name: Check LFS
 
 on:
   pull_request:
