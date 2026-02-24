@@ -35,10 +35,10 @@ Grupy 1-5:
 | 26.02 | [W4 FIFO/pipe]({{< ref "lab/l5" >}})                |
 | 12.03 | [L5 FIFO/pipe]({{< ref "lab/l5" >}})                |
 | 26.03 | [W5 Pamięć dzielona i mmap]({{< ref "lab/l6" >}})   |
-| 16.04 | [L6 Pamięć dzielona i mmap]({{< ref "lab/l6" >}})   |
-| 30.04 | [W6 Gniazda TCP,  epoll]({{< ref "lab/l7" >}})      |
-| 14.05 | [L7 Gniazda TCP, epoll]({{< ref "lab/l7" >}})       |
-| 28.05 | L8                                                  |
+|  9.04 | [L6 Pamięć dzielona i mmap]({{< ref "lab/l6" >}})   |
+| 23.04 | [W6 Gniazda TCP,  epoll]({{< ref "lab/l7" >}})      |
+|  7.05 | [L7 Gniazda TCP, epoll]({{< ref "lab/l7" >}})       |
+| 21.05 | L8                                                  |
 | 11.06 | Poprawa                                             |
 
 Grupy 6, 6a:
@@ -46,9 +46,9 @@ Grupy 6, 6a:
 |-------|-----------------------------------------------------|
 |  5.03 | [W4 FIFO/pipe]({{< ref "lab/l5" >}})                |
 | 19.03 | [L5 FIFO/pipe]({{< ref "lab/l5" >}})                |
-|  9.04 | [W5 Pamięć dzielona i mmap]({{< ref "lab/l6" >}})   |
-| 23.04 | [L6 Pamięć dzielona i mmap]({{< ref "lab/l6" >}})   |
-|  7.05 | [W6 Gniazda TCP,  epoll]({{< ref "lab/l7" >}})      |
-| 21.05 | [L7 Gniazda TCP, epoll]({{< ref "lab/l7" >}})       |
-|  4.06 | L8                                                  |
+|  2.04 | [W5 Pamięć dzielona i mmap]({{< ref "lab/l6" >}})   |
+| 16.04 | [L6 Pamięć dzielona i mmap]({{< ref "lab/l6" >}})   |
+| 30.04 | [W6 Gniazda TCP,  epoll]({{< ref "lab/l7" >}})      |
+| 14.05 | [L7 Gniazda TCP, epoll]({{< ref "lab/l7" >}})       |
+| 28.06 | L8                                                  |
 | 11.06 | Poprawa                                             |

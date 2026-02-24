@@ -32,9 +32,9 @@ Thursdays, 14:15 - 16:30
 |-------|-----------------------------------------------------|
 |  5.03 | [W4 FIFO/pipe]({{< ref "lab/l5" >}})                |
 | 19.03 | [L5 FIFO/pipe]({{< ref "lab/l5" >}})                |
-|  9.04 | [W5 Shared memory and mmap]({{< ref "lab/l6" >}})   |
-| 23.04 | [L6 Shared memory and mmap]({{< ref "lab/l6" >}})   |
-|  7.05 | [W6 TCP sockets and epoll]({{< ref "lab/l7" >}})    |
-| 21.05 | [L7 TCP sockets and epoll]({{< ref "lab/l7" >}})    |
-|  4.06 | L8                                                  |
+|  2.04 | [W5 Shared memory and mmap]({{< ref "lab/l6" >}})   |
+| 16.04 | [L6 Shared memory and mmap]({{< ref "lab/l6" >}})   |
+| 30.04 | [W6 TCP sockets and epoll]({{< ref "lab/l7" >}})    |
+| 14.05 | [L7 TCP sockets and epoll]({{< ref "lab/l7" >}})    |
+| 28.05 | L8                                                  |
 | 11.06 | Retake                                              |
