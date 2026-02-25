@@ -39,6 +39,7 @@ It allows you to treat the file contents directly as an array of C structures,
 bypassing serialization, `read()`, and `write()` entirely.
 
 ```shell
+rm /tmp/database.bin
 make binary
 ./binary /tmp/database.bin
 ```
