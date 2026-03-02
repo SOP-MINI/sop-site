@@ -291,7 +291,6 @@ Reads and writes to regular variables **are not** observability points!
 ### Atomic updates
 
 If a value of given length may be atomically updated depends on the hardware!
-
 32-bit X86 CPU does not even have instruction to update 64-bit integer.
 
 ```c
@@ -304,7 +303,13 @@ shared_val = 0x0000000100000001ULL;
 See in [compiler explorer](https://godbolt.org/z/o7fWo8bMx)
 
 Fortunately nearly all (**aligned!**) 2, 4, 8 byte accesses
-on modern hardware are atomic.
+on modern hardware are atomic. High-level languages/libraries provide dedicated types and routines to
+access words atomically, i.e.:
+
+```c
+atomic_store_explicit(&x, 1, memory_order_relaxed);
+int ry = atomic_load_explicit(&y, memory_order_relaxed);
+```
 
 ---
 
