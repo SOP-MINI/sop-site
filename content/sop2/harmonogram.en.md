@@ -9,7 +9,7 @@ Tuesdays, 16:15-17:45, room 328
 | Date  | Topic                                                     |
 |-------|-----------------------------------------------------------|
 | 24.02 | [Shared memory]({{< ref "wyk/shm" >}})                    |
-| 03.03 | [Low-level synchronization.]({{< ref "wyk/w3" >}})        |
+| 03.03 | [Synchronization]({{< ref "wyk/sync" >}})                 |
 | 10.03 | [POSIX synchronization]({{< ref "wyk/w4" >}})             |
 | 17.03 | [Deadlocks]({{< ref "wyk/w3" >}})                         |
 | 24.03 | [Introduction to TCP/IP networking]({{< ref "wyk/w5" >}}) |

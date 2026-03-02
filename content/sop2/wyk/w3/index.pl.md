@@ -26,5 +26,5 @@ weight: 30
 ## Materiały
 
 1.  Podręcznik: rozdz. 7 (Synchronizacja procesów), 8 (Zakleszczenia).
-2.  Slajdy: [Synchro.pdf]({{< resource "Synchro_3.pdf" >}}), [Zakleszczenia.pdf]({{< resource "Zakleszczenia_1.pdf" >}})
+2.  Slajdy: [Zakleszczenia.pdf]({{< resource "Zakleszczenia_1.pdf" >}})
 

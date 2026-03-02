@@ -33,4 +33,4 @@ weight: 30
 ## Reference
 
 1.  Textbook: chapters: Process Synchronization, Deadlocks.
-2.  Slides: [Sync.pdf]({{< resource "Sync_2.pdf" >}}), [Deadlocks.pdf]({{< resource "Deadlocks_0.pdf" >}})
+2.  Slides: [Deadlocks.pdf]({{< resource "Deadlocks_0.pdf" >}})
