@@ -50,5 +50,5 @@ Grupy 6, 6a:
 | 16.04 | [L6 Pamięć dzielona i mmap]({{< ref "lab/l6" >}})   |
 | 30.04 | [W6 Gniazda TCP,  epoll]({{< ref "lab/l7" >}})      |
 | 14.05 | [L7 Gniazda TCP, epoll]({{< ref "lab/l7" >}})       |
-| 28.06 | L8                                                  |
+| 28.05 | L8                                                  |
 | 11.06 | Poprawa                                             |
