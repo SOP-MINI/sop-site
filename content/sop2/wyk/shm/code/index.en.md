@@ -129,7 +129,7 @@ Experiment:
 
 ```shell
 make shm_basic
-./shm_basic arbiter
+./shm_basic
 ```
 Source: [shm_basic.c]({{< github_url "shm_basic.c" >}})
 

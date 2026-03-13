@@ -2,6 +2,7 @@
 title: "Pamięć wspólna"
 date: 2022-02-10T10:00:00+01:00
 weight: 10
+bookCollapseSection: true
 ---
 
 # Pamięć wspólna
@@ -23,8 +24,8 @@ weight: 10
 ## Materiały
 
 1. [Slajdy wykładowe](slides)
-1. [Programy przykładowe](code)
-2. Litera uzupełniająca: W.R. Stevens, Unix programowanie usług sieciowych, t. 2, wyd. 2: Komunikacja międzyprocesowa
+2. [Programy przykładowe](code)
+3. Litera uzupełniająca: W.R. Stevens, Unix programowanie usług sieciowych, t. 2, wyd. 2: Komunikacja międzyprocesowa
    Rozdziały:
     - 12 (Podstawy na temat pamięci wspólnej)
     - 13 (POSIX'owa pamięć wspólna)

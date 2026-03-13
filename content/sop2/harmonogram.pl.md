@@ -9,9 +9,9 @@ Wtorki, g. 18:00 - 19:30, s. 328
 | Data  | Tytuł                                                    |
 |-------|----------------------------------------------------------|
 | 24.02 | [Pamięć wspólna.]({{< ref "wyk/shm" >}})                 |
-| 03.03 | [Synchronizacja niskopoziomowa.]({{< ref "wyk/w3" >}})   |
-| 10.03 | [Synchronizacja POSIX.]({{< ref "wyk/w4" >}})            |
-| 17.03 | [Zakleszczenia.]({{< ref "wyk/w3" >}})                   |
+| 03.03 | [Synchronizacja]({{< ref "wyk/sync" >}})                 |
+| 10.03 | [Synchronizacja POSIX.]({{< ref "wyk/sync2" >}})         |
+| 17.03 | [Zakleszczenia.]({{< ref "wyk/deadlocks" >}})            |
 | 24.03 | [Wprowadzenie do sieci TCP/IP.]({{< ref "wyk/w5" >}})    |
 | 31.03 | [Interfejs gniazd.]({{< ref "wyk/w6" >}})                |
 | 14.04 | [Programowanie sieciowe.]({{< ref "wyk/w7" >}})          |

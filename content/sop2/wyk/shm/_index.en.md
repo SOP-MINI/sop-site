@@ -2,6 +2,7 @@
 title: "Shared memory"
 date: 2022-02-10T10:00:00+01:00
 weight: 10
+bookCollapseSection: true
 ---
 
 # Shared memory
