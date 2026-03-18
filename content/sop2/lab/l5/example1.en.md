@@ -13,6 +13,6 @@ After creating processes and pipes parent process sends `1` (as a null-terminate
 ## Stages
 
 1. Create processes and pipes, correctly close unused descriptors. Each process should print descriptor it uses and closes. Parent process wait for children and then terminates.
-2. Each process sends random number in range `[0-99]` and prints number received whit its `PID` to stdout. At this stage you should handle variable length messages.
+2. Each process sends random number in range `[0-99]` and prints number received with its `PID` to stdout. At this stage you should handle variable length messages.
 3. Parent process sends `1`, which travels without any change until receiving C-c.
 4. Add number changing, STOP condition and pipe break check.
