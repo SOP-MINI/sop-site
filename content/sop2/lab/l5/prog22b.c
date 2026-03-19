@@ -88,7 +88,7 @@ void parent_work(int n, int *fds, int R)
             i %= n;
             if (fds[i])
             {
-                c = 'a' + rand() % ('z' - 'a');
+                c = 'a' + rand() % ('z' - 'a' + 1);
                 status = TEMP_FAILURE_RETRY(write(fds[i], &c, 1));
                 if (status != 1)
                 {
