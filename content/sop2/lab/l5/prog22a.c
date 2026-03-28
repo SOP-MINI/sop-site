@@ -40,7 +40,7 @@ void sigchld_handler(int sig)
 void child_work(int fd, int R)
 {
     srand(getpid());
-    char c = 'a' + rand() % ('z' - 'a');
+    char c = 'a' + rand() % ('z' - 'a' + 1);
     if (write(R, &c, 1) < 0)
         ERR("write to R");
 }
