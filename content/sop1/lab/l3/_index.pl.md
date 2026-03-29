@@ -273,7 +273,35 @@ Czy wszystkie wątki w tym programie na prawdę pracują?
 
 
 ## Wątki i sygnały
-## Zadanie 3 - wątki i sygnały z czekaniem na sygnał za pomocą funkcji sigwait
+
+Gdy wielowątkowy program odbiera sygnał, może go odebrać dowolny z wątków, który nie zablokował tego sygnału.
+
+Należy jednak pamiętać, że asynchroniczne funkcje obsługi sygnałów (tj. ustawione za pomocą `sigaction`) nie są lokalne dla wątku! Ustawienie procedury obsługi w jednym wątku powoduje nadpisanie procedury obsługi dla całego procesu.
+
+W praktyce jednak, w programach wielowątkowych używamy innego podejścia, dzięki któremu nie musimy się przejmować powyższymi ograniczeniami.
+Polega ono na uruchomieniu oddzielnego wątku przeznaczonego specjalnie do obsługi sygnałów, przy jednoczesnym blokowaniu ich w pozostałych wątkach.
+
+Jest to wygodne, ponieważ eliminuje potrzebę stosowania zmiennych globalnych, pozwalając jednocześnie na obsługę sygnałów w sposób synchroniczny (wystarczy użyć `sigwait`).
+
+### Wysyłanie sygnału
+
+POSIX udostępnia możliwość wysłania sygnału do konkretnego wątku poprzez funkcję `pthread_kill` (`man 3p pthread_kill`):
+
+```
+int pthread_kill(pthread_t thread, int sig);
+```
+
+Używając jej tylko wybrany wątek otrzymuje dany sygnał. Jeśli go blokuje, otrzyma go od razu po zdjęciu blokady.
+
+### Ustawianie maski
+
+W programie wielowątkowym nie można używać funkcji `sigprocmask` do ustawiania maski sygnałów. Zamiast tego należy wywołać funkcję `pthread_sigmask`, która ustawia maskę sygnałów lokalną dla danego wątku (`man 3p pthread_sigmask`).
+
+Podobnie jak procesy dziedziczą maskę po procesie nadrzędnym, tak wątki dziedziczą maskę sygnałów po wątku, który je utworzył.
+
+Aby całkowicie zablokować sygnał, należy go zablokować we wszystkich wątkach programu. W przeciwnym razie wątek, który nie blokuje ani nie obsługuje danego sygnału odbierze go, i wykona domyślą akcję - czyli najczęściej zakończy cały program.
+
+### Zadanie
 
 Cel:
 Napisać program, który przyjmuje jeden parametr 'k' i co sekundę wyświetla listę liczb, początkowo od 1 do k. 
@@ -296,9 +324,6 @@ Co student musi wiedzieć:
 W strukturze argumentów argsSignalHandler_t przekazujemy wskazania na dane współdzielone przez oba wątki czyli tablicę i
 flagę STOP oraz muteksy je chroniące. Dodatkowo maskę sygnałów i tid wątku obsługi sygnałów, które to dane nie są
 współdzielone.
-
-W wątkach do ustawiania maski sygnałów (per wątek) używamy pthread_sigmask, nie powinno się, gdy istnieje więcej wątków
-niż jeden w programie używać f. sigprocmask.
 
 Delegowanie oddzielnego wątku do obsługi sygnałów jest typowym i wygodnym sposobem radzenia sobie w programach
 wielowątkowych.
