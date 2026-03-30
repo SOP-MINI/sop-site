@@ -218,7 +218,7 @@ Each layer is a bunch of functions and data structures using API of a layer belo
 
 ### Local networks (L2)
 
-L2 solves _simple_ problem: sending **frames** between a group of physically interconnected hosts, together forming 
+L2 solves _simple_ problem: sending **frames** between a group of physically interconnected hosts, together forming
 a **Local Area Network**. It does **not** aim solve global-scale communication.
 
 ![lan.svg](/ops2/wyk/net_intro/lan.svg)
@@ -230,13 +230,13 @@ Ethernet is an omnipresent standard today.
 
 ### L2 Ethernet Header
 
-L2 protocol, implemented in hardware or in code, is concerned only with L2 header. 
+L2 protocol, implemented in hardware or in code, is concerned only with L2 header.
 
 ![eth_header.svg](/ops2/wyk/net_intro/eth_header.svg)
 
 Ethernet specifies a simple header with just 3 fields:
 * (6b) destination address
-* (6b) source address 
+* (6b) source address
 * (2b) upper layer protocol<br/>(i.e. `0x0800` = IPv4, `0x86DD` = IPv6)
 
 ---
@@ -270,3 +270,157 @@ Everything going to `11:22:33:44:55:66` should go to `eth2`!_
 
 ![sw.svg](/ops2/wyk/net_intro/sw.svg)
 
+---
+
+### Isn't L2 enough?
+
+If switches are so smart, why do we need something above at all (IP)?
+
+*   **Flat Addressing:** MAC addresses have no hierarchy or geographical meaning. They are tied to the hardware vendor, not the network location.
+*   **The Flooding Problem:** Switches learn by flooding unknown destinations. Imagine broadcasting a packet to 5 billion devices globally just to find a specific server. The Internet would instantly collapse under the weight of broadcast traffic.
+*   **Medium Dependency:** L2 protocols are tied to physical cables and signals (Ethernet, Wi-Fi, LTE). We need a universal protocol to bridge entirely different physical networks together.
+
+---
+
+### Enter Layer 3: The Network Layer
+
+How does the Internet Protocol (IP) solve L2's limitations?
+
+* **Hierarchical Addressing:** IP addresses are logical and group devices into **Subnets**. Just like postal codes, they allow routers to summarize millions of hosts into a single routing table entry.
+* **Routing Instead of Flooding:** Routers connect different networks. Unlike switches, if a router doesn't know a destination, it does *not* broadcast. It forwards the packet to a **Default Gateway** or simply drops it.
+* **Hardware Agnostic:** IP was invented to bridge the gap between many L2 technologies. IP frames may be encapsulated differently depending on the underlying link layer technology used.
+
+---
+
+![l3.svg](/ops2/wyk/net_intro/l3.svg)
+
+_Note that each addressable host on the IP network has to have both IP address and L2 technology specific hardware (i.e. MAC) address._
+
+---
+
+### L3 IP Header
+
+As the packet travels through the IP network, it is always encapsulated within some L2 envelope (i.e. Ethernet header).
+
+IP packet itself usually has 20 byte header with `src` and `dst` IP addresses:
+
+![ip_header.svg](/ops2/wyk/net_intro/ip_header.svg)
+
+---
+
+### L3 device operations (receive)
+
+IP device (router or host), like a switch, may have several interfaces attached to a number of L2 networks.
+It processes IP packets incoming from attached networks:
+
+- receive L2 frame from some other host on the **directly attached** L2 network
+   - `src` hardware address is the L2 address of this other host
+   - `dst` hardware address should be L2 address of receiving port
+- strip the L2 header to extract the IP **packet**
+- **decide what to do with it**
+   - stop if it's for me (forward to local L4)
+   - drop it if it's not for me (discard)
+   - send it elsewhere (that's what routers do)
+
+---
+
+### L3 device operations (send)
+
+Same, it might want to send IP packets:
+- based on the `dst` IP address it must pick the **outbound port**
+- pick a target host on the L2 network accessible through the outbound port
+   - note this might not be the destination IP host itself
+- it must wrap the packet into a network-specific L2 frame
+   - `src` hardware address is the outbound port's L2 address
+   - `dst` hardware address is the destination host's L2 address
+- send it out!
+
+---
+
+### Router operations
+
+Routers are IP devices configured to forward packets between networks. Upon receiving a packet:
+
+- based on the `dst` IP address pick where (which port) to forward the packet to:
+   - (a) some host within one of the directly attached networks
+   - (b) some network indirectly accessible through intermediate router(s)
+- wraps the packet back into the L2 frame and sends it out
+   - IP `src` and `dst` addresses remain unchanged
+   - L2 `src` address the router's outbound interface address
+   - (a) L2 `dst` address is directly the hadware address of the target host
+   - (b) L2 `dst` address is the next _hop_ router hardware address
+
+---
+
+
+![router_op1.svg](/ops2/wyk/net_intro/router_op1.svg)
+
+_Note the L3 addressing remains unchanged while L2 addresses are changed!_
+
+---
+
+![router_op2.svg](/ops2/wyk/net_intro/router_op2.svg)
+
+
+---
+
+### Address Resolution Protocol (ARP)
+
+Once we know that a packet should be sent directly to host `192.168.1.100` via interface `eth0`,
+or to the router at `192.168.2.254` via interface `eth1` we have to find out the L2 address of target L2 device.
+
+- sender sends an ARP request to **broadcast L2 address**:<br/>L2 `02:FA:B7:44:81:ED > ff:ff:ff:ff:ff:ff`<br/>L3 ARP Request: _who-has 192.168.1.100?_
+- only the host having IP address `192.168.1.100` replies:<br/>L2 `D8:49:06:E1:92:AB > 02:FA:B7:44:81:ED`<br/>L3 ARP Response: _10.0.0.2 is-at D8:49:06:E1:92:AB_
+
+---
+
+### ARP Packet format
+
+ Offset (Bytes) | Field Name        | Size (Bits) | Example                                         
+----------------|-------------------|-------------|-----------------------------------------------------
+ 0              | Hardware Type     | 16          | Ethernet = `0x0001` 
+ 2              | Protocol Type     | 16          | IPv4 = `0x0800` 
+ 4              | Hardware Length   | 8           | Ethernet = `6`      
+ 5              | Protocol Length   | 8           | IPv4 = `4`           
+ 6              | Operation         | 16          | `1` = ARP Request                 
+ 8              | Sender HW Addr    | 48          | `02:FA:B7:44:81:ED`       
+ 14             | Sender Proto Addr | 32          | `192.168.1.10`                 
+ 18             | Target HW Addr    | 48          | `00:00:00:00:00:00`       
+ 24             | Target PRoto Addr | 32          | `192.168.1.100`                           
+
+---
+
+### The routing table
+
+The decision where to forward some IP packet is made based on the **routing table**:
+
+```bash
+$ ip route
+default via 192.168.1.1 dev eth0 proto dhcp metric 100
+10.0.0.0/24 via 192.168.2.254 dev eth1
+192.168.1.0/24 dev eth0 scope link src 192.168.1.100
+```
+
+* `192.168.1.0/24`: directly connected network: _if the `dst` address starts with `192.168.1.` send it via `eth0` to a directly accessible host_
+* `10.0.0.0/24`: specific route: _if the `dst` address starts with `10.0.0.` send it via `eth1` to the router at 192.168.2.254_
+* `default` or `0.0.0.0/0`: _If the destination IP doesn't match any other rule, send it via `eth0` to `192.168.1.1` and hope they know what to do._
+
+---
+
+### IP Fragmentation
+
+L3 devices may split and reassemble IP packets. This is known as **fragmentation** and **reassembly**.
+IP header contains `Identification`, `Flags` and `Fragment Offset` fields which are used to keep track of fragmentation.
+
+![mtu.svg](/ops2/wyk/net_intro/mtu.svg)
+
+---
+
+### TTL (Time To Live)
+
+TTL (Time To Live) is a field in the IP header that specifies how long a packet may be stored in the network before it is discarded.
+Each time a packet is forwarded, routers automatically decremented it by 1 and sent back an ICMP message to the original sender.
+
+Both improve the stability of the global network.
+
+**Note neither L2 nor L3 do anything to guarantee delivery of packets!**

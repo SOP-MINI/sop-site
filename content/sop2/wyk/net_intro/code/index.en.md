@@ -58,10 +58,10 @@ graph LR
 
     classDef namespace fill:#f9f9f9,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5;
     class ns_client,ns_server,ns_host namespace;
-    
+
     classDef interface fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
     class veth_c,veth_s,eth0_h,wlp4s0_h interface;
-    
+
     classDef loopback fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px,shape:circle;
     class lo_c,lo_s,lo_h loopback;
 ```
@@ -138,8 +138,8 @@ sudo ip netns exec ns_client nc 10.0.0.2 80
 Try dumping host communication:
 
 ```shell
-sudo tcpdump -i $(ip route get 8.8.8.8 | grep -oP 'dev \K\S+') -n -w dump.pcap --print && \
-wireshark dump.pcap
+sudo tcpdump -i $(ip route get 8.8.8.8 | grep -oP 'dev \K\S+') -n -w extdump.pcap --print && \
+wireshark extdump.pcap
 ```
 
 Here `ip route get` is used to get name of the interface handling internet traffic.
@@ -153,9 +153,9 @@ Look into the dump in wireshark. Try filtering by `http`/`tcp` protocol to find 
 Find and display first frame of the request in `tshark` CLI:
 
 ```shell
-STREAM_ID=$(tshark -r dump.pcap -Y "http.request.method == GET" -T fields -e tcp.stream | head -n 1)
-FRAME_NUM=$(tshark -r dump.pcap -Y "tcp.stream == $STREAM_ID" -T fields -e frame.number | head -n 1)
-tshark -r dump.pcap -Y "frame.number == $FRAME_NUM" -x
+STREAM_ID=$(tshark -r extdump.pcap -Y "http.request.method == GET" -T fields -e tcp.stream | head -n 1)
+FRAME_NUM=$(tshark -r extdump.pcap -Y "tcp.stream == $STREAM_ID" -T fields -e frame.number | head -n 1)
+tshark -r extdump.pcap -Y "frame.number == $FRAME_NUM" -x
 ```
 
 Note `tshark` options used:
@@ -297,3 +297,173 @@ sudo ip netns exec ns_br3_2 ./send_eth.py -i veth2 -s "02:00:00:00:00:02" -d "02
 
 Observe that after bridge memorized some address, it forwards the packet to the correct host.
 
+### L3 and ARP
+
+View the local routing table:
+
+```shell
+sudo ip netns exec ns_br3_1 ip route
+```
+
+So everything going to `10.0.0.0/24` is sent directly to target device via interface `veth1`.
+
+Let's start sniffing traffic on host 2:
+
+```shell
+sudo ip netns exec ns_br3_2 tcpdump -i veth2 -n -e
+```
+
+And try to send some bytes from `10.0.0.1` to `10.0.0.2`:
+
+```shell
+sudo ip netns exec ns_br3_1 ./send_udp.py -d 10.0.0.2 -s 100
+```
+
+Display contents of the ARP tables:
+
+```shell
+sudo ip netns exec ns_br3_1 ip neigh
+```
+
+```shell
+sudo ip netns exec ns_br3_2 ip neigh
+```
+
+Note that re-sending the packet to the same destination does not trigger ARP request.
+
+You can flush ARP tables to start fresh:
+
+```shell
+sudo ip netns exec ns_br3_1 ip neigh flush all
+```
+
+```shell
+sudo ip netns exec ns_br3_2 ip neigh flush all
+```
+
+### L3 routers
+
+```shell
+sudo ./two_routers.sh up
+```
+[two_routers.sh]({{< github_url "two_routers.sh" >}})
+
+
+```mermaid
+graph TD
+    subgraph Host ["Host (Default Namespace)"]
+        direction TB
+
+        subgraph ns_sw ["Namespace: ns_sw (Isolated Switch)"]
+            direction TB
+            br_mid[br_mid<br/>Virtual Switch / L2 Bridge]
+            
+            veth_r1_br
+            veth_h2_br
+            veth_r2_br
+            
+            veth_r1_br ---|attached| br_mid
+            veth_h2_br ---|attached| br_mid
+            veth_r2_br ---|attached| br_mid
+        end
+
+        subgraph ns_h1 ["Namespace: ns_h1 (Left Host)"]
+            direction TB
+            lo1((lo<br/>127.0.0.1/8))
+            veth_h1[veth_h1<br/>10.0.1.1/24<br/>MAC: 02:00:01:00:00:01<br/>Default GW: 10.0.1.254]
+        end
+
+        subgraph ns_r1 ["Namespace: ns_r1 (Router 1)"]
+            direction TB
+            veth_r1_l[veth_r1_l<br/>10.0.1.254/24<br/>MAC: 02:00:01:00:00:fe<br/>To Subnet 1]
+            veth_r1_r[veth_r1_r<br/>10.0.2.253/24<br/>MAC: 02:00:02:00:00:fd<br/>To Subnet 2]
+            forward1[IPv4 Forwarding = ENABLED]
+        end
+
+        subgraph ns_h2 ["Namespace: ns_h2 (Middle Host)"]
+            direction TB
+            lo2((lo<br/>127.0.0.1/8))
+            veth_h2[veth_h2<br/>10.0.2.1/24<br/>MAC: 02:00:02:00:00:01<br/>Routes to Subnets 1 & 3 via Routers]
+        end
+
+        subgraph ns_r2 ["Namespace: ns_r2 (Router 2)"]
+            direction TB
+            veth_r2_l[veth_r2_l<br/>10.0.2.254/24<br/>MAC: 02:00:02:00:00:fe<br/>To Subnet 2]
+            veth_r2_r[veth_r2_r<br/>10.0.3.254/24<br/>MAC: 02:00:03:00:00:fe<br/>To Subnet 3]
+            forward2[IPv4 Forwarding = ENABLED]
+        end
+
+        subgraph ns_h3 ["Namespace: ns_h3 (Right Host)"]
+            direction TB
+            lo3((lo<br/>127.0.0.1/8))
+            veth_h3[veth_h3<br/>10.0.3.1/24<br/>MAC: 02:00:03:00:00:01<br/>Default GW: 10.0.3.254]
+        end
+
+        %% Connection Pair Subnet 1
+        veth_h1 <==>|VETH pair 1 <br/>Subnet 10.0.1.0/24| veth_r1_l
+
+        %% Connection Pair Subnet 2
+        veth_r1_r <==>|VETH pair 2<br/>to ns_sw| veth_r1_br
+        veth_h2   <==>|VETH pair 3<br/>to ns_sw| veth_h2_br
+        veth_r2_l <==>|VETH pair 4<br/>to ns_sw| veth_r2_br
+
+        %% Connection Pair Subnet 3
+        veth_r2_r <==>|VETH pair 5<br/>Subnet 10.0.3.0/24| veth_h3
+
+    end
+
+    classDef namespace fill:#f9f9f9,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5;
+    class ns_h1,ns_r1,ns_sw,ns_h2,ns_r2,ns_h3,Host namespace;
+    
+    classDef interface fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    class veth_h1,veth_r1_l,veth_r1_r,veth_r1_br,veth_h2,veth_h2_br,veth_r2_l,veth_r2_br,veth_r2_r,veth_h3 interface;
+
+    classDef bridge fill:#fff9c4,stroke:#fbc02d,stroke-width:2px;
+    class br_mid bridge;
+    
+    classDef loopback fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px,shape:circle;
+    class lo1,lo2,lo3 loopback;
+
+    classDef forwarder fill:#e8f5e9,stroke:#4caf50,stroke-width:1px,stroke-dasharray: 2 2;
+    class forward1,forward2 forwarder;
+```
+
+Display routing tables of the routers:
+
+```shell
+sudo ip netns exec ns_r1 ip route
+```
+
+```shell
+sudo ip netns exec ns_r2 ip route
+```
+
+Setup sniffing at router 1:
+
+```shell
+sudo ip netns exec ns_r1 tcpdump -i veth_r1_r -n -e
+```
+
+Setup listening servers at hosts `h2` & `h3`:
+
+```shell
+sudo ip netns exec ns_h2 nc -u -l 9999
+```
+
+```shell
+sudo ip netns exec ns_h3 nc -u -l 9999
+```
+
+Now send some bytes from host `h1`:
+
+```shell
+sudo ip netns exec ns_h1 ./send_udp.py -d 10.0.2.1 -s 100
+```
+
+Inspect the captured packets.
+
+Then try to send to a distant host `h3`:
+
+```shell
+sudo ip netns exec ns_h1 ./send_udp.py -d 10.0.3.1 -s 50
+```
