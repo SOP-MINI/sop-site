@@ -6,3 +6,5 @@
 !*/code/Makefile
 !*/code/*.md
 !*/code/*.txt
+!*/code/*.sh
+!*/code/*.py

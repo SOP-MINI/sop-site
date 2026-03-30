@@ -31,75 +31,12 @@ Interface `wlp0s20f3` has MAC address `dc:21:5c:08:bf:83` and IP addresses `192.
 
 ### Virtual network setup
 
-Create isolated virtual hosts with separate networking environment:
+Create isolated pair of virtual hosts with separate networking environment:
 
 ```shell
-sudo ip netns del ns_client; sudo ip netns del ns_server
+sudo ./direct_client_server.sh up
 ```
-
-```shell
-sudo ip netns add ns_client; sudo ip netns add ns_server; ip netns ls
-```
-
-Create virtual link - pair of interfaces:
-
-```shell
-sudo ip link add veth_c type veth peer name veth_s; ip a
-```
-
-Move new interfaces into virtual hosts:
-
-```shell
-sudo ip link set veth_c netns ns_client
-```
-
-```shell
-sudo ip link set veth_s netns ns_server
-```
-
-Note interfaces disappeared from regular host `ip a`.
-
-`ip netns exec` runs any command within isolated networking environment.
-Use it to list interfaces and addresses within virtual hosts.
-
-```shell
-sudo ip netns exec ns_client ip a
-```
-
-```shell
-sudo ip netns exec ns_server ip a
-```
-
-Enable all interfaces (UP) and assign addresses:
-
-```shell
-sudo ip netns exec ns_client ip addr add 10.0.0.1/24 dev veth_c
-```
-```shell
-sudo ip netns exec ns_server ip addr add 10.0.0.2/24 dev veth_s
-```
-```shell
-sudo ip netns exec ns_client ip link set veth_c up
-```
-```shell
-sudo ip netns exec ns_server ip link set veth_s up
-```
-```shell
-sudo ip netns exec ns_client ip link set lo up
-```
-```shell
-sudo ip netns exec ns_server ip link set lo up
-```
-
-Re-verify:
-
-```shell
-sudo ip netns exec ns_client ip a
-```
-
-```shell
-sudo ip netns exec ns_server ip a
-```
+Source: [direct_client_server.sh]({{< github_url "direct_client_server.sh" >}})
 
 This is what we've constructed within a single operating system thanks to Linux powerful network virtualization features.
 
@@ -129,6 +66,28 @@ graph LR
     class lo_c,lo_s,lo_h loopback;
 ```
 
+You can list virtual hosts (network namespaces) with:
+
+```shell
+ip netns ls
+```
+
+You can execute any command using `ip netns exec` to run it in one of the virtual environments:
+
+```shell
+sudo ip netns exec ns_client ip address
+```
+
+```shell
+sudo ip netns exec ns_server ip address
+```
+
+You can clean that up with:
+
+```shell
+sudo ./direct_client_server.sh down
+```
+
 Note that regular host networking is kept completely separate.
 
 ### Netcat
@@ -139,7 +98,7 @@ Use `nc` to connect somewhere and send some data.
 nc mini.pw.edu.pl 80 
 ```
 
-We can even send some real request:
+We can even send some real requests:
 
 ```shell
 echo -e "GET / HTTP/1.1\r\nHost: mini.pw.edu.pl\r\n\r\n" | nc mini.pw.edu.pl 80
@@ -155,11 +114,12 @@ sudo ip netns exec ns_server nc -l -p 80 -v
 sudo ip netns exec ns_client nc 10.0.0.2 80 -v
 ```
 
-Close client connection with `C-c`.
+ClosSource: [direct_client_server.sh]({{< github_url "direct_client_server.sh" >}})
+e client connection with `C-c`.
 
 ### Packet sniffing
 
-Run packet sniffer on server side:
+Run the packet sniffer on the server side:
 
 ```shell
 sudo ip netns exec ns_server tcpdump -i veth_s -n -w dump.pcap --print
@@ -172,6 +132,8 @@ sudo ip netns exec ns_server nc -l -p 80
 ```shell
 sudo ip netns exec ns_client nc 10.0.0.2 80
 ```
+
+### External traffic capture
 
 Try dumping host communication:
 
@@ -201,3 +163,137 @@ Note `tshark` options used:
 * `http.request.method == GET` filter used to get ID of the first TCP connection stream associated with HTTP request
 * `tcp.stream == $STREAM_ID` filter is used to get the first frame index of the request
 * `-x` displays frame in hex
+
+### Raw L2 frames
+
+Start capturing and displaying in raw L2 format on the server side:
+
+```shell
+sudo ip netns exec ns_server tcpdump -i veth_s -XX -e -n
+```
+
+Send to broadcast address `ff:ff:ff:ff:ff:ff` from the client:
+
+```shell
+sudo ip netns exec ns_client ./send_eth.py -i veth_c -s '11:22:33:44:55:66' -d 'ff:ff:ff:ff:ff:ff' -p "Broadcast"
+```
+[send_eth.py]({{< github_url "send_eth.py" >}})
+
+Note that `bind()` forces to use `veth_c` as outgoing interface.
+
+Send to an _invalid_ `00:11:22:33:44:55` address:
+
+```shell
+sudo ip netns exec ns_client ./send_eth.py -i veth_c -s '11:22:33:44:55:66' -d '00:11:22:33:44:55' -p "Invalid DST"
+```
+
+Observe that a packet is still forwarded.
+The sending OS does may not assume who is on the other end of `veth`.
+
+### L2 bridge (virtual switches)
+
+```shell
+sudo ./bridge_3hosts.sh up
+```
+[bridge_3hosts.sh]({{< github_url "bridge_3hosts.sh" >}})
+
+```mermaid
+graph LR
+    br0[br0<br/>Bridge]
+    
+    veth1_br
+    veth2_br
+    veth3_br
+    
+    veth1_br --- br0
+    veth2_br --- br0
+    veth3_br --- br0
+
+    subgraph ns_br3_1 ["Namespace: ns_br3_1"]
+        direction TB
+        lo1((lo<br/>127.0.0.1/8))
+        veth1[veth1<br/>10.0.0.1/24<br/>MAC: 02:00:00:00:00:01]
+    end
+
+    subgraph ns_br3_2 ["Namespace: ns_br3_2"]
+        direction TB
+        lo2((lo<br/>127.0.0.1/8))
+        veth2[veth2<br/>10.0.0.2/24<br/>MAC: 02:00:00:00:00:02]
+    end
+
+    subgraph ns_br3_3 ["Namespace: ns_br3_3"]
+        direction TB
+        lo3((lo<br/>127.0.0.1/8))
+        veth3[veth3<br/>10.0.0.3/24<br/>MAC: 02:00:00:00:00:03]
+    end
+
+    veth1 <-->|VETH pair| veth1_br
+    veth2 <-->|VETH pair| veth2_br
+    veth3 <-->|VETH pair| veth3_br
+
+    classDef namespace fill:#f9f9f9,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5;
+    class ns_br3_1,ns_br3_2,ns_br3_3,Host namespace;
+    
+    classDef interface fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    class veth1,veth2,veth3,veth1_br,veth2_br,veth3_br interface;
+
+    classDef bridge fill:#fff9c4,stroke:#fbc02d,stroke-width:2px;
+    class br0 bridge;
+    
+    classDef loopback fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px,shape:circle;
+    class lo1,lo2,lo3 loopback;
+```
+
+Inspect MAC addresses of the virtual hosts:
+
+```shell
+MAC1=$(sudo ip netns exec ns_br3_1 cat /sys/class/net/veth1/address)
+MAC2=$(sudo ip netns exec ns_br3_2 cat /sys/class/net/veth2/address)
+MAC3=$(sudo ip netns exec ns_br3_3 cat /sys/class/net/veth3/address)
+echo "NS1: $MAC1 | NS2: $MAC2 | NS3: $MAC3"
+```
+
+Observe what _switch_ knows about MACs:
+
+```shell
+watch -n0.1 'bridge fdb show br br0 | grep -v "permanent"'
+```
+
+Flush the FDB (forwarding database) table:
+
+```shell
+sudo bridge fdb flush dev br0
+```
+
+Sniff packets on hosts 2 & 3:
+
+```shell
+sudo ip netns exec ns_br3_2 tcpdump -i veth2 -XX -e -n
+```
+
+```shell
+sudo ip netns exec ns_br3_3 tcpdump -i veth3 -XX -e -n
+```
+
+Try sending packets from host 1 with funny src/dst addresses:
+
+```shell
+sudo ip netns exec ns_br3_1 ./send_eth.py -i veth1 -s "aa:aa:aa:aa:aa:aa" -d "bb:bb:bb:bb:bb:bb" -p "<3"
+```
+
+Observe that:
+- bridge memorizes source addresses
+- bridge forwards packet everywhere
+
+Now send some correct traffic:
+
+```shell
+sudo ip netns exec ns_br3_1 ./send_eth.py -i veth1 -s "02:00:00:00:00:01" -d "02:00:00:00:00:02" -p "Request"
+```
+
+```shell
+sudo ip netns exec ns_br3_2 ./send_eth.py -i veth2 -s "02:00:00:00:00:02" -d "02:00:00:00:00:01" -p "Reply"
+```
+
+Observe that after bridge memorized some address, it forwards the packet to the correct host.
+

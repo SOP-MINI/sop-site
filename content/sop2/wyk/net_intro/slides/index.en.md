@@ -241,4 +241,32 @@ Ethernet specifies a simple header with just 3 fields:
 
 ---
 
-### ...
+### MAC addresses
+
+Ethernet specifies 48-bit long addressing of the hosts (interfaces).
+
+Those are **usually** globally unique, assigned by the interface manufacturer in format
+`[OID 24b]:[SID 24b] = [Manufacturer ID]:[Serial ID]`. MAC addresses do **not** form a geographical hierarchy,
+thus do not allow for building scalable, global networks.
+
+`src` address populated by the kernel with the address of the local outbound interface.
+It is useful for the recipient as the **reply-to** address.
+
+```text
+ip address
+[...]
+3: wlp4s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 UP
+    link/ether 04:68:74:66:81:35 brd ff:ff:ff:ff:ff:ff
+```
+
+You have to know the `dst` address! Usually kernel discovers it automatically.
+
+---
+
+### Switch operations
+
+Switches think simple: _Something from `11:22:33:44:55:66` came from `eth2` recently.
+Everything going to `11:22:33:44:55:66` should go to `eth2`!_
+
+![sw.svg](/ops2/wyk/net_intro/sw.svg)
+
