@@ -291,7 +291,7 @@ sudo ip netns exec ns_br3_3 tcpdump -i veth3 -XX -e -n
 Try sending packets from host 1 with funny src/dst addresses:
 
 ```shell
-sudo ip netns exec ns_br3_1 ./send_eth.py -i veth1 -s "aa:aa:aa:aa:aa:aa" -d "bb:bb:bb:bb:bb:bb" -p "<3"
+sudo ip netns exec ns_br3_1 ./send_eth.py -i veth1 -s "02:00:00:00:00:aa" -d "02:00:00:00:00:bb" -p "<3"
 ```
 
 Observe that:
