@@ -29,6 +29,20 @@ Example output:
 
 Interface `wlp0s20f3` has MAC address `dc:21:5c:08:bf:83` and IP addresses `192.168.178.28` and `fe80::2ecb:209a:b7d2:bd77` assigned.
 
+### Netcat
+
+Use `nc` to connect somewhere and send some data.
+
+```shell
+nc mini.pw.edu.pl 80 
+```
+
+We can even send some real requests:
+
+```shell
+echo -e "GET / HTTP/1.1\r\nHost: mini.pw.edu.pl\r\n\r\n" | nc mini.pw.edu.pl 80
+```
+
 ### Virtual network setup
 
 Create isolated pair of virtual hosts with separate networking environment:
@@ -87,22 +101,9 @@ You can clean that up with:
 ```shell
 sudo ./direct_client_server.sh down
 ```
+Source: [direct_client_server.sh]({{< github_url "direct_client_server.sh" >}})
 
 Note that regular host networking is kept completely separate.
-
-### Netcat
-
-Use `nc` to connect somewhere and send some data.
-
-```shell
-nc mini.pw.edu.pl 80 
-```
-
-We can even send some real requests:
-
-```shell
-echo -e "GET / HTTP/1.1\r\nHost: mini.pw.edu.pl\r\n\r\n" | nc mini.pw.edu.pl 80
-```
 
 Now let's establish both sides in our virtual environment:
 
@@ -114,15 +115,14 @@ sudo ip netns exec ns_server nc -l -p 80 -v
 sudo ip netns exec ns_client nc 10.0.0.2 80 -v
 ```
 
-ClosSource: [direct_client_server.sh]({{< github_url "direct_client_server.sh" >}})
-e client connection with `C-c`.
+Close client connection with `C-c`.
 
 ### Packet sniffing
 
 Run the packet sniffer on the server side:
 
 ```shell
-sudo ip netns exec ns_server tcpdump -i veth_s -n -w dump.pcap --print
+sudo ip netns exec ns_server tcpdump -i veth_s -n -w ncdump.pcap --print
 ```
 
 ```shell
@@ -133,13 +133,26 @@ sudo ip netns exec ns_server nc -l -p 80
 sudo ip netns exec ns_client nc 10.0.0.2 80
 ```
 
-### External traffic capture
-
-Try dumping host communication:
+Find and display first frame sent by the client in `tshark` CLI:
 
 ```shell
-sudo tcpdump -i $(ip route get 8.8.8.8 | grep -oP 'dev \K\S+') -n -w extdump.pcap --print && \
-wireshark extdump.pcap
+FRAME_NUM=$(tshark -r ncdump.pcap -Y "tcp.stream == 0" -T fields -e frame.number | head -n 1)
+tshark -r ncdump.pcap -Y "frame.number == $FRAME_NUM" -x
+```
+
+Display it with frame dissection:
+
+```shell
+FRAME_NUM=$(tshark -r ncdump.pcap -Y "tcp.stream == 0" -T fields -e frame.number | head -n 1)
+tshark -r ncdump.pcap -Y "frame.number == $FRAME_NUM" -V
+```
+
+### External traffic capture
+
+Try also dumping host - internet communication:
+
+```shell
+sudo tcpdump -i $(ip route get 8.8.8.8 | grep -oP 'dev \K\S+') -n -w extdump.pcap --print
 ```
 
 Here `ip route get` is used to get name of the interface handling internet traffic.
