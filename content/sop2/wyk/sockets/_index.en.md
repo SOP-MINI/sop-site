@@ -1,7 +1,7 @@
 ---
 title: "Sockets"
-date: 2022-02-03T19:18:47+01:00
 weight: 60
+bookCollapseSection: true
 ---
 
 # Sockets
