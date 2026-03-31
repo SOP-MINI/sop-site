@@ -1,5 +1,5 @@
 ---
-title: "TCP/IP networking"
+title: "Networking basics"
 date: 2022-02-03T19:14:17+01:00
 weight: 50
 bookCollapseSection: true
@@ -9,21 +9,26 @@ bookCollapseSection: true
 
 ## Scope
 
-- OSI communication architecture. Functionality of layers.
-- Internetworks, Internet. 4-layer architecture of TCP/IP based networks.
-- Communication in TCP/IP network; virtual layer to layer communication. Encapsulation. Roles of router and bridge.
-  Example protocol stack.
-- Types of data transmissions/routing schemes: unicast, multicast, broadcast, anycast, geocast
-- IPv4 addressing: classful, classless (CIDR). Private networks and NAT.
-- Port concept, IANA, assignment of ports: well-known, registered, ephemeral.
-- Basic TCP/IP protocols:
-    - IP: addressing, fragmentation/reassembly of data packets (datagrams). IP datagram structure.
-    - ICMP: carrier of (mostly error) messages.
-    - UDP: basis of connection-less (datagram) Internet communication.
-    - TCP: basis of connection-oriented (stream) reliable Internet communication.  
-      Concepts: segement retransmission, acknowledgement, offered window, adaptation of transmission speed, Nagle
-      algorithm, input/output queues (buffers) and their size, low-water marks, urgent/out-of-band (OOB) data.
-- IPv6
+- Networking as Inter-Process Communication (IPC)
+- Packets
+- Network interfaces
+- Addressing
+- Basics of the `ip` command
+- The `nc` tool
+- Capturing network traffic using `tcpdump`
+- Packet encapsulation
+- Network stack
+- Layered network models (OSI and TCP/IP)
+- MAC hardware addresses
+- Ethernet header
+- Operating principles of switches
+- IP header
+- Operating principles of a router
+- Address Resolution Protocol (ARP)
+- Routing table
+- IP packet fragmentation
+- TTL (Time To Live)
+- ICMP protocol
 
 ## Reference
 

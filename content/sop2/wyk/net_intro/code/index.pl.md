@@ -5,7 +5,7 @@ weight: 99
 
 [View on GitHub]({{< github_url >}})
 
-### Network interfaces
+## Network interfaces
 
 See what network interfaces you have:
 
@@ -29,7 +29,7 @@ Example output:
 
 Interface `wlp0s20f3` has MAC address `dc:21:5c:08:bf:83` and IP addresses `192.168.178.28` and `fe80::2ecb:209a:b7d2:bd77` assigned.
 
-### Netcat
+## Netcat
 
 Use `nc` to connect somewhere and send some data.
 
@@ -43,7 +43,7 @@ We can even send some real requests:
 echo -e "GET / HTTP/1.1\r\nHost: mini.pw.edu.pl\r\n\r\n" | nc mini.pw.edu.pl 80
 ```
 
-### Virtual network setup
+## Virtual network setup
 
 Create isolated pair of virtual hosts with separate networking environment:
 
@@ -117,7 +117,7 @@ sudo ip netns exec ns_client nc 10.0.0.2 80 -v
 
 Close client connection with `C-c`.
 
-### Packet sniffing
+## Packet sniffing
 
 Run the packet sniffer on the server side:
 
@@ -177,7 +177,7 @@ Note `tshark` options used:
 * `tcp.stream == $STREAM_ID` filter is used to get the first frame index of the request
 * `-x` displays frame in hex
 
-### Raw L2 frames
+## Ethernet frames
 
 Start capturing and displaying in raw L2 format on the server side:
 
@@ -203,7 +203,7 @@ sudo ip netns exec ns_client ./send_eth.py -i veth_c -s '11:22:33:44:55:66' -d '
 Observe that a packet is still forwarded. 
 The sending OS does may not assume who is on the other end of `veth`.
 
-### L2 bridge (virtual switches)
+## Virtual switch
 
 ```shell
 sudo ./bridge_3hosts.sh up
@@ -310,7 +310,7 @@ sudo ip netns exec ns_br3_2 ./send_eth.py -i veth2 -s "02:00:00:00:00:02" -d "02
 
 Observe that after bridge memorized some address, it forwards the packet to the correct host.
 
-### L3 and ARP
+## Address Resolution Protocol
 
 View the local routing table:
 
@@ -354,7 +354,7 @@ sudo ip netns exec ns_br3_1 ip neigh flush all
 sudo ip netns exec ns_br3_2 ip neigh flush all
 ```
 
-### L3 routers
+## Routers
 
 ```shell
 sudo ./two_routers.sh up
@@ -479,4 +479,101 @@ Then try to send to a distant host `h3`:
 
 ```shell
 sudo ip netns exec ns_h1 ./send_udp.py -d 10.0.3.1 -s 50
+```
+
+## Network faults
+
+### Missing route
+
+Try deleting a route definition for router 1:
+
+```shell
+sudo ip netns exec ns_r1 ip route del 10.0.3.0/24
+```
+
+Sniff incoming router traffic:
+
+```shell
+sudo ip netns exec ns_r1 tcpdump -i veth_r1_l -n -e
+```
+
+And try to send:
+
+```shell
+sudo ip netns exec ns_h1 ./send_udp.py -d 10.0.3.1 -s 50
+```
+
+Observe that the packet is **not delivered** and router generates a `ICMP net 10.0.3.1 unreachable` response.
+
+Restore back to normal:
+
+```shell
+sudo ip netns exec ns_r1 ip route add 10.0.3.0/24 via 10.0.2.254
+```
+
+### Broken link
+
+Let's simulate a broken cable between switch and host h2:
+
+```shell
+sudo ip netns exec ns_sw ip link set veth_h2_br down
+```
+
+Start sniffing at both interfaces of router 1:
+
+```shell
+sudo ip netns exec ns_r1 tcpdump -i veth_r1_l -n -e
+```
+
+```shell
+sudo ip netns exec ns_r1 tcpdump -i veth_r1_r -n -e
+```
+
+Ensure the router's ARP cache is flushed:
+```shell
+sudo ip netns exec ns_r1 ip neigh flush all
+```
+
+Send a packet to host 2:
+```shell
+sudo ip netns exec ns_h1 ./send_udp.py -d 10.0.2.1 -s 50
+```
+
+Observe:
+- flooding the right network with ARP requests.
+- `ICMP host 10.0.2.1 unreachable` response generated.
+
+Fix the cable:
+```shell
+sudo ip netns exec ns_sw ip link set veth_h2_br up
+```
+
+### Packet loss
+
+Observe traffic at both interfaces of router 1.
+
+See how `ping` behaves:
+
+```shell
+sudo ip netns exec ns_h1 ping -c 3 10.0.3.1
+```
+
+Let's now add `netem loss` rule, simulating 50% packet loss:
+
+```shell
+sudo ip netns exec ns_r1 tc qdisc add dev veth_r1_r root netem loss 50%
+```
+
+Observe traffic at both interfaces of router 1 and try to repeatedly send something:
+
+```shell
+sudo ip netns exec ns_h1 ping -c 10 10.0.3.1
+```
+
+Observe that some ICMP requests are not forwarded to the right network and thus, replies are not generated.
+
+Fix:
+
+```shell
+sudo ip netns exec ns_r1 tc qdisc del dev veth_r1_r root
 ```

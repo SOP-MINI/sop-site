@@ -1,5 +1,5 @@
 ---
-title: "Sieci TCP/IP"
+title: "Postawy sieci"
 date: 2022-02-03T19:14:33+01:00
 weight: 50
 bookCollapseSection: true
@@ -9,20 +9,27 @@ bookCollapseSection: true
 
 ## Zakres wykładu
 
-- Modele komunikacji sieciowej: 7-warstwowy OSI i 4-warstwowy DoD (TCP/IP). Rola warstw. Internet. Standardy IETF: RFC.
-- Terminy związane z komunikacją w sieci TCP/IP: stos protokołów, ruter, MTU, kapsułkowanie, fragmentacja/scalanie
-  pakietów, unicast/multicast/broadcast/anycast
-- Adresowanie klasowe, a bezklasowe. Sieci prywatne i NAT.
-- Porty i zarządzanie nimi; porty ogólnie znane, rejestrowane, dynamiczne; rola IANA.
-- Podstawowe informacje o wybranych protokołach rodziny TCP/IP:
-    - `IP` - adresowanie, fragmentacja/scalanie, TTL
-    - `ICMP` - rola protokołu, wybrane funkcje.
-    - `UDP` - adresowanie, struktura datagramu UDP
-    - `TCP` - podstawowe własności (realizacja niezawodnej dupleksowej komunikacji strumieniowej/połączeniowej z
-      kontrolą przepływu).  
-      Terminy: potwierdzanie doręczenia segmentów, retransmisja, okno oferowane, adaptacja szybkości, algorytm Nagle'a,
-      dane pilne (OOB), bufor odbiorczy i wysyłkowy, rozmiary i wskaźniki "low-water mark".
-- IPv6
+- Sieć jako komunikacji międzyprocesowej (IPC)
+- Pakiety sieciowe
+- Interfejsy sieciowe
+- Adresacja sieciowa
+- Podstawy polecenia `ip`
+- Narzędzie `nc`
+- Przechwytywanie ruchu sieciowego z wykorzystaniem `tcpdump`
+- Enkapsulacja pakietów
+- Stos sieciowy
+- Warstwowe modele sieci (OSI i TCP/IP)
+- Adresy sprzętowe MAC
+- Nagłówek Ethernet
+- Zasada działania przełączników (switchy)
+- Nagłówek IP
+- Struktura nagłówka IP oraz proces przetwarzania pakietów (odbieranie, decydowanie, wysyłanie) przez hosty i routery.
+- Zasada działania routera
+- Address Resolution Protocol
+- Tablica routingu
+- Fragmentacja pakietów IP
+- TTL (Time To Live)
+- Protokół ICMP
 
 ## Materiały
 
