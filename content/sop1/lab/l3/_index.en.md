@@ -278,6 +278,45 @@ Do all the threads created in this program really work?
 
 ## Threads and Signals
 
+### Handling signals
+
+When a multithreaded process receives a signal, any one of the threads that haven't blocked the signal may receive it.
+
+Another important thing to note is that asynchronous signal handlers (i.e those set by `sigaction`) are not thread-local! Setting a handler in one thread overwrites the handler for the whole process.
+
+Thankfully, you don't necessarily have to deal with that and many other limitations of signal handlers in a multithreaded program.
+
+A very common pattern for handling signals in multithreaded applications is to start a separate thread specifically for handling signals, while blocking them in the rest of your threads.
+
+This is convenient, as it removes the need for global variables while allowing you to handle signals in a synchronous way, (you just use `sigwait`) albeit at the expense of dedicating a thread to it.
+
+### Sending a signal
+
+Inside your process you may send a signal to a specific thread, using `pthread_kill`
+```
+int pthread_kill(pthread_t thread, int sig);
+```
+
+When you send a signal to a specific thread, only that thread will receive that signal. If the thread is blocking that signal, it will recieve it as soon as it unblocks it.
+
+More information:
+```
+man 3p pthread_kill
+```
+
+### Setting a signal mask
+
+In a multithreaded program you may not use `sigprocmask` to set the signal mask. Instead, you have to call `pthread_sigmask`, which sets the thread-local signal mask.
+
+Similar to how processes inherit the mask of the parent, threads inherit the signal mask of the thread that created them.
+
+In order to fully block a signal, it must be blocked in every thread of the program, otherwise one thread may receive it and bring down the whole program if the signal isn't handled.
+
+More information:
+```
+man 3p pthread_sigmask
+```
+
 ### Excercise
 Goal: 
 The program takes sole 'k' parameter and prints the list of numbers form 1 to k at each second. It must handle two signals in dedicated thread, the following action must be taken upon the signal arrival:
@@ -296,11 +335,6 @@ What you need to know:
 
 Thread input structure argsSignalHandler_t holds the shared threads data (an array and STOP flag) with protective
 mutexes and not shared (signal mask and tid of thread designated to handle the signals).
-
-In threaded process (one that has more that one thread) you can not use sigprocmask, use pthread_sigmask instead.
-
-Having separated thread to handle the signals (as in this example) is a very common way to deal with signals in
-multi-threaded code.
 
 How many threads run in this program?
 {{< details "Answer"  >}} Two, main thread created by system (every process has one starting thread) and the thread created by the code.  {{< /details  >}}

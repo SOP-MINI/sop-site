@@ -47,7 +47,7 @@ so that process can access file contents through memory operations.
 
 ### Memory file mappings
 
-![mmap.svg](/wyk/mmap.svg)
+![mmap.svg](/ops2/wyk/shm/mmap.svg)
 
 ---
 
@@ -104,7 +104,7 @@ the file.
 Using `MAP_SHARED` processes may read and write the same **physical memory**
 region backed by a disk file.
 
-![ipc.svg](/wyk/ipc.svg)
+![ipc.svg](/ops2/wyk/shm/ipc.svg)
 
 ---
 
@@ -112,7 +112,7 @@ region backed by a disk file.
 
 Each `MAP_PRIVATE` mapping gets own physical memory region. The sync process is disabled.
 
-![private.svg](/wyk/private.svg)
+![private.svg](/ops2/wyk/shm/private.svg)
 
 <sub>Implementation detail: this is optimized to use Copy-on-Write scheme.</sub>
 
@@ -123,7 +123,7 @@ Each `MAP_PRIVATE` mapping gets own physical memory region. The sync process is 
 After mapping write the OS does not dump changes to the disk immediately.
 Memory writes are asynchronously flushed to disk by kernel tasks.
 
-![kworker.svg](/wyk/kworker.svg)
+![kworker.svg](/ops2/wyk/shm/kworker.svg)
 
 ---
 
@@ -159,7 +159,7 @@ It defines properties of given memory range:
 
 ---
 
-![procmaps.svg](/wyk/procmaps.svg)
+![procmaps.svg](/ops2/wyk/shm/procmaps.svg)
 
 ---
 
@@ -196,7 +196,7 @@ The child **will share memory** with parent if it had any shared mapping.
 
 ---
 
-![fork.svg](/wyk/fork.svg)
+![fork.svg](/ops2/wyk/shm/fork.svg)
 
 ---
 
@@ -246,7 +246,7 @@ FD operations like `fchmod`, `fchown`, `fstat` work just like on regular files.
 POSIX SHM objects are referred to through path-like strings but those have 
 nothing to do with regular filesystem paths.
 
-![shmnamespace.svg](/wyk/shmnamespace.svg)
+![shmnamespace.svg](/ops2/wyk/shm/shmnamespace.svg)
 
 SHM namespace is separate, has own root and is **flat**.
 

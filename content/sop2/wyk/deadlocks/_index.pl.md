@@ -2,6 +2,7 @@
 title: "Zakleszczenia"
 date: 2022-01-28T17:23:23+01:00
 weight: 40
+bookCollapseSection: true
 ---
 
 # Zakleszczenia
@@ -16,6 +17,8 @@ weight: 40
 
 ## Materiały
 
-1.  Podręcznik: rozdz. 7 (Synchronizacja procesów), 8 (Zakleszczenia).
-2.  Slajdy: [Zakleszczenia.pdf]({{< resource "Zakleszczenia_1.pdf" >}})
+1. Slajdy: [Zakleszczenia.pdf]({{< resource "Zakleszczenia_1.pdf" >}})
+2. [Programy przykładowe](code)
+3. Podręcznik: rozdz. 7 (Synchronizacja procesów), 8 (Zakleszczenia).
+
 

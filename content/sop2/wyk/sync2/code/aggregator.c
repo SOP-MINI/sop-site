@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
         float global_max = -1000.0f;
         int readings_count = 0;
 
-        for (int s = 1; s <= num_sensors; s++) {
+        for (int s = 0; s <= num_sensors; s++) {
             char filename[32];
             snprintf(filename, sizeof(filename), "sensor_%d.dat", s);
 
