@@ -2,6 +2,7 @@
 title: "Deadlocks"
 date: 2022-01-28T17:23:23+01:00
 weight: 40
+bookCollapseSection: true
 ---
 
 # Deadlocks
@@ -16,5 +17,6 @@ weight: 40
 
 ## Reference
 
-1.  Textbook: chapters: Deadlocks.
-2.  Slides: [Deadlocks.pdf]({{< resource "Deadlocks_0.pdf" >}})
+1. Slides: [Deadlocks.pdf]({{< resource "Deadlocks_0.pdf" >}})
+2. [Code samples](code)
+3. Textbook: chapters: Deadlocks.

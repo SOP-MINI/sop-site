@@ -1,4 +1,4 @@
-CODEDIRS := shm/code sync/code sync2/code deadlocks/code
+CODEDIRS := shm/code sync/code sync2/code deadlocks/code sockets/code
 
 .PHONY: all clean $(CODEDIRS)
 

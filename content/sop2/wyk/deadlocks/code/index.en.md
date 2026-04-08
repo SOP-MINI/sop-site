@@ -1,4 +1,4 @@
-[---
+---
 title: "Code"
 weight: 99
 ---
