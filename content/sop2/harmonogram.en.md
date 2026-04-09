@@ -10,11 +10,11 @@ Tuesdays, 16:15-17:45, room 328
 |-------|----------------------------------------------------------|
 | 24.02 | [Shared memory]({{< ref "wyk/shm" >}})                   |
 | 03.03 | [Synchronization]({{< ref "wyk/sync" >}})                |
-| 10.03 | [POSIX synchronization]({{< ref "wyk/sync2" >}})         |
-| 17.03 | [Deadlocks]({{< ref "wyk/deadlocks" >}})                 |
-| 24.03 | [Networking basics]({{< ref "wyk/networks" >}})          |
-| 31.03 | [Sockets interface]({{< ref "wyk/sockets" >}})           |
-| 14.04 | [Network programming]({{< ref "wyk/w7" >}})              |
+| 10.03 | [Synchronization]({{< ref "wyk/sync" >}})                |
+| 17.03 | [POSIX synchronization]({{< ref "wyk/sync2" >}})         |
+| 24.03 | [Deadlocks]({{< ref "wyk/deadlocks" >}})                 |
+| 31.03 | [Networking basics]({{< ref "wyk/networks" >}})          |
+| 14.04 | [Sockets interface]({{< ref "wyk/sockets" >}})           |
 | 21.04 | **Lecture Test 1**                                       |
 | 28.04 | [Main memory management]({{< ref "wyk/w9" >}})           |
 | 05.05 | [Virtual memory]({{< ref "wyk/w10" >}})                  |

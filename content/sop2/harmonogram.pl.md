@@ -10,11 +10,11 @@ Wtorki, g. 18:00 - 19:30, s. 328
 |-------|---------------------------------------------------------|
 | 24.02 | [Pamięć wspólna]({{< ref "wyk/shm" >}})                 |
 | 03.03 | [Synchronizacja]({{< ref "wyk/sync" >}})                |
-| 10.03 | [Synchronizacja POSIX]({{< ref "wyk/sync2" >}})         |
-| 17.03 | [Zakleszczenia]({{< ref "wyk/deadlocks" >}})            |
-| 24.03 | [Podstawy sieci]({{< ref "wyk/networks" >}})            |
-| 31.03 | [Interfejs gniazd]({{< ref "wyk/sockets" >}})           |
-| 14.04 | [Programowanie sieciowe]({{< ref "wyk/w7" >}})          |
+| 10.03 | [Synchronizacja c.d.]({{< ref "wyk/sync" >}})           |
+| 17.03 | [Synchronizacja POSIX]({{< ref "wyk/sync2" >}})         |
+| 24.03 | [Zakleszczenia]({{< ref "wyk/deadlocks" >}})            |
+| 31.03 | [Podstawy sieci]({{< ref "wyk/networks" >}})            |
+| 14.04 | [Interfejs gniazd]({{< ref "wyk/sockets" >}})           |
 | 21.04 | **Kolokwium 1.**                                        |
 | 28.04 | [Zarządzanie pamięcią operacyjną]({{< ref "wyk/w9" >}}) |
 | 05.05 | [Pamięć wirtualna]({{< ref "wyk/w10" >}})               |

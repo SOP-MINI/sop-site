@@ -120,6 +120,9 @@ Servers almost always calls `bind()`. These are expected to receive communicatio
 
 Clients usually skip explicit `bind()`. The OS will automatically assign a random, unused (_ephemeral_) port the first time the client sends something.
 
+Socket address includes IP part. It may be the address of one of the available interfaces or a wildcard like `0.0.0.0` (`INADDR_ANY`)
+allowing for receiving traffic from all attached subnets.
+
 ---
 
 ### Address structures
@@ -183,6 +186,29 @@ Conventionally used network format: **Network Byte Order** (NBO) = Big Endian.
 
 Applications must perform conversions to/from network byte order manually. Kernel cannot possibly know how to interpret
 bytes in L5+ application layers. Address structures also contain such mutlibyte integers. Sockets API expects them to be in the Network Byte Order.
+
+---
+
+### Addressing helpers
+
+* `inet_pton()` - converts text to binary address
+* `inet_ntop()` - converts binary address to text
+
+```c
+const char* ip = "192.168.0.1";
+struct in_addr addr; // uint32_t (NBO)
+inet_pton(AF_INET, ip, &addr);
+```
+
+* `getsockname()` - returns address assigned to a socket
+* `getpeername()` - returns address of remote, connected peer (TCP)
+
+```c
+struct sockaddr_in addr;
+socklen_t len = sizeof(addr);
+// Assumes AF_INET address is bound
+getsockname(sockfd, (struct sockaddr *)&addr, &len);
+```
 
 ---
 
