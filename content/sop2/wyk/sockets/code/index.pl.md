@@ -246,7 +246,7 @@ sudo ip netns exec ns_client2 tc qdisc del dev veth_c2 root
 
 ### Reorderings
 
-Build and try out client sending burst of requests:
+Build and try out the client sending a burst of requests:
 
 ```shell
 make time_burst_client
@@ -271,3 +271,26 @@ Rollback to the normal state:
 ```shell
 sudo ip netns exec ns_client2 tc qdisc del dev veth_c2 root
 ```
+
+### Datagram truncation
+
+Run UDP echo server:
+
+```shell
+make -B echo_server
+```
+[echo_server.c]({{< github_url "echo_server.c" >}})
+
+```shell
+sudo ip netns exec ns_server ./echo_server
+```
+
+Utilize `nc` as a client which sends a datagram line by line:
+
+```shell
+sudo ip netns exec ns_client1 nc -u 10.0.1.1 5678
+```
+
+Observe that messages longer than the server's read buffer size get truncated.
+
+
