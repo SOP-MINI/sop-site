@@ -26,6 +26,7 @@ make -B addrconv
 ```shell
 make -B addrbind
 ```
+[addrbind.c]({{< github_url "addrbind.c" >}})
 
 Bind localhost address:
 
@@ -45,9 +46,7 @@ Explicitly bind ephemeral port:
 ./addrbind 127.0.0.1 0
 ```
 
-## User Datagram Protocol
-
-### Setup
+## Network setup
 
 Set up server independently connected with two clients over two distinct networks:
 
@@ -116,6 +115,8 @@ sudo ip netns exec ns_client2 ping -c 2 10.0.1.2 # Client 2 <-> Client 1
 ```
 
 ---
+
+## User Datagram Protocol
 
 ### Basic Usage
 
@@ -293,4 +294,122 @@ sudo ip netns exec ns_client1 nc -u 10.0.1.1 5678
 
 Observe that messages longer than the server's read buffer size get truncated.
 
+---
 
+## Transmission Control Protocol
+
+### TCP Sink Server
+
+```shell
+make byte_sink
+```
+[byte_sink.c]({{< github_url "byte_sink.c" >}})
+
+Setup `ss` watch before running the server:
+```shell
+sudo ip netns exec ns_server watch -n0.1 ss -tan
+```
+
+Setup `tcpdump` too:
+```shell
+sudo ip netns exec ns_server tcpdump -i veth_srv_c1 -n tcp port 8080
+```
+
+```shell
+sudo ip netns exec ns_server ./byte_sink
+```
+
+Try connecting to the server before `listen()` and observe packet dump:
+```shell
+sudo ip netns exec ns_client1 nc -nv 10.0.1.1 8080
+```
+
+Note the remote server responds with `RST` segment refusing the connection.
+
+Now let the server call `listen()`. Check `ss` output. Re-try to connect:
+```shell
+sudo ip netns exec ns_client1 nc -nv 10.0.1.1 8080
+```
+
+Note:
+* client socket emerged in `ss` in `ESTABLISHED` state, it has a peer address set.
+* the whole handshake is completed without any server process intervention.
+* client may even send some data and get it acknowledged 
+
+Now, let the server call `accept()`. Observe nothing changes in `ss` or `tcpdump`.
+
+Receive bytes, observe decreasing Rx buffer length in `ss`.
+
+Close the connection by terminating `nc` and observe server reading EOF.
+
+Follow-ups:
+* Send some data before server calls `accept()`
+* Close the connection before server calls `accept()`
+* Try to connect more clients, while the first one is still connected.
+
+### Client application
+
+Now build and use small client application which reads from `stdin` and writes everything to an established TCP conneciton.
+
+```shell
+make simple_nc
+```
+[simple_nc.c]({{< github_url "simple_nc.c" >}})
+
+```shell
+sudo ip netns exec ns_client1 ./simple_nc 10.0.1.1 8080
+```
+
+Experiment as previously.
+
+Try to populate server Rx buffer and `C-d` to send `FIN` fin. Observe server reading EOF.
+
+Follow-ups:
+* Kill the server when it's Rx buffer is empty. Close the client without sending anything more!
+  * Observe server socket going into `TIME_WAIT` state.
+  * Try re-running the server immediately after.
+* Kill the server when it's Rx buffer is empty, then close the client!
+  * Observe that the client cannot distinguish between half-closed and fully-closed stream just by writing.
+  * Note the first attempt to send works and the next one kills the client application!
+* Kill the server when it's Rx buffer is **not** empty
+  * Again see client gets killed with signal on second write attempt.
+
+### KV Store
+
+Now let's build a simple key-value store server which interatively serves many clients, processing their requests and sending reponses.
+
+```shell
+make kv_store kv_client
+```
+[kv_protocol.h]({{< github_url "kv_protocol.h" >}})
+[kv_store.c]({{< github_url "kv_store.c" >}})
+[kv_client.c]({{< github_url "kv_client.c" >}})
+
+Sniff traffic on port 8085:
+```shell
+sudo ip netns exec ns_server tcpdump -i veth_srv_c1 -n tcp port 8085
+```
+
+```shell
+sudo ip netns exec ns_server ./kv_store
+```
+
+Run the first client and play with the commands:
+```shell
+sudo ip netns exec ns_client1 ./kv_client 10.0.1.1 8085
+```
+
+Without closing the first client run the second one and attempt to do something:
+```shell
+sudo ip netns exec ns_client2 ./kv_client 10.0.2.1 8085
+```
+
+Observe requests are served only after the first client disconnects.
+
+Follow-ups:
+* Try to execute special `fire` command
+  * Observe server gets killed with `SIGPIPE`.
+
+### Broken networks
+
+TBD

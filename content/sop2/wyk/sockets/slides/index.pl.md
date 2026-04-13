@@ -343,8 +343,8 @@ Sequence counters for new connections have unpredictable initial values:
 
 ### Connection Backlog
 
-TCP connection acceptor is typically called a **server side**. It must create the main socket using `SOCK_STREAM` type
-and address it using `bind()` so that clients know where to connect to. Then it calls `listen()` to start accepting connections **in the background** by the OS.
+TCP server constructs a *listening socket* which maintains the **connection backlog**. After `listen()` the OS starts to respond to the incoming handshakes.
+
 
 ![tcp_server.svg](/ops2/wyk/sockets/tcp_server.svg)
 
@@ -436,4 +436,20 @@ Client applications typically do not experience this problem due to ephemeral po
 
 For quick iteration during developemnt `SO_REUSEADDR` before binding the listening socket!
 
+---
 
+### Data Transfer
+
+Unlike UDP, TCP models bidirectional byte stream. Syscalls read and write **local kernel buffers**:
+
+```c
+ssize_t send(int fd, const void *buf, size_t len, int flgs);
+ssize_t recv(int fd, void *buf, size_t len, int flgs);
+```
+Both can return `> 0` but `< len` if buffers are full/empty. Always use loops!
+* **Graceful Disconnect (Received `FIN`)**
+  * `recv()` returns 0. This means EOF (End of File).
+  * `send()` will succeed! `FIN` does not mean the other side is done.
+* **Abortive Disconnect (Received `RST`)**:
+  * `recv()` returns `-1` and sets `errno` = `ECONNRESET`.
+  * `send()` triggers a `SIGPIPE` signal, killing your process by default!
