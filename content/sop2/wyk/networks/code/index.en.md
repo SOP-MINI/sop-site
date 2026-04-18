@@ -470,7 +470,7 @@ sudo ip netns exec ns_h3 nc -u -l 9999
 Now send some bytes from host `h1`:
 
 ```shell
-sudo ip netns exec ns_h1 ./send_udp.py -d 10.0.2.1 -s 100
+sudo ip netns exec ns_h1 ./send_udp.py -d 10.0.2.1 -s 10
 ```
 
 Inspect the captured packets.
@@ -536,7 +536,7 @@ sudo ip netns exec ns_r1 ip neigh flush all
 
 Send a packet to host 2:
 ```shell
-sudo ip netns exec ns_h1 ./send_udp.py -d 10.0.2.1 -s 50
+sudo ip netns exec ns_h1 ./send_udp.py -d 10.0.2.1 -s 10
 ```
 
 Observe:

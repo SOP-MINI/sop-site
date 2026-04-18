@@ -411,7 +411,7 @@ Calling `close()` syscall tells the kernel two things:
 flushing in the background. 
 
 If `close()` is called with something not consumed from the Rx buffer, kernel treats it as an abnormal termination.
-It will send `RST` segment to the other side resulting in `ECONNRESET` errors there.
+It will send `RST` segment to the other side.
 
 You can also use `shutdown(fd, SHUT_WR)` to close output stream while maintaining the possibility to receive more data.
 
@@ -448,8 +448,8 @@ ssize_t recv(int fd, void *buf, size_t len, int flgs);
 ```
 Both can return `> 0` but `< len` if buffers are full/empty. Always use loops!
 * **Graceful Disconnect (Received `FIN`)**
-  * `recv()` returns 0. This means EOF (End of File).
-  * `send()` will succeed! `FIN` does not mean the other side is done.
+  * `recv()` returns 0 after stream was fully consumed.
+  * `send()` will succeed! `FIN` does not mean the other side is done!
 * **Abortive Disconnect (Received `RST`)**:
-  * `recv()` returns `-1` and sets `errno` = `ECONNRESET`.
-  * `send()` triggers a `SIGPIPE` signal, killing your process by default!
+  * both `recv()` and `send()` may return `ECONNRESET`.
+  * if `send()` is called **after** `RST`, it triggers a `SIGPIPE` signal!

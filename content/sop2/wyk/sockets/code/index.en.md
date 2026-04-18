@@ -437,11 +437,84 @@ Try to send another command from the client and observe that:
 * In tcpdump, the router actively drops the `PSH` packet
 * Retries happen with decreasing frequency (Exponential Backoff)
 * Client application remains blocked on `recv()`. It should eventually fail after ~15 minutes when the TCP maximum retry limit is reached (`ETIMEDOUT`).
-* The server, blocked on its own `recv()`, has absolutely no idea the network is down. It cannot distinguish between a broken link and an idle client! 
+* The server, blocked on its own `recv()`, has absolutely no idea the network is down. It cannot distinguish between a broken link and an idle client!
   * This is why application-level Keep-Alives exist
 
 To restore back to a normal state:
 ```shell
 sudo ip netns exec ns_server sysctl -w net.ipv4.ip_forward=1
 ```
+
+### Flow Control
+
+Let's run application which serves `/dev/urandom` bytes in chunks of 1KiB.
+
+```shell
+make random_server random_client
+```
+[random_server.c]({{< github_url "random_server.c" >}})
+
+Run `tcpdump` on port 8089:
+
+```shell
+sudo ip netns exec ns_server tcpdump -i veth_srv_c1 -n tcp port 8089
+```
+
+Observe also `ss` queue lengths on the **client side**:
+
+```shell
+watch -n0.1 sudo ip netns exec ns_client1 ss -tn
+```
+
+Start the server:
+
+```shell
+sudo ip netns exec ns_server ./random_server
+```
+
+Request 100 random bytes to confirm:
+
+```shell
+sudo ip netns exec ns_client1 ./random_client 10.0.1.1 100
+```
+
+Now simulate a really slow client:
+
+```shell
+sudo ip netns exec ns_client1 ./random_client 10.0.1.1 10000000 | pv -q  -L 4k > /dev/null
+```
+
+`pv` here acts as a bandwidth limiter. `random_client` shall output those 10MB of data in 4kB chunks to it's stdout.
+`pv` will limit the speed of the output to 4kB/s.
+
+Note the cascade of events:
+* `random_client` blocks on write to `stdout`
+* client side Rx buffer becomes full
+* client sends **zero window** segments letting know the server to stop transmitting
+* server side Tx buffer becomes full
+* server blocks on `send()` syscall!
+
+### Close handling
+
+Now let's run the clinent requesting large amount of data and let's interrupt it via C-c:
+
+```shell
+sudo ip netns exec ns_client1 timeout 1s ./random_client 10.0.1.1 10000000000 > /dev/null
+```
+
+Note server receives `RST` segment. In response `send()` fails with `ECONNRESET`.
+
+Do the same, but this time, request server side sleeps between sending chunks:
+
+```shell
+sudo ip netns exec ns_client1 timeout 1s ./random_client 10.0.1.1 10000000000 100 > /dev/null
+```
+
+Note that server got killed with `SIGPIPE` signal.
+
+This is because it attempted to write to a closed socket (one which already received `RST` segment).
+
+Previously this was not the case as RST came **while** the server thread was within the `send()` syscall.
+
+In general, TCP writers should always be prepared for `EPIPE`/`SIGPIPE` errors.
 
