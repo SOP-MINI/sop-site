@@ -16,11 +16,11 @@ Wtorki, g. 18:00 - 19:30, s. 328
 | 31.03 | [Podstawy sieci]({{< ref "wyk/networks" >}})            |
 | 14.04 | [Interfejs gniazd]({{< ref "wyk/sockets" >}})           |
 | 21.04 | **Kolokwium 1.**                                        |
-| 28.04 | [Zarządzanie pamięcią operacyjną]({{< ref "wyk/w9" >}}) |
-| 05.05 | [Pamięć wirtualna]({{< ref "wyk/w10" >}})               |
-| 19.05 | [Systemy plików]({{< ref "wyk/w11" >}})                 |
-| 26.05 | [Realizacje systemów plików]({{< ref "wyk/w12" >}})     |
-| 02.06 | Docker (nowy wykład)                                    |
+| 28.04 | [Serwery]({{< ref "wyk/servers" >}})                    |
+| 05.05 | [Zarządzanie pamięcią operacyjną]({{< ref "wyk/w9" >}}) |
+| 19.05 | [Pamięć wirtualna]({{< ref "wyk/w10" >}})               |
+| 26.05 | [Systemy plików]({{< ref "wyk/w11" >}})                 |
+| 02.06 | [Realizacje systemów plików]({{< ref "wyk/w12" >}})     |
 | 09.06 | **Kolokwium 2.**                                        |
 | 16.06 | Konsultacje                                             |
 

@@ -16,11 +16,11 @@ Tuesdays, 16:15-17:45, room 328
 | 31.03 | [Networking basics]({{< ref "wyk/networks" >}})          |
 | 14.04 | [Sockets interface]({{< ref "wyk/sockets" >}})           |
 | 21.04 | **Lecture Test 1**                                       |
-| 28.04 | [Main memory management]({{< ref "wyk/w9" >}})           |
-| 05.05 | [Virtual memory]({{< ref "wyk/w10" >}})                  |
-| 19.05 | [File systems]({{< ref "wyk/w11" >}})                    |
-| 26.05 | [Implementations of file systems]({{< ref "wyk/w12" >}}) |
-| 02.06 | Docker (new lecture)                                     |
+| 28.04 | [Servers]({{< ref "wyk/servers" >}})                     |
+| 05.05 | [Main memory management]({{< ref "wyk/w9" >}})           |
+| 19.05 | [Virtual memory]({{< ref "wyk/w10" >}})                  |
+| 26.05 | [File systems]({{< ref "wyk/w11" >}})                    |
+| 02.06 | [Implementations of file systems]({{< ref "wyk/w12" >}}) |
 | 09.06 | **Lecture Test 2**                                       |
 | 16.06 | Office hours                                             |
 
