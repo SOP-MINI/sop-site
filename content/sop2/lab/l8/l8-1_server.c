@@ -1,4 +1,4 @@
-#include "l7_common.h"
+#include "l8_common.h"
 
 #define BACKLOG 3
 #define MAXBUF 576
@@ -74,7 +74,7 @@ void doServer(int fd)
         con[i].free = 1;
     for (;;)
     {
-        if (TEMP_FAILURE_RETRY(recvfrom(fd, buf, MAXBUF, 0, &addr, &size) < 0))
+        if (TEMP_FAILURE_RETRY(recvfrom(fd, buf, MAXBUF, 0, (struct sockaddr*)&addr, &size) < 0))
             ERR("read:");
         if ((i = findIndex(addr, con)) >= 0)
         {
@@ -93,7 +93,7 @@ void doServer(int fd)
                     printf("Part %d\n%s\n", chunkNo, buf + 2 * sizeof(int32_t));
                 con[i].chunkNo++;
             }
-            if (TEMP_FAILURE_RETRY(sendto(fd, buf, MAXBUF, 0, &addr, size)) < 0)
+            if (TEMP_FAILURE_RETRY(sendto(fd, buf, MAXBUF, 0, (struct sockaddr*)&addr, size)) < 0)
             {
                 if (EPIPE == errno)
                     con[i].free = 1;
