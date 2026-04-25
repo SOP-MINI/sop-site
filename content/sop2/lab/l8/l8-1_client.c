@@ -1,4 +1,4 @@
-#include "l7_common.h"
+#include "l8_common.h"
 
 #define MAXBUF 576
 volatile sig_atomic_t last_signal = 0;
@@ -19,7 +19,7 @@ void usage(char *name) { fprintf(stderr, "USAGE: %s domain port file \n", name);
 void sendAndConfirm(int fd, struct sockaddr_in addr, char *buf1, char *buf2, ssize_t size)
 {
     struct itimerval ts;
-    if (TEMP_FAILURE_RETRY(sendto(fd, buf1, size, 0, &addr, sizeof(addr))) < 0)
+    if (TEMP_FAILURE_RETRY(sendto(fd, buf1, size, 0, (struct sockaddr*)&addr, sizeof(addr))) < 0)
         ERR("sendto:");
     memset(&ts, 0, sizeof(struct itimerval));
     ts.it_value.tv_usec = 500000;
