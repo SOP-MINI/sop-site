@@ -1,12 +1,69 @@
 ---
-title: "L8 - UDP i ?"
+title: "L8 - Protokoły datagramowe i wielowątkowe serwery"
 weight: 50
 ---
 
-## WIP
+## Protokoły datagramowe
 
-		
-## UDP
+W przeciwieństwie do protokołów strumieniowych jak TCP, w protokołach datagramowych przesyłamy paczki danych czyli _datagramy_. 
+Tak jak w przypadku protokołów strumieniowych będziemy zajmować się nimi w kontekście socketów internetowych (UDP) oraz lokalnych (UNIX).
+
+### UNIX
+
+Lokalne gniazdo datagramowe tworzymy podobnie jak strumieniowe, po prostu specyfikując protokół na `SOCK_DGRAM`:
+
+```C
+socket(PF_UNIX, SOCK_DGRAM, 0)
+```
+
+Obowiązują wszystkie zasady związane z gniazdami lokalnymi (`man 7 unix`).
+Warto zauważyć że, w przeciwieństwie do internetowych gniazd datagramowych (UDP), lokalne są niezawodne - `as on most UNIX implementations, UNIX domain datagram sockets are always reliable and don't reorder datagrams`.
+Jest to więc dość wygodny sposób na przesyłanie wiadomości między procesami.
+Nie mamy np. znanego z protokołów strumieniowych problemu sklejania się wiadomości.
+
+### UDP
+
+Sieciowe gniazdo datagramowe, czyli gniazdo UDP tworzymy analogicznie do TCP, wystarczy zmienić protokół na `SOCK_DGRAM`, np:
+
+```C
+socket(AF_INET, SOCK_DGRAM, 0)
+```
+
+dla gniazda IPv4 (`AF_INET` dla IPv6).
+
+Aby dowiedzieć się więcej o protokole UDP przeczytaj koniecznie `man 7 udp` oraz przejrzyj jeszcze raz [wykład o gniazdach sieciowych](../../wyk/sockets/).
+W szczególności jest ważne żeby rozumieć, że protokół UDP jest zawodny - wiadomości mogą zaginąć, przyjść w złej kolejności, przyjść zduplikowane etc.
+Ponieważ jednak protokół UDP nie ma narzutu związanego z niezawodnością jak TCP, pozwala przesyłać wiadomości z mniejszym opóźnieniem.
+Jest więc wykorzystywany w zastosowaniach, gdzie szybkie przesłanie danych jest ważniejsze niż niezawodność, jak np. sieciowe gry komputerowe.
+Ponieważ protokół UDP jest bezpołączeniowy wspiera tzw. _broadcast_ czyli wysyłanie jednej wiadomości na wiele adresów.
+
+### Komunikacja
+
+Protokoły datagramowe są bezpołączeniowe - nie wywołujemy `connect` w kliencie ani `listen` oraz `accepty` po stronie serwera.
+Zamiast tego mamy po prostu dwie funkcje do wysyłania i odbierania danych:
+
+```C
+ssize_t recvfrom(int socket, void *restrict buffer, size_t length,
+    int flags, struct sockaddr *restrict address, socklen_t *restrict address_len);
+
+ssize_t sendto(int socket, const void *message, size_t length,
+    int flags, const struct sockaddr *dest_addr, socklen_t dest_len);
+``` 
+
+Przeczytaj ich strony w manualu - `man 3p recvfrom` oraz `man 3p sendto`.
+Jak widać funkcje te są analogiczne do `recv` oraz `send`, po prostu biorą po dwa dodatkowe parametry - adres oraz jego rozmiar.
+
+Przy odbieraniu wiadomości używając `recvfrom` warto zwrócić uwagę, na specyficzny sposób jego działania.
+Funkcja ta zwraca ilość przeczytanych bajtów, jednak zawsze odczytuje tylko jedną wiadomość (datagram) na raz.
+Parametr `lenght` wskazuje na wielkość dostarczanego bufora `buffer` i oznacza _maksymalny_ rozmiar wiadomości jakiej się spodziewamy.
+
+Jeśli wiadomość jest krótsza po prostu zostanie wczytana w całości, natomiast jeśli jest dłuższa - nadmiarowe bajty zostaną **zignorowane i porzucone**.
+Dlatego ważne jest, żeby `buffer` miał odpowiedni rozmiar, a parametr `lenght` był ustawiony na rozmiar największej wiadomości jaką obsługujemy w programie, a nie takiej, jakiej akurat się spodziewamy.
+W protokole UDP nie mamy gwarancji, że wiadomości przyjdą w dobrej kolejności.
+
+Funkcja `sendto` jest jeszcze prostsza w użyciu - albo wyśle cały datagram, albo zakończy się błędem i nie wyśle nic.
+
+## Zadanie
 
 Cel:
 
@@ -89,9 +146,25 @@ Czemu konwertujemy tylko byte order numeru fragmentu i znacznika ostatniego elem
 Przeanalizuj jak działa limitowanie do 5 połączeń, zwróć uwagę na pole free w strukturze i znaczenie znacznika ostatniego fragmentu przesyłanego przez klienta.
 
 
-## Przykładowe zadanie
+## Wielowątkowe serwery
+
+Na poprzednim laboratorium ćwiczyliśmy pisanie serwerów działających w oparciu o jeden wątek.
+Taka architektura ma wiele sensu gdy musimy oszczędzać zasoby a spodziewamy się niezbyt dużego obciążenia.
+
+Często jednak jest tak, że nasz serwer musi obsłużyć bardzo dużą ilość zapytań.
+W takiej sytuacji, żeby uzyskać odpowiednią wydajność na nowoczesnym sprzęcie, konieczne jest wykorzystanie wielu wątków.
+Typową i naturalną architekturą jest jeden wątek przyjmujący połączenia oraz przekazujący zadania do wątków roboczych, które je wykonują i wysyłają rezultaty do klientów.
+
+W celu napisania tego typu programu na laboratorium warto powtórzyć sobie L4 (synchronizacja), w szczególności mutexy, semafory i zmienne warunkowe. Ponadto typowe struktury danych używane do tego typu zadań jak pula wątków czy bufor cykliczny. Jeśli słabo pamiętasz te zagadnienia przejrzyj tutoriale do [L3](../../../sop1/lab/l3/) i [L4](../../../sop1/lab/l4) oraz [slajdy i programy wykładowe z synchronizacji](../../../sop1/wyk/w7).
+
+
+## Przykładowe zadania
 
 Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
+
+- [Zadanie 2 z L7]({{< ref "../l7/example2" >}}) ~120 minut na całość, etapy 4-5 dotyczą L8
+
+
 ## Kody źródłowe z treści tutoriala
 
 {{% codeattachments %}}
