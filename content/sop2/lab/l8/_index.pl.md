@@ -5,8 +5,8 @@ weight: 50
 
 ## Protokoły datagramowe
 
-W przeciwieństwie do protokołów strumieniowych jak TCP, w protokołach datagramowych przesyłamy paczki danych czyli _datagramy_. 
-Tak jak w przypadku protokołów strumieniowych będziemy zajmować się nimi w kontekście socketów internetowych (UDP) oraz lokalnych (UNIX).
+W przeciwieństwie do protokołów strumieniowych jak TCP, w protokołach datagramowych przesyłamy paczki danych, czyli _datagramy_. 
+Tak jak w przypadku protokołów strumieniowych będziemy zajmować się nimi w kontekście gniazd sieciowych (UDP) oraz lokalnych (UNIX).
 
 ### UNIX
 
@@ -32,14 +32,14 @@ socket(AF_INET, SOCK_DGRAM, 0)
 dla gniazda IPv4 (`AF_INET` dla IPv6).
 
 Aby dowiedzieć się więcej o protokole UDP przeczytaj koniecznie `man 7 udp` oraz przejrzyj jeszcze raz [wykład o gniazdach sieciowych](../../wyk/sockets/).
-W szczególności jest ważne żeby rozumieć, że protokół UDP jest zawodny - wiadomości mogą zaginąć, przyjść w złej kolejności, przyjść zduplikowane etc.
+W szczególności jest ważne, żeby rozumieć, że protokół UDP jest zawodny - wiadomości mogą zaginąć, przyjść w złej kolejności, przyjść zduplikowane etc.
 Ponieważ jednak protokół UDP nie ma narzutu związanego z niezawodnością jak TCP, pozwala przesyłać wiadomości z mniejszym opóźnieniem.
 Jest więc wykorzystywany w zastosowaniach, gdzie szybkie przesłanie danych jest ważniejsze niż niezawodność, jak np. sieciowe gry komputerowe.
 Ponieważ protokół UDP jest bezpołączeniowy wspiera tzw. _broadcast_ czyli wysyłanie jednej wiadomości na wiele adresów.
 
 ### Komunikacja
 
-Protokoły datagramowe są bezpołączeniowe - nie wywołujemy `connect` w kliencie ani `listen` oraz `accepty` po stronie serwera.
+Protokoły datagramowe są bezpołączeniowe - nie wywołujemy `connect` w kliencie ani `listen` oraz `accept` po stronie serwera.
 Zamiast tego mamy po prostu dwie funkcje do wysyłania i odbierania danych:
 
 ```C
@@ -55,10 +55,10 @@ Jak widać funkcje te są analogiczne do `recv` oraz `send`, po prostu biorą po
 
 Przy odbieraniu wiadomości używając `recvfrom` warto zwrócić uwagę, na specyficzny sposób jego działania.
 Funkcja ta zwraca ilość przeczytanych bajtów, jednak zawsze odczytuje tylko jedną wiadomość (datagram) na raz.
-Parametr `lenght` wskazuje na wielkość dostarczanego bufora `buffer` i oznacza _maksymalny_ rozmiar wiadomości jakiej się spodziewamy.
+Parametr `length` wskazuje na wielkość dostarczanego bufora `buffer` i oznacza _maksymalny_ rozmiar wiadomości jakiej się spodziewamy.
 
-Jeśli wiadomość jest krótsza po prostu zostanie wczytana w całości, natomiast jeśli jest dłuższa - nadmiarowe bajty zostaną **zignorowane i porzucone**.
-Dlatego ważne jest, żeby `buffer` miał odpowiedni rozmiar, a parametr `lenght` był ustawiony na rozmiar największej wiadomości jaką obsługujemy w programie, a nie takiej, jakiej akurat się spodziewamy.
+Jeśli wiadomość jest krótsza, po prostu zostanie wczytana w całości, natomiast jeśli jest dłuższa - nadmiarowe bajty zostaną **zignorowane i porzucone**.
+Dlatego ważne jest, żeby `buffer` miał odpowiedni rozmiar, a parametr `length` był ustawiony na rozmiar największej wiadomości jaką obsługujemy w programie, a nie takiej, jakiej akurat się spodziewamy.
 W protokole UDP nie mamy gwarancji, że wiadomości przyjdą w dobrej kolejności.
 
 Funkcja `sendto` jest jeszcze prostsza w użyciu - albo wyśle cały datagram, albo zakończy się błędem i nie wyśle nic.
@@ -81,10 +81,10 @@ też mogą zaginąć w sieci, ale program powinien sobie i z tym radzić -
 serwer nie może dwa razy wypisać tego samego fragmentu tekstu.
 
 Wszystkie dodatkowe dane (wszystko poza tekstem z pliku) przesyłane
-między serwerem i klientem mają mieć postać liczb typu int32_t.  Należ
+między serwerem i klientem mają mieć postać liczb typu int32_t.  Należy
 przyjąć, że rozmiar przesyłanych jednorazowo danych (tekst z pliku i
 dane sterujące)  nie może przekroczyć 576B. Naraz serwer może odbierać
-maksymalnie 5 plików, 6 jednoczesna transmisja ma być zignorowana.
+maksymalnie 5 plików, szósta jednoczesna transmisja ma być zignorowana.
 
 Program serwer jako parametr przyjmuje numer portu na którym będzie
 pracował, program klient przyjmuje jako parametry adres i port serwera
@@ -108,7 +108,7 @@ Zwróć uwagę, że w protokole UDP nie nawiązujemy połączenia, gniazda komun
 W przykładzie występują kolejne przydatne do biblioteki wariacje funkcji: make_socket, bind_inet_socket, ponieważ mają te same nazwy co funkcje użyte w poprzednim zadaniu trzeba je inaczej ponazywać.
 
 W tym zadaniu  kontekst połączenia jest ważny i wymaga wysiłku aby go utrzymać. Co jest kontekstem połączenia?
-{{< answer >}} Kontekstem jest ilość poprawnie przesłanych pakietów do danej chwili. {{< /answer >}}
+{{< answer >}} Kontekstem jest liczba poprawnie przesłanych pakietów do danej chwili. {{< /answer >}}
 
 Jakie dane są przesyłane w pojedynczym datagramie? Czemu służą przesyłane metadane?</br>
 {{< answer >}} Pakiet składa się z (1) 32 bitowego numeru fragmentu, (2) 32 bitowej informacji czy to ostatni fragment oraz (3) z fragmentu pliku. Metadane służą do kontroli kontekstu (1) oraz do zakończenia transmisji (2).   {{< /answer >}}
@@ -123,7 +123,7 @@ Przeanalizuj jak działa findIndex w serwerze, zwłaszcza jak są porównywane a
 {{< answer >}} Porównywane adresy są w byte order sieci, nie mamy potrzeby ich konwertować skoro jedynie je porównujemy a nie np. wyświetlamy. Funkcja dla nowego adresu zakłada nowy rekord (o ile ma jeszcze wolne miejsce w tablicy). {{< /answer >}}
 
 Jak sobie poradzimy z duplikatami datagramów?
-{{< answer >}} Trzymamy tablice stanu połączeń "struct connections", wiemy, który fragment już wypisaliśmy i nie powtarzamy go. {{< /answer >}}
+{{< answer >}} Trzymamy tablicę stanu połączeń "struct connections", wiemy, który fragment już wypisaliśmy i nie powtarzamy go. {{< /answer >}}
 
 Jak sobie poradzimy, z odwrotną kolejnością datagramów, czyli gdy otrzymamy fragment dalszy niż aktualnie oczekiwany?
 {{< answer >}} Odwrócenie nie  może się zdarzyć, bo klient nie prześle dalszych części dopóki nie potwierdzimy wcześniejszych. {{< /answer >}}
@@ -160,7 +160,7 @@ W celu napisania tego typu programu na laboratorium warto powtórzyć sobie L4 (
 
 ## Przykładowe zadania
 
-Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
+Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy, że jesteś dobrze przygotowany do zajęć.
 
 - [Zadanie 2 z L7]({{< ref "../l7/example2" >}}) ~120 minut na całość, etapy 4-5 dotyczą L8
 
