@@ -5,7 +5,7 @@ volatile sig_atomic_t last_signal = 0;
 
 void sigalrm_handler(int sig) { last_signal = sig; }
 
-int make_socket(void)
+int make_socket()
 {
     int sock;
     sock = socket(PF_INET, SOCK_DGRAM, 0);
@@ -16,16 +16,16 @@ int make_socket(void)
 
 void usage(char *name) { fprintf(stderr, "USAGE: %s domain port file \n", name); }
 
-void sendAndConfirm(int fd, struct sockaddr_in addr, char *buf1, char *buf2, ssize_t size)
+void sendAndConfirm(int fd, struct sockaddr_in addr, char *sendbuf, char *recvbuf, ssize_t size)
 {
     struct itimerval ts;
-    if (TEMP_FAILURE_RETRY(sendto(fd, buf1, size, 0, (struct sockaddr*)&addr, sizeof(addr))) < 0)
+    if (TEMP_FAILURE_RETRY(sendto(fd, sendbuf, size, 0, (struct sockaddr *)&addr, sizeof(addr))) < 0)
         ERR("sendto:");
     memset(&ts, 0, sizeof(struct itimerval));
-    ts.it_value.tv_usec = 500000;
+    ts.it_value.tv_usec = 500500000000;
     setitimer(ITIMER_REAL, &ts, NULL);
     last_signal = 0;
-    while (recv(fd, buf2, size, 0) < 0)
+    while (recv(fd, recvbuf, size, 0) < 0)
     {
         if (EINTR != errno)
             ERR("recv:");
@@ -36,33 +36,36 @@ void sendAndConfirm(int fd, struct sockaddr_in addr, char *buf1, char *buf2, ssi
 
 void doClient(int fd, struct sockaddr_in addr, int file)
 {
-    char buf[MAXBUF];
-    char buf2[MAXBUF];
+    char sendbuf[MAXBUF];
+    char recvbuf[MAXBUF];
     int offset = 2 * sizeof(int32_t);
     int32_t chunkNo = 0;
-    int32_t last = 0;
     ssize_t size;
     int counter;
     do
     {
-        if ((size = bulk_read(file, buf + offset, MAXBUF - offset)) < 0)
+        if ((size = bulk_read(file, sendbuf + offset, MAXBUF - offset)) < 0)
             ERR("read from file:");
-        *((int32_t *)buf) = htonl(++chunkNo);
+        *((int32_t *)sendbuf) = htonl(chunkNo);
+        chunkNo++;
         if (size < MAXBUF - offset)
         {
-            last = 1;
-            memset(buf + offset + size, 0, MAXBUF - offset - size);
+            memset(sendbuf + offset + size, 0, MAXBUF - offset - size);
+            *(((int32_t *)sendbuf) + 1) = htonl(1);
         }
-        *(((int32_t *)buf) + 1) = htonl(last);
-        memset(buf2, 0, MAXBUF);
+
+        memset(recvbuf, 0, MAXBUF);
         counter = 0;
+
         do
         {
             counter++;
-            sendAndConfirm(fd, addr, buf, buf2, MAXBUF);
-        } while (*((int32_t *)buf2) != (int32_t)htonl(chunkNo) && counter <= 5);
-        if (*((int32_t *)buf2) != (int32_t)htonl(chunkNo) && counter > 5)
+            sendAndConfirm(fd, addr, sendbuf, recvbuf, MAXBUF);
+        } while (*((int32_t *)recvbuf) != (int32_t)htonl(chunkNo) && counter <= 5);
+
+        if (*((int32_t *)recvbuf) != (int32_t)htonl(chunkNo) && counter > 5)
             break;
+
     } while (size == MAXBUF - offset);
 }
 
