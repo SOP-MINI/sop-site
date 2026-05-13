@@ -66,37 +66,44 @@ void doServer(int fd)
 {
     struct sockaddr_in addr;
     struct connections con[MAXADDR];
-    char buf[MAXBUF];
-    socklen_t size = sizeof(addr);
-    int i;
-    int32_t chunkNo, last;
-    for (i = 0; i < MAXADDR; i++)
+    char buf[MAXBUF+1];
+    for (int i = 0; i < MAXADDR; i++)
         con[i].free = 1;
-    for (;;)
+
+    while (1)
     {
-        if (TEMP_FAILURE_RETRY(recvfrom(fd, buf, MAXBUF, 0, (struct sockaddr*)&addr, &size) < 0))
+        socklen_t size = sizeof(addr);
+        int receivedBytes;
+        if ((receivedBytes = TEMP_FAILURE_RETRY(recvfrom(fd, buf, MAXBUF, 0, (struct sockaddr *)&addr, &size))) < 0)
             ERR("read:");
-        if ((i = findIndex(addr, con)) >= 0)
+        buf[receivedBytes] = 0;
+        int index = -1;
+
+        if ((index = findIndex(addr, con)) >= 0)
         {
-            chunkNo = ntohl(*((int32_t *)buf));
-            last = ntohl(*(((int32_t *)buf) + 1));
-            if (chunkNo > con[i].chunkNo + 1)
-                continue;
-            else if (chunkNo == con[i].chunkNo + 1)
+            int32_t chunkNo = ntohl(*((int32_t *)buf));
+            if (chunkNo > con[index].chunkNo + 1)
             {
-                if (last)
+                continue;
+            }
+            else if (chunkNo == con[index].chunkNo + 1)
+            {
+                if (ntohl(*(((int32_t *)buf) + 1)))  // last message bit is set
                 {
                     printf("Last Part %d\n%s\n", chunkNo, buf + 2 * sizeof(int32_t));
-                    con[i].free = 1;
+                    con[index].free = 1;
                 }
                 else
+                {
                     printf("Part %d\n%s\n", chunkNo, buf + 2 * sizeof(int32_t));
-                con[i].chunkNo++;
+                }
+                con[index].chunkNo++;
             }
-            if (TEMP_FAILURE_RETRY(sendto(fd, buf, MAXBUF, 0, (struct sockaddr*)&addr, size)) < 0)
+
+            if (TEMP_FAILURE_RETRY(sendto(fd, buf, MAXBUF, 0, (struct sockaddr *)&addr, size)) < 0)
             {
                 if (EPIPE == errno)
-                    con[i].free = 1;
+                    con[index].free = 1;
                 else
                     ERR("send:");
             }
