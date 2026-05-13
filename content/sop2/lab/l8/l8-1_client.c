@@ -22,7 +22,7 @@ void sendAndConfirm(int fd, struct sockaddr_in addr, char *sendbuf, char *recvbu
     if (TEMP_FAILURE_RETRY(sendto(fd, sendbuf, size, 0, (struct sockaddr *)&addr, sizeof(addr))) < 0)
         ERR("sendto:");
     memset(&ts, 0, sizeof(struct itimerval));
-    ts.it_value.tv_usec = 500500000000;
+    ts.it_value.tv_usec = 500000;
     setitimer(ITIMER_REAL, &ts, NULL);
     last_signal = 0;
     while (recv(fd, recvbuf, size, 0) < 0)
@@ -46,8 +46,7 @@ void doClient(int fd, struct sockaddr_in addr, int file)
     {
         if ((size = bulk_read(file, sendbuf + offset, MAXBUF - offset)) < 0)
             ERR("read from file:");
-        *((int32_t *)sendbuf) = htonl(chunkNo);
-        chunkNo++;
+        *((int32_t *)sendbuf) = htonl(++chunkNo);
         if (size < MAXBUF - offset)
         {
             memset(sendbuf + offset + size, 0, MAXBUF - offset - size);

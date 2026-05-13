@@ -71,9 +71,9 @@ Cel:
 
 Napisz dwa programy pracujące w architekturze klient-serwer poprzez
 połączenie UDP. Zadanie programu klienta polega na wysłaniu pliku
-podzielonego na datagramy. Zadanie programu serwera polega na
-odbieraniu plików przesyłanych przez socket i wypisywaniu ich na
-ekran (bez informacji o pliku z którego dane pochodzą).
+tekstowego podzielonego na datagramy. Zadanie programu serwera polega
+na odbieraniu plików przesyłanych przez socket i wypisywaniu ich
+na ekran (bez informacji o pliku z którego dane pochodzą).
 
 Każdy wysłany do serwera pakiet musi być potwierdzony odpowiednim
 komunikatem zwrotnym, w razie braku takiego zwrotnego komunikatu

@@ -66,15 +66,17 @@ void doServer(int fd)
 {
     struct sockaddr_in addr;
     struct connections con[MAXADDR];
-    char buf[MAXBUF];
+    char buf[MAXBUF+1];
     for (int i = 0; i < MAXADDR; i++)
         con[i].free = 1;
 
     while (1)
     {
         socklen_t size = sizeof(addr);
-        if (TEMP_FAILURE_RETRY(recvfrom(fd, buf, MAXBUF, 0, (struct sockaddr *)&addr, &size) < 0))
+        int receivedBytes;
+        if ((receivedBytes = TEMP_FAILURE_RETRY(recvfrom(fd, buf, MAXBUF, 0, (struct sockaddr *)&addr, &size))) < 0)
             ERR("read:");
+        buf[receivedBytes] = 0;
         int index = -1;
 
         if ((index = findIndex(addr, con)) >= 0)
