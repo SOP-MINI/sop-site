@@ -44,6 +44,9 @@ void doClient(int fd, struct sockaddr_in addr, int file)
     int counter;
     do
     {
+        memset(sendbuf, 0, MAXBUF);
+        memset(recvbuf, 0, MAXBUF);
+
         if ((size = bulk_read(file, sendbuf + offset, MAXBUF - offset)) < 0)
             ERR("read from file:");
         *((int32_t *)sendbuf) = htonl(++chunkNo);
@@ -52,8 +55,6 @@ void doClient(int fd, struct sockaddr_in addr, int file)
             memset(sendbuf + offset + size, 0, MAXBUF - offset - size);
             *(((int32_t *)sendbuf) + 1) = htonl(1);
         }
-
-        memset(recvbuf, 0, MAXBUF);
         counter = 0;
 
         do

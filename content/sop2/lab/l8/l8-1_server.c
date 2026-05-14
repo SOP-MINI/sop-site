@@ -66,7 +66,7 @@ void doServer(int fd)
 {
     struct sockaddr_in addr;
     struct connections con[MAXADDR];
-    char buf[MAXBUF+1];
+    char buf[MAXBUF + 1];
     for (int i = 0; i < MAXADDR; i++)
         con[i].free = 1;
 
