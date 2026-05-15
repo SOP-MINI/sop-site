@@ -14,6 +14,8 @@ Meldunki są przekazywane przez posłańców.
 W chaosie bitwy często zdarza się, że posłańcowi nie uda się dotrzeć.
 Dlatego dostarczanie meldunków będziemy symulować przez protokół UDP.
 
+Do testów możesz użyć programu `netcat` z flagą `-u`.
+
 ## Etapy
 
 1. Program serwera przyjmuje jeden parametr - numer portu. 
@@ -35,9 +37,10 @@ Do synchronizacji użyj muteksu (do ochrony stosu) oraz semafora lub zmiennej wa
 3. Dodaj aktualizację map sztabowych.
 Stwórz współdzieloną między wątkami tablicę nazw oddziałów - o rozmiarze `DIVISION_NAMES_SIZE` równym 128.
 Po otrzymaniu nowego meldunku adiutant pracuje (czyli śpi przez 10ms).
-Następnie sprawdza, czy nazwa oddziału znajduje się już w tablicy. Jeśli nie, to dopisuje ją na koniec (pamiętaj o synchronizacji!).
-Dodaj współdzieloną mapę sztabową - tablicę dwuwymiarową o rozmiarze `100`x`100` wypełnioną na początku zerami.
-Adiutant aktualizuje pozycję oddziału na mapie - tj. szuka jego numeru, zeruje dane pole, po czym wpisuje numer oddziału na współrzędne z wiadomości.
+Następnie sprawdza, czy nazwa oddziału znajduje się już w tablicy.
+Jeśli nie, to dopisuje ją na koniec (pamiętaj o synchronizacji!).
+Dodaj współdzieloną mapę sztabową - tablicę dwuwymiarową o rozmiarze `100`x`100` wypełnioną na początku `-1`.
+Adiutant aktualizuje pozycję oddziału na mapie - tj. szuka jego numeru, ustawia dane pole na `-1`, po czym wpisuje numer oddziału (indeks w tablicy nazw oddziałów) na współrzędne z wiadomości.
 Żeby zapewnić synchronizację, dodaj muteks na każdy wiersz mapy.
 
 4. Dodaj wątek Napoleona.
