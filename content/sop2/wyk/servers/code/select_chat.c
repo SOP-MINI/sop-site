@@ -74,7 +74,7 @@ int main() {
                     } else {
                         FD_SET(new_fd, &master_set);
                         if (new_fd > fd_max) {
-                            fd_max = new_fd; // Aktualizujemy sufit
+                            fd_max = new_fd;
                         }
 
                         printf("done!: new client (fd=%d) connected from %s:%d\n",

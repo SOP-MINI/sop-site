@@ -157,7 +157,6 @@ int main() {
                 res.status = STATUS_OK;
                 res.val_len = htonl(strlen(text));
 
-                // Próba 2: Śmiertelny Cios. Gniazdo ma już flagę błędu od RST. SIGPIPE!
                 if (send(client_fd, text, strlen(text), 0) < 0) {
                     perror("send() failed"); // To się nigdy nie wypisze (bez SIG_IGN)
                 }

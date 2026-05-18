@@ -8,23 +8,20 @@ bookCollapseSection: true
 
 ## Zakres wykładu
 
-### Treści podstawowe
-
-- Model klient-serwer.
-    - Serwer współbieżny, a iteracyjny. Wpływ typu komunikacji na wybór typu serwera.
-    - Usługa sieciowa ze stanem. Przechowywanie stanu sesji
-- Modele partnerskie (P2P): czysty i hybrydowy. Zalety i wady P2P w porównaniu z modelem klient-serwer.
-- Kryteria oceny jakości usług sieciowych
-- Realizacja współbieżnego dostępu do wielu kanałów komunikacji sieciowej
-    - blokujące wej/wyj + wątki lub procesy robocze.
-    - wejście/wyjście zwielokrotnione - funkcje `select()`, `pselect()`
-
-### Treści dodatkowe
-
-- Realizacja współbieżnego dostępu do wielu kanałów komunikacji sieciowej
-    - wejście/wyjście nieblokujące
-    - wejście/wyjście sterowane sygnałami
-- Uruchamianie serwerów
+- Serwery iteracyjne
+- De-multipleksery zdarzeń: `select()`/`poll()`/`epoll()`
+- Architektura "wątek na połączenie"
+- Problem C10k
+- Metryki jakości: QPS, EPS, latencja
+- Serwery współbieżne oparte o pętlę zdarzeń
+- Skalowanie pętli zdarzeń
+  - wpółdzielone demultipleksery z użyciem `EPOLLONESHOT`
+  - prywatne demultipleksery
+  - `SO_REUSEPORT` dla skalowania `accept()`
+- Wzorzec _Reactor_
+- Wzorzec _Maszyna Stanów_
+- Korutyny
+- Rozwiązania _Zero-Copy_
 
 ## Materiały
 

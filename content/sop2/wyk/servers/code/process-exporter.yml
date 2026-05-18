@@ -1,0 +1,6 @@
+process_names:
+  - name: "dumb_server"
+    cmdline:
+      - 'dumb_multithreaded|dumb_epoll'
+
+

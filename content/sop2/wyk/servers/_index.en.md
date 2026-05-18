@@ -8,25 +8,22 @@ bookCollapseSection: true
 
 ## Scope
 
-### Basic content
-
-- Client-server model.
-    - Concurrent and iterative server types. Communication type vs server type.
-    - Stateful services. Stateful and stateless servers.
-- Peer to peer (P2P) models. Pros and coms of P2P as compared to the client-server model.
-- Service quality criteria.
-- Handling multiple communication channels
-    - blocking I/O + threads or sub-processes.
-    - Synchronous I/O multiplexing - `select()`, `pselect()`
-
-### Auxiliary content
-
-- Non-blocking I/O.
-- SIGIO and I/O
-- Running servers
+- Iterative servers
+- Event demultiplexers: `select()`/`poll()`/`epoll()`
+- _Thread-per-connection_ architecture
+- C10k problem
+- Quality metrics: QPS, EPS, latency
+- Event loop based servers
+- Scaling out event loops
+    - shared demultiplexers with `EPOLLONESHOT`
+    - private demultiplexers
+    - `SO_REUSEPORT` to scale out `accept()`
+- _Reactor_ pattern
+- _State Machine_ pattern
+- Coroutines
+- _Zero-Copy_ solutions
 
 ## Reference
-
 
 1. [Lecture Slides](slides)
 2. [Code samples](code)

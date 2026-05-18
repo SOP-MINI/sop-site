@@ -1,0 +1,30 @@
+global:
+  scrape_interval: 1s
+
+scrape_configs:
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: [ 'localhost:9100' ]
+
+  - job_name: 'process_exporter'
+    static_configs:
+      - targets: ['localhost:9256']
+
+  - job_name: 'dumb_multithreaded'
+    static_configs:
+      - targets: ['localhost:9000']
+
+  - job_name: 'c10k_clients'
+    static_configs:
+      - targets:
+        - 'localhost:9001'
+        - 'localhost:9002'
+        - 'localhost:9003'
+        - 'localhost:9004'
+        - 'localhost:9005'
+        - 'localhost:9006'
+        - 'localhost:9007'
+        - 'localhost:9008'
+        - 'localhost:9009'
+        - 'localhost:9010'
+

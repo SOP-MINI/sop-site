@@ -1,6 +1,7 @@
 */code/*
 
 !*/code/*.c
+!*/code/*.cpp
 !*/code/*.h
 !*/code/*.S
 !*/code/Makefile
@@ -8,3 +9,4 @@
 !*/code/*.txt
 !*/code/*.sh
 !*/code/*.py
+!*/code/*.yml

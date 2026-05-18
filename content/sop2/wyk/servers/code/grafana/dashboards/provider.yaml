@@ -1,0 +1,12 @@
+apiVersion: 1
+
+providers:
+  - name: 'Default'
+    orgId: 1
+    folder: ''
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 5 # Grafana będzie co 10 sekund sprawdzać czy plik JSON się zmienił
+    options:
+      # Ścieżka wewnątrz kontenera Grafany, gdzie zamontujemy pliki JSON
+      path: /var/lib/grafana/dashboards

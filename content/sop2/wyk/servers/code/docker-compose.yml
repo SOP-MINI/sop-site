@@ -1,0 +1,32 @@
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    network_mode: "host" # Najprostsze, by widział usługi na localhost
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  grafana:
+    image: grafana/grafana:latest
+    network_mode: "host"
+    volumes:
+      # Montowanie źródła danych
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+      # Montowanie pliku providera
+      - ./grafana/dashboards/provider.yaml:/etc/grafana/provisioning/dashboards/provider.yaml
+      # Montowanie samych plików JSON z dashboardami
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      # Pozwala na anonimowy dostęp (bez logowania admin/admin) na czas dema (Opcjonalnie)
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+  node-exporter:
+    image: prom/node-exporter:latest
+    network_mode: "host"
+    pid: "host"
+  process-exporter:
+    image: ncabatoff/process-exporter:latest
+    network_mode: "host"
+    pid: "host"
+    volumes:
+      - /proc:/host/proc
+      - ./process-exporter.yml:/config/process-exporter.yml
+    command: --procfs /host/proc -config.path /config/process-exporter.yml
