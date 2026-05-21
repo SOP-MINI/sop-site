@@ -21,10 +21,10 @@ Several programs are installed on the lab computers that (when properly configur
 - Vim
 - Visual Studio Code
 
-Below is a sample IDE configuration tutorial, but it is worth noting that this is only an example dictated by the author's personal preferences. All of the programs listed above (with proper configuration) should work equally well, so if you already have a favorite tool, you can stick with it (although it is worth giving QtCreator a try, a very nice IDE ~ _author's personal note_).
+Below there are two IDE configuration tutorials, but it is worth noting that this is only an example dictated by the author's personal preferences. All of the programs listed above (with proper configuration) should work equally well, so if you already have a favorite tool, you can stick with it (although it is worth giving QtCreator a try, a very nice IDE ~ _author's personal note_).
 
 
-# Configuring QtCreator for laboratories
+## Configuring QtCreator for laboratories
 
 First, to test program's features we create a simple project. Create a new directory (in our example we name it `test`) and two files in it: `main.c` and `Makefile`:
 
@@ -88,3 +88,116 @@ Note that the name of this file begins with a dot - it is invisible by default. 
 Now, every time you save a file (Ctrl+S), it will be automatically formatted according to configuration from config file. To check if this feature works correctly, try adding a few unnecessary spaces somewhere in the program and save the file.
 
 Your IDE is now ready for the laboratories. It is still worth spending a few minutes reviewing and adjusting various options in the settings (`Edit->Preferences`), especially in the Environment section, where you can configure the appearance and keyboard shortcuts. By default, QtCreator has a very convenient search engine under the shortcut `ctrl+k` that allows you to find various object classes (files, functions, global variables, etc.) in the project. Other options and instructions can be found in the help and documentation.
+
+## Visual Studio Code Configuration
+
+Before creating a project, you should first install the extensions needed for working with C/C++. To do this, launch Visual Studio Code and open the Extensions tab (keyboard shortcut: Ctrl + Shift + X).
+
+![](/img/vsc1.png) 
+
+Search for the **C/C++** extension (published by Microsoft; it should be the first result after searching), then click *Install*. The installation is automatic and restarting the editor is not required.
+
+![](/img/vsc2.png) 
+
+Do the same for the **Makefile Tools** extension (also published by Microsoft).
+
+![](/img/vsc3.png) 
+
+Then install the **Code Runner** extension as well.
+
+![](/img/vsc4.png) 
+
+These are all the extensions needed for comfortable work with C code.   
+
+Now let us create a simple test project named `test`, containing the files `main.c` and `Makefile`:  
+
+**main.c**:
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    printf("Hello world\n");
+    return EXIT_SUCCESS;
+}
+```
+
+**Makefile**:
+```
+all: main
+main: main.c	
+	gcc -fsanitize=address,undefined -Wall -Wextra -Wshadow -Werror -o main main.c
+.PHONY: clean all
+clean:
+	rm main
+```
+
+In Visual Studio Code, click `File -> Open Folder` in the upper-left corner and select the newly created `test` folder.
+
+With this configuration, running the `make` command compiles the program that prints `Hello world` to the standard output.
+
+**Note!** A very important step is changing the default C standard used by the editor. Otherwise, the editor may mark some names as unknown even though the program compiles correctly. To fix this, change the default standard from `c17` to `gnu17`. To do this, press Ctrl + Shift + P, type `C/C++: Edit Configurations (UI)`, and press Enter. A page with compiler settings should appear. Scroll down to the `C standard` section and change the value from `c17` to `gnu17`. It should look more or less like this:
+
+![](/img/vsc5.png) 
+
+From this point on, the editor should analyze and highlight the code correctly.  
+
+The next step is to enable error highlighting in the code. In theory, this option is enabled by default for the C language, but it often happens that, for some reason, it is disabled without any user intervention.  
+Press Ctrl + , (left Ctrl key and comma), then type `error squiggles` in the settings search bar and change the option to `enabled`.
+
+![](/img/vsc6.png) 
+
+Configure the IntelliSense engine in a similar way. Its default value should also be set to `default`, although this is not always the case. Press Ctrl + , and type `IntelliSense engine`. Set the value of `C_Cpp.intelliSenseEngine` to `default`.
+
+![](/img/vsc7.png)
+
+The next step is to configure support for the `Makefile`, so that compilation uses the flags defined in it.
+
+Press Ctrl + , and type `configuration provider` in the search bar. In the `C_Cpp.default.configurationProvider` field, enter the following value: `ms-vscode.makefile-tools`. This allows VS Code to automatically use the settings provided in the `Makefile`.  
+
+![](/img/vsc8.png)
+
+Next, with the project open, press Ctrl + Shift + P and run the `Makefile: Configure` command. This will automatically configure Makefile support in VS Code. Then press Ctrl + Shift + P again, run the `Makefile: Set the target to be built by make` command, and select `all`.
+
+Next, we will configure an optional but very useful feature: automatic code formatting when saving C files. During the labs, our project will include the following `.clang-format` file:
+
+**.clang-format**:
+```
+BasedOnStyle: Google
+IndentWidth: 4
+ColumnLimit: 120
+BreakBeforeBraces: Allman
+BreakConstructorInitializersBeforeComma: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortBlocksOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+IncludeBlocks: Preserve
+PointerAlignment: Left
+InsertNewlineAtEOF: true
+```
+
+This is important because we want VS Code to use the above file as the formatting configuration.  
+First, enable code formatting on save: press Ctrl + ,, type `format on save` in the search bar, and enable the `Format on File save` option.
+
+![](/img/vsc9.png)
+
+Next, search for `default formatter` and, in the `Default Formatter` setting, select `C/C++ ms-vscode.cpptools`.
+
+![](/img/vsc10.png)
+
+Then search for `C_Cpp formatting` and change the `C_Cpp: Formatting` setting to `clangformat`.
+
+![](/img/vsc11.png)
+
+Finally, make sure that the `C_Cpp: Clang_format_style` option (available through the search bar) is set to `file`. This should be the default value. Thanks to this setting, VS Code will use the formatting options defined in the `.clang-format` file.
+
+![](/img/vsc12.png)
+
+These are all the steps needed to make formatting run automatically when saving a file. This will speed up our work and make completing laboratory tasks much easier.  
+
+As the final step, let us take care of hints and autocompletion. Most hint and autocompletion options should already be active, but we can verify this by pressing Ctrl + , and searching for `parameter hints`. It is recommended to apply the settings shown in the screenshot below:
+
+![](/img/vsc13.png)
+
+After completing the steps described above, Visual Studio Code should be ready for use during the labs. However, it is worth spending a moment getting familiar with a few additional editor features, because VS Code is a very flexible and highly customizable environment. The command palette, available under Ctrl + Shift + P, is especially useful because it allows you to run most editor functions without looking for them in the menu. It is also worth exploring the extensions panel, code formatting settings, and the integrated terminal, which can be opened with Ctrl + `. More options and configuration examples can be found in the [Visual Studio Code documentation](https://code.visualstudio.com/docs).
