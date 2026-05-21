@@ -90,7 +90,7 @@ Program jest w tym momencie gotowy na laboratoria. Wciąż warto spędzić kilka
 
 ## Konfiguracja Visual Studio Code
 
-Przed utworzeniem projektu należy najpierw zainstalować rozszerzenia potrzebne do pracy z C/C++. W tym celu uruchamiamy Visual Studio Code, a następnie przechodzimy w zakładkę rozszerzenia (skrót klawiszowy: Ctrl + Shift + X).
+Przed utworzeniem projektu należy najpierw zainstalować rozszerzenia potrzebne do pracy z C/C++. W tym celu uruchamiamy Visual Studio Code, a następnie przechodzimy w zakładkę rozszerzenia (skrót klawiszowy: `Ctrl + Shift + X`).
 
 ![](/img/vsc1.png) 
 
@@ -136,30 +136,35 @@ W Visual Studio Code klikamy w lewym górnym rogu `File -> Open Folder` i wybier
 
 W takiej konfiguracji wywołanie polecenia `make` kompiluje program wypisujący `Hello world` na standardowe wyjście.
 
-**Uwaga!** Bardzo ważnym krokiem jest zmiana domyślnego standardu C, którego używa edytor! W przeciwnym razie edytor podświetla część nazw jako nieznane, mimo że program poprawnie się kompiluje! By to rozwiązać należy zmienić domyślny standard `c17` na `gnu17`. By to zrobić klikamy skrót klawiszowy Ctrl + Shift + P, wpisujemy `C/C++: Edit Configurations (UI)` oraz naciśnijmy enter. Powinna pojawić się nam strona z ustawieniami kompilatora. Przewijamy stronę w dół, gdzie w zakładce `C standard` zmieniamy z `c17` na `gnu17`. Powinno wyglądać to mniej więcej tak:
+**Uwaga!** Bardzo ważnym krokiem jest zmiana domyślnego standardu C, którego używa edytor! W przeciwnym razie edytor podświetla część nazw jako nieznane, mimo że program poprawnie się kompiluje! By to rozwiązać należy zmienić domyślny standard `c17` na `gnu17`. By to zrobić klikamy skrót klawiszowy `Ctrl + Shift + P`, wpisujemy `C/C++: Edit Configurations (UI)` oraz naciśnijmy enter. Powinna pojawić się nam strona z ustawieniami kompilatora. Przewijamy stronę w dół, gdzie w zakładce `C standard` zmieniamy z `c17` na `gnu17`. Powinno wyglądać to mniej więcej tak:
 
 ![](/img/vsc5.png) 
 
 Od tego momentu edytor powinien poprawnie analizować i podświetlać kod.  
 
+**Uwaga!** Koniecznym jest by w środowisku nie było żadnych pomocniczych narzędzi AI (w VS Code domyślnie jest zainstalowany GitHub Copilot, niemniej jednak trzeba się zalogować + narzędzie to domyślnie nie podpowiada w trakcie manualnego pisania kodu). Oczywiście instalacja dodatkowych rozszerzeń z agentami AI jest dość odradzana.  
+Łatwym sposobem na wyłączenie jakichkolwiek pomocy związanych z AI jest: wciśnięcie `Ctrl +` , oraz wpisanie `disable ai features` oraz zaznaczenie `chat.disableAIFeatures`.
+
+![](/img/vsc14.png) 
+
 Kolejnym krokiem będzie ustawienie opcji do podkreślania błędów w kodzie (teoretycznie opcja ta dla języka C jest włączona domyślnie, lecz często zdarza się, iż z jakiegoś powodu jest wyłączona bez dokonania żadnej interwencji).  
-Wciskamy skrót klawiszowy Ctrl + , (Lewy przycisk Ctrl oraz przecinek), po czym wpisujemy `error squiggles` w wyszukiwarkę w opcjach, po czym zmieniamy opcję na `enabled`.
+Wciskamy skrót klawiszowy `Ctrl + ,` (Lewy przycisk Ctrl oraz przecinek), po czym wpisujemy `error squiggles` w wyszukiwarkę w opcjach, po czym zmieniamy opcję na `enabled`.
 
 ![](/img/vsc6.png) 
 
-Podobnie postępujemy z silnikiem edycji IntelliSense (którego wartość domyślna powinna również być ustawiona na wartość 'default', choć nie zawsze tak jest). Wciskamy Ctrl + , oraz wpisujemy 'IntelliSense engine'. Ustawiamy wartość 'C_Cpp.intelliSenseEngine' na 'default'.
+Podobnie postępujemy z silnikiem edycji IntelliSense (którego wartość domyślna powinna również być ustawiona na wartość `default`, choć nie zawsze tak jest). Wciskamy `Ctrl + ,` oraz wpisujemy `IntelliSense engine`. Ustawiamy wartość `C_Cpp.intelliSenseEngine` na `default`.
 
 ![](/img/vsc7.png)
 
 Kolejnym krokiem będzie skonfigurowanie obsługi pliku `Makefile`, tak aby kompilacja korzystała ze zdefiniowanych flag.
 
-Wciskamy Ctrl + , po czym wpisujemy w wyszukiwarkę `configuration provider`. W polu 'C_Cpp.default.configurationProvider' wpisujemy daną wartość: `ms-vscode.makefile-tools`. Dzięki temu VS Code będzie automatycznie korzystał z ustawień podanych w pliku Makefile.  
+Wciskamy `Ctrl + ,` po czym wpisujemy w wyszukiwarkę `configuration provider`. W polu `C_Cpp.default.configurationProvider` wpisujemy daną wartość: `ms-vscode.makefile-tools`. Dzięki temu VS Code będzie automatycznie korzystał z ustawień podanych w pliku Makefile.  
 
 ![](/img/vsc8.png)
 
-Następnie (w otworzonym projekcie) wciskamy skrót Ctrl + Shift + P oraz uruchamiamy polecenie 'Makefile: Configure'. Dokona to automatycznej konfiguracji opcji Makefile do VS Code. Następnie ponownie wciskamy skrót Ctrl + Shift + P oraz uruchamiamy komendę 'Makefile: Set the target to be built by make' oraz wybieramy 'all'.
+Następnie (w otworzonym projekcie) wciskamy skrót `Ctrl + Shift + P` oraz uruchamiamy polecenie `Makefile: Configure`. Dokona to automatycznej konfiguracji opcji Makefile do VS Code. Następnie ponownie wciskamy skrót `Ctrl + Shift + P` oraz uruchamiamy komendę 'Makefile: Set the target to be built by make' oraz wybieramy 'all'.
 
-Następnie skonfigurujemy opcjonalną, ale bardzo przydatną funkcję automatycznego formatowania kodu przy zapisie plików C. W trakcie laboratoriów, w naszym projekcie będziemy mieli dostęp do następującego pliku '.clang-format'
+Następnie skonfigurujemy opcjonalną, ale bardzo przydatną funkcję automatycznego formatowania kodu przy zapisie plików C. W trakcie laboratoriów, w naszym projekcie będziemy mieli dostęp do następującego pliku `.clang-format`:
 
 **.clang-format**:
 ```
@@ -177,15 +182,15 @@ InsertNewlineAtEOF: true
 ```
 
 Jest to ważne, gdyż będziemy chcieli wskazać powyższy plik jako opcje formatowania dla VS Code.  
-Najpierw włączamy opcje formatowania kodu przy zapisie: Ctrl + , wpisujemy w wyszukiwarkę `format on save` oraz włączamy opcję `Format on File save`.
+Najpierw włączamy opcje formatowania kodu przy zapisie: `Ctrl + ,` wpisujemy w wyszukiwarkę `format on save` oraz włączamy opcję `Format on File save`.
 
 ![](/img/vsc9.png)
 
-Następnie wyszukujemy `default formatter` oraz w ustawieniu 'Default Formatter' wybieramy `C/C++ ms-vscode.cpptools`.
+Następnie wyszukujemy `default formatter` oraz w ustawieniu `Default Formatter` wybieramy `C/C++ ms-vscode.cpptools`.
 
 ![](/img/vsc10.png)
 
-Potem wyszukujemy 'C_Cpp formatting' gdzie zmieniamy ustawienie `C_Cpp: Formatting` na wartość `clangformat`.
+Potem wyszukujemy `C_Cpp formatting` gdzie zmieniamy ustawienie `C_Cpp: Formatting` na wartość `clangformat`.
 
 ![](/img/vsc11.png)
 
@@ -195,8 +200,10 @@ Na koniec upewnijmy się, iż opcja `C_Cpp: Clang_format_style` (dostępna po wy
 
 Są to wszystkie kroki potrzebne by formatowanie wykonywało się automatycznie przy zapisie pliku, co przyspieszy nam pracę i znacznie ułatwi wykonywanie zadań laboratoryjnych.  
 
-Jako ostatnią kwestię zajmijmy się podpowiedziami i autouzupełnianiem. Większość z opcji podpowiedzi oraz autouzupełniania powinno być już aktywnych, niemniej jednak możemy upewnić się wciskając Ctrl + , oraz wyszukaniu `parameter hints`. Zaleca się zastosowanie ustawień pokazanych na poniższym zrzucie ekranu:
+Jako ostatnią kwestię zajmijmy się podpowiedziami i autouzupełnianiem. Większość z opcji podpowiedzi oraz autouzupełniania powinno być już aktywnych, niemniej jednak możemy upewnić się wciskając `Ctrl + ,` oraz wyszukaniu `parameter hints`. Zaleca się zastosowanie ustawień pokazanych na poniższym zrzucie ekranu:
 
 ![](/img/vsc13.png)
 
-Po wykonaniu opisanych kroków Visual Studio Code powinien być gotowy do użycia podczas laboratoriów. Warto jednak poświęcić chwilę na poznanie kilku dodatkowych funkcji edytora, ponieważ VS Code jest środowiskiem bardzo elastycznym i w dużym stopniu konfigurowalnym. Szczególnie przydatna może być paleta poleceń dostępna pod skrótem Ctrl+Shift+P, z której można uruchamiać większość funkcji programu bez szukania ich w menu. Dobrze jest także zapoznać się z panelem rozszerzeń, ustawieniami formatowania kodu oraz możliwością otwierania zintegrowanego terminala skrótem Ctrl+`. Więcej opcji i przykładów konfiguracji można znaleźć w [dokumentacji Visual Studio Code](https://code.visualstudio.com/docs).
+Skrypt można też szybko kompilować i uruchamiać wciskając kombinacje klawiszy `Ctrl + Alt + n` gdy ma się otworzony dany skrypt (bardzo przyspiesza to szybkie uruchamianie i testowanie naszego kodu, choć nie uruchomimy tym skrótem klawiszowym bez argumentów nie modyfikując w ustawieniach opcji `code-runner.executorMap`, niemniej jednak jest to już ustawienie do własnego researchu).  
+
+Po wykonaniu opisanych kroków Visual Studio Code powinien być gotowy do użycia podczas laboratoriów. Warto jednak poświęcić chwilę na poznanie kilku dodatkowych funkcji edytora, ponieważ VS Code jest środowiskiem bardzo elastycznym i w dużym stopniu konfigurowalnym. Szczególnie przydatna może być paleta poleceń dostępna pod skrótem `Ctrl + Shift + P`, z której można uruchamiać większość funkcji programu bez szukania ich w menu. Dobrze jest także zapoznać się z panelem rozszerzeń, ustawieniami formatowania kodu oraz możliwością otwierania zintegrowanego terminala skrótem `Ctrl + ,`. Więcej opcji i przykładów konfiguracji można znaleźć w [dokumentacji Visual Studio Code](https://code.visualstudio.com/docs).

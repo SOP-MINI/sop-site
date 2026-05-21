@@ -91,7 +91,7 @@ Your IDE is now ready for the laboratories. It is still worth spending a few min
 
 ## Visual Studio Code Configuration
 
-Before creating a project, you should first install the extensions needed for working with C/C++. To do this, launch Visual Studio Code and open the Extensions tab (keyboard shortcut: Ctrl + Shift + X).
+Before creating a project, you should first install the extensions needed for working with C/C++. To do this, launch Visual Studio Code and open the Extensions tab (keyboard shortcut: `Ctrl + Shift + X`).
 
 ![](/img/vsc1.png) 
 
@@ -137,28 +137,34 @@ In Visual Studio Code, click `File -> Open Folder` in the upper-left corner and 
 
 With this configuration, running the `make` command compiles the program that prints `Hello world` to the standard output.
 
-**Note!** A very important step is changing the default C standard used by the editor. Otherwise, the editor may mark some names as unknown even though the program compiles correctly. To fix this, change the default standard from `c17` to `gnu17`. To do this, press Ctrl + Shift + P, type `C/C++: Edit Configurations (UI)`, and press Enter. A page with compiler settings should appear. Scroll down to the `C standard` section and change the value from `c17` to `gnu17`. It should look more or less like this:
+**Note!** A very important step is changing the default C standard used by the editor. Otherwise, the editor may mark some names as unknown even though the program compiles correctly. To fix this, change the default standard from `c17` to `gnu17`. To do this, press `Ctrl + Shift + P`, type `C/C++: Edit Configurations (UI)`, and press Enter. A page with compiler settings should appear. Scroll down to the `C standard` section and change the value from `c17` to `gnu17`. It should look more or less like this:
 
 ![](/img/vsc5.png) 
 
 From this point on, the editor should analyze and highlight the code correctly.  
 
+**Note!** It is necessary to ensure that no AI-assisted tools are active in the environment. In newer versions of VS Code, GitHub Copilot features are available built in, but using them requires activation and signing in. To be safe, they should be disabled. Installing additional extensions with AI agents is not allowed.
+
+An easy way to disable AI-related features is to press `Ctrl + ,`, type `disable ai features` in the settings search bar, and then enable the `Chat: Disable AI Features` option, which sets `chat.disableAIFeatures` to `true`.
+
+![](/img/vsc14.png)
+
 The next step is to enable error highlighting in the code. In theory, this option is enabled by default for the C language, but it often happens that, for some reason, it is disabled without any user intervention.  
-Press Ctrl + , (left Ctrl key and comma), then type `error squiggles` in the settings search bar and change the option to `enabled`.
+Press `Ctrl + ,` (left Ctrl key and comma), then type `error squiggles` in the settings search bar and change the option to `enabled`.
 
 ![](/img/vsc6.png) 
 
-Configure the IntelliSense engine in a similar way. Its default value should also be set to `default`, although this is not always the case. Press Ctrl + , and type `IntelliSense engine`. Set the value of `C_Cpp.intelliSenseEngine` to `default`.
+Configure the IntelliSense engine in a similar way. Its default value should also be set to `default`, although this is not always the case. Press `Ctrl + ,` and type `IntelliSense engine`. Set the value of `C_Cpp.intelliSenseEngine` to `default`.
 
 ![](/img/vsc7.png)
 
 The next step is to configure support for the `Makefile`, so that compilation uses the flags defined in it.
 
-Press Ctrl + , and type `configuration provider` in the search bar. In the `C_Cpp.default.configurationProvider` field, enter the following value: `ms-vscode.makefile-tools`. This allows VS Code to automatically use the settings provided in the `Makefile`.  
+Press `Ctrl + ,` and type `configuration provider` in the search bar. In the `C_Cpp.default.configurationProvider` field, enter the following value: `ms-vscode.makefile-tools`. This allows VS Code to automatically use the settings provided in the `Makefile`.  
 
 ![](/img/vsc8.png)
 
-Next, with the project open, press Ctrl + Shift + P and run the `Makefile: Configure` command. This will automatically configure Makefile support in VS Code. Then press Ctrl + Shift + P again, run the `Makefile: Set the target to be built by make` command, and select `all`.
+Next, with the project open, press `Ctrl + Shift + P` and run the `Makefile: Configure` command. This will automatically configure Makefile support in VS Code. Then press `Ctrl + Shift + P` again, run the `Makefile: Set the target to be built by make` command, and select `all`.
 
 Next, we will configure an optional but very useful feature: automatic code formatting when saving C files. During the labs, our project will include the following `.clang-format` file:
 
@@ -178,7 +184,7 @@ InsertNewlineAtEOF: true
 ```
 
 This is important because we want VS Code to use the above file as the formatting configuration.  
-First, enable code formatting on save: press Ctrl + ,, type `format on save` in the search bar, and enable the `Format on File save` option.
+First, enable code formatting on save: press `Ctrl + ,`, type `format on save` in the search bar, and enable the `Format on File save` option.
 
 ![](/img/vsc9.png)
 
@@ -196,8 +202,10 @@ Finally, make sure that the `C_Cpp: Clang_format_style` option (available throug
 
 These are all the steps needed to make formatting run automatically when saving a file. This will speed up our work and make completing laboratory tasks much easier.  
 
-As the final step, let us take care of hints and autocompletion. Most hint and autocompletion options should already be active, but we can verify this by pressing Ctrl + , and searching for `parameter hints`. It is recommended to apply the settings shown in the screenshot below:
+As the final step, let us take care of hints and autocompletion. Most hint and autocompletion options should already be active, but we can verify this by pressing `Ctrl + ,` and searching for `parameter hints`. It is recommended to apply the settings shown in the screenshot below:
 
 ![](/img/vsc13.png)
 
-After completing the steps described above, Visual Studio Code should be ready for use during the labs. However, it is worth spending a moment getting familiar with a few additional editor features, because VS Code is a very flexible and highly customizable environment. The command palette, available under Ctrl + Shift + P, is especially useful because it allows you to run most editor functions without looking for them in the menu. It is also worth exploring the extensions panel, code formatting settings, and the integrated terminal, which can be opened with Ctrl + `. More options and configuration examples can be found in the [Visual Studio Code documentation](https://code.visualstudio.com/docs).
+You can also quickly compile and run the script by pressing `Ctrl + Alt + N` while the given script is open. This greatly speeds up running and testing your code (Although this keyboard shortcut will not let us run the program with arguments unless we modify the `code-runner.executorMap` option in the settings, this is something left for individual research).    
+
+After completing the steps described above, Visual Studio Code should be ready for use during the labs. However, it is worth spending a moment getting familiar with a few additional editor features, because VS Code is a very flexible and highly customizable environment. The command palette, available under `Ctrl + Shift + P`, is especially useful because it allows you to run most editor functions without looking for them in the menu. It is also worth exploring the extensions panel, code formatting settings, and the integrated terminal, which can be opened with `Ctrl + ,`. More options and configuration examples can be found in the [Visual Studio Code documentation](https://code.visualstudio.com/docs).
