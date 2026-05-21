@@ -1,11 +1,74 @@
 ---
-title: "L8 - UDP and ?"
+title: "L8 - Datagram protocols and multithreaded servers"
 weight: 50
 ---
 
-## WIP
+## Datagram Protocols
 
-## UDP
+Unlike stream protocols such as TCP, in datagram protocols we transmit packets of data, that is, _datagrams_.
+As with stream protocols, we will study them in the context of both network (UDP) and local sockets (UNIX).
+
+### UNIX
+
+A local datagram socket is created similarly to a stream socket, simply by specifying `SOCK_DGRAM` as the protocol type:
+
+```C
+socket(PF_UNIX, SOCK_DGRAM, 0)
+```
+
+All rules related to local sockets apply (`man 7 unix`).
+It is worth noting that, unlike network datagram sockets (UDP), local ones are reliable - `as on most UNIX implementations, UNIX domain datagram sockets are always reliable and don't reorder datagrams`.
+This makes them a fairly convenient way to send messages between processes.
+For example, we do not have the message coalescing problem known from stream protocols.
+
+### UDP
+
+A network datagram socket, i.e. a UDP socket, is created analogously to TCP - it is enough to change the type to `SOCK_DGRAM`, for example:
+
+```C
+socket(AF_INET, SOCK_DGRAM, 0)
+```
+
+for an IPv4 socket (`AF_INET6` for IPv6).
+
+To learn more about UDP, be sure to read `man 7 udp` and the [lecture on network sockets](../../wyk/sockets/).
+In particular, it is important to understand that UDP is unreliable - messages may be lost, arrive out of order, arrive duplicated, etc.
+However, because UDP does not have the reliability overhead of TCP, it allows messages to be transmitted with lower latency.
+It is therefore used in applications where fast data delivery is more important than reliability, such as online multiplayer games.
+Because UDP is connectionless, it supports so-called _broadcast_, i.e. sending one message to many addresses.
+
+### Communication
+
+Datagram protocols are connectionless - we do not call `connect` on the client side, nor `listen` and `accept` on the server side.
+Instead, we simply have two functions for sending and receiving data:
+
+```C
+ssize_t recvfrom(int socket, void *restrict buffer, size_t length,
+    int flags, struct sockaddr *restrict address, socklen_t *restrict address_len);
+
+ssize_t sendto(int socket, const void *message, size_t length,
+    int flags, const struct sockaddr *dest_addr, socklen_t dest_len);
+``` 
+
+Read their manual pages - `man 3p recvfrom` and `man 3p sendto`.
+As you can see, these functions are analogous to `recv` and `send`, but they take two additional parameters: the address and its size.
+
+When receiving a message with `recvfrom`, it is worth paying attention to its specific behavior.
+This function returns the number of bytes read, but it always reads only one message (datagram) at a time.
+The `length` parameter indicates the size of the provided `buffer` and means the _maximum_ size of a message we expect.
+
+If the message is shorter, it will simply be read in full; if it is longer, the extra bytes will be **ignored and discarded**.
+Therefore, it is important that `buffer` has an appropriate size, and that the `length` parameter is set to the size of the largest message our program supports, not the size of the message we currently expect.
+In UDP, we have no guarantee that messages will arrive in the correct order.
+
+In `man 2 recvfrom` you can find some additional information specific to Linux.
+For example, there is the `recvmsg` function, which in some cases allows better performance and can, for instance, return a flag indicating that a message was truncated. 
+Remember, however, that the contents of that manual page are not part of the POSIX standard and are therefore not portable to other Unix systems (e.g. macOS, BSD).
+During the laboratory, we generally use only functions from the standard.
+
+The `sendto` function is even simpler to use - it either sends the entire datagram, or it fails and sends nothing.
+
+## Task
 
 Goal:
  
@@ -74,10 +137,28 @@ Why the program converts byte order only the part number and the last part marke
 
 Analyze how 5 connection limit works, pay attention how "free" member in the connections structure works, how it is affected by the last part marker in the datagram?
 
-## Sample task
+## Multithreaded Servers
+
+During the previous lab, we practiced writing servers using only one thread.
+Such architecture makes a lot of sense when we need to conserve resources and expect a relatively low load.
+
+Often, however, our server must handle a very large number of requests.
+In such a situation, to achieve adequate performance on modern hardware, it is necessary to use multiple threads.
+A typical and natural architecture is one thread receiving messages and passing tasks to worker threads, which process them and send results back to clients.
+On the other hand, the atomicity of operations on datagrams also allows many threads to wait simultaneously for a message on a single socket.
+Of course, in such a situation there is often some additional state associated with it, so synchronization may still be necessary, for example using a mutex.
+
+To write efficient multithreaded programs during the lab, it is worth rereading lab 4 tutorial (synchronization), in particular mutexes, semaphores, and condition variables.
+Review also the typical data structures used for this kind of task, such as a thread pool or a circular buffer.
+If you do not remember these topics well, look through the tutorials for [Lab 3](../../../sop1/lab/l3/) and [Lab 4](../../../sop1/lab/l4), as well as the [slides and lecture programs on synchronization](../../../sop1/wyk/w7).
+
+## Example Tasks
 
 Complete the sample exercises. You will have more time and starter code during the lab session, but completing the tasks below on your own means you are well prepared.
 
+- [Task 1]({{< ref "/sop2/lab/l8/example1" >}}) ~100 ~~days~~ minutes
+- [Task 2 from Lab 7]({{< ref "../l7/example2" >}}) ~120 minutes total, stages 4–5 concern Lab 8
+- we do not have more specific tasks, but tasks from Lab 5 and Lab 7 are well suited for practicing the topic - simply rewrite the communication so that it uses UDP.
 
 ## Source codes presented in this tutorial
 
