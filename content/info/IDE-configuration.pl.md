@@ -51,7 +51,7 @@ clean:
 	rm main
 ```
 
-W folderze projektu tworzymy jeszcze plik konfiguracyjny dla `clang-format` - na laboratorium będzie zawarty w startowym repozytorium. *Ważne!* Plik ten zaczyna się od kropki, więc jest domyślnie niewidoczny.
+W folderze projektu tworzymy jeszcze plik konfiguracyjny dla `clang-format` - na laboratorium będzie zawarty w startowym repozytorium. **Ważne!** Plik ten zaczyna się od kropki, więc jest domyślnie niewidoczny.
 
 **.clang-format**:
 ```
@@ -144,7 +144,7 @@ Wciskamy `Ctrl + ,` po czym wpisujemy w wyszukiwarkę `configuration provider`. 
 
 ![](/img/vsc8.png)
 
-Następnie (w otworzonym projekcie) wciskamy skrót `Ctrl + Shift + P` oraz uruchamiamy polecenie `Makefile: Configure`. Dokona to automatycznej konfiguracji opcji Makefile do VS Code. Następnie ponownie wciskamy skrót `Ctrl + Shift + P` oraz uruchamiamy komendę 'Makefile: Set the target to be built by make' oraz wybieramy 'all'.
+Następnie (w otworzonym projekcie) wciskamy skrót `Ctrl + Shift + P` oraz uruchamiamy polecenie `Makefile: Configure`. Dokona to automatycznej konfiguracji opcji Makefile do VS Code. Następnie ponownie wciskamy skrót `Ctrl + Shift + P` oraz uruchamiamy komendę `Makefile: Set the target to be built by make` oraz wybieramy `all`.
 
 Następnie skonfigurujemy opcjonalną, ale bardzo przydatną funkcję automatycznego formatowania kodu przy zapisie plików C. W trakcie laboratoriów, w naszym projekcie będziemy mieli dostęp do pliku konfiguracyjnego `.clang-format`.
 

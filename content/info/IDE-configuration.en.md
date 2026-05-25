@@ -51,7 +51,7 @@ clean:
 	rm main
 ```
 
-In the project folder, we also create a configuration file for `clang-format`; during the laboratory classes, this file will be included in the starter repository. *Important!* This file starts with a dot, so it is hidden by default.
+In the project folder, we also create a configuration file for `clang-format`; during the laboratory classes, this file will be included in the starter repository. **Important!** This file starts with a dot, so it is hidden by default.
 
 **.clang-format**:
 ```yaml
