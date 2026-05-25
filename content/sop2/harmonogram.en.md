@@ -6,23 +6,23 @@ title: "Schedule"
 
 Tuesdays, 16:15-17:45, room 328
 
-| Date  | Topic                                                    |
-|-------|----------------------------------------------------------|
-| 24.02 | [Shared memory]({{< ref "wyk/shm" >}})                   |
-| 03.03 | [Synchronization]({{< ref "wyk/sync" >}})                |
-| 10.03 | [Synchronization]({{< ref "wyk/sync" >}})                |
-| 17.03 | [POSIX synchronization]({{< ref "wyk/sync2" >}})         |
-| 24.03 | [Deadlocks]({{< ref "wyk/deadlocks" >}})                 |
-| 31.03 | [Networking basics]({{< ref "wyk/networks" >}})          |
-| 14.04 | [Sockets interface]({{< ref "wyk/sockets" >}})           |
-| 21.04 | **Lecture Test 1**                                       |
-| 28.04 | [Servers]({{< ref "wyk/servers" >}})                     |
-| 05.05 | [Main memory management]({{< ref "wyk/w9" >}})           |
-| 19.05 | [Virtual memory]({{< ref "wyk/w10" >}})                  |
-| 26.05 | [File systems]({{< ref "wyk/w11" >}})                    |
-| 02.06 | [Implementations of file systems]({{< ref "wyk/w12" >}}) |
-| 09.06 | **Lecture Test 2**                                       |
-| 16.06 | Office hours                                             |
+| Date  | Topic                                                              |
+|-------|--------------------------------------------------------------------|
+| 24.02 | [Shared memory]({{< ref "wyk/shm" >}})                             |
+| 03.03 | [Synchronization]({{< ref "wyk/sync" >}})                          |
+| 10.03 | [Synchronization]({{< ref "wyk/sync" >}})                          |
+| 17.03 | [POSIX synchronization]({{< ref "wyk/sync2" >}})                   |
+| 24.03 | [Deadlocks]({{< ref "wyk/deadlocks" >}})                           |
+| 31.03 | [Networking basics]({{< ref "wyk/networks" >}})                    |
+| 14.04 | [Sockets interface]({{< ref "wyk/sockets" >}})                     |
+| 21.04 | **Lecture Test 1**  [Sockets interface]({{< ref "wyk/sockets" >}}) |
+| 28.04 | [Servers]({{< ref "wyk/servers" >}})                               |
+| 05.05 | _Dean hours_                                                       |
+| 19.05 | [Servers]({{< ref "wyk/servers" >}})                               |
+| 26.05 | [Binaries]({{< ref "wyk/bin" >}})                                  |
+| 02.06 | [Virtual memory]({{< ref "wyk/w10" >}})                            |
+| 09.06 | **Lecture Test 2** [File systems]({{< ref "wyk/w11" >}})           |
+| 16.06 | Containers                                                         |
 
 ## Laboratories
 
