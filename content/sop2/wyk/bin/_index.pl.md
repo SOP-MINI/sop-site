@@ -9,15 +9,26 @@ bookCollapseSection: true
 
 ## Zakres wykładu
 
-- Wiązanie adresów logicznych z adresami pamięci operacyjnej:
-    - kompilacja
-    - konsolidacja: statyczna, dynamiczna, dynamiczna w czasie wykonywania
-    - ładowanie absolutne, na żądanie, dynamiczne
-    - wykonywanie; nakładkowanie; wymiana.
+- Logiczna przestrzeń adresowa
+- Proces kompilacji, linkowania i ładowania
+- Format ELF
+- Struktura pliku obiektowego
+  - sekcje danych
+  - sekcje wykonywalne
+  - tablice symboli
+- PIC 
+- Relocation tables
+- Linker operations
+- Dynamic symbol resolution
+  - Global Offset Table (GOT)
+  - Procedure Linkage Table (PLT)
+- ELF segments
+- Address Space Layout Randomization (ASLR)
+- Loader operations
+- Runtime library loading
 
 ## Materiały
 
 1. [Slajdy wykładowe](slides)
 2. [Programy przykładowe](code)
-3. Podręcznik: rozdz. 9: "Zarządzanie pamięcią"
-4. Stare Slajdy: [Mem.pdf]({{< resource "Mem_1.pdf" >}})
+3. Stare Slajdy: [Mem.pdf]({{< resource "Mem_1.pdf" >}})
