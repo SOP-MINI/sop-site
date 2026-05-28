@@ -292,4 +292,17 @@ Lastly loader jumps to `AT_ENTRY` (`_start`) passing control to the program.
 
 ---
 
+### Runtime library loading
+
+Process may call the loader explicitly with function provided in
+`<dlfcn.h>`:
+
+```c
+void *dl_handle = dlopen("libm.so.6", RTLD_LAZY);
+float (*sin)(float) = dlsym(dl_handle, "sin");
+sin(1.0f);
+```
+
+This dynamically maps a new shared object into the address space
+and allows for runtime symbol resolution.
 
