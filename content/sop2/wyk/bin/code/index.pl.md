@@ -46,9 +46,9 @@ make -B hello
 ### Inspect file types
 
 ```bash
-file main.c
-file main.o
-file main
+file hello.c
+file hello.o
+file hello
 ```
 
 ### ELF Object Files
@@ -72,6 +72,10 @@ readelf -x .data hello.o
 ```bash
 readelf -x .rodata hello.o
 readelf -p .rodata hello.o
+```
+
+```shell
+readelf --symbols hello.o
 ```
 
 ```bash
@@ -145,11 +149,11 @@ readelf --segments hello | grep LOAD -A1
 #### Dynamic loader operation
 
 ```shell
-readelf -p .interp main
+readelf -p .interp hello
 ```
 
 ```bash
-readelf --dynamic main
+readelf --dynamic hello
 ```
 
 ```bash

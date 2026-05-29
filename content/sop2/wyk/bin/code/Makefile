@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra
 
-TARGETS = hello hello_shr libutils.so
+TARGETS = hello hello_shared hello_static libshared_utils.so
 
 .PHONY: all clean
 

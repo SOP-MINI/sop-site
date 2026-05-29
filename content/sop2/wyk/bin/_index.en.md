@@ -9,15 +9,26 @@ bookCollapseSection: true
 
 ## Scope
 
-- Binding of instructions and data to memory:
-    - compilation
-    - linking: static, dynamic, dynamic during execution
-    - loading: absolute, on demand, dynamic
-    - execution; overlaying, swapping.
+- Logical Address Space
+- Compilation, linking and loading trajectory
+- ELF format
+- Object file structure
+    - data sections
+    - code sections
+    - symbol tables
+- Position Independent Code (PIC)
+- Tablice relokacji
+- Zasada działania linkera
+- Odwołania do symboli dynamicznych
+    - Global Offset Table (GOT)
+    - Procedure Linkage Table (PLT)
+- Segmenty w pliku ELF
+- Address Space Layout Randomization (ASLR)
+- Zasada działania loadera
+- Ładowanie bibliotek w czasie wykonania
 
 ## Reference
 
 1. [Lecture Slides](slides)
 2. [Code samples](code)
-3. Textbook: chapter 8 - "Memory-management strategies".
-4. Old Slides: [Mem\_en.pdf]({{< resource "Mem_en_1.pdf" >}})
+3. Old Slides: [Mem\_en.pdf]({{< resource "Mem_en_1.pdf" >}})

@@ -20,7 +20,7 @@ Wtorki, g. 18:00 - 19:30, s. 328
 | 05.05 | _Godziny dziekańskie_                                           |
 | 19.05 | [Serwery]({{< ref "wyk/servers" >}})                            |
 | 26.05 | [Binaria]({{< ref "wyk/bin" >}})                                |
-| 02.06 | [Pamięć wirtualna]({{< ref "wyk/w10" >}})                       |
+| 02.06 | [Pamięć wirtualna]({{< ref "wyk/mem" >}})                       |
 | 09.06 | **Kolokwium 2.** [Systemy plików]({{< ref "wyk/w11" >}})        |
 | 16.06 | Konteneryzacja                                                  |
 
