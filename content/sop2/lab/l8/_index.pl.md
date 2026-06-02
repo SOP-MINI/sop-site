@@ -166,8 +166,8 @@ W celu napisania wydajnych wielowątkowych programów na laboratorium warto powt
 Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy, że jesteś dobrze przygotowany do zajęć.
 
 - [Zadanie 1]({{< ref "/sop2/lab/l8/example1" >}}) ~100 ~~dni~~ minut
+- [Zadanie 2]({{< ref "/sop2/lab/l8/example2" >}}) ~130 minut
 - [Zadanie 2 z L7]({{< ref "../l7/example2" >}}) ~120 minut na całość, etapy 4-5 dotyczą L8
-- nie mamy więcej konkretnych zadań, ale do przećwiczenia tematu dobrze nadają się zadania z L5 oraz L7 - po prostu przepisz komunikację tak, żeby używała UDP.
 
 
 ## Kody źródłowe z treści tutoriala
