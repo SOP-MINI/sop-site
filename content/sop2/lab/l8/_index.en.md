@@ -157,8 +157,8 @@ If you do not remember these topics well, look through the tutorials for [Lab 3]
 Complete the sample exercises. You will have more time and starter code during the lab session, but completing the tasks below on your own means you are well prepared.
 
 - [Task 1]({{< ref "/sop2/lab/l8/example1" >}}) ~100 ~~days~~ minutes
+- [Task 2]({{< ref "/sop2/lab/l8/example2" >}}) ~130 minutes
 - [Task 2 from Lab 7]({{< ref "../l7/example2" >}}) ~120 minutes total, stages 4–5 concern Lab 8
-- we do not have more specific tasks, but tasks from Lab 5 and Lab 7 are well suited for practicing the topic - simply rewrite the communication so that it uses UDP.
 
 ## Source codes presented in this tutorial
 
