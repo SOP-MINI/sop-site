@@ -9,31 +9,29 @@ bookCollapseSection: true
 
 ## Zakres
 
-- Pamięć wirtualna - podstawy:
-    - Motywacja: mniejsze zapełnienie pamięci ⇒ lepsze wykorzystanie, większy stopień wieloprogramowości, mniejszy
-      narzut na operacje wejścia/wyjścia; przestrzeń adresów logicznych może być dużo większa od przestrzeni adresów
-      fizycznych i rzadka
-    - Realizacja: stronicowanie na żądanie, segmentacja na żądanie
-    - Memory management unit (MMU)
-- Stronicowanie na żądanie:
-    - bit poprawności, błąd braku strony (*page fault*), wymiana stron
-    - leniwa wymiana (*lazy swapping*), proces stronicowania (*pager*)
-    - lokalność odwołań a częstość błędu braku strony
-    - komplikacje związane ze wznawianiem instrukcji
-    - średnia sprawność stronicowania na żądanie, średni czas dostępu do pamięci
-    - algorytmy zastępowania stron i ramek: FIFO, OPT, LRU i przybliżenia; efekt Belady'ego
-    - buforowanie ramek, a surowy tryb dostępu do urządzeń wej/wyj
-    - przydział ramek do procesu: równy/priorytetowy, lokalny/globalny; niejednorodny dostęp (NUMA), powinowactwo
-      procesora/rdzenia do procesu/watku (*CPU affinity*).
-    - szamotanie (*thrashing*): przyczyny, objawy, środki zaradcze; model zbioru roboczego, częstość błędów braku
-      strony, planista średnioterminowy
-- Środki poprawy wykorzystania dostępu do pamięci:
-    - odwzorowanie plików w pamięci; odwzorowanie urządzeń wej/wyj
-    - kopiowanie przy zapisie (COW) a efektywność realizaji funkcji `fork()`
-    - przydział pamięci na potrzeby jądra; algorytm bliźniaków (*buddy algorithm*), algorytm płytkowy (*slab algorithm*)
-    - Wpływ implementacji algorytmów działających z dużymi strukturami danych na lokalność odwołań i efektywność dostępu
-      do pamięci
-- Przykłady realizacji pamięci wirtualnej: Windows, Unix, Linux
+- Fizyczna przestrzeń adresowa
+- Urządzenia zmapowane w pamięć
+- Mapa pamięci systemu
+- Translacja adresów
+- Memory Management Unit
+- Ciągły przydział pamięci
+  - Algorytmy first-fit, best-fit, worst-fit 
+  - Fragmentacja zewnętrzna
+- Segmentacja
+  - Tablica segmentów
+  - Rejestry segmentowe
+  - Segmentacja 8086, 80286, GDT, LDT
+  - Wady segmentacji
+- Stronicowanie
+  - Ramki i strony
+  - Tablice stron
+  - Fragmentacja wewnętrzna
+  - TLB
+  - Ochrona pamięci
+  - Współdzielenie stron
+  - Hierarchiczne tablice stron
+  - Hashowane tablice stron
+  - Intel 32 i 64 bit
 
 ## Materiały
 

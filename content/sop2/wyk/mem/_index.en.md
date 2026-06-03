@@ -9,27 +9,29 @@ bookCollapseSection: true
 
 ## Scope
 
-- Virtual memory - fundamentals:
-    - Motivation: smaller memory allocation ⇒ better utilization, higher degree of multi-programming, smaller I/O
-      -related overhead; virtual address space can be much larger than physical and sparse
-    - Implementations: demand paging, demand segmentation
-    - Memory management unit (MMU)
-- Demand paging:
-    - valid-invalid bid, page fault, page swapping
-    - lazy swapping, pager
-    - memory reference locality and page fault frequency
-    - CPU instruction restart
-    - average performance of demand paging, average memory access time
-    - page/frame replacement algorithms: FIFO, OPT, LRU and approximations; Belady effect
-    - page buffering and raw disk mode
-    - allocation of frames to a process: equal/proportional/priority, local/global; NUMA, CPU affinityS.
-    - thrashing: causes, symptoms, remedies; working-set mode, page-fault frequency, middle-term scheduler.
-- Measures to improve the use of memory access:
-    - memory-mapped files; memory-mapped I/O devices
-    - copy-on-write(COW) and efficiency of `fork()`
-    - allocating kernel memory; buddy algorithm, slab algorithm
-    - locality of memory references and efficiency of large data structures processing
-- Examples of VM implementations: Windows, Unix, Linux
+- Physical address space
+- Memory mapped devices
+- System memory map
+- Address translation
+- Memory Management Unit
+- Contiguous memory allocation
+    - Algorithms: first-fit, best-fit, worst-fit
+    - External fragmentation
+- Segmentation
+    - Segment table
+    - Segment registers
+    - Segmentation of 8086, 80286, GDT, LDT
+    - Segmentation cons
+- Paging
+    - Frames and pages
+    - Page tables
+    - Internal fragmentation
+    - TLB
+    - Memory protection
+    - Shared pages
+    - Hierarchical page tables
+    - Hashed page tables
+    - Intel 32 and 64 bit
 
 ## Reference
 
