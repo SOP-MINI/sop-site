@@ -340,3 +340,5 @@ In case of enormous 64-bit address space (>16EB!), far larger split is necessary
 4-level paging is introduced. Only 48 address bits are used (still large enough).
 
 ![paging_64bit.svg](/ops2/wyk/mem/paging_64bit.svg)
+
+---

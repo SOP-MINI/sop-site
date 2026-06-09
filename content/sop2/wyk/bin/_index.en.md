@@ -1,7 +1,7 @@
 ---
 title: "Binaries"
 date: 2022-02-04T22:05:56+01:00
-weight: 90
+weight: 80
 bookCollapseSection: true
 ---
 
@@ -31,4 +31,3 @@ bookCollapseSection: true
 
 1. [Lecture Slides](slides)
 2. [Code samples](code)
-3. Old Slides: [Mem\_en.pdf]({{< resource "Mem_en_1.pdf" >}})

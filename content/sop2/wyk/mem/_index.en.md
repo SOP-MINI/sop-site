@@ -1,7 +1,7 @@
 ---
 title: "Memory Management"
 date: 2022-02-04T22:11:02+01:00
-weight: 100
+weight: 90
 bookCollapseSection: true
 ---
 
@@ -37,9 +37,5 @@ bookCollapseSection: true
 
 1. [Lecture Slides](slides)
 2. [Code samples](code)
-3. Textbook:
-    - chapter 8 - "Memory-management strategies".
-    - chapter 9 - "Virtual-Memory Management",
-4. Slides: [VM\_en.pdf]({{< resource "VM_en_4.pdf" >}})
-5. Auxiliary reading (for those
-   interested): [Linux MM Documentation](https://linux-mm.org/LinuxMMDocumentation), [Understanding the Linux Virtual Memory Manager](http://ptgmedia.pearsoncmg.com/images/0131453483/downloads/gorman_book.pdf)
+3. Textbook: chapter 8 - "Memory-management strategies".
+4. Old Slides: [Mem_en_1.pdf]({{< resource "Mem_en_1.pdf" >}})

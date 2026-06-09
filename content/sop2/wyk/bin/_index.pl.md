@@ -1,7 +1,7 @@
 ---
 title: "Binaria"
 date: 2022-02-04T22:05:53+01:00
-weight: 90
+weight: 80
 bookCollapseSection: true
 ---
 
@@ -31,4 +31,3 @@ bookCollapseSection: true
 
 1. [Slajdy wykładowe](slides)
 2. [Programy przykładowe](code)
-3. Stare Slajdy: [Mem.pdf]({{< resource "Mem_1.pdf" >}})
