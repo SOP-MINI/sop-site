@@ -20,9 +20,9 @@ Tuesdays, 16:15-17:45, room 328
 | 05.05 | _Dean hours_                                                       |
 | 19.05 | [Servers]({{< ref "wyk/servers" >}})                               |
 | 26.05 | [Binaries]({{< ref "wyk/bin" >}})                                  |
-| 02.06 | [Virtual memory]({{< ref "wyk/mem" >}})                            |
-| 09.06 | **Lecture Test 2** [File systems]({{< ref "wyk/w11" >}})           |
-| 16.06 | Containers                                                         |
+| 02.06 | [Memory management]({{< ref "wyk/mem" >}})                         |
+| 09.06 | **Lecture Test 2** [Virtual memory]({{< ref "wyk/vmem" >}})        |
+| 16.06 | [Containers]({{< ref "wyk/docker" >}})                             |
 
 ## Laboratories
 
