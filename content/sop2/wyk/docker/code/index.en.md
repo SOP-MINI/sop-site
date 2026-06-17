@@ -141,6 +141,12 @@ echo "Container IP: $CONTAINER_IP"
 echo "Hello Container" | nc -u -w1 $CONTAINER_IP 8080
 ```
 
+Show a host route installed by docker:
+
+```shell
+ip route
+```
+
 See interfaces from the container:
 
 ```shell
@@ -158,7 +164,7 @@ echo $SANDBOX_KEY
 #### Port exporting
 
 ```shell
-docker run -it --rm --name=demo_cpu -p 80:8080/udp --cpus="0.1" demo --udp
+docker run -it --rm --name=demo_cpu -p 80:8080/udp demo --udp
 ```
 
 Show `iptables` rules:
@@ -225,7 +231,7 @@ sudo ./mntns ./root
 #### Bind mounts
 
 ```shell
-docker run -it --name demo_bind -v ./data:/data demo --write /data/trwaly_sekret.txt
+docker run -it --name demo_bind -v ./root:/data demo --write /data/persistent.txt
 ```
 
 ```shell
@@ -234,12 +240,12 @@ sudo cat /proc/$HOST_PID/mountinfo | grep '/data'
 ```
 
 ```shell
-stat ./data/trwaly_sekret.txt
-cat ./data/trwaly_sekret.txt
+stat ./root/persistent.txt
+cat ./root/persistent.txt
 ```
 
 ```shell
-sudo rm -Rf ./data
+sudo rm ./root/persistent.txt
 ```
 
 ```shell
