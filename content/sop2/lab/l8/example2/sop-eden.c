@@ -1,5 +1,6 @@
 #define _GNU_SOURCE
 #include <arpa/inet.h>
+#include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -106,6 +107,12 @@ int main(int argc, char **argv)
         struct sockaddr_in addr;
         socklen_t len = sizeof(addr);
         ssize_t m_size = recvfrom(socket, &m, MSG_MAX + 1, 0, (struct sockaddr *)&addr, &len);
+        if (m_size < 0)
+        {
+            if (errno == EINTR)
+                continue;
+            ERR("recvfrom");
+        }
         if (m_size < HEADER_LEN || m_size > MSG_MAX)
         {
             printf("error: wrong message length %ld\n", m_size);
@@ -122,12 +129,23 @@ int main(int argc, char **argv)
             case -1:
                 printf("error: unknown command %.8s\n", m.command);
                 continue;
-                break;
             case EXIT:
+                if ((m_size - HEADER_LEN) != 0)
+                {
+                    printf("error: command: %.8s cannot have params\n", m.command);
+                    break;
+                }
+                printf("%.16s: %.8s\n", m.login, m.command);
                 close(socket);
                 return 0;
             case COMPUTE:
-                if ((m_size - HEADER_LEN) % (2 * sizeof(uint32_t)) != 0)
+                ssize_t params_bytes = m_size - HEADER_LEN;
+                if (params_bytes == 0)
+                {
+                    printf("error: compute has to have at least one pair of parameters\n");
+                    continue;
+                }
+                if (params_bytes % (2 * sizeof(uint32_t)) != 0)
                 {
                     printf("error: wrong compute message params length %ld\n", m_size - HEADER_LEN);
                     continue;
@@ -142,6 +160,11 @@ int main(int argc, char **argv)
                 putchar('\n');
                 break;
             default:
+                if ((m_size - HEADER_LEN) != 0)
+                {
+                    printf("error: command: %.8s cannot have params\n", m.command);
+                    break;
+                }
                 printf("%.16s: %.8s\n", m.login, m.command);
                 break;
         }
