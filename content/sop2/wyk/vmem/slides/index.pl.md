@@ -247,6 +247,139 @@ slowing it down drastically.
 
 ---
 
-### Victim frame choice
+### Local vs Global Replacement
 
-TBD
+When a page fault occurs, where does the OS find a victim frame?
+
+- **Local Replacement**: The process can only select a victim from its own set of allocated frames. 
+  - *Pros*: Predictable performance; one process cannot thrash another. 
+  - *Cons*: Wastes memory if a process doesn't fully utilize its allocation.
+
+- **Global Replacement**: A process can select a replacement frame from the set of all frames, even if it belongs to another process.
+  - *Pros*: Better overall system throughput and memory utilization (used by Linux, Windows).
+  - *Cons*: One memory-hogging process can impact the entire system.
+
+---
+
+### Local Replacement: Frame Allocation
+
+If an OS uses Local Replacement, how many frames does each process get?
+
+- **Fixed Allocation**: Every process gets $N$ frames.
+- **Proportional Allocation**: Frames allocated based on process size.
+- **Dynamic Allocation**: 
+  - **Working-Set Model**: Tracks the set of actively used pages over a time window $\Delta$. Allocation grows/shrinks dynamically.
+  - **Page-Fault Frequency (PFF)**: Establish acceptable upper and lower bounds on the fault rate. If the rate is too high, allocate more frames; if too low, remove frames.
+
+---
+
+### Global Replacement: Domino Effect
+
+In Global Replacement, a single misbehaving process can steal frames from all other processes.
+
+If Process A starts thrashing, it evicts pages belonging to Process B and C. 
+Now B and C page fault, stealing frames back. The entire OS grinds to a halt!
+
+**Solution**: Containment. Modern OSes use Resource Limits (e.g., **Linux cgroups**) to enforce a hard local limit on a globally-replaced system. This protects the rest of the OS.
+
+---
+
+### FIFO Algorithm Simulation
+
+*(Note: The following algorithm simulations demonstrate a **Local Replacement Policy** with a fixed allocation of 3 frames)*
+
+Evicts the oldest page. Suffers from *Belady's Anomaly*.
+
+| Request | 7 | 0 | 1 | 2 | 0 | 3 | 0 | 4 | 2 | 3 |
+|---------|---|---|---|---|---|---|---|---|---|---|
+| Frame 1 | 7 | 7 | 7 | 2 | 2 | 2 | 2 | 4 | 4 | 4 |
+| Frame 2 |   | 0 | 0 | 0 | 0 | 3 | 3 | 3 | 2 | 2 |
+| Frame 3 |   |   | 1 | 1 | 1 | 1 | 0 | 0 | 0 | 3 |
+| Fault?  | F | F | F | F |   | F | F | F | F | F |
+
+Total faults: 9 (on 3 frames).
+
+---
+
+### OPT Algorithm Simulation
+
+Evicts the page that will not be used for the longest time in the future.
+
+| Request | 7 | 0 | 1 | 2 | 0 | 3 | 0 | 4 | 2 | 3 |
+|---------|---|---|---|---|---|---|---|---|---|---|
+| Frame 1 | 7 | 7 | 7 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
+| Frame 2 |   | 0 | 0 | 0 | 0 | 0 | 0 | 4 | 4 | 3 |
+| Frame 3 |   |   | 1 | 1 | 1 | 3 | 3 | 3 | 3 | 3 |
+| Fault?  | F | F | F | F |   | F |   | F |   | F |
+
+Total faults: 7. Optimal, but impossible to implement.
+
+---
+
+### LRU Algorithm Simulation
+
+Evicts the page that has not been accessed for the longest time in the past.
+
+| Request | 7 | 0 | 1 | 2 | 0 | 3 | 0 | 4 | 2 | 3 |
+|---------|---|---|---|---|---|---|---|---|---|---|
+| Frame 1 | 7 | 7 | 7 | 2 | 2 | 2 | 2 | 4 | 4 | 4 |
+| Frame 2 |   | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 3 |
+| Frame 3 |   |   | 1 | 1 | 1 | 3 | 3 | 3 | 2 | 2 |
+| Fault?  | F | F | F | F |   | F |   | F | F | F |
+
+Total faults: 8. Good approximation of OPT, but hard to implement in HW.
+
+---
+
+### Clock Algorithm (Second-Chance)
+
+Approximates LRU using an **Accessed** bit (set to `1` by MMU on access, cleared to `0` by OS).
+Frames are in a circular list. OS scans for a page with bit `0`. If bit is `1`, it is cleared to `0` (second chance) and the pointer moves on.
+
+| Request | 7 | 0 | 1 | 2 | 0 | 3 | 0 | 4 | 2 | 3 |
+|---------|---|---|---|---|---|---|---|---|---|---|
+| F1 (A)  | 7(1)| 7(1)| 7(1)| 2(1)| 2(1)| 2(1)| 2(1)| 4(1)| 4(1)| 4(1)|
+| F2 (A)  |     | 0(1)| 0(1)| 0(0)| 0(1)| 0(0)| 0(1)| 0(0)| 2(1)| 2(1)|
+| F3 (A)  |     |     | 1(1)| 1(0)| 1(0)| 3(1)| 3(1)| 3(0)| 3(0)| 3(1)|
+| Fault?  | F   | F   | F   | F   |     | F   |     | F   | F   | F   |
+
+*(F1, F2, F3 indicate frames; (A) is the Accessed bit state after the request)*
+
+---
+
+### Dirty Bit in Eviction
+
+The OS doesn't only look at the Accessed bit. The PTE also contains a **Dirty (Modified)** bit.
+
+- **Clean Page** `(Dirty=0)`: Evicting it is fast. The OS just discards it.
+- **Dirty Page** `(Dirty=1)`: Evicting it is slow. The OS must write it to disk (Swap or file) before reusing the frame.
+
+Therefore, eviction algorithms prefer pages with `(Accessed=0, Dirty=0)` over `(Accessed=0, Dirty=1)`.
+
+---
+
+### Linux LRU Approximation & Eviction
+
+Linux maintains two main lists to approximate LRU:
+- **Active List**: Pages recently accessed (MRU).
+- **Inactive List**: Pages not accessed recently, candidates for eviction (LRU).
+
+**How it ties to Watermarks**:
+When free memory drops below the `low` watermark, the kernel wakes up the `kswapd` daemon.
+- `kswapd` scans the tail of the **Inactive List** to find victims.
+- It shrinks the Inactive List by reclaiming clean pages and swapping out dirty pages.
+- To replenish the Inactive List, it demotes pages from the tail of the **Active List**.
+- If an inactive page is accessed again, it gets promoted back to the head of the Active List.
+- `kswapd` stops when free memory reaches the `high` watermark.
+
+---
+
+### Thrashing
+
+If the sum of **Working Sets** (the set of pages actively used) of all running processes exceeds the total physical memory allocation, the system will constantly trigger page faults.
+When the OS swaps out a page from one process to bring in a page for another, the swapped-out page is needed again almost immediately.
+
+This state is called **Thrashing**.
+- Disk I/O becomes the bottleneck.
+- CPU utilization plummets because processes are mostly blocked waiting for pages.
+- The OS might mistakenly think the CPU is idle and admit *more* processes, worsening the problem!

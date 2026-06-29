@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra
 
-TARGETS = large_mmap pf_cost alloc
+TARGETS = large_mmap pf_cost alloc thrashing linux_approx
 
 .PHONY: all clean
 
