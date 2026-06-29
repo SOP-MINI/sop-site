@@ -12,11 +12,11 @@ enableGitInfo: true
 
 languages:
   pl:
-    languageName: Polski (Informatyka)
+    label: Polski (Informatyka)
     title: Systemy Operacyjne (Informatyka)
     weight: 1
   en:
-    languageName: English (Computer Science)
+    label: English (Computer Science)
     title: Operating Systems (Computer Science)
     weight: 2
 
