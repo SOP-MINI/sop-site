@@ -12,11 +12,12 @@ Do udziału w przedmiocie Systemy Operacyjne 1 wymagane jest zaliczenie przedmio
 
 Przedmiot składa się z wykładu i laboratorium.
 
-Laboratorium składa się z niepunktowanych zajęć (W1, W2 i W3), punktowanych (L1, L2, L3 i L4) oraz projektu. Zajęcia odbywają się zgodnie z harmonogramem podanym na stronie przedmiotu. Na stronie przedmiotu znajdują się też materiały przygotowawcze do zajęć.
+Laboratorium składa się z niepunktowanych zajęć (W1, W2 i W3), punktowanych (L1, L2, L3 i L4). Zajęcia odbywają się zgodnie z harmonogramem podanym na stronie przedmiotu. Na stronie przedmiotu znajdują się też materiały przygotowawcze do zajęć.
 
 ### Punktowane laboratoria
+  - Zajęcia W1, W2 i W3 służą przećwiczeniu materiału sprawdzanego na punktowanych laboratoriach. Pod koniec W1 studenci rozwiązują proste zadanie za które można uzyskać 1 punkt.  W celu owocnego uczestnictwa w zajęciach W2 i W3 wymagana jest już przynajmniej podstawowa wiedza z danego tematu, która jest sprawdzana na początku tych zajęć krótkim sprawdzianem (wejściówką), za którą można uzyskać do 1.5 punkta.
   - Zajęcia L1, L2, L3 i L4 służą ocenie umiejętności w obszarze wskazanym w harmonogramie przedmiotu. Do każdych zajęć należy przygotować się samodzielnie, korzystając z materiałów na stronie przedmiotu i materiałów wykładowych.
-  - Za zadanie uzyskać można od 0 do 22 punktów
+  - Za zadanie uzyskać można od 0 do 23 punktów
   - Na wykonanie zadania jest 130 minut
   - Zadania laboratoryjne rozwiązywane są z użyciem systemu Arch Linux na komputerach w laboratorium. Nie jest dozwolone rozwiązywanie zadań na własnym komputerze.
   - Zadanie programistyczne jest podzielone na etapy. Punkty za każdy etap podane są w treści zadania. Etapy muszą być wykonywane w wyznaczonej kolejności. Nie wolno przechodzić do następnego etapu bez wykonania poprzednich.
@@ -32,10 +33,6 @@ Laboratorium składa się z niepunktowanych zajęć (W1, W2 i W3), punktowanych 
 
 Zajęcia W1 to zajęcia poświęcone na przygotowanie środowiska. W trakcie tych zajęć studenci konfigurują środowisko programistyczne i przypominają sobie umiejętności z przedmiotu "Podstawy systemu Unix". Wszelkie braki w konfiguracji środowiska lub tych umiejętnościach (np. brak podpowiadania nazw funkcji, podkreślania błędów w edytorze, czy brak umiejętności poruszania się po katalogach) na wszystkich kolejnych zajęciach nie są okolicznością łagodzącą przy ocenianiu. Ponadto na W1 prowadzący zapoznają studentów ze sposobem zgłaszania rozwiązań podczas kolejnych laboratoriów.
 
-### Projekt
-
-Projekt jest realizowany zgodnie z harmonogramem zamieszczonym na stronie. Polega na stworzeniu większego programu i omówieniu sposobu jego działania z prowadzącym. Dopuszczalne są te same materiały co na laboratoriach. Za projekt można uzyskać do 12 punktów.
-
 
 # Harmonogram etapowej/końcowej weryfikacji osiągnięcia efektów uczenia się, w szczególności terminy sprawdzianów pisemnych i ustnych oraz terminy złożenia sprawozdań z wykonania ćwiczeń laboratoryjnych i projektów z uwzględnieniem terminów poprawkowych, jeśli specyfika przedmiotu to umożliwia*
 
@@ -50,7 +47,7 @@ Dodatkowe terminy egzaminów ponad liczbę wymaganą przez regulamin studiów ni
 
 - Do zaliczenia przedmiotu koniecznie jest uzyskanie w sumie przynajmniej 50 punktów (na 100 możliwych), z zastrzeżeniem dopuszczalnej liczby nieobecności.
 - Ocena z poprawy zastępuje ocenę z poprawianych zajęć.
-- Ocena końcowa z przedmiotu wynika z sumy punktów uzyskanych przez studenta z laboratorium i projektu:
+- Ocena końcowa z przedmiotu wynika z sumy punktów uzyskanych przez studenta z laboratorium:
   - Ocena 5.0 - wynik w przedziale [90, 100]
   - Ocena 4.5 - wynik w przedziale [80, 90)
   - Ocena 4.0 - wynik w przedziale [70, 80)
@@ -61,12 +58,11 @@ Dodatkowe terminy egzaminów ponad liczbę wymaganą przez regulamin studiów ni
 
 # Terminy i tryby ogłaszania wyników etapowej/końcowej weryfikacji osiągnięcia efektów uczenia się i ocen uzyskiwanych przez studentów
 
-Wyniki laboratoriów są wpisywane do USOSa bezpośrednio po każdych zajęciach. Wyniki projektu są wpisywane bezpośrednio po jego sprawdzeniu w czasie przeznaczonych do tego zajęć.
+Wyniki laboratoriów są wpisywane do USOSa bezpośrednio po każdych zajęciach.
 
 - Oceny cząstkowe
   - Liczba punktów uzyskana za kolejne etapy zadania laboratoryjnego jest podawana w momencie sprawdzania przez prowadzącego i zapisywana na kartce z treścią zadania
   - Punkty z laboratorium są umieszczane w USOSie najpóźniej 24 godziny po zajęciach. Liczba punktów wpisana w USOSie determinuje ocenę końcową
-  - Wyniki projektu są wpisywane bezpośrednio po jego sprawdzeniu w czasie przeznaczonych do tego zajęć.
 - Ocena końcowa
   - Wystawiana w USOSie w ciągu 24 godzin od opublikowania wyników ostatniego laboratorium L4 w USOSie
   - Korygowana w trakcie sesji egzaminacyjnej w ciągu 24 godzin od opublikowania wyników laboratorium poprawkowego w USOSie

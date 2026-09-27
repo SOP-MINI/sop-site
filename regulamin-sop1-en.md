@@ -12,11 +12,12 @@ Participation in the Operating Systems 1 course requires passing the courses: Pr
 
 The course consists of lectures and laboratories.
 
-The laboratory consists of non-graded classes (W1, W2 and W3), graded classes (L1, L2, L3 and L4) and a project. Classes are held according to the schedule provided on the course website. The course website also contains preparatory materials for the classes.
+The laboratory consists of non-graded classes (W1, W2 and W3), graded classes (L1, L2, L3 and L4). Classes are held according to the schedule provided on the course website. The course website also contains preparatory materials for the classes.
 
 ### Graded laboratories
+  - Classes W1, W2, and W3 are used to practice the skills tested in graded labs. During the W1 students solves a simple task for up to 1 point.  In order to participate in these classes, at least basic knowledge of the subject is required, which is tested at the beginning of these classes with a short test, for which up to 1.5 points can be obtained.
   - Classes L1, L2, L3 and L4 are used to assess skills in the area indicated in the course schedule. For each class, students should prepare independently, using the materials on the course website and lecture materials.
-  - You can get from 0 to 22 points for the task
+  - Student can get from 0 to 23 points for the task
   - The time to complete the task is 130 minutes
   - Laboratory tasks are solved using the Arch Linux system on computers in the laboratory. It is not allowed to solve tasks on student's own computer.
   - The programming task is divided into stages. The points for each stage are given in the task description. The stages must be performed in the specified order. You are not allowed to proceed to the next stage without completing the previous ones.
@@ -31,10 +32,6 @@ The laboratory consists of non-graded classes (W1, W2 and W3), graded classes (L
   - During the solving of programming tasks, students **can** use the course website, their own materials, solutions to sample tasks, system documentation and the Internet, but in such a way that the submitted solution is their independent work. In particular, communication with others and the use of AI-based solutions, such as ChatGPT, Github Copilot and similar, is not allowed.
 
 Class W1 is dedicated to environment setup. During this class, students will configure their programming environment and review skills from the "Unix System Fundamentals" course. Any shortcomings in the environment configuration or these skills (e.g., lack of function name completion, error highlighting in the editor, or inability to navigate directories) will not be considered as mitigating circumstances for grading in subsequent classes. Additionally, during W1, teachers will familiarize students with the solution submission process for the labs.
-
-### Project
-
-The project is completed according to the schedule on the course website. It involves creating a larger program and discussing its implementation with the teacher. The same materials are allowed as in the laboratories. The project is worth up to 12 points.
 
 
 # Schedule of partial and/or final verification of learning outcomes achievement, in particular the dates of written and oral tests and deadlines for submission of reports on completed laboratory work and projects, including make-up dates, if the specifics of the course allow for it
@@ -61,12 +58,11 @@ Additional exam dates beyond the number required by the study regulations will n
 
 # Dates and methods of providing information on the results of partial and/or final verification of learning outcomes achievement and grades awarded to students
 
-The results of the laboratories are entered into USOS immediately after each class. The results of the project are entered immediately after it is checked during the classes designated for this purpose.
+The results of the laboratories are entered into USOS immediately after each class. 
 
 - Partial grades
   - The number of points obtained for subsequent stages of the laboratory task is given at the time of checking by the instructor and written down on the sheet with the task description
   - Points from the laboratory are placed in USOS no later than 24 hours after the classes. The number of points entered in USOS determines the final grade
-  - The results of the project are entered immediately after it is checked during the classes designated for this purpose.
 - Final grade
   - Issued in USOS within 24 hours of the publication of the results of the last L4 laboratory in USOS
   - Corrected during the examination session within 24 hours of the publication of the results of the make-up laboratory in USOS
