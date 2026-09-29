@@ -1,5 +1,5 @@
 ---
-title: "Example task 1 on POSIX program environment"
+title: "Example task 1 on Filesystem"
 bookHidden: true
 ---
 
@@ -28,5 +28,4 @@ In the above example size of all objects in /run is below 2000 bytes.
 2.  Program lists the sizes (without names) of objects in the working folder, counts the sum of sizes and prints it on the screen. *To show:* run the program without params
 3.  Extend the code to accept folders as parameters (sizes are ignored) and repeat the printout for every folder. *To show:* run the program with params: `/etc 1000 /run 200`
 4.  Program prints only the names of folders if the content size is above the limit. *To show:* run the program with params: `/etc 1000 /run 200`, adjust the sizes so one folder will be printed and other not
-5.  Implement an alternative version of stage 4. using low-level FS functions, i.e. `open`, `close` and `read`.
-6.  Move output to the file out.txt, add message on access problems. To show: run the program with params as in the example below the task.
+5.  Move output to the file out.txt, add message on access problems. To show: run the program with params as in the example below the task.

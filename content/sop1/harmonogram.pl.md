@@ -30,13 +30,15 @@ Wtorki, godz. 14:15 - 16:30
 
 | Data       | Tytuł                                         |
 |------------|-----------------------------------------------|
-| 14.10.2025 | [W1 Wprowadzenie]({{< ref "lab/l0" >}})       |
-| 28.10.2025 | [L1 System plików i IO]({{< ref "lab/l1" >}}) |
-| 18.11.2025 | [W2 Procesy i sygnały]({{< ref "lab/l2" >}})  |
-| 2.12.2025  | [L2 Procesy i sygnały]({{< ref "lab/l2" >}})  |
-| 16.12.2025 | [W3 Wątki i muteksy]({{< ref "lab/l3" >}})    |
-| 9.01.2026  | [L3 Wątki i muteksy]({{< ref "lab/l3" >}})    |
-| 20.01.2026 | [L4 Synchronizacja]({{< ref "lab/l4" >}})     |
-| 3.02.2026  | L5 Poprawy                                    |
+|  6.10.2026 | [W1 Wprowadzenie]({{< ref "lab/l0" >}})       |
+| 20.10.2026 | [L1 System plików i IO]({{< ref "lab/l1" >}}) |
+|  3.11.2026 | [W2                                           |
+| 17.11.2026 | [L2                                           |
+|  1.12.2026 | [W3 Wątki i muteksy]({{< ref "lab/l3" >}})    |
+| 15.12.2026 | [L3 Wątki i muteksy]({{< ref "lab/l3" >}})    |
+| 12.01.2027 | [L4                                           |
+| 26.02.2027 | Poprawa                                       |
+
+
 
 

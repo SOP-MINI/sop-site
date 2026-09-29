@@ -6,32 +6,19 @@ weight: 30
 
 ## Schemat użycia GITa na laboratorium
 
-{{< hint info >}}
-
-Tą sekcję należy wykonać w sali na pierwszym laboratorium (W1).
-Przed przejściem przez tą sekcję trzeba zapoznać się z opisem użycia [GITa]({{< ref "/info/git" >}})
-Wymaga ona dostępu do serwera działającego tylko w trakcie trwania laboratorium.
-Zachęcam jednak do przeczytania jej i przygotowania się do wykonania poniższych kroków.
-
-{{< /hint >}}
-
-### Konfiguracja ssh
-
-Na laboratorium każde zadanie będzie rozwiązywane w takim repozytorium.
+Na laboratorium każde zadanie będzie rozwiązywane w repozytorium.
 Twoim celem jest śledzenie zmian w repozytorium w trakcie trwania laboratorium i ich synchronizacja z serwerem.
 **Jeżeli jakiś kod nie znajdzie się na serwerze, nie będzie oceniany.**
 
-Zanim przejdziemy do pobierania kodu, trzeba uzyskać swój osobisty klucz SSH z platformy [LeON](https://leon.pw.edu.pl).
-W dziale *klucze ssh* należy pobrać dwa pliki: `id_ed25519` oraz `id_ed25519.pub` oraz przekopiować je do folderu `~/.ssh`.
-Plik `id_ed25519` jest *kluczem prywatnym* - to znaczy że może być użyty do uwierzytelnienia wobec serwera znającego klucz publiczny (oraz do wielu innych rzeczy, jak szyfrowanie, podpisy cyfrowe i inne).
-Każdy klucz jest unikatowy i - zgodnie z nazwą - prywatny, tzn. działa jak hasło. Nie powinno się go udostępniać, ponieważ, podobnie jak z hasłem - jeżeli inna osoba wejdzie w jego posiadanie jest w stanie się pod nas podszyć i np. skasować nasze rozwiązanie z serwera. Zmień uprawnienia poleceniem:
-```shell
-chmod 600 ~/.ssh/id_ed25519
-```
+### Konfiguracja ssh
+
+W celu efektywniejsze pracy warto skonfigurować sobie autoryzację przy użyciu kluczy SSH.
+Pozwalają one wykonywać operacje na zdalnym repozytorium bez ciągłego wpisywania swojego hasła, co w efekcie oszczędza dużo czasu.
+Aby skonfigurować klucze SSH należy <tu link do tutorialu na sgicie>
 
 #### Wiele różnych kluczy
 
-Może zdarzyć się tak, że w folderze `~/.ssh` znajdują się już inne klucze (np. na potrzeby innego przedmiotu). W takiej sytuacji najlepszy rozwiązaniem, jest powiedzenie programowi `ssh`, jakich kluczy ma używać przy połączeniu z danym serwerem. Zmień nazwę pobranych kluczy na inną, np. `id_ed25519_sop` oraz `id_ed25519_sop.pub` i umieść w katalogu `~/.ssh/` (pamiętaj o uprawnieniach, `chmod 600`). Następnie utwórz plik `~/.ssh/config` z zawartością postaci:
+Może zdarzyć się tak, że w folderze `~/.ssh` znajdują się już inne klucze (np. dla innego serwera). W takiej sytuacji najlepszy rozwiązaniem, jest powiedzenie programowi `ssh`, jakich kluczy ma używać przy połączeniu z danym serwerem. Zmień nazwę pobranych kluczy na inną, np. `id_ed25519_sop` oraz `id_ed25519_sop.pub` i umieść w katalogu `~/.ssh/` (pamiętaj o uprawnieniach, `chmod 600`). Następnie utwórz plik `~/.ssh/config` z zawartością postaci:
 
 ```
 IdentityFile ~/.ssh/id_ed25519

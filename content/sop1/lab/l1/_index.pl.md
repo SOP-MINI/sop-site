@@ -1,5 +1,5 @@
 ---
-title: "L1 - System plików"
+title: "L1 - System plików 1"
 date: 2022-02-05T18:39:22+01:00
 weight: 20
 ---
@@ -12,6 +12,13 @@ Jest to jednak wciąż jedynie poglądowy zbiór najważniejszych informacji --
 należy **koniecznie przeczytać wskazane strony manuala**, aby dobrze poznać i zrozumieć wszystkie szczegóły.
 
 {{< /hint >}}
+
+W tym tutorialu zajmiemy się obsługą systemu plików poprzez wysokopoziomowe API, będące częścią jezyka C, oraz jego rozszerzeniami POSIX.
+Charakterystyczną cechą tego API jest operowanie na ścieżkach do pliku oraz strukturach `DIR` i `FILE`.
+Istnieje również niskopoziomowe API POSIX operujące na deskryptorach.
+Zajmiemy się nim na następnym laboratorium.
+Zasadniczo powinniście być zaznajomieni ze standardowymi funkcjami języka C po przedmiocie "Programowanie 1" - tutaj powtórzymy je tylko pokrótce.
+Warto powtórzyć sobie informacje z tego przedmiotu, np. poprzez [cppreference](https://en.cppreference.com/c/io).
 
 
 ## Przeglądanie katalogu
@@ -207,94 +214,6 @@ Najprostsze rozwiązanie to `if(chdir(argv[i])) continue;`, można by jednak dod
 - Nigdy i pod żadnym pozorem nie pisz `printf(argv[i])`! Jeśli ktoś poda jako katalog `%d` to jak to wyświetli `printf`?
 To dotyczy nie tylko argumentów programu, ale dowolnych ciągów znaków.
 
-## Przeglądanie katalogów i podkatalogów (rekursywne)
-
-Gdyby zaszła potrzeba odwiedzenia nie tylko danego katalogu, ale całego poddrzewa katalogów, rozwiązanie bazujące na funkcji
-`opendir` byłoby dość kłopotliwe. Są za to dostępne funkcje `ftw` i `nftw` obecne w pliku nagłówkowym `<ftw.h>`, które przechodzą
-całe drzewo katalogów, startując z podanego katalogu, i wywołują na każdym z odwiedzonych katalogów i plików pewną funkcję.
-Opisana zostanie tutaj tylko funkcja `nftw`, ponieważ `ftw` jest oznaczona jako przestarzała i nie powinna być używana. Deklaracja
-funkcji `nftw` jest następująca:
-
-```
-int nftw(const char *path, int (*fn)(const char *, const struct stat *, int, struct FTW *), int fd_limit, int flags);
-```
-- `path` oznacza ścieżkę do katalogu, od którego zacznie się przeszukanie,
-- `fn` to **wskaźnik na funkcję** przyjmującą cztery argumenty:
-   - pierwszy: typu `const char*`, w którym znajdzie się ścieżka do rozważanego pliku/katalogu,
-   - drugi: typu `const struct stat*`, zawierający wskaźnik na strukturę `stat`, która została omówiona we wcześniejszej części tutoriala,
-   - trzeci: typu `int`, zawierający dodatkową informację. Może ona przyjąć jedną z ustalonych wartości (patrz `man 3p nftw`), z czego ważniejsze
-   to: 
-      - `FTW_D`: odwiedzono katalog,
-      - `FTW_F`: odwiedzono plik,
-      - `FTW_SL`: odwiedzono link,
-      - `FTW_DNR`: odwiedzono katalog, którego nie można było otworzyć.
-   - czwarty: typu `struct FTW *`, zawierający wskaźnik na strukturę, której pole `level` informuje, jak głęboko aktualnie jesteśmy 
-   w drzewie przeszukania, a pole `base` zawiera indeks znaku w ścieżce (obecnej w pierwszym argumencie), 
-   który rozpoczyna właściwą nazwę pliku, np. dla ścieżki `/usr/bin/cat` tą wartością byłoby `9`.
-
-    Funkcja ta jest wywoływana dla każdego odwiedzonego pliku i katalogu, można ją traktować jako pewnego rodzaju callback.
-W funkcji `fn` powinniśmy zwykle zwrócić `0`, jeśli zwrócimy coś innego, `nftw` natychmiast zakończy działanie i zwróci też tę wartość
-(to można także wykorzystać jako sygnalizację błędu).
-- `fd_limit` oznacza maksymalną liczbę deskryptorów użytych przez `nftw` podczas przeszukania drzewa. Na każdy poziom drzewa katalogów
-używany jest co najwyżej jeden deskryptor, zatem podana wartość jest też dolnym ograniczeniem na głębokość drzewa, do której dojdzie przeszukanie,
-- `flags` oznacza flagi modyfikujące działanie funkcji, z czego ciekawsze to:
-   - `FTW_CHDIR`: zmienia katalog roboczy na aktualnie przeglądany katalog w trakcie wykonywania funkcji,
-   - `FTW_DEPTH`: przeszukanie w głąb (domyślnie `nftw` przeszukuje wszerz),
-   - `FTW_PHYS`: jeśli obecna, odwiedzane będą linki same w sobie, domyślnie odwiedzane są pliki, do których link prowadzi.
-Flagi te można łączyć ze sobą operatorem logicznym `|`.
-
-Manual (`man 3p nftw`) zawiera bardziej szczegółowe informacje i wszystkie możliwe wartości, jakie mogą być przekazane
-lub napotkane w trakcie wykonywania `nftw`.
-
-### Zadanie
-
-Napisz program zliczający wystąpienia plików, katalogów, linków i innych typów dla całych poddrzew zaczynających
-się w podanych jako parametry folderach.
-
-### Rozwiązanie zadania
-
-Nowe strony z manuala:
-```
-man 3p ftw
-man 3p nftw
-```
-
-rozwiązanie `l1-3.c`:
-{{< includecode "l1-3.c" >}}
-
-### Uwagi i pytania
-
-- Jeśli definicja funkcji `nftw` lub użycie `walk` w rozwiązaniu są dla Ciebie niezrozumiałe, 
-powtórz koniecznie, co to są i jak działają wskaźniki na funkcje w C.
-
-- Sprawdź, jak program sobie radzi z niedostępnymi i nieistniejącymi katalogami.
-
-- W jakim celu użyta jest flaga `FTW_PHYS`?
-{{< answer >}} 
-Bez tej flagi, `nftw` przechodzi przez linki symboliczne do wskazywanych obiektów, czyli nie może ich zliczać, 
-analogicznie jak `stat`. 
-{{< /answer >}}
-
-- Dlaczego w przypadku gdy typ pliku zgłaszany przez `nftw` to `FTW_F` robimy dodatkowe sprawdzenie `S_ISREG` na strukturze `stat`?
-{{< answer >}} 
-Zgodnie z dokumentacją `FTW_F` oznacza tylko, że dany plik nie jest katalogiem (ani dowiązaniem w przypadku użycia `FTW_PHYS`).
-{{< /answer >}}
-
-- Sprawdź, jak inne flagi modyfikują zachowanie `nftw`.
-
-- Deklaracja `_XOPEN_SOURCE` jest na Linuksie niezbędna, inaczej nie widzi deklaracji funkcji `nftw` (ważna jest kolejność,
-deklaracja przed `include`). Funkcję `ftw` oznaczono już jako przestarzałą i nie powinno się jej używać.
-
-- Zmienne globalne to "zło wcielone", zbyt łatwo ich użyć, a przychodzi za to zapłacić przy analizowaniu cudzego kodu lub
-podczas przenoszenia funkcji z jednego projektu do drugiego. Tworzą one niejawne zależności w kodzie. Tutaj (niestety) musimy
-ich użyć, ponieważ funkcja callback `nftw` nie pozwala nic przekazać na zewnątrz inaczej, niż przez zmienną globalną. To jest
-wyjątkowa sytuacja, używanie zmiennych globalnych, poza wskazanymi koniecznymi przypadkami, jest na laboratoriach zabronione!
-
-- Bardzo przydatna jest możliwość nałożenia limitu otwieranych przez `nftw` deskryptorów, co prawda może to uniemożliwić
-przeskanowanie bardzo głębokiego drzewa katalogów (głębszego niż limit), ale pozwala to nam zarządzać zasobami, które
-mamy. W zakresie deskryptorów, maksima systemowe pod Linuksem są nieokreślone, ale można oddzielnie limitować procesy na
-poziomie administracji systemem.
-
 ## Operacje na plikach
 
 Duża część programów wchodzi w interakcję z plikami na dysku. Najprostszym sposobem którym można to zrealizować jest:
@@ -443,6 +362,88 @@ zainteresowane procesy będą mogły z niego korzystać. Gdy skończą plik znik
 - Najlepiej w procesie wywołać srand dokładnie jeden raz z unikalnym ziarnem,w tym programie wystarczy czas podany w
 sekundach.
 
+## Inne operacje na systemie plików
+
+### Tworzenie katalogu
+
+Do tworzenia nowych katalogów służy funkcja `mkdir` (`man 3p mkdir`):
+
+```
+int mkdir(const char *path, mode_t mode);
+```
+
+Jak widać jest dość prosta w użyciu - podajemy ścieżkę do katalogu oraz uprawnienia - jeśli będą poprawne funkcja stworzy pusty katalog.
+Należy pamiętać, że w przypadku katalogów niezbędne są uprawnienia do wykonania (`x`), które w tym wypadku oznaczają możliwość przejście przez katalog i dostęp do plików i katalogów wewnątrz niego.
+
+### Uprawnienia
+
+Przy użyciu wspomnianych wcześniej funkcji `stat` i `lstat` możemy sprawdzać uprawnienia pliku.
+Funkcja `chmod` (`man 3p chmod`) pozwala nam je ustawiać. Sygnatura jest taka sama jak `mkdir` wyżej:
+
+```
+int mkdir(const char *path, mode_t mode);
+```
+
+Należy pamiętać, że żeby zmienić uprawnienia nasz proces musi mieć uprawnienia do zapisu danego pliku.
+Wygodnym sposobem, żeby sprawdzić, czy plik istnieje i mamy odpowiednie uprawnienia jest funkcja `access` (`man 3p access`).
+
+```
+int access(const char *path, int amode);
+```
+Należy uważać, bo parametr `amode` nie jest tym samym co `mode` w `chmod` i `mkdir`.
+Przyjmuje jedną z czterech flag lub ich kombinację (przez `|`) w zależności od tego, co chcemy sprawdzić: `F_OK` (istnienie), `R_OK` (odczyt), `W_OK` (zapis), `X_OK` (wykonanie).
+
+Istnieje również funkcja `chown` pozwalająca zmieniać właściciela pliku, nie będziemy się jednak nią zajmować, gdyż jej użycie wymaga uprawnień superusera.
+
+### Dowiązania
+
+W systemach POSIX istnieją dwa rodzaje dowiązań - twarde (ang. _hardlink_) oraz symboliczne (ang. _symlink_).
+
+Dowiązanie twarde jest referencją do danego inoda - tym samym z punktu widzenia API jest po prostu inną nazwą tego samego pliku.
+Każde jest równoważne i nie ma między nimi różnicy - po prostu niektóre pliki mają tylko jedną nazwę w systemie plików a inne kilka
+Do tworzenie dowiązań twardych służy funkcja `link` (`man 3p link`).
+
+Dowiązania twarde są bardzo użyteczne ale równocześnie niebezpieczne.
+Takie dowiązanie może np. mieć inne uprawnienia albo znajdować się w publicznym katalogu dając niepowołanym osobom dostęp do pliku.
+Ogólnie rzecz biorąc na laboratorium nie będziemy ich używać.
+
+Dowiązania symboliczne są tak naprawdę specjalnym rodzajem pliku, zawierającym ścieżkę do innego pliku.
+Działają więc w innej warstwie niż dowiązania twarde - są od nich bezpieczniejsze ale jednocześnie mają ograniczenia.
+Np. jeżeli plik na który wskazuje dowiązanie symboliczne zmieni nazwę takie dowiązanie przestanie być poprawne - plik na który wskazuje przestaje istnieć.
+W przypadku dowiązań twardych wszystkie one są równorzędne. W przypadku dowiązań symbolicznych są one tylko wskaźnikami odrębnymi od właściwego pliku.
+
+Do tworzenia dowiązań twardych służy funkcja `symlink` (`man 3p symlink`).
+
+```
+int symlink(const char *path1, const char *path2);
+```
+
+Jej wywołanie tworzy dowiązanie symboliczne o ścieżce `path2` do pliku o nazwie `path1` (czyli `path2->path1`, `->` oznacz ,,wskazuje na'').
+W terminalu mamy bezpośredni odpowiednik tej funkcji `ln -s <TARGET> <PATH>` (`man 1 ln`).
+Możemy użyć `ln` żeby w prosty sposób poeksperymentować z symlinkami.
+Warto, ponieważ potrafią one być mylące.
+
+Rozważ następujący przypadek:
+
+w naszym katalogu roboczym mamy dwa podkatalogi `a` oraz `b`.
+W katalogu `a` tworzymy plik `file.txt`.
+Chcemy teraz stworzyć dowiązanie symboliczne do tego pliku w katalogu `b` o nazwie np. `file.txt_bak`
+Wywołujemy więc `ln -s a/file.txt b/file.txt_bak`.
+Czy to zadziała poprawnie?
+
+{{< answer >}} 
+Nie, nie zadziała!
+Zostanie stworzone dowiązanie `b/file.txt_bak` jednak będzie ono wskazywać na względną ścieżkę `a/file.txt`, która z punktu widzenia pliku `b/file.txt_bak` jest niepoprawna, bo dla niego ścieżka do tego pliku to `../a/file.txt`.
+
+Żeby poprawnie stworzyć dowiązanie z naszego katalogu roboczego musimy wywołać `ln -s ../a/file.txt b/file.txt_bak` - wygląda nieintuicyjnie na pierwszy rzut oka, ale po prostu trzeba pamiętać, że ścieżka docelowa jest zawsze z punktu widzenia dowiązania. Alternatywnie możemy wejść do katalogu `b` i stamtąd wywołać `ln -s ../a/file.txt file.txt_bak`. Aby wygodnie podejrzeć na jaki plik wskazuje dowiązania w danym katalogu najlepiej użyć `ls -l`.
+{{</ answer >}}
+
+Ponieważ dowiązania symboliczne to jedynie ścieżki wskazujące na inne pliki istotne jest, czy będzie ona bezwzględna czy względna.
+W zależności od tego dowiązanie może być poprawnie lub nie po zmianie nazwy lub położenia pliku lub dowiązania (ćwiczenie: przeanalizuj jak zmiana położenia pliku albo symlinku wpływa na jego poprawność gdy ścieżki są względne albo bezwględne. Rozważ przypadek, gdy plik i jego symlink poruszają się razem, bo cały katalog w którym się znajdują jest przenoszony)
+
+Jeśli nadal nie czujesz się pewnie z dowiązaniami symbolicznymi koniecznie je przećwicz w terminalu używając takich komend jak `ls -l`, `ln -s`, `cd`, `touch`, `echo`, `cat`.
+Mają one swoje bezpośrednie odpowiedniki w C, wspomniane wyżej.
+
 ## Buforowanie standardowego wyjścia
 
 ### Eksperyment
@@ -493,124 +494,6 @@ rezultatów, a do czegokolwiek innego używa się standardowego błędu. Na przy
 wystąpienia na standardowe wyjście, ale ewentualne błędy przy otwarciu pliku trafią na standardowy błąd. Nawet nasze
 makro `ERR` wypisuje błąd do strumienia standardowego błędu.
 
-## Operacje niskopoziomowe na plikach
-
-Do realizacji odczytu i zapisu plików można użyć też funkcji niskopoziomowych, t.j. takich, których nie definiuje biblioteka standardowa C, a które udostępnia sam system operacyjny. Można przy ich pomocy np. wysyłać pakiety przez sieć, czym zajmiemy się w przyszłym semestrze.
-
-Zamiast wskaźników na struktury `FILE` funkcje niskopoziomowe pracują na *file descriptors* (fd) - wartościach całkowitoliczbowych identyfikujących zasoby w obrębie procesu. W tym przypadku będą to pliki, ale w ogólności mogą odnosić się do różnego typu zasobów systemowych. Aby użyć poniższych funkcji konieczne jest dołączenie nagłówków `<fcntl.h>` i `<unistd.h>`.
-
-```
-int open(const char *path, int oflag, ...);
-```
-Zobacz `man 3p open`.
-- `path` - ścieżka otwieranego pliku,
-- `oflag` - flagi otwarcia pliku połączone operacją bitowego OR `|`, analogiczne do trybu otwarcia funkcji `fopen`, ale też precyzujące zachowanie w różnych warunkach brzegowych. Odnieś się do `man 3p open` dla listy flag.
-
-Funkcja zwraca deskryptor pliku `fd`, którego używać będziemy w kolejnych funkcjach.
-
-Funkcje niskopoziomowe nie korzystają z buforowania. `read` (`man 3p read`) dostaje znaki natychmiastowo kiedy są dostępne. Oznacza to, że nie zawsze wczyta tyle znaków ile oczekujemy. Z jednej strony dostajemy dane najszybciej jak się da nie musząc czekać aż system załaduje resztę z dysku. Z drugiej jednak musimy uważać żeby faktycznie wczytać całość danych które chcemy.
-
-```
-ssize_t read(int fildes, void *buf, size_t nbyte);
-```
-- `filedes` - deskryptor pliku, pozyskany z `open`,
-- `buf` - wskaźnik na bufor w którym zapisane będą dane,
-- `nbyte` - rozmiar danych których ma oczekiwać funkcja.
-
-Funkcja zwraca ilość bajtów które udało się wczytać.
-
-W analogiczny sposób działa funkcja `write` (`man 3p write`):
-
-```
-ssize_t write(int fildes, const void *buf, size_t nbyte);
-```
-- `filedes` - deskryptor pliku, pozyskany z `open`,
-- `buf` - wskaźnik na bufor z którego pobierane będą dane,
-- `nbyte` - rozmiar danych przeznaczonych do wysłania.
-
-Zwrócona wartość oznacza ilość zapisanych bajtów.
-
-
-### Zadanie
-
-Napisz prosty program kopiujący pliki.
-Powinien akceptować jako swoje argumenty dwie ścieżki i skopiować plik z pierwszej na drugą. 
-
-Tym razem użyj funkcji niskopoziomowych.
-
-### Rozwiązanie zadania
-
-Co student musi wiedzieć: 
-- man 3p open
-- man 3p close
-- man 3p read
-- man 3p write
-- man 3p mknod (tylko stałe opisujące uprawnienia do open)
-- opis makra TEMP_FAILURE_RETRY <a href="http://www.gnu.org/software/libc/manual/html_node/Interrupted-Primitives.html">tutaj</a>
-
-<em>kod do pliku <b>prog14.c</b></em>
-{{< includecode "prog14.c" >}}
-
-### Uwagi i pytania
-
-Aby dostępne było makro `TEMP_FAILURE_RETRY` trzeba najpierw zdefiniować `GNU_SOURCE` a następnie dołączyć plik
-nagłówkowy `unistd.h`. Nie musisz jeszcze w pełni rozumieć działania tego makra, będzie ono ważniejsze w trakcie kolejnego laboratorium gdy zajmiemy się sygnałami.
-
-- Dlaczego w powyższym programie używane są funkcje `bulk_read` i `bulk_write`?
-Czy nie wystarczyłoby po prostu użyć `read` i `write`
-{{< answer >}}
-Zgodnie ze specyfikacją funkcje `read` i `write` mogą zwrócić zanim ilość danych której zażądał użytkownik zostanie odczytana/zapisana.
-Więcej o tym zachowaniu dowiesz się w tutorialu do kolejnego laboratorium.
-Teoretycznie w tym zadaniu nie ma to znaczenia (ponieważ nie używamy sygnałów), ale dobrze się do tego przyzwyczaić już teraz.
-{{< /answer >}}
-
-- Czy powyższy program mógłby być zaimplementowany funkcjami bibliotecznymi z C zamiast niskopoziomowym IO? (`fopen`, `fprintf`, ...)
-{{< answer >}}
-Tak, w tym programie nie ma niczego co nie pozwala użyć wcześniej pokazanych funkcji.
-{{< /answer >}}
-
-- Czy do deskryptora zwróconego z `open` można zapisać dane przez `fprintf`?
-{{< answer >}}
-Nie! Funkcje `fprintf`, `fgets`, `fscanf` itd. przyjmują jako argument zmienną typu `FILE*`, deskryptor jest natomiast pojedynczą liczbą `int` używaną przez system operacyjny do identyfikacji otwartego pliku.
-{{< /answer >}}
-
-## Operacje wektorowe na plikach
-
-Funkcja `writev` (`man 3p writev`) oferuje wygodne rozwiązanie w przypadku gdy dane które chcemy zapisać nie znajdują się w jednym ciągłym fragmencie pamięci. Pozwala ona zebrać dane z wielu miejsc i zapisać je w pliku za pomocą jednego wywołania funkcji. Znajduje się w nagłówku `<sys/uio.h>`.
-```
-ssize_t writev(int fildes, const struct iovec *iov, int iovcnt);
-```
-- `filedes` - deskryptor do którego zapisywane są dane,
-- `iov` - tablica struktur opisujących bufory z których funkcja zbiera dane - `struct iovec` (`man 0p sys_uio.h`), które mają następujące pola: 
-```
-void   *iov_base -> wskaźnik na obszar pamięci
-size_t  iov_len  -> długość obszaru pamięci
-```
-- `iovcnt` - rozmiar tablicy `iov`.
-
-Funkcja ta zapisuje do `filedes`:\
-`iov[0].iov_len` bajtów zaczynając od `iov[0].iov_base`, następnie\
-`iov[1].iov_len` bajtów zaczynając od `iov[1].iov_base`, ... aż do\
-`iov[iovcnt-1].iov_len` bajtów zaczynając od `iov[iovcnt-1].iov_base`.
-
-W analogiczny sposób działa funkcja `readv` (`man 3p readv`):
-
-```
-ssize_t readv(int fildes, const struct iovec *iov, int iovcnt);
-```
-
-- `filedes` - deskryptor z którego czytane są dane,
-- `iov` - tablica struktur `struct iovec` opisujących bufory do których funkcja rozprasza dane.
-- `iovcnt` - rozmiar tablicy `iov`.
-
-W pozostałych aspektach funkcje te zachowują się jak ich niewektorowe odpowiedniki `write` i `read`.
-
-### Przydatne strony
-
-- man 3p writev
-- man 3p readv
-- man 0p sys_uio.h
-
 ## Przykładowe zadania
 
 Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
@@ -618,6 +501,8 @@ Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu
 - [Zadanie 1]({{< ref "/sop1/lab/l1/example1" >}}) ~75 minut
 - [Zadanie 2]({{< ref "/sop1/lab/l1/example2" >}}) ~75 minut
 - [Zadanie 3]({{< ref "/sop1/lab/l1/example3" >}}) ~120 minut
+- [Zadanie 4]({{< ref "/sop1/lab/l1/example4" >}}) ~130 minut
+
 
 ## Kody źródłowe z treści tutoriala
 {{% codeattachments %}}

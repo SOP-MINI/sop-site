@@ -17,7 +17,7 @@ The laboratory consists of non-graded classes (W1, W2 and W3), graded classes (L
 ### Graded laboratories
   - Classes W1, W2, and W3 are used to practice the skills tested in graded labs. During the W1 students solves a simple task for up to 1 point.  In order to participate in these classes, at least basic knowledge of the subject is required, which is tested at the beginning of these classes with a short test, for which up to 1.5 points can be obtained.
   - Classes L1, L2, L3 and L4 are used to assess skills in the area indicated in the course schedule. For each class, students should prepare independently, using the materials on the course website and lecture materials.
-  - Student can get from 0 to 23 points for the task
+  - Student can get from 0 to 24 points for the task
   - The time to complete the task is 130 minutes
   - Laboratory tasks are solved using the Arch Linux system on computers in the laboratory. It is not allowed to solve tasks on student's own computer.
   - The programming task is divided into stages. The points for each stage are given in the task description. The stages must be performed in the specified order. You are not allowed to proceed to the next stage without completing the previous ones.

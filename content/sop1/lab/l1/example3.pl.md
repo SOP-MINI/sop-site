@@ -1,5 +1,5 @@
 ---
-title: "Example task 3 on POSIX program environment"
+title: "Zadanie testowe 3 z tematu system plików"
 bookHidden: true
 ---
 

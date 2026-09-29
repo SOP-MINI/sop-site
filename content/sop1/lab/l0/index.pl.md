@@ -1,5 +1,5 @@
 ---
-title: "L0 - Środowisko wykonania programu POSIX"
+title: "L0 (W1) - Środowisko wykonania programu POSIX"
 date: 2022-02-05T17:26:02+01:00
 weight: 10
 ---

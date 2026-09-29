@@ -17,7 +17,7 @@ Laboratorium składa się z niepunktowanych zajęć (W1, W2 i W3), punktowanych 
 ### Punktowane laboratoria
   - Zajęcia W1, W2 i W3 służą przećwiczeniu materiału sprawdzanego na punktowanych laboratoriach. Pod koniec W1 studenci rozwiązują proste zadanie za które można uzyskać 1 punkt.  W celu owocnego uczestnictwa w zajęciach W2 i W3 wymagana jest już przynajmniej podstawowa wiedza z danego tematu, która jest sprawdzana na początku tych zajęć krótkim sprawdzianem (wejściówką), za którą można uzyskać do 1.5 punkta.
   - Zajęcia L1, L2, L3 i L4 służą ocenie umiejętności w obszarze wskazanym w harmonogramie przedmiotu. Do każdych zajęć należy przygotować się samodzielnie, korzystając z materiałów na stronie przedmiotu i materiałów wykładowych.
-  - Za zadanie uzyskać można od 0 do 23 punktów
+  - Za zadanie uzyskać można od 0 do 24 punktów
   - Na wykonanie zadania jest 130 minut
   - Zadania laboratoryjne rozwiązywane są z użyciem systemu Arch Linux na komputerach w laboratorium. Nie jest dozwolone rozwiązywanie zadań na własnym komputerze.
   - Zadanie programistyczne jest podzielone na etapy. Punkty za każdy etap podane są w treści zadania. Etapy muszą być wykonywane w wyznaczonej kolejności. Nie wolno przechodzić do następnego etapu bez wykonania poprzednich.
