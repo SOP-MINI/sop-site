@@ -3,7 +3,7 @@ title: "Zadanie testowe 4 z tematu system plików"
 bookHidden: true
 ---
 
-# L1: Ἡ Βιβλιοθήκη τῆς Ἀλεξάνδρειας {#l1-ἡ-βιβλιοθήκη-τῆς-ἀλεξάνδρειας}
+# L1: Ἡ Βιβλιοθήκη τῆς Ἀλεξάνδρειας
 
 Jest trzeci wiek przed Chrystusem. Kallimach z Cyreny (Καλλίμαχος ὁ
 Κυρηναῖος) właśnie ukończył swój słynny Pinakes (Πίνακες). Jest to
