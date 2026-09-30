@@ -6,32 +6,16 @@ weight: 30
 
 ## Instruction of using GIT on the laboratory
 
-{{< hint info >}}
-
-This section of tutorial has to be done during the laboratory on faculty (W1).
-Before starting you have to read section about [GIT]({{< ref "/info/git" >}}) usage.
-Steps below require access to server available only during laboratory.
-I encourage you to read it and prepare before zeroth laboratory.
-
-{{< /hint >}}
-
-### ssh configuration
-
 During laboratory every task will be done inside a GIT repository.
-Credentials to remote access will be provided during the laboratory.
 Your code has to be tracked by GIT during the laboratory.
 Every stage has to be synchronized with server.
 **If some code will not be sent to the server, you will not take points for it.** 
 
-Before you start coding, you need your personal SSH key from [LeON](https://leon.pw.edu.pl).
-On the OPS page you can download two files: `id_ed25519` and `id_ed25519.pub`.
-You have to copy it to `~/.ssh` directory.
-Every pair of keys is unique to student and has to be used by only one student.
 
-Because the private key is secret, it shouldn't be readable to other users. You need to change permissions:
-```shell
-chmod 600 ~/.ssh/id_ed25519
-```
+### ssh configuration
+
+Authorisation using SSH keys is more efficient since it allows doing operations on remote repository without typing password every time.
+To configure SSH keys follow <tu link do tutorialu na sgicie>
 
 #### Managing multiple ssh keys
 

@@ -1,5 +1,5 @@
 ---
-title: "Zadanie testowe nr 2 z tematu Środowisko wykonania programu POSIX"
+title: "Zadanie testowe nr 2 z tematu system plików"
 bookHidden: true
 ---
 

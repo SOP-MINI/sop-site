@@ -1,574 +1,623 @@
 ---
-title: "L2 - Procesy, sygnały i deskryptory"
-date: 2022-02-05T19:10:36+01:00
+title: "L2 - System plików 2"
+date: 2022-02-05T18:39:22+01:00
 weight: 30
 ---
 
-# Tutorial 2 - Procesy, sygnały i deskryptory
+# Tutorial 1 - System plików
 
 {{< hint info >}}
 Ten tutorial zawiera wyjaśnienia działania funkcji wymaganych na laboratoriach oraz ich parametrów.
-Jest to jednak wciąż zbiór jedynie poglądowy najważniejszych informacji -- 
+Jest to jednak wciąż jedynie poglądowy zbiór najważniejszych informacji -- 
 należy **koniecznie przeczytać wskazane strony manuala**, aby dobrze poznać i zrozumieć wszystkie szczegóły.
+
 {{< /hint >}}
 
-## Zarządzanie procesami
 
-### Tworzenie procesów
-Stworzenie procesu potomnego wykonywane jest za pomocą polecenia `fork`. Przyjrzymy się definicji tej funkcji: 
+## Przeglądanie katalogu
 
-```
-pid_t fork(void)
-```
-
-Jak widać, zwraca ona obiekt typu `pid_t`, jest to typ całkowitoliczbowy ze znakiem. W procesie rodzica funkcja zwraca identyfikator nowo utworzonego procesu, natomiast w utworzonym procesie zwracane jest `0`, pozwala to łatwo rozdzielić logikę na tę wykonywaną przez dzieci oraz na tę wykonywaną przez rodzica.
-
-
-Oczywiście stworzenie nowego procesu może się nie powieść (np. gdy systemowi zabraknie potrzebnych zasobów). W takim wypadku funkcja `fork` zwraca wartość `-1` i ustawia odpowiednią wartość zmiennej `errno`.
-
-Procesy utworzone przez dany proces nazywamy jego __dziećmi__, natomiast z perspektywy procesu potomnego, proces który go stworzył nazywamy __rodzicem__.
-
-Więcej informacji można znaleźć w manualu:
+Przejrzenie katalogu umożliwia nam poznanie nazw oraz atrybutów zawartych w nim plików. 
+Realizuje to zadanie np. terminalowe polecenie `ls -l`. Aby natomiast uzyskać dostęp do
+tych informacji z poziomu języka C, należy "otworzyć" przeglądany katalog funkcją
+`opendir`, a następnie kolejne rekordy odczytać funkcją `readdir`. Wspomniane funkcje
+obecne są w pliku nagłówkowym `<dirent.h>` (`man 3p fdopendir`). Spójrzmy na definicje obu funkcji:
 
 ```
-man 3p fork
+DIR *opendir(const char *dirname);
+struct dirent *readdir(DIR *dirp);
 ```
 
-### Identyfikacja procesów
-Każdy proces posiada unikatowy identyfikator typu `pid_t`. 
-Aby uzyskać informację o identyfikatorze procesu używamy funkcji `getpid()`, natomiast aby dowiedzieć się jaki jest idenyfikator procesu rodzica funkcji  `getppid()`. 
-Ich definicje są następujące: 
+Jak widzimy, `opendir` zwraca nam wskaźnik na obiekt typu `DIR`, którym będziemy się posługiwać przy odczytywaniu
+danych o zawartości katalogu. Funkcja `readdir` zwraca natomiast wskaźnik na strukturę typu `dirent`, która posiada 
+(wg POSIX) następujące pola (`man 0p dirent.h`):
 
 ```
-pid_t getpid(void)
-pid_t getppid(void)
+ino_t  d_ino       -> identyfikator pliku (numer inode, więcej w man 7 inode)
+char   d_name[]    -> nazwa pliku
 ```
 
-Jak widać nie przyjmują one żadnych argumentów i zwracają obiekt typu `pid_t`.:
-
-Zgodnie ze standardem POSIX obie funkcje __zawsze kończą się sukcesem__ (`man 3p getpid`).
-
-
-### Zadanie 
-
-Napisz program tworzący n procesów potomnych (n jest parametrem na pozycji 1), każdy z tych procesów czeka przez losowy czas [5, 10] sekund po czym wypisuje na ekran swój PID i się kończy. Proces rodzica co 3s ma wyświetlać na stdout ile jeszcze posiada podprocesów. Na razie nie przejmuj się czekaniem na zakończenie procesów potomnych.
-
-Nowe strony z manuala: 
-- man 3p fork
-- man 3p getpid
-- man 3p sleep
-- <a href="https://www.gnu.org/software/libc/manual/html_node/Job-Control.html">Job Control</a>
-
-### Rozwiązanie zadania
-
-<em>rozwiązanie 1 etap <b>prog13a.c</b>:</em>
-{{< includecode "prog13a.c" >}}
-
-### Uwagi i pytania
-
-- Upewnij się, że wiesz jak powstaje grupa procesów tzn. kiedy powłoka tworzy nową grupę i jakie procesy do niej należą.
-
-- Zwróć uwagę, że w makrze `ERR` dodano `kill(0, SIGKILL)`. Chodzi o to aby w razie błędu zatrzymać cały program (wszystkie
-procesy danej grupy).
-
-- `0` jako argument `kill` jest bardzo użyteczne, odnosi się do wszystkich procesów danej grupy, nie musimy przechowywać
-listy PID'ów.
-
-- Zwróć uwagę, że nie analizujemy błędów funkcji `kill` w makrze `ERR`, to dlatego, że w przypadku sytuacji krytycznej
-podejmujemy jak najmniej działań, zresztą co mielibyśmy zrobić wywołać rekurencyjnie `ERR`?
-
-- Pytanie czemu po uruchomieniu wraca linia poleceń?
-{{< details "Odpowiedź" >}} Proces rodzic nie czeka na zakończenie procesów potomnych, brak wywołania `wait` lub `waitpid`, naprawimy to w 2 etapie {{< /details >}}
-
-- Jak sprawdzić kto jest rodzicem procesów prog13a? Dlaczego właśnie ten proces?
-{{< details "Odpowiedź" >}} Zaraz po uruchomieniu wykonać np.: `$ps -f`, rodzicem procesów będzie proces o PID 1 czyli init/systemd. Dzieje się tak dlatego, że proces rodzic kończy się bez czekania na procesy potomne a te nie mogą "wisieć" poza drzewem procesów. Nie przechodzą pod powłokę ale właśnie pod proces po PID=1 {{< /details >}}
-
-- Zwróć uwagę na miejsce i sposób ustalenia ziarna liczb losowych. Czy jeśli przesuniemy srand z procesu dziecka do rodzica to zmieni to działanie programu? Jak?
-{{< details "Odpowiedź" >}}  Procesy potomne będą losowały te same liczby ponieważ zaczynają z tym samym ziarnem, tak być nie może. {{< /details >}}
-
-- Czy można jako argument `srand`  podać `time()` zamiast `getpid()`?
-{{< details "Odpowiedź" >}}  Nie można, wywołania time() odbędą się w tej samej sekundzie wiec ziarna będą takie same, efekt taki sam jak poprzednio. {{< /details >}}
-
-- Zwróć uwagę na losowanie liczby z przedziału `[A,B]`. Niby oczywiste, ale warto opracować sobie prosty wzór.
-
-- Jak zachowa się program bez `exit`  wywołanym zaraz po `child_work` w procesie potomnym?
-{{< details "Odpowiedź" >}} Procesy potomne po zakończeniu wykonania kodu funkcji child_work przechodzą dalej w kodzie czyli wracają do pętli forkującej i tworzą własne procesy potomne, które to też mogą utworzyć swoje potomne itd. Niezły bałagan, do tego procesy dzieci nie czekają na swoje dzieci.  {{< /details >}}
-
-- Ile procesów (w sumie) zostanie utworzonych jeśli jako parametr uruchomienia podamy 3 przy założeniu, że nie ma `exit` wspomnianego w poprzednim pytaniu?
-{{< details "Odpowiedź" >}}  1 rodzic 3 potomne 1 poziomu,  3 drugiego i  1 trzeciego poziomu, w sumie 8 procesów, narysuj sobie drzewko, opisz gałęzie wartością n w momencie wykonania forka. {{< /details >}}
-
-- Co zwraca `sleep`?  Czy powinniśmy jakoś na to reagować? 
-{{< details "Odpowiedź" >}} zwraca czas "niedospany" w przypadku przerwania funkcją obsługi sygnału w tym programie proces dziecka nie dostaje sygnałów i ich nie obsługuje więc nie musimy się tym martwić. W innych programach często będziemy restartować sleep z nowym czasem spania tak aby w sumie przespać tyle ile było założone. {{< /details >}}
-
-- W kolejnym etapie dodamy czekanie i zliczanie procesów potomnych. Pytanie skąd mamy wiedzieć ile procesów potomnych w danej chwili istnieje?
-{{< details "Odpowiedź" >}} Można próbować zliczać sygnały SIGCHLD ale to zawodny sposób bo mogą się "sklejać" czyli mniej ich dostaniemy niż potomków się naprawdę zakończyło. Jedyną pewną metodą jest zliczanie udanych wywołań wait i waitpid. {{< /details >}}
-
-### Czekanie na procesy potomne
-Po zakończeniu wykonywania wszystkich swoich instrukcji proces potomny przechodzi w stan **zombie** (jego identyfikator dalej widnieje w tablicy procesów) i pozostaje w nim do momentu, aż proces rodzic odbierze informację o jego stanie (`Status Information` z `man 3p wait`). Dopiero wtedy zasoby procesu potomnego są **całkowicie zwalniane** z systemu. 
-
-Rodzic może odebrać informację o stanie wiszącego pod procesu korzystając z funkcji `wait` czekającą na dowolny proces potomny lub funkcji `waitpid`, która umożliwia określenie na które procesy potomne czekamy.
-Przyjrzyjmy się ich definicjom:
+Pozostałe dane o pliku można odczytać używając funkcji `stat` lub `lstat` z pliku nagłówkowego `<sys/stat.h>` (`man 3p fstatat`).
+Ich definicje są następujące:
 
 ```
-pid_t wait(int *stat_loc);
-pid_t waitpid(pid_t pid, int *stat_loc, int options);
+int  stat(const char *restrict path, struct stat *restrict buf);
+int lstat(const char *restrict path, struct stat *restrict buf);
 ```
+- `path` jest tutaj ścieżką do pliku,
+- `buf` jest wskaźnikiem do (wcześniej zaalokowanej) struktury typu `stat` (nie mylić z nazwą funkcji!) 
+przechowującej informacje o pliku.
 
-Jak można zauważyć, obie funkcje zwracają obiekt typu `pid_t` będący identyfikatorem procesu, o którego stanie dostaniemy informację. 
+*Manualowe* definicje argumentów funkcji często zawierają słowo kluczowe `restrict`. Jest to deklaracja
+mówiąca, że dany argument musi być blokiem pamięci rozłącznym z innymi argumentami. W takim przypadku, 
+podanie tego samego bloku pamięci (np. tego samego wskaźnika) jest poważnym błędem i może spowodować 
+SEGFAULT lub nieprawidłowe działanie programu. 
 
-Obie funkcje przyjmują argument `stat_loc` typu `int*`, który wskazuje miejsce w pamięci, do którego ma zostać zapisana informacja o odczytanym stanie procesu (jeżeli informacja ta nie będzie nam potrzebna możemy wstawić w to miejsce `NULL`).
+Jedyną różnicą w działaniu funkcji `stat` i `lstat` jest obsługa linków. `stat` zwróci informacje o pliku, do 
+którego dany link prowadzi, natomiast `lstat` zwróci informacje o samym linku. 
 
-Funkcja `waitpid` posiada dwa dodatkowe argumenty, kolejno `pid` typu `pid_t` oraz `options` typu `int`.
+Struktura `stat` zawiera m.in. informacje o rozmiarze pliku, właścicielu, czy dacie ostatniej modyfikacji. Dostępne
+są też makra sprawdzające typ pliku. Poniżej znajdują się ważniejsze przykłady takich makr:
+- Makra przyjmujące `buf->st_mode` (pole typu `mode_t`):
+   - `S_ISREG(m)` -- czy mamy do czynienia ze zwykłym plikiem,
+   - `S_ISDIR(m)` -- czy mamy do czynienia z katalogiem,
+   - `S_ISLNK(m)` -- czy mamy do czynienia z linkiem.
+- Istnieją też makra `S_TYPE*(buf)` przyjmujące sam wskaźnik `buf`, służące identyfikacji typów plików takich, jak
+semafory czy pamięć dzielona (więcej o tym będzie w przyszłym semestrze).
+Szczegóły znajdują się w manualu `man sys_stat.h`. Warto się zapoznać ze wszystkimi atrybutami struktury `stat` 
+i makrami, jest tego dość dużo.
 
- Argument `pid` określa, na które procesy chcemy czekać. Dla różnych wartości funkcja zachowuje się następująco:
-- `pid == -1` - czekamy na dowolny proces potomny.
-- `pid > 0` - czekamy na proces o identyfikatorze równym `pid`.
-- `pid == 0` - czekamy na dowolny proces należący do **grupy** procesu wywołującego.
-- `pid < -1` czekamy na dowolny proces którego identyfikator **grupy** jest równy wartości bezwzględnej `pid`.
+Po przejrzeniu katalogu należy (będąc dobrym programistą i chcąc zdać przedmiot) pamiętać o zwolnieniu zasobów 
+za pomocą funkcji `closedir`.
 
-argument `options` określa modyfikacje sposobu działania funkcji, i jest kombinacją następujących opcji:
-- `WCONTINUED` - funkcja powinna zwrócić również informacje o procesach, które zostały wznowione po zatrzymaniu.
-- `WNOHANG` - funkcja `waitpid` nie powinna zatrzymywać wywołania bieżącego procesu jeżeli żaden z procesów na które czekamy nie może natychmiast powiadomić o swoim statusie. W takiej sytuacji funkcja zwraca wartość `0`.
-- `WUNTRACED` - funkcja powinna zwrócić również informacje o procesach, które zostały zatrzymane.
-  
-W ramach laboratorium wystarczy znajomość opcji `WNOHANG`.
+### Informacje techniczne
 
-Więcej informacji można znaleźć w manualu:
-```
-man 3p wait
-```
+W celu przejrzenia całego katalogu, funkcję `readdir` należy wywoływać tyle razy, aż nie zwróci `NULL`.
+W przypadku wystąpienia błędu, zarówno `opendir`, jak i `readdir` zwracają `NULL`. Wynika z tego ważny wniosek
+w przypadku funkcji `readdir`: przed jej wywołaniem należy wyzerować zmienną `errno`, a w razie zwrócenia `NULL`
+sprawdzić, czy ta zmienna nie została ustawiona na niezerową wartość (oznaczającą błąd).
+`errno` jest zmienną globalną używaną przez funkcje systemowe do wskazania kodu napotkanego błędu.
 
-
-Podsumowując możemy traktować funkcję `waitpid` jako bardziej rozbudowaną wersję funkcji `wait` - wywołanie funkcji `wait(stat_loc)` jest równoważne wywołaniu `waitpid(-1, stat_loc, 0)`.
-
-Oczywiście obie te funkcję mogą się nie powieść, zwracają one wtedy `-1` i ustawiają odpowiednią wartość zmiennej errno. 
-
-__Uwaga:__ Jeżeli wywołamy funkcję `wait` lub `waitpid` i pula procesów potomnych na,  które możemy czekać będzie pusta funkcja zwróci `-1` i ustawi wartość zmiennej `errno` na `ECHILD`. Warto z tego skorzystać by mieć pewność że nie osierocimy żadnych procesów przed zakończeniem procesu.
+Funkcje `stat`, `lstat` i `closedir` zwracają `0` w razie sukcesu, inna wartość oznacza błąd.
 
 ### Zadanie
 
-Rozbuduj program z poprzedniego zadania o poprawne czekanie na procesy potomne.
+Napisz program zliczający: pliki, linki, katalogi i inne obiekty w katalogu roboczym (bez podkatalogów).
+
+### Rozwiązanie zadania
 
 Nowe strony z manuala:
-- `man 3p wait`
-- `man 3p waitpid`
-
-### Rozwiązanie zadania
-
-<em> rozwiązanie <b>prog13b.c</b>:</em>
-{{< includecode "prog13b.c" >}}
-
-### Uwagi i pytania
-- Koniecznie trzeba rozróżnić kiedy waitpid informuje nas o chwilowym braku zakończonych potomków (wartość zwracana zero) od permanentnego braku potomków (błąd `ECHILD`). Ten ostatni przypadek nie jest w zasadzie błędem, tę sytuację trzeba normalnie obsłużyć. 
-
-- Czemu wołamy `waitpid` w pętli?
-{{< details "Odpowiedź" >}} Nie wiemy z góry ile procesów zombie czeka, może być 0 , 1 , 2 aż do n {{< /details >}}
-
-- Czemu wołamy waitpid z flagą `WNOHANG`?
-{{< details "Odpowiedź" >}} Nie chcemy czekać nie wiadomo ile na jeszcze żyjące procesy, działamy w pętli, która co 3 sekundy ma wypisać dane {{< /details >}}
-
-- Czemu wołamy `waitpid` z pidem zero?
-{{< details "Odpowiedź" >}} Czekamy na dowolny proces potomny, nie musimy znać jego PID, zero oznacza dowolny z potomków. {{< /details >}}
-
-- Czy w tym programie występują sygnały? 
-{{< details "Odpowiedź" >}} `SIGCHLD`, nie ma f. obsługi ale to nie szkodzi, w pewnym sensie jest obsługiwany przez waitpid {{< /details >}}
-
-- Czy tym razem nie powinniśmy sprawdzać co zwraca sleep skoro są sygnały?
-{{< details "Odpowiedź" >}} Nie bo nie ma funkcji obsługi sygnału. {{< /details >}}
-
-## Sygnały
-
-Sygnały (ang. signals) są asynchronicznym mechanizmem obsługi zdarzeń w systemach operacyjnych z rodziny Unix. Umożliwiając powiadamianie procesów o wystąpieniu określonych zdarzeń systemowych, wyjątków lub żądań sterowania wykonaniem.
-
-### Wysyłanie sygnałów
-
-Do wysyłania sygnałów służy funkcja `kill`.
-```c
-#include <signal.h>
-
-int kill(pid_t pid, int sig);
 ```
-Argument `pid` określa, do którego procesu lub grupy procesów kierowany jest sygnał:
- - `pid > 0` - sygnał jest wysyłany do procesu o PID równym `pid`
- - `pid = 0` - sygnał wysyłany jest do procesów należących do grupy procesów nadawcy (nadawca również otrzymuje sygnał)
- - `pid = -1` - sygnał wysyłany do wszystkich procesów, do których nadawca ma uprawnienia (w tym do samego siebie)
- - `pid < -1` - sygnał wysyłany jest do procesów o identyfikatorze **grupy** równym co do modułu `pid`
-
-Argument `sig` specyfikuje jaki sygnał powinien być wysłany. Może on przyjmować następujące wartości:
- - jedno z makr zdefiniowanych w pliku nagłówkowym `<signal.h>` jak np. `SIGTERM`, `SIGKILL` czy `SIGUSR1`. Pełną liste można znaleźć w manualu
-  ```bash
-  man 7 signal
-  ```
- - wartość zero - w takim przypadku żaden sygnał nie zostanie wysłany, a jedynie zajdzie sprawdzenie potencjalnych błędów wykonania funkcji.
-
-Funkcja zwraca `0` w przypadku poprawnego wykonania. W przeciwnym wypadu zwracana jest wartość `-1` i ustawiana jest odpowiednia wartość zmiennej `errno`.
-
-Więcej informacji można znaleźć w manualu
-```bash
-man 3p kill
+man 3p fdopendir (tylko opis opendir)
+man 3p closedir
+man 3p readdir
+man 0p dirent.h
+man 3p fstatat (tylko opis stat i lstat)
+man sys_stat.h
+man 7 inode (pierwsza połowa sekcji "The file type and mode")
 ```
 
-### Obsługa sygnałów
-
-Każdy sygnał posiada swój domyślny sposób obsługi przez proces. Liste sygnałów i ich domyślny sposób obsługi możesz sprawdzić w manualu
-```bash
-man 7 signal
-```
-
-Sposób obsługi danego sygnału jesteśmy w stanie sprawdzić lub zmienić za pomocą funkcji
-```c
-#include <signal.h>
-
-int sigaction(int sig, const struct sigaction *restrict act, struct sigaction *restrict oact);
-```
-
-Argumenty:
- - `sig` specyfikuje jaki o jaki sygnał nam chodzi i przyjmuje wartości makr z nagłówka `<signal.h>`.
- - `act` może ustawić nowy sposób obsługi sygnału jeśli wskazuje na strukture typu `sigaction`. Jeśli wartość jest równa `NULL`, to obsługa się nie zmienia.
- - `oact` - jeśli przy wywołaniu jest ustawiony na `NULL`, to argument ten jest ignorowany. W przeciwnym wypadku struktura na którą wskazuje ten wskaźnik jest ustawiana na stary sposób obsługi sygnału (gdy `act` nie jest `NULL`em) lub aktualny (gdy `act` jest `NULL`em)
-
-Zgodnie z POSIXem struktura `sigaction` musi posiadać co najmniej następujące pola:
- - `void(*) (int) sa_handler` - wskaźnik na funkcje obsługującą sygnał lub jedna z wartości `SIG_IGN` lub `SIG_DFL`. Funkcja obsługująca musi przyjmować `int` (kod obsługiwanego sygnału) i nic nie zwracać. Makro `SIG_IGN` oznacza, że sygnał będzie ignorowany, a `SIG_DFL` domyślną obsługę sygnału.
- - `sigset_t sa_mask` - zbiór sygnałów, które będą blokowane na czas wywołania funkcji obsługującej sygnał
- - `int sa_flags` - specjalne flagi modyfikujące zachowanie sygnału
- - `void(*) (int, siginfo_t *, void *) sa_sigaction` - wskaźnik na funkcje obsługującą sygnał. Różni się od `sa_handle` przyjmowanymi argumentami. Domyślnie wywoływana jest funkcja `sa_handle`, aby to zmienić należy do `sa_flags` dodać flagą `SA_SIGINFO`.
-
-Funkcja zwraca `0` w przypadku poprawnego wykonania. W przeciwnym wypadu zwracana jest wartość `-1` i ustawiana jest odpowiednia wartość zmiennej `errno`.
-
-Należy zaznaczyć, że procesy dzieci stworzone za pomocą funkcji `fork` dziedziczą sposób obsługi sygnału.
-
-Więcej informacji można znaleźć w manualu
-```bash
-man 3p sigaction
-```
-
-### Zadanie
-
-Program przyjmuje 4 parametry pozycyjne (`n`,`k`,`p` i `r`). Tworzy `n` procesów potomnych. Proces rodzic wysyła
-naprzemiennie sygnały `SIGUSR1` i `SIGUSR2` do wszystkich procesów potomnych w pętli po odpowiednio `k` i `p` sekundach. Kończy
-się gdy kończą się wszystkie procesy potomne. Każdy proces potomny losuje czas swojego spania z przedziału 5-10 sekund a
-następnie w pętli śpi i wypisuje na ekran **SUKCES** jeśli ostatnim otrzymanym przez niego sygnałem był `SIGUSR1` lub **FAILURE**
-jeśli `SIGUSR2`. Taka pętla powtarza się `r` razy.
-
-Co student musi wiedzieć:
-- `man 7 signal`
-- `man 3p sigaction`
-- `man 3p nanosleep`
-- `man 3p alarm`
-- `man 3p memset`
-- `man 3p kill`
-
-### Rozwiązanie zadania
-
-<em>plik <b>prog14.c</b>:</em>
-{{< includecode "prog14.c" >}}
-
-Do komunikacji pomiędzy funkcją obsługi sygnału a resztą programu musimy użyć zmiennych globalnych, proszę pamiętać, że
-jest to sytuacja wyjątkowa, zmienne globalne są jako takie niepożądane oraz, co powinno być oczywiste, ale czasem się
-studentom myli - nie są współdzielone pomiędzy procesami pokrewnymi.
-
-Typ zmiennej globalnej `last_signal` nie jest przypadkowy, co więcej jest to jedyny **BEZPIECZNY i POPRAWNY** typ. Wynika to z
-asynchronicznej natury wywołania funkcji obsługi sygnału a dokładniej:
- - `volatile` oznacza wyłączenie optymizacji
-kompilatora, ważne żeby kompilator nie uznał wartości zmiennej za stałą bo jej zmiany nie wynikają z kodu i tak mogłoby
-się okazać, że czytelna dla nas pętla `while(work)` gdzie `work` jest zmienną globalną zmienia się na `while(1)` po
-optymizacji.
- - `sig_atomic_t` oznacza największy typ numeryczny, który jest przetwarzany w pojedynczej instrukcji
-CPU. Jeśli weźmiemy większy typ numeryczny przerwanie obsługą sygnału może zakłócić wartość wynikową nawet dla przykładowego prostego
-porównania `a==0` o ile przerwanie wypadnie w trakcie porównania i zmieni już porównane bajty.
-
-Z powyższego wynika, że nie przekazujemy pomiędzy funkcją obsługi a głównym kodem nic poza prostymi liczbami, stanami.
-Do tego dochodzi dobra praktyka nie przerywania programu na zbyt długo co pozostawia nam bardzo mało poprawnych,
-przenośnych i bezpiecznych rozwiązań w kwestii jak dzielić logikę programu pomiędzy główny kod a funkcję obsługi
-sygnału. Najprostsza zasada aby funkcje obsługi były ekstremalnie krótkie (przypisanie, inkrementacja zmiennej itp) a
-cała logika pozostała w głównym kodzie jest najlepsza.
-
-Funkcja `memset` bywa konieczna a zazwyczaj jest użyteczna przy inicjowaniu nie w pełni znanych nam struktur. W tym przypadku POSIX wyraźnie mówi, że struktura `sigaction` może zawierać więcej pól niż jest to wymagane przez standard. W takim przypadku te dodatkowe pola, których wartości nie ustawilibyśmy (tutaj zzerujemy za pomocą `memset`) mogą skutkować różnym działaniem na różnych systemach, a nawet różnym zachowaniem po między wywołaniami programu.
-
-Czy podczas obsługi sygnału `SIGCHLD` można się spodziewać więcej niż jednego zakończonego procesu dziecka?
-{{< details "Odpowiedź" >}}  Tak, sygnały mogą się skleić, dziecko może się zakończyć akurat w trakcie obsługi `SIGCHLD`. Stąd pętla w funkcji obsługi tego. {{< /details >}}
-
-Czy podczas obsługi sygnału `SIGCHLD` można się spodziewać braku zakończonego procesu dziecka? Zerknij na zakończenie main.
-{{< details "Odpowiedź" >}}  Tak, `wait` na końcu main może "podkradać" te czekające zombie tj. wywoła się poprawnie `wait` zanim wykona się funkcja obsługi.  {{< /details >}}
-
-Pamiętaj o możliwym **KONFLIKCIE** `sleep` i `alarm` - wg. POSIX `sleep` może używać w implementacji `SIGALRM` a nie ma jak
-zagnieżdżać sygnałów, nigdy zatem w kodzie oczekującym na alarm nie używamy `sleep`, można za to użyć `nanosleep` tak jak w kodzie powyżej.
-
-W wysyłaniu sygnałów (`kill`) pojawia się jako PID zero, dzięki temu nie musimy znać pidów procesów potomnych ale też wysyłamy sygnał sami do siebie!
-
-Miejsca ustawienia obsługi sygnałów i ich blokowania w tym programie są bardzo ważne, zwróć uwagę jak to działa i
-odpowiedz na pytania poniżej. Pamiętaj aby zawsze dobrze przemyśleć kolejność tych ustawień w swoim programie, z tym
-jest związanych sporo błędów w pracach studentów!
-
-Zwróć uwagę na `sleep`, czemu jest w pętli? Czy czas spania jest/mógłby być dokładny?
-{{< details "Odpowiedź" >}}  sleep jest przerywane przez obsługę sygnału, zatem restart jest konieczny. Ponieważ sleep zwraca pozostały czas spania w sekundach to z uwagi na zaokrąglenia nie można po restarcie uzyskać dokładnego czasu spania.   {{< /details >}}
-
-Jaka jest domyślna dyspozycja znakomitej większości sygnałów (w tym `SIGUSR1` i `SIGUSR2`)?
-{{< details "Odpowiedź" >}} Zabicie procesu do którego wysyłamy, w tym programie brak reakcji (funkcji obsługi), blokowania lub ignorowania sygnałów SIGUSR1 i SIGUSR2 skutkowałoby przedwczesnym zabiciem procesów. {{< /details >}}
-
-Jaka jest konsekwencja wysyłana przez proces rodzic sygnałów `SIGUSR1`/`2` do całej grupy procesów?
-{{< details "Odpowiedź" >}} Proces rodzic musi jakoś reagować na te sygnały mimo, że nie są one mu potrzebne do pracy, zatem je ignoruje. {{< /details >}}
-
-Co by się stało, gdyby nie było włączone ignorowanie `SIGUSR1` i `SIGUSR2` w procesie rodzicu?
-{{< details "Odpowiedź" >}} Proces rodzic zabiłby się pierwszym wysyłanym sygnałem. {{< /details >}} 
-
-Czy można przesunąć ustawienie ignorowania sygnałów za funkcję `create_children`? Procesy potomne przecież nie potrzebują tego ignorowania, mają od razu po starcie ustawianą funkcję obsługi? 
-{{< details "Odpowiedź" >}} Nie można, mogłoby się zdarzyć (choć rzadko), że procesy potomne zostałyby tylko utworzone (a nie zaczęte) a przydział CPU po tym utworzeniu przeszedłby do procesu rodzica. który zdążyłby wysłać sygnał SIGUSR1 do dzieci. Kolejny przydział CPU do procesu dziecka/dzieci spowodowałby najpierw obsługę sygnału a to oznaczałoby zabicie! {{< /details >}}
-
-Czy można jakoś zmienić ten program tak aby wykluczyć ignorowanie sygnałów `SIGUSR1` i `SIGUSR2`?
-{{< details "Odpowiedź" >}} Ten akurat program może mieć identyczną reakcję na te sygnały w rodzicu i potomkach, można zatem ustawić obsługę od razu w procesie rodzicielskim przed fork. {{< /details >}}
-
-A co się stanie jeśli za fork  przeniesiemy obsługę `SIGCHLD`? 
-{{< details "Odpowiedź" >}} Jeśli jeden z procesów potomnych "umrze" zanim włączymy tą obsługę to będzie on "zombie" aż do momentu gdy kolejny z podprocesów się zakończy. Nie jest to bardzo duży błąd ale warto i na takie zwracać uwagę. {{< /details >}}
-
-Pytanie, czy wait na końcu main jest potrzebny? Przecież i tak funkcja `parent_work()` powinna działać co najmniej tyle czasu co najdłuższy z podprocesów?
-{{< details "Odpowiedź" >}} Wyliczenie czasu w pętli rodzica nie wystarczy, w obciążonym systemie możliwe są dowolnie długie opóźnienia, bez `wait` powstaje zatem tzw. race condition - kto się pierwszy zakończy rodzic czy potomne procesy. {{< /details >}}
-
-## Czekanie na sygnał
-
-Często podczas pisania programów natkniemy sie na sytuację, w której proces, zanim wykona prace musi zostać poinformowany o tym, że inny proces zakończył swoje zadanie.
-Jak się pewnie domyślasz, ten problem można łatwo rozwiązać z wykorzystaniem __sygnałów__. Inspirując się poprzednim zadaniem, moglibyśmy napisać logikę, która opiera się na tym, że nasz proces
-śpi w pętli i sprawdza, czy ostatni otrzymany przez niego sygnał to ten, na który czeka. Niestety nie dość, że to rozwiązanie jest nieeleganckie, to jeszcze jest __niepoprawne__ - mogło by dojść do sytuacji że sygnał na który czekamy zostanie "sklejony" z innym sygnałem i tak naprawdę nigdy nie dowiedzielibyśmy się, że nasz proces może rozpocząć pracę.
-Na szczęście system operacyjny dostarcza nam narzędzia, które pozwalają rozwiązać ten problem.
-
-Aby zablokować program do momentu, gdy otrzyma on sygnał będziemy używać funkcji `sigsuspend`. Przyjrzyjmy się jej definicji:
-
-```
-int sigsuspend(const sigset_t *sigmask);
-```
-
-Jak możemy zauważyć funkcja ta zwaraca wartość typu `int` służącą do powiadomienia o potencjalnym błędzie, zwracane wtedy jest `-1`. Przyjmuje argument `sigmask` typu `const sigset_t *` jest to wskaźnik na zbiór sygnałów, na które funkcja będzie czekać. 
-
-Działanie tej funkcji jest następujące: ustawia ona maskę sygnałów na tę podaną w argumencie, czeka na przechwycenie jednego z tych sygnałów, po czym przywraca poprzednią maskę sygnałów i wznawia wykonywanie procesu.
-
-Więcej informacji można znaleźć w manualu:
-```
-man 3p sigsuspend
-```
-
-### Zarządzanie maską sygnałów
-
-Zbiór sygnałów będziemy nazywać maską sygnałów. Maskę sygnałów będziemy przechowywać jako obiekt o typie `sigset_t`. Standard nie określa w jaki sposób ma być zaimplementowany ten typ, może być to zarówno `int`, jak i struktura. 
-W celu modyfikacji maski sygnałów będziemy używac funkcji `sigsemptyset`, inicjalizującej maskę jako zbiór pusty, oraz `sigaddset` ,dodającej sygnał do maski. 
-Przyjrzyjmy się ich definicjom:
-
-```
-int sigemptyset(sigset_t *set);
-int sigaddset(sigset_t *set, int signo);
-```
-
-Jak możemy zauważyć, obie funkcje przyjmują jako pierwszy argument `set` typu `sigset_t *`, jest to wskaźnik na maskę, którą chcemy edytować. 
-funkcja `sigaddset` dodatkowo przyjmuje argument `signo` będący kodem sygnału, który chcemy dodać do maski.
-
-Obie funkcje zwracają wartość typu int, służącą do sygnalizacji przebiegu operacji: w razie sukcesu zwracają `0`, a w razie błędu `-1`, ustawiając odpowiednią wartość zmiennej `errno`.
-
-Więcej informacji znajdziesz w manualu:
-```
-man 3p sigaddset
-man 3p sigemptyset
-```
-
-### Zmiana maski sygnałów
-
-Skoro już zdefiniowaliśmy nową maskę sygnałów, chcielibśmy sprawić, by wpłynęła ona na działanie naszego procesu. 
-W tym celu będziemy używać funkcji `sigprocmask`, która określa, w jaki sposób zdefiniowana przez nas maska sygnałów ma wpłynąć na aktualaną maskę sygnałów procesu.
-Przyjrzyjmy się jej definicji:
-```
-int sigprocmask(int how, const sigset_t *restrict set,
-           sigset_t *restrict oset);
-```
-
-Jak możemy zauważyć funkcja ta przyjmuje kolejno argumenty:
-- `how` typu `int` określa w jaki sposób nowa maska ma wpłynąć na aktualną maskę. Dostępne opcje:
-  - `SIG_BLOCK` - wynikowa maska sygnałów jest sumą zbiorów maski wskazanej przez `set` i aktualnej maski sygnałów (określamy jakie sygnały chcemy __dodać__ do maski).
-  - `SIG_SETMASK` - wynikowa maska sygnałów jest maską sygnałów wskazywaną przez `set`.
-  - `SIG_UNBLOCK` - wynikowa maska sygnałów jest przecięciem aktualnej maski i dopełnieniem zbioru maski wskazanej przez `set` (Określamy jakie sygnały chcemy __usunąć__ z maski).
-
-- `set` typu `const sigset_t` to wskaźnik na maskę, na podstawie której chcemy modyfikować poprzednią maskę.
-- `oset` typu `sigset_t *` jest wskaźnikiem na obiekt do którego chcemy zapisać maskę sygnałów sprzed edycji.
-
-Więcej informacji znajdziesz w manualu:
-```
-man 3p pthread_sigmask
-```
-
-### Zadanie
-Napisz program, który tworzy jeden pod-proces, który co określony parametrami czas (w mikrosekundach) wysyła do procesu rodzica
-`SIGUSR1`, co n-ty raz (określony parametrami) wysyła `SIGUSR2`. Proces rodzic czeka na otrzymanie sygnału `SIGUSR2`. Oba
-procesy zliczają i wypisują na bieżąco ilości wysłanych/odebranych `SIGUSR2`. Używamy część funkcji z poprzedniego
-zadania.
-
-Nowe strony z manuala
-- man 3p sigsuspend
-- Opis metod czekania na sygnał w glibc <a href="http://www.gnu.org/software/libc/manual/html_node/Waiting-for-a-Signal.html#Waiting-for-a-Signal"> tutaj</a>
-- man 3p pthread_sigmask (tylko opis sigprocmask)
-- man 3p sigaddset
-- man 3p sigemptyset
-
-### Rozwiązanie zadania
-
-<em>rozwiązanie, plik <b>prog15.c</b>:</em>
-{{< includecode "prog15.c" >}}
+rozwiązanie `l1-1.c`:
+{{< includecode "l1-1.c" >}}
 
 ### Uwagi i pytania
 
-- Program działa aż do `SIGINT` (`C-c`)
+- Uruchom ten program w katalogu, w którym nie ma żadnych podkatalogów, czy wyniki zgadzają się z tym czego oczekujemy tj. zero katalogów i, ewentualnie, pliki?
+{{< answer >}} 
+Nie, są dwa katalogi, program policzył katalogi `.` i `..`. Każdy katalog ma *hardlinka* na samego siebie (`.`) i katalog nadrzędny (`..`). 
+{{< /answer >}}
 
-- Uruchom z różnymi parametrami, z małą przerwą w mikrosekundach i częstymi `SIGUSR2` różnica w licznikach powinna wzrastać
-szybciej niż gdy te parametry są większe. Za chwilę wyjaśni się skąd te błędy. Jeśli nie obserwujesz błędów spróbuj dać
-programowi trochę więcej czasu na działanie, około minuty powinno dać już różne wyniki.
+- Jak utworzyć link symboliczny do testów? 
+{{< answer >}} 
+```shell
+ln -s prog9.c prog_link.c
+```
+{{< /answer >}}
 
-- Program jest celowo napisany tak, aby występowały pewne problemy, można go lepiej napisać i je wyeliminować, proszę miej
-to na względzie kopiując rozwiązania z tego kodu!
+- Przeczytaj `man readdir`. Jakie pola zawiera struktura opisująca obiekt w systemie plików (`dirent`) w Linuksie? 
+{{< answer >}} 
+Identyfikator, nazwę i 3 inne pola nie objęte standardem.
+{{< /answer >}}
 
-- Zwróć uwagę na `getppid`, niby oczywiste ale widziałem prace gdzie studenci przekazywali pid rodzica do procesu potomnego.
+- Tam, gdzie implementacja Linuksa odbiega od standardu, trzymamy się zawsze standardów, to powoduje większą przenośność
+naszego kodu pomiędzy różnymi Unixami.
 
-- Oczekiwanie na sygnał poprzez sigsuspend jest bardzo ważną technika, którą musisz rozumieć, dobrze omawia to
-dokumentacja GNU podlinkowana powyżej. Pamiętaj, że zasada jest taka, blokujemy oczekiwane sygnały w całej pętli (
-większej części programu) i przywracamy ich dochodzenie tylko wtedy gdy możemy czekać czyli właśnie w wywołaniu
-sigsuspend. Mamy zatem w programie dobrze określone momenty w których obsługujemy sygnały, to spore ułatwienie.
+- Zwróć uwagę na sposób obsługi błędów funkcji systemowych, zazwyczaj robimy to tak: `if(fun()) ERR()` (makro `ERR` było już
+omawiane wcześniej). Wszystkie funkcje mogące sprawiać kłopoty (w szczególności, prawie wszystkie funkcje systemowe) 
+należy sprawdzać. Większość błędów, jakie napotkamy, będzie wymagać zakończenia programu. Wyjątki omówimy w kolejnych tutorialach.
 
-- Jeśli funkcje obsługujące sygnały mogą być wykonywane tylko w czasie nieaktywności programu głównego (czyli jak w tym
-przykładzie) można nieco rozluźnić zasady tego co wolno przekazywać przez zmienne globalne, oraz te dotyczące długości i
-czasu ich działania.
+- Zwróć uwagę na użycie katalogu `.` w kodzie, nie musimy znać aktualnego katalogu roboczego, tak jest prościej.
 
-- Który licznik jest niepoprawny, ten w procesie dziecka czy rodzica?
-{{< details "Odpowiedź" >}} To musi być ten który jest mniejszy, nie mamy w tym kodzie możliwości zliczania nieistniejących sygnałów, możemy tylko gubić te wysłane. Gubić może oczywiście tylko odbiorca. Problem jest w procesie rodzica. {{< /details >}}
+- Zwróć uwagę, że `errno` jest zerowane w pętli bezpośrednio przed wywołaniem `readdir`, a nie np. raz przed pętlą oraz na to, że w
+razie zwrócenia `NULL` przez `readdir`, sterowanie przechodzi jeszcze przez dwa proste warunki, zanim dojdzie do sprawdzenia
+`errno` i rozpoznania błędu.
 
-- Pytanie czemu liczniki się różnią ? 
-{{< details "Odpowiedź" >}} 1. sklejanie sygnałów ale to ma mały wpływ, 2.  fakt, że sigsuspend NIE GWARANTUJE WYKONANIA MAKSYMALNIE JEDNEJ OBSŁUGI SYGNAŁU! To częsty błąd w rozumowaniu! Zaraz po wywołaniu obsługi SIGUSR2 jeszcze w obrębie jednego wykonania sigsuspend następuje obsługa SIGUSR1, zmienna globalna jest nadpisywana i proces rodzic nie ma szansy zliczyć SIGUSR2!!! {{< /details >}}
+- Dlaczego w ogóle zerujemy `errno`? Czy funkcja `readdir` nie mogłaby robić tego za nas? No właśnie *mogłaby* (dokładnie tak
+definiuje to standard), funkcje systemowe mogą zerować `errno` w razie poprawnego wykonania, ale nie muszą.
 
-- Jak uruchomić ten program aby zminimalizować szansę na sklejanie się `SIGUSR2` i jednocześnie obserwować  różnice w licznikach?
-{{< details "Odpowiedź" >}} Uruchomić dla małych czasów i dużych ilości SIGUSR1 między SIGUSR2, teraz jest prawie zerowa szansa na sklejenie SIGUSR2, za to duża na wykonanie wiele razy funkcji obsługi sygnału w obrębie jednego sigsuspend {{< /details >}}
+- Jeśli chcemy w warunkach logicznych w C dokonywać przypisań, to powinniśmy ująć całe przypisanie w nawiasy. Wartość
+przypisywana będzie wtedy uznana za wartość wyrażenia w nawiasie. Robimy tak w przypadku wywołania `opendir` oraz `readdir`.
 
-- Popraw powyższy program tak aby wyeliminować problem wielu wywołań obsługi sygnału w obrębie jednego `sigsuspend` 
-{{< details "Odpowiedź" >}} Można to zrobić np. dodając drugą zmienną globalną tylko do obsługi SIGUSR2, zwiększanie zmiennej count też można przenieść do funkcji obsługi sygnału w ten sposób uniknie się potencjalnego problemu z obsługą dwóch SIGUSR2  w obrębie jednego sigsuspend. Trzeba jeszcze przebudować kod związany z wypisywaniem zmienionego licznika count w rodzicu i gotowe. {{< /details >}}
+## Katalog roboczy
 
-## Operacje niskopoziomowe na plikach, a sygnały
+Program z poprzedniego zadania umożliwiał skanowanie zawartości tylko katalogu, w którym został uruchomiony. 
+Dużo lepsza byłaby możliwość wyboru, jaki katalog należałoby zeskanować. Widzimy, że wystarczyłoby w tym celu podmienić
+argument funkcji `opendir` na ścieżkę podaną np. w parametrze pozycyjnym. Nie będziemy jednak chcieli modyfikować funkcji `scan_dir`, aby przedstawić sposób na wczytanie i zmianę katalogu roboczego z poziomu kodu programu.
 
-W tej części tutoriala na samym początku pokażemy z jakimi problemami można się spotkać przy okazji operacji na plikach przy jednoczesnej obsłudze sygnałów, a następnie pokażemy jak możemy sobie z nimi radzić.
+Operacje na katalogu roboczym umożliwiają funkcje `getcwd` i `chdir`, dostępne po dołączeniu pliku nagłówkowego `<unistd.h>` (`man 3p getcwd`, `man 3p chdir`). 
+Ich deklaracje, według standardu, są następujące:
+
+```
+char *getcwd(char *buf, size_t size);
+```
+- `buf` jest wcześniej zaalokowaną tablicą znaków, do której zostanie zapisana **bezwzględna** ścieżka do katalogu roboczego.
+Tablica ta powinna mieć długość co najmniej `size`,
+- funkcja zwraca `buf` w przypadku sukcesu. W razie niepowodzenia, zwracany jest `NULL`, a `errno` ustawiane jest na odpowiednią
+wartość.
+
+```
+int chdir(const char *path);
+```
+- `path` jest ścieżką do nowego katalogu roboczego (może być względna lub bezwzględna),
+- tak jak wiele funkcji systemowych zwracających `int`, funkcja `chdir` zwraca `0` w przypadku sukcesu i inną wartość w razie niepowodzenia.
 
 ### Zadanie
 
-Zmodyfikować poprzedni program tak, aby proces rodzic odbierał sygnały `SIGUSR1` wysyłane co zadany czas (parametr `1`) i zliczał je.  Dodatkowo proces główny tworzy plik o nazwie podanej jako parametr 4 o zadanej ilości bloków o zadanym rozmiarze (parametry 2 i 3). Zawartość pliku ma pochodzić z /dev/urandom. Każdy blok kopiujemy osobno, kontrolując rozmiary. Po skopiowaniu bloku należy podać na stderr realną ilość przepisanych bloków oraz stan liczników sygnałów.
+Bazując na funkcji z poprzedniego zadania, napisz program, który będzie zliczał obiekty we wszystkich folderach
+podanych jako parametry pozycyjne programu.
+
+### Rozwiązanie zadania
+
+Nowe strony z manuala:
+```
+man 3p getcwd
+man 3p chdir
+```
+
+rozwiązanie `l1-2.c`:
+{{< includecode "l1-2.c" >}}
+
+### Uwagi i pytania
+
+- Sprawdź, jak program zachowa się w przypadku: 
+   - nieistniejących katalogów, 
+   - katalogów, co do których nie masz prawa dostępu, 
+   - czy poprawnie poradzi sobie ze ścieżkami zarówno względnymi, jak i bezwzględnymi, podawanymi jako parametr.
+
+- Dlaczego program pobiera i zapamiętuje aktualny katalog roboczy?
+{{< answer >}}
+Jest to rozwiązanie przypadku, w którym użytkownik poda kilka ścieżek względnych jako parametry, np. 
+`l1-2 dir1 dir2/dir3`. Program z rozwiązania zmienia katalog roboczy na docelowy przed wywołaniem skanowania. 
+Gdybyśmy zatem po sprawdzeniu katalogu nie wracali każdorazowo do katalogu początkowego,
+próbowalibyśmy odwiedzić najpierw folder `./dir1/` (to jeszcze poprawne), a następnie `./dir1/dir2/dir3/` zamiast 
+przewidywanego `./dir2/dir3/`.
+{{< /answer >}}
+
+- Czy prawdziwe jest stwierdzenie, że program powinien "wrócić" do tego katalogu w którym był uruchomiony?
+{{< answer >}}
+Nie, katalog roboczy to właściwość procesu. Jeśli proces-dziecko zmienia swój CWD, to nie ma to wpływu na proces-rodzic,
+zatem nie ma obowiązku ani potrzeby wracać.
+{{< /answer >}}
+
+- W tym programie nie wszystkie błędy muszą zakończyć się wyjściem: który można inaczej obsłużyć i jak?
+{{< answer >}}
+Chodzi o błędy funkcji `chdir`: może się np. zdarzyć sytuacja, w której użytkownik poda nieistniejący katalog.
+Najprostsze rozwiązanie to `if(chdir(argv[i])) continue;`, można by jednak dodać jakiś komunikat.
+{{< /answer >}}
+
+- Nigdy i pod żadnym pozorem nie pisz `printf(argv[i])`! Jeśli ktoś poda jako katalog `%d` to jak to wyświetli `printf`?
+To dotyczy nie tylko argumentów programu, ale dowolnych ciągów znaków.
+
+## Przeglądanie katalogów i podkatalogów (rekursywne)
+
+Gdyby zaszła potrzeba odwiedzenia nie tylko danego katalogu, ale całego poddrzewa katalogów, rozwiązanie bazujące na funkcji
+`opendir` byłoby dość kłopotliwe. Są za to dostępne funkcje `ftw` i `nftw` obecne w pliku nagłówkowym `<ftw.h>`, które przechodzą
+całe drzewo katalogów, startując z podanego katalogu, i wywołują na każdym z odwiedzonych katalogów i plików pewną funkcję.
+Opisana zostanie tutaj tylko funkcja `nftw`, ponieważ `ftw` jest oznaczona jako przestarzała i nie powinna być używana. Deklaracja
+funkcji `nftw` jest następująca:
+
+```
+int nftw(const char *path, int (*fn)(const char *, const struct stat *, int, struct FTW *), int fd_limit, int flags);
+```
+- `path` oznacza ścieżkę do katalogu, od którego zacznie się przeszukanie,
+- `fn` to **wskaźnik na funkcję** przyjmującą cztery argumenty:
+   - pierwszy: typu `const char*`, w którym znajdzie się ścieżka do rozważanego pliku/katalogu,
+   - drugi: typu `const struct stat*`, zawierający wskaźnik na strukturę `stat`, która została omówiona we wcześniejszej części tutoriala,
+   - trzeci: typu `int`, zawierający dodatkową informację. Może ona przyjąć jedną z ustalonych wartości (patrz `man 3p nftw`), z czego ważniejsze
+   to: 
+      - `FTW_D`: odwiedzono katalog,
+      - `FTW_F`: odwiedzono plik,
+      - `FTW_SL`: odwiedzono link,
+      - `FTW_DNR`: odwiedzono katalog, którego nie można było otworzyć.
+   - czwarty: typu `struct FTW *`, zawierający wskaźnik na strukturę, której pole `level` informuje, jak głęboko aktualnie jesteśmy 
+   w drzewie przeszukania, a pole `base` zawiera indeks znaku w ścieżce (obecnej w pierwszym argumencie), 
+   który rozpoczyna właściwą nazwę pliku, np. dla ścieżki `/usr/bin/cat` tą wartością byłoby `9`.
+
+    Funkcja ta jest wywoływana dla każdego odwiedzonego pliku i katalogu, można ją traktować jako pewnego rodzaju callback.
+W funkcji `fn` powinniśmy zwykle zwrócić `0`, jeśli zwrócimy coś innego, `nftw` natychmiast zakończy działanie i zwróci też tę wartość
+(to można także wykorzystać jako sygnalizację błędu).
+- `fd_limit` oznacza maksymalną liczbę deskryptorów użytych przez `nftw` podczas przeszukania drzewa. Na każdy poziom drzewa katalogów
+używany jest co najwyżej jeden deskryptor, zatem podana wartość jest też dolnym ograniczeniem na głębokość drzewa, do której dojdzie przeszukanie,
+- `flags` oznacza flagi modyfikujące działanie funkcji, z czego ciekawsze to:
+   - `FTW_CHDIR`: zmienia katalog roboczy na aktualnie przeglądany katalog w trakcie wykonywania funkcji,
+   - `FTW_DEPTH`: przeszukanie w głąb (domyślnie `nftw` przeszukuje wszerz),
+   - `FTW_PHYS`: jeśli obecna, odwiedzane będą linki same w sobie, domyślnie odwiedzane są pliki, do których link prowadzi.
+Flagi te można łączyć ze sobą operatorem logicznym `|`.
+
+Manual (`man 3p nftw`) zawiera bardziej szczegółowe informacje i wszystkie możliwe wartości, jakie mogą być przekazane
+lub napotkane w trakcie wykonywania `nftw`.
+
+### Zadanie
+
+Napisz program zliczający wystąpienia plików, katalogów, linków i innych typów dla całych poddrzew zaczynających
+się w podanych jako parametry folderach.
+
+### Rozwiązanie zadania
+
+Nowe strony z manuala:
+```
+man 3p ftw
+man 3p nftw
+```
+
+rozwiązanie `l1-3.c`:
+{{< includecode "l1-3.c" >}}
+
+### Uwagi i pytania
+
+- Jeśli definicja funkcji `nftw` lub użycie `walk` w rozwiązaniu są dla Ciebie niezrozumiałe, 
+powtórz koniecznie, co to są i jak działają wskaźniki na funkcje w C.
+
+- Sprawdź, jak program sobie radzi z niedostępnymi i nieistniejącymi katalogami.
+
+- W jakim celu użyta jest flaga `FTW_PHYS`?
+{{< answer >}} 
+Bez tej flagi, `nftw` przechodzi przez linki symboliczne do wskazywanych obiektów, czyli nie może ich zliczać, 
+analogicznie jak `stat`. 
+{{< /answer >}}
+
+- Dlaczego w przypadku gdy typ pliku zgłaszany przez `nftw` to `FTW_F` robimy dodatkowe sprawdzenie `S_ISREG` na strukturze `stat`?
+{{< answer >}} 
+Zgodnie z dokumentacją `FTW_F` oznacza tylko, że dany plik nie jest katalogiem (ani dowiązaniem w przypadku użycia `FTW_PHYS`).
+{{< /answer >}}
+
+- Sprawdź, jak inne flagi modyfikują zachowanie `nftw`.
+
+- Deklaracja `_XOPEN_SOURCE` jest na Linuksie niezbędna, inaczej nie widzi deklaracji funkcji `nftw` (ważna jest kolejność,
+deklaracja przed `include`). Funkcję `ftw` oznaczono już jako przestarzałą i nie powinno się jej używać.
+
+- Zmienne globalne to "zło wcielone", zbyt łatwo ich użyć, a przychodzi za to zapłacić przy analizowaniu cudzego kodu lub
+podczas przenoszenia funkcji z jednego projektu do drugiego. Tworzą one niejawne zależności w kodzie. Tutaj (niestety) musimy
+ich użyć, ponieważ funkcja callback `nftw` nie pozwala nic przekazać na zewnątrz inaczej, niż przez zmienną globalną. To jest
+wyjątkowa sytuacja, używanie zmiennych globalnych, poza wskazanymi koniecznymi przypadkami, jest na laboratoriach zabronione!
+
+- Bardzo przydatna jest możliwość nałożenia limitu otwieranych przez `nftw` deskryptorów, co prawda może to uniemożliwić
+przeskanowanie bardzo głębokiego drzewa katalogów (głębszego niż limit), ale pozwala to nam zarządzać zasobami, które
+mamy. W zakresie deskryptorów, maksima systemowe pod Linuksem są nieokreślone, ale można oddzielnie limitować procesy na
+poziomie administracji systemem.
+
+## Operacje na plikach
+
+Duża część programów wchodzi w interakcję z plikami na dysku. Najprostszym sposobem którym można to zrealizować jest:
+1. Otwarcie (stworzenie) za pomocą `fopen` (`man 3p fopen`),
+2. Ustawienie kursora pliku z `fseek` (`man 3p fseek`),
+3. Wpisanie danych `fprintf`, `fputc`, `fputs`, `fwrite` lub wczytanie ich `fscanf`, `fgetc`, `fgets`, `fread`
+4. Powtórzenie kroków 2.-3. w miarę potrzeby,
+5. Zamknięcie pliku `fclose` (`man 3p fclose`).
+
+Potrzebne funkcje znajdziemy w nagłówku `<stdio.h>`.
+```
+FILE *fopen(const char *restrict pathname, const char *restrict mode);
+```
+- `pathname` oznacza ścieżkę otwieranego pliku,
+- `mode` to tryb w którym chcemy go otworzyć. String trybu może wyglądać w następujący sposób, co może dawać różne możliwości manipulacji plikiem:
+   - `r` - plik udostępnia czytanie danych,
+   - `w` lub `w+` - plik zostaje skrócony do zera (lub stworzony) i udostępnia pisanie danych,
+   - `a` lub `a+` - plik udostępnia dopisywanie danych do końca jego istniejącej treści.
+   - `r+` - plik udostępnia czytanie oraz pisanie danych.
+
+Do każdego z trybów możemy dodać na koniec `b`, co w standardzie UNIX nic nie zmieni w deskryptorze który otrzymamy. Jest to opcja utrzymywana dla kompatybilności ze standardem C.
+
+Funkcja ta zwraca wskaźnik do wewnętrznej struktury `FILE`, która pozwala na kontrolowanie strumienia powiązanego z otwartym przez nią plikiem. Zgodnie z mądrością komentarza umieszczonego w jednej z implementacji `FILE` `<stdio.h>` przez Pedro A. Aranda Gutiérreza:
+
+>\* Some believe that nobody in their right mind should make use of the\
+>\* internals of this structure.
+
+nie będziemy się przyglądać temu co jest wewnątrz. Budowa tej struktury zależy od konkretnej implementacji systemu, więc zwykle traktujemy ją jako typ nieprzejrzysty, nie ustawiamy ani nie odczytujemy z niej bezpośrednio jej pól. Przechowujemy wyłącznie wskaźnik i używamy go poprzez wywoływanie na nim różnych funkcji.
+
+Funkcja `fseek` przyjmuje wskaźnik `FILE` i pozwala nam przesunąć się na odpowiednie miejsce w pliku. Wyjątkiem jest plik otwarty w trybie "a" - append, który niezmiennie wskazuje na koniec treści niezależnie od wywołań `fseek`. Poza tym przypadkiem, tuż po otwarciu, kursor pliku wskazuje na pierwszy bajt.
+
+```
+int fseek(FILE *stream, long offset, int whence);
+```
+- `stream` jest wyżej wymienionym identyfikatorem strumienia pliku,
+- `offset` określa liczbę bajtów o którą chcemy się przesunąć,
+- `whence` mówi o tym jaki punkt odniesienia powinniśmy przyjąć w momencie przesunięcia. Może przyjmować następujące wartości:
+   - SEEK_SET - punktem odniesienia jest początek pliku, funkcja ustawia kursor pliku na `offset`-ym bajcie pliku.
+   - SEEK_CUR - przesunięcie relatywne do obecnego kursora pliku, funkcja ustawia kursor o `offset` bajtów do przodu (do tyłu w przypadku wartości ujemnej).
+   - SEEK_END - punktem odniesienia jest koniec pliku. Kursor pliku będzie wskazywał na dane tylko jeśli wartość `offset` jest ujemna.
+      - Dla wartości `offset` równej `0` kursor pliku ustawiony jest na bajt po ostatnim bajcie pliku. Odczytanie pozycji kursora funkcją `ftell` podaje wtedy dokładny rozmiar pliku w bajtach. Operacja ta pozwala programiście zaalokować dokładną ilość bajtów która będzie potrzebna na wczytanie całego pliku.
+
+Kiedy ustawimy kursor pliku na pożądaną pozycję, możemy zacząć wczytywać dane z pliku lub je do niego zapisywać. Funkcje `fprintf` oraz `fscanf` działają analogicznie do dobrze znanych wszystkim funkcji działających na standardowym wejściu - `printf` oraz `scanf`. Pozostałe funkcje na początku mogą wydawać się mniej użyteczne, chociaż w szczególności `fread` (`man 3p fread`) w praktyce stanowczo przewyższa częstością użycia swojego kuzyna `fscanf`. Własnoręczna implementacja konwersji danych z pliku na wartości o docelowych typach danych daje znacznie większą kontrolę niż implementacje biblioteczne.
+```
+size_t fread(void *restrict ptr, size_t size, size_t nitems, FILE *restrict stream);
+```
+- `ptr` - bufor w który będą zapisywane dane,
+- `size` - rozmiar nieprzerwanych elementów do wczytania,
+- `nitems` - liczba elementów do wczytania,
+- `stream` - wskaźnik pozyskany z `fopen`.
+
+Zwrócona wartość oznacza liczbę elementów wczytanych z sukcesem. Będzie ona mniejsza niż `nitems` w przypadku błędu lub zakończenia pliku. Można pomyśleć że podział wczytanych danych na elementy jest niepotrzebną komplikacją, ale daje to pewną korzyść w przypadku gdy wczytywany plik składa się z pewnych rekordów których nie chcemy przerywać w połowie (np. 4-bajtowe zmienne całkowitoliczbowe `int`). W przypadku niepełnego odczytu nie musimy obliczać ile obiektów wczytaliśmy poprawnie ani cofać kursora pliku aby wczytać niepełny rekord jeszcze raz. W momencie gdy pierwsze wywołanie zwróciło `n` wystarczy wywołać funkcję jeszcze raz z przesuniętym buforem `ptr+size*n` oraz liczbą elementów `nitems-n`.
+
+Należy pamiętać, żeby po zakończeniu działaniu na danym pliku zwolnić używane zasoby przy użyciu funkcji `fclose`.
+
+W przypadku gdy potrzebujemy usunąć plik należy wywołać `unlink` (`man 3p unlink`). Jeżeli jakiś proces (w tym nasz) wciąż otwiera `unlink`-owany przez nas plik, jest on usunięty z systemu plików, lecz istnieje wciąż w pamięci. Jest on ostatecznie usunięty w momencie gdy ostatni używający proces go zamknie.
+
+### Zadanie
+
+Napisać program tworzący nowy plik o podanej parametrami nazwie (-n NAME), uprawnieniach (-p OCTAL ) i rozmiarze (
+-s SIZE). Zawartość pliku ma się składać w około 10% z losowych znaków [A-Z], resztę pliku wypełniają zera (znaki o
+kodzie zero, nie '0'). Jeśli podany plik już istnieje, należy go skasować.
+
+### Rozwiązanie zadania
 
 Co student musi wiedzieć: 
-- `man 4 urandom`
+- man 3p fopen
+- man 3p fclose
+- man 3p fseek
+- man 3p rand
+- man 3p unlink
+- man 3p umask
 
-### Niepoprawne rozwiązanie
+Dokumentacja glibc dotycząca umask <a href="http://www.gnu.org/software/libc/manual/html_node/Setting-Permissions.html">link</a>
 
-<em>plik <b>prog16a.c</b>:</em>
-{{< includecode "prog16a.c" >}}
-
-{{< hint info >}}
-Pamiętaj, z pliku `/dev/random` możesz pobrać naprawdę losowe bajty ale w małych ilościach, z `/dev/urandom` odwrotnie, pseudolosowe liczby za to w dowolnych ilościach.
-{{< /hint >}}
-
-{{< hint info >}}
-Zawsze gdy w poprawnym programie pojawia się alokacja pamięci musi być też jej zwalnianie!
-{{< /hint >}}
-
-{{< hint info >}}
-Uprawnienia podawane w funkcji `open` mogą być także podane przy użyciu stałych (`man 3p mknod`), wyjątkowo ze względu na
-bardzo silne zakorzenienie notacji oktalnej u programistów i administratorów oraz na fakt, że łatwo takie liczby w
-kodzie wyszukać nie uznajemy tego za błąd stylu tzw. "magic numbers".
-{{< /hint >}}
-
-### Problemy
-
-Po wywołaniu programu z parametrami `1 20 40 out.txt` powinieneś obserwować następujące problemy:
- - Kopiowanie krótszych bloków niż zadano, na moim laptopie nigdy nie przekraczam 33554431 a powinno być 40MB, ale pojawiają się też i krótsze, powód to przerwanie odczytu (W TRAKCIE) obsługą sygnału
- - Możliwe wystąpienie błędu `fprintf: Interrupted system call` - przerwanie funkcją obsługi sygnału funkcji `fprintf` **ZANIM** ta coś wyświetli
- - Analogiczne komunikaty dla `open` i `close` - może to być trudno zaobserwować w tym programie ale jest to możliwe wg. POSIX
- - Widać, że zliczamy w rodzicu mniej sygnałów niż wysyła potomek, ponieważ sumowanie odbywa się bezpośrednio w nieblokowanej obsłudze sygnału to łatwo się domyślić, że w grę wchodzi sklejanie się sygnałów, pytanie czemu w tym programie to sklejanie jest aż tak silne?
-{{< details "Odpowiedź" >}}  w tej architekturze (GNU/Linux) planista procesora blokuje uruchomienie obsługi sygnału podczas większych operacji IO, w tym czasie sygnały się sklejają. {{< /details >}}
+<em>kod do pliku <b>prog12.c</b></em>
+{{< includecode "prog12.c" >}}
 
 ### Uwagi i pytania
 
-W jakim celu proces rodzic na zakończenie wysyła do całej grupy `SIGUSR1`?
-{{< details "Odpowiedź" >}} Aby zakończyć proces potomny. {{< /details >}}
+- Jaką maskę bitową tworzy wyrażenie `~perms&0777` ? 
+{{< answer >}}
+odwrotność wymaganych parametrem -p uprawnień przycięta do 9 bitów, 
+jeśli nie rozumiesz jak to działa koniecznie powtórz sobie operacje bitowe w C.
+{{< /answer >}}
 
-Jak proces potomny może się zakończyć po nadejściu `SIGUSR1` skoro dziedziczy obsługę tego sygnału?
-{{< details "Odpowiedź" >}} Zaraz po starcie potomka przywracana jest domyślna reakcja na ten sygnał, która właśnie zapewnia zabicie procesu. {{< /details >}}
+- Jak działa losowanie znaków ? 
+{{< answer >}}
+W losowych miejscach wstawia kolejne znaki alfabetu od A do Z potem znowu A itd.
+Wyrażenie 'A'+(i%('Z'-'A'+1)) powinno być zrozumiałe, jeśli nie poświęć mu więcej czasu takie losowania będą się jeszcze pojawiać.
+{{< /answer >}}
 
-Czemu proces rodzic nie zabija się sam tym sygnałem?
-{{< details "Odpowiedź" >}} Ma włączoną obsługę tego sygnału zanim wyśle sygnał do grupy. {{< /details >}}
+- Uruchom program kilka razy, pliki wynikowe wyświetl poleceniem cat i less sprawdź jakie mają rozmiary (ls -l), czy zawsze równe podanej w parametrach wartości? Z czego wynikają różnice dla małych rozmiarów -s a z czego dla dużych (> 64K) rozmiarów?
+{{< answer >}}
+Prawie zawsze rozmiary są różne w obu przypadkach wynika to ze sposobu tworzenia pliku,
+który jest na początku pusty a potem w losowych lokalizacjach wstawiane są znaki, 
+nie zawsze będzie wylosowany znak na ostatniej pozycji. Losowanie podlega limitowi 2-bajtowego RAND_MAX, 
+więc w dużych plikach losowane są znaki na pozycjach do granicy RAND_MAX.
+{{< /answer >}}
 
-Czy taka strategia może się  nie powieść?
-{{< details "Odpowiedź" >}} Tak, jeśli proces rodzic upora się ze swoim zadaniem zanim proces potomny zmieni dyspozycję odnośnie `SIGUSR1` na domyślną. {{< /details >}}
+- Przerób program tak, aby rozmiar zawsze był zgodny z założonym.
 
-Czy można to jakoś poprawić? Tzn. proces rodzic zawsze zabije potomka ale jednocześnie sam nie narazi się na przedwczesną śmierć?
-{{< details "Odpowiedź" >}} Wyślij do potomka `SIGUSR2`. {{< /details >}} 
+- Czemu podczas sprawdzania błędu unlink jeden przypadek ignorujemy?
+{{< answer >}}
+ENOENT oznacza brak pliku, jeśli plik o podanej nazwie nie istniał to nie możemy go skasować,
+ale to nie przeszkadza programowi, w tym kontekście to nie jest błąd. 
+Bez tego wyjątku moglibyśmy tylko nadpisywać istniejące pliki a nie tworzyć nowe.
+{{< /answer >}}
 
-Czy taka strategia zakończenia potomka zawsze jest poprawna i  łatwa do przeprowadzenia?
-{{< details "Odpowiedź" >}} Tylko jeśli proces zabijany nie posiada zasobów, jeśli by takowe posiadał to musisz dodać obsługę sygnału kończącego co nie musi być  łatwe. {{< /details >}}
+- Zwrócić uwagę na wyłączenie z `main` funkcji do tworzenia pliku, im więcej kodu tym ważniejszy jest jego podział na funkcje. Przy okazji krótko omówmy cechy dobrej funkcji:
+   - robi jedną rzecz na raz (krótki kod)
+   - możliwie duży stopień generalizacji problemu (dodano procent jako parametr)
+   - wszystkie dane wejściowe dostaje przez parametry (nie używamy zmiennych globalnych)
+   - wyniki przekazuje przez parametry wskaźnikowe lub wartość zwracaną (w tym przypadku wynikiem jest plik) a nie przez zmienne globalne
 
-Czemu po wywołaniu alokacji pamięci sprawdzamy przydzielony wskaźnik czy aby nie jest NULL? 
-{{< details "Odpowiedź" >}} System może nie móc nam przydzielić więcej pamięci, musimy być na to przygotowani. Brak tego sprawdzania jest bardzo częstym błędem w pracach studentów. {{< /details >}}
+- W kodzie używamy specjalnych typów numerycznych `ssize_t`, `mode_t` zamiast int robimy to ze względu na zgodność typów z
+prototypami funkcji systemowych.
 
-Czy nie dałoby się tego bufora uczynić zmienną automatyczną i uniknąć kodu związanego z alokacją i zwalnianiem?
-{{< details "Odpowiedź" >}} Nie ma w znanych mi architekturach tak dużych stosów aby można było  na nich umieszczać tak duże zmienne (40MB dla przykładowych parametrów), zazwyczaj stos ma wymiar do kilku megabajtów, gdyby  nasz bufor był mały (kilka KB) to moglibyśmy tak zrobić. {{< /details >}}  
+- Czemu w tym programie używamy umask? Otóż funkcja fopen nie pozwala ustawić uprawnień, a przez umask możemy okroić
+uprawnienia jakie są nadawane domyślnie przez fopen, niskopoziomowe open daje nam nad uprawnieniami większą kontrolę.
 
-Czemu uprawnienia do nowego pliku są  pełne (0777)? 
-{{< details "Odpowiedź" >}} umask zredukuje uprawnienia, jeśli nie chcemy mieć konkretnych ustawień to jest to dobra strategia {{< /details >}}
+- Czemu zatem nie możemy dodać uprawnień `x`? Funkcja fopen domyślnie nadaje tylko prawa 0666 a nie pełne 0777, przez
+bitowe odejmowanie nijak nam nie może wyjść ta brakująca część 0111.
 
-### Rozwiązanie problemów
+- Jak zwykle sprawdzamy wszystkie błędy, ale nie sprawdzamy statusu umask, czemu? Otóż umask nie zwraca błędów tylko starą
+maskę.
 
-W przypadku operacji I/O funkcje mogą być przerwane podczas swojego działania przez funkcję obsługi sygnału. W takim wypadku funkcje zwracają wartość -1, która sygnalizuje błąd i ustawiają `errno` na `EINTR`. Standard POSIX mówi, że w takim przypadku wykonanie funkcji zostaje przerwana zanim ta funkcja coś zrobi. Z tego powodu jak najbardziej poprawną i zalecaną reakcją na ten błąd jest restart funkcji z tymi samymi parametrami, jakie były podane przy pierwszym wywołaniu.
+- Zmiana `umask` jest lokalna dla naszego procesu i nie ma wpływu na proces rodzicielski zatem nie musimy jej przywracać.
 
-Ręczna obsługa tego błędu może być z czasem niewygodna (szczególnie, gdy wykonujemy dużo operacji I/O). Z tego powodu w tym celu wykorzystamy makro `TEMP_FAILURE_RETRY`, które jest rozszerzeniem biblioteki C projektu GNU. [Tutaj](https://www.gnu.org/software/libc/manual/html_node/Interrupted-Primitives.html) przeczytasz więcej o tym makrze. Aby skorzystać makra musimy wcześniej zdefiniować makro `_GNU_SOURCE`, które daje nam dostęp do tego typu niestandardowych rozszerzeń.
+- Parametr tekstowy -p został zmieniony na oktalne uprawnienia dzięki funkcji strtol, warto znać takie przydatne funkcje
+aby potem nie wyważać otwartych drzwi i nie próbować pisać samemu oczywistych konwersji.
 
-<em>rozwiązanie drugi etap, plik <b>prog16b.c</b>:</em>
-{{< includecode "prog16b.c" >}}
+- Pytanie czemu kasujemy plik skoro tryb otwarcia `w+` nadpisuje plik? Jeśli plik o danej nazwie istniał to jego uprawnienia
+są zachowywane a my przecież musimy nadać nasze, przy okazji jest to pretekst do ćwiczenia kasowania.
 
-Uruchamiamy jak poprzednio - błędy znikają.
+- Tryb otwarcia pliku `b` nie ma w systemach POSIX-owych żadnego znaczenia, nie rozróżniamy dostępu na tekstowy i binarny,
+jest tylko binarny.
+
+- W programie nie wypełniamy pliku zerami, dzieje się to automatycznie ponieważ gdy zapisujemy coś poza aktualnym końcem
+pliku system automatycznie dopełnia lukę zerami. Co więcej, jeśli tych zer ciągiem jest sporo to nie zajmują one
+sektorów dysku!
+
+- Jeśli wykonamy unlink na pliku już otwartym i używanym w innym programie to plik zniknie z filesystemu ale nadal
+zainteresowane procesy będą mogły z niego korzystać. Gdy skończą plik zniknie na dobre.
+
+- Najlepiej w procesie wywołać srand dokładnie jeden raz z unikalnym ziarnem,w tym programie wystarczy czas podany w
+sekundach.
+
+## Buforowanie standardowego wyjścia
+
+### Eksperyment
+
+<em>kod do pliku <b>prog13.c</b></em>
+{{< includecode "prog13.c" >}}
+
+- Spróbuj uruchomić ten (bardzo prosty!) kod z terminala. Co widać na terminalu? 
+{{< answer >}} 
+To czego się spodziewaliśmy: co sekundę pokazuje się liczba.
+{{</ answer >}}
+
+- Spróbuj uruchomić kod ponownie, tym razem jednak przekierowując wyjście do pliku `./plik_wykonwyalny >
+plik_z_wyjściem`. Następnie spróbuj otworzyć plik z wyjściem w trakcie działania programu, a potem zakończyć
+działanie programu przez Ctrl+C i otworzyć plik jeszcze raz. Co widać tym razem? 
+{{< answer >}} Jeśli zrobimy te kroki wystarczająco szybko, plik okazuje się być pusty! To zjawisko wynika z
+tego, że biblioteka standardowa wykrywa, że dane nie trafiają bezpośrednio do terminala, i dla wydajności buforuje je, 
+zapisując je do pliku dopiero gdy zbierze się ich wystarczająco dużo. To oznacza, że dane nie są dostępne od razu,
+a w razie nietypowego zakończenia programu (tak jak kiedy użyliśmy Ctrl+C) mogą wręcz zostać stracone. 
+Oczywiście, jeśli damy programowi dojść do końca działania, to wszystkie dane zostaną zapisane do pliku (proszę spróbować!). Mechanizm buforowania można skonfigurować,
+ale nie musimy tego robić, jak za chwilę zobaczymy. 
+{{</ answer >}}
+
+- Spróbuj uruchomić kod podobnie, ponownie pozwalając wyjściu trafić do terminala (jak za pierwszym razem), ale spróbuj usunąć nową linię z argumentu `printf`: `printf("%d", i);`. Co widzimy tym razem?
+{{< answer >}}
+Wbrew temu co powiedzieliśmy wcześniej, nie widać wyjścia mimo to, że tym razem dane trafiają bezpośrednio do terminala;
+dzieje się natomiast to samo co w poprzednim kroku. Otóż biblioteka buforuje standardowe wyjście nawet jeśli dane
+trafiają do terminala; jedyną różnicą jest to, że reaguje na znak nowej linii, wypisując wszystkie dane zebrane w
+buforze. To ten mechanizm sprawił, że w pierwszym kroku nie wydarzyło się nic dziwnego. Właśnie dlatego czasami zdarza
+się Państwu, że `printf` nie wypisuje nic na ekran; jeśli zapomnimy o znaku nowej linii, standardowa
+biblioteka nic nie wypisze na ekran dopóki w innym wypisywanym stringu nie pojawi się taki znak, lub program się nie
+zakończy poprawnie.
+{{</ answer >}}
+
+- Spróbuj ponownie zrobić poprzednie trzy kroki, tym razem jednak wypisując dane do strumienia standardowego błędu: `fprintf(stderr, /* parametry wcześniej przekazywane do printf */);`. Co dzieje się tym razem? Żeby przekierować standardowy błąd do pliku, należy użyć `>2` zamiast `>`. 
+{{< answer >}}
+Tym razem nic się nie buforuje i zgodnie z oczekiwaniami widzimy jedną cyfrę co sekundę. Standardowa biblioteka nie
+buforuje standardowego błędu, bowiem często wykorzystuje się go do debugowania. 
+{{</ answer >}}
+
+- Często możemy chcieć użyć `printf(...)` do debugowania, dodając wywołania tej funkcji w celu sprawdzenia
+wartości zmiennych bądź czy wywołanie dochodzi do jakiegoś miejsca w naszym kodzie. W takich przypadkach należy zamiast
+tej funkcji użyć `fprintf(stderr, ...)` i wypisywać do standardowego błędu. W przeciwnym przypadku może się
+okazać, że nasze dane zostaną zbuforowane i zostaną wypisane później niż się spodziewamy, a w skrajnych przypadkach
+wcale. Jeśli nie wiemy, do którego strumienia wypisywać, należy preferować standardowy błąd.
+Przy pisaniu prawdziwych aplikacji konsolowych strumienia standardowego wyjścia używa się wyłącznie do wypisywania
+rezultatów, a do czegokolwiek innego używa się standardowego błędu. Na przykład `grep` wypisze znalezione
+wystąpienia na standardowe wyjście, ale ewentualne błędy przy otwarciu pliku trafią na standardowy błąd. Nawet nasze
+makro `ERR` wypisuje błąd do strumienia standardowego błędu.
+
+## Operacje niskopoziomowe na plikach
+
+Do realizacji odczytu i zapisu plików można użyć też funkcji niskopoziomowych, t.j. takich, których nie definiuje biblioteka standardowa C, a które udostępnia sam system operacyjny. Można przy ich pomocy np. wysyłać pakiety przez sieć, czym zajmiemy się w przyszłym semestrze.
+
+Zamiast wskaźników na struktury `FILE` funkcje niskopoziomowe pracują na *file descriptors* (fd) - wartościach całkowitoliczbowych identyfikujących zasoby w obrębie procesu. W tym przypadku będą to pliki, ale w ogólności mogą odnosić się do różnego typu zasobów systemowych. Aby użyć poniższych funkcji konieczne jest dołączenie nagłówków `<fcntl.h>` i `<unistd.h>`.
+
+```
+int open(const char *path, int oflag, ...);
+```
+Zobacz `man 3p open`.
+- `path` - ścieżka otwieranego pliku,
+- `oflag` - flagi otwarcia pliku połączone operacją bitowego OR `|`, analogiczne do trybu otwarcia funkcji `fopen`, ale też precyzujące zachowanie w różnych warunkach brzegowych. Odnieś się do `man 3p open` dla listy flag.
+
+Funkcja zwraca deskryptor pliku `fd`, którego używać będziemy w kolejnych funkcjach.
+
+Funkcje niskopoziomowe nie korzystają z buforowania. `read` (`man 3p read`) dostaje znaki natychmiastowo kiedy są dostępne. Oznacza to, że nie zawsze wczyta tyle znaków ile oczekujemy. Z jednej strony dostajemy dane najszybciej jak się da nie musząc czekać aż system załaduje resztę z dysku. Z drugiej jednak musimy uważać żeby faktycznie wczytać całość danych które chcemy.
+
+```
+ssize_t read(int fildes, void *buf, size_t nbyte);
+```
+- `filedes` - deskryptor pliku, pozyskany z `open`,
+- `buf` - wskaźnik na bufor w którym zapisane będą dane,
+- `nbyte` - rozmiar danych których ma oczekiwać funkcja.
+
+Funkcja zwraca ilość bajtów które udało się wczytać.
+
+W analogiczny sposób działa funkcja `write` (`man 3p write`):
+
+```
+ssize_t write(int fildes, const void *buf, size_t nbyte);
+```
+- `filedes` - deskryptor pliku, pozyskany z `open`,
+- `buf` - wskaźnik na bufor z którego pobierane będą dane,
+- `nbyte` - rozmiar danych przeznaczonych do wysłania.
+
+Zwrócona wartość oznacza ilość zapisanych bajtów.
+
+
+### Zadanie
+
+Napisz prosty program kopiujący pliki.
+Powinien akceptować jako swoje argumenty dwie ścieżki i skopiować plik z pierwszej na drugą. 
+
+Tym razem użyj funkcji niskopoziomowych.
+
+### Rozwiązanie zadania
+
+Co student musi wiedzieć: 
+- man 3p open
+- man 3p close
+- man 3p read
+- man 3p write
+- man 3p mknod (tylko stałe opisujące uprawnienia do open)
+- opis makra TEMP_FAILURE_RETRY <a href="http://www.gnu.org/software/libc/manual/html_node/Interrupted-Primitives.html">tutaj</a>
+
+<em>kod do pliku <b>prog14.c</b></em>
+{{< includecode "prog14.c" >}}
 
 ### Uwagi i pytania
 
-Jakie inne przerwania w programie może spowodować funkcja obsługi sygnału?
-{{< details "Odpowiedź" >}} Może przerwać operacje IO lub spanie, nie jest to raportowane przez EINTR, w obu przypadkach reakcja na takie zdarzenie nie jest prosta.  {{< /details >}}
+Aby dostępne było makro `TEMP_FAILURE_RETRY` trzeba najpierw zdefiniować `GNU_SOURCE` a następnie dołączyć plik
+nagłówkowy `unistd.h`. Nie musisz jeszcze w pełni rozumieć działania tego makra, będzie ono ważniejsze w trakcie kolejnego laboratorium gdy zajmiemy się sygnałami.
 
-Skąd wiemy, które funkcje mogą być przerwane zanim coś osiągną (EINTR)?
-{{< details "Odpowiedź" >}} Strony man pages, dział o zwracanych błędach. Łatwo zgadnąć, że to te funkcje, które mogą/muszą czekać zanim coś zrobią. {{< /details >}}
+- Dlaczego w powyższym programie używane są funkcje `bulk_read` i `bulk_write`?
+Czy nie wystarczyłoby po prostu użyć `read` i `write`
+{{< answer >}}
+Zgodnie ze specyfikacją funkcje `read` i `write` mogą zwrócić zanim ilość danych której zażądał użytkownik zostanie odczytana/zapisana.
+Więcej o tym zachowaniu dowiesz się w tutorialu do kolejnego laboratorium.
+Teoretycznie w tym zadaniu nie ma to znaczenia (ponieważ nie używamy sygnałów), ale dobrze się do tego przyzwyczaić już teraz.
+{{< /answer >}}
 
-Jako ważne ćwiczenie przeanalizuj jak działa `bulk_read` i `bulk_write`. Musisz rozumieć czemu uwzględniają tak dużo przypadków, jakie to przypadki, kiedy operacja IO może być przerwana, jak rozpoznać EOF.
-W przeciwieństwie do laboratorium L1, na L2 i kolejnych trzeba używać tych funkcji (lub analogicznych) gdy używasz `read` lub `write` (ponieważ w programie mamy już sygnały).
-I brak będzie powodował odejmowanie punktów.
+- Czy powyższy program mógłby być zaimplementowany funkcjami bibliotecznymi z C zamiast niskopoziomowym IO? (`fopen`, `fprintf`, ...)
+{{< answer >}}
+Tak, w tym programie nie ma niczego co nie pozwala użyć wcześniej pokazanych funkcji.
+{{< /answer >}}
 
-Obie funkcje `bulk_` mogą być pomocne nie tylko gdy chodzi o ochronę przed sygnałami lub sklejanie dużych transferów I/O,
-ale także tam gdzie dane nie są dostępne w sposób ciągły - pipe/fifo/gniazda które poznamy nieco później.
+- Czy do deskryptora zwróconego z `open` można zapisać dane przez `fprintf`?
+{{< answer >}}
+Nie! Funkcje `fprintf`, `fgets`, `fscanf` itd. przyjmują jako argument zmienną typu `FILE*`, deskryptor jest natomiast pojedynczą liczbą `int` używaną przez system operacyjny do identyfikacji otwartego pliku.
+{{< /answer >}}
 
-Podobnie jak `read`/`write` zachowują się wszystkie funkcje pokrewne takie jak `fread`/`fwrite` czy `send`/`recv`
+## Operacje wektorowe na plikach
 
-Warto sobie uświadomić czemu użycie flagi `SA_RESTART` w `sa_flags` podczas ustawiania funkcji obsługi sygnału nie rozwiązuje nam problemu z `EINTR`:
- - Z góry musimy wiedzieć jakie sygnały będą obsługiwane w naszym programie i wszystkie one muszą być włączone z tą flagą, wystarczy jeden bez niej i problem `EINTR` powraca. Łatwo o taki błąd jeśli powrócimy do starszego kodu, łatwo zapomnieć o tym wymogu.
+Funkcja `writev` (`man 3p writev`) oferuje wygodne rozwiązanie w przypadku gdy dane które chcemy zapisać nie znajdują się w jednym ciągłym fragmencie pamięci. Pozwala ona zebrać dane z wielu miejsc i zapisać je w pliku za pomocą jednego wywołania funkcji. Znajduje się w nagłówku `<sys/uio.h>`.
+```
+ssize_t writev(int fildes, const struct iovec *iov, int iovcnt);
+```
+- `filedes` - deskryptor do którego zapisywane są dane,
+- `iov` - tablica struktur opisujących bufory z których funkcja zbiera dane - `struct iovec` (`man 0p sys_uio.h`), które mają następujące pola: 
+```
+void   *iov_base -> wskaźnik na obszar pamięci
+size_t  iov_len  -> długość obszaru pamięci
+```
+- `iovcnt` - rozmiar tablicy `iov`.
 
- - Jeśli chcemy napisać sobie funkcję biblioteczną (np. bulk_read) to nie możemy nic zakładać o obsłudze sygnałów w
-programie używającym naszej biblioteki.
+Funkcja ta zapisuje do `filedes`:\
+`iov[0].iov_len` bajtów zaczynając od `iov[0].iov_base`, następnie\
+`iov[1].iov_len` bajtów zaczynając od `iov[1].iov_base`, ... aż do\
+`iov[iovcnt-1].iov_len` bajtów zaczynając od `iov[iovcnt-1].iov_base`.
 
- - Nie możemy łatwo przenieść takiego kodu, w programie docelowym musiałaby być dokładnie taka sama obsługa sygnałów.
+W analogiczny sposób działa funkcja `readv` (`man 3p readv`):
 
- - Czasem zależy nam na tym, aby właśnie być informowanym o przerwaniu, jaskrawym przykładem jest funkcja sigsuspend, która z tą flagą traci sens!
+```
+ssize_t readv(int fildes, const struct iovec *iov, int iovcnt);
+```
 
-Po wywołaniu `fprintf` nie sprawdzamy błędów innych niż `EINTR`, czemu?
-{{< details "Odpowiedź" >}}Jeśli nie możemy pisać na stderr (zapewne ekran) to i tak nie zaraportujemy błędu. {{< /details >}}
+- `filedes` - deskryptor z którego czytane są dane,
+- `iov` - tablica struktur `struct iovec` opisujących bufory do których funkcja rozprasza dane.
+- `iovcnt` - rozmiar tablicy `iov`.
 
-Zwróć uwagę, że naprawdę duże (f)printf'y mogą być przerwane także w trakcie wypisywania! Trudno będzie coś mądrego z
-tym zrobić, zwłaszcza jeśli do tego wypisywania używamy skomplikowanych formatów. Co prawda funkcja zwróci ile znaków
-wypisała ale jak to potem zrestartować? Zazwyczaj nie łatwo jest nam policzyć ile znaków powinno być wypisane, tym
-bardziej nie mamy jak wyznaczyć od którego momentu trzeba wznowić wypisywanie. Dlatego funkcji tej rodziny unikamy tam
-gdzie restartowanie będzie krytyczne i musimy wypisać dużo danych. Tam gdzie błąd braku restartu nie jest krytyczny (
-wypisywanie na ekran) lub gdy ilość danych jest mała tam nie ma tego problemu.
+W pozostałych aspektach funkcje te zachowują się jak ich niewektorowe odpowiedniki `write` i `read`.
+
+### Przydatne strony
+
+- man 3p writev
+- man 3p readv
+- man 0p sys_uio.h
 
 ## Przykładowe zadania
 
-Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy, że jesteś dobrze przygotowany do zajęć.
+Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
 
-- [Zadanie 1]({{< ref "/sop1/lab/l2/example1" >}}) ~60 minut
-- [Zadanie 2]({{< ref "/sop1/lab/l2/example2" >}}) ~120 minut
-- [Zadanie 3]({{< ref "/sop1/lab/l2/example3" >}}) ~120 minut
+- [Zadanie 1]({{< ref "/sop1/lab/l1/example1" >}}) ~75 minut
+- [Zadanie 2]({{< ref "/sop1/lab/l1/example2" >}}) ~75 minut
+- [Zadanie 3]({{< ref "/sop1/lab/l1/example3" >}}) ~120 minut
 
 ## Kody źródłowe z treści tutoriala
-
 {{% codeattachments %}}
-

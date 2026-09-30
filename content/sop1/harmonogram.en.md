@@ -30,11 +30,12 @@ Tuesdays, 2:15-4:30pm
 
 | Date       | Topic                                            |
 |------------|--------------------------------------------------|
-| 21.10.2025 | [W1 Introduction]({{< ref "lab/l0" >}})          |
-| 4.11.2025  | [L1 Filesystem and IO]({{< ref "lab/l1" >}})     |
-| 25.11.2025 | [W2 Processes and signals]({{< ref "lab/l2" >}}) |
-| 9.12.2025  | [L2 Processes and signals]({{< ref "lab/l2" >}}) |
-| 23.12.2025 | [W3 Threads and mutexes]({{< ref "lab/l3" >}})   |
-| 13.01.2025 | [L3 Threads and mutexes]({{< ref "lab/l3" >}})   |
-| 27.01.2025 | [L4 Synchronization]({{< ref "lab/l4" >}})       |
-| 3.02.2025  | L5 Retakes                                       |
+| 13.10.2026 | [W1 Introduction]({{< ref "lab/l0" >}})          |
+| 27.10.2026 | [L1 Filesystem and IO]({{< ref "lab/l1" >}})     |
+| 10.11.2026 | W2                                               |
+| 24.11.2026 | L2                                               |
+|  8.12.2026 | [W3 Threads and mutexes]({{< ref "lab/l3" >}})   |
+| 22.12.2026 | [L3 Threads and mutexes]({{< ref "lab/l3" >}})   |
+| 19.01.2027 | [L4 Synchronization]({{< ref "lab/l4" >}})       |
+| 26.02.2027 | Retake                                          |
+

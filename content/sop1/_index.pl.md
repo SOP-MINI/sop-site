@@ -23,6 +23,5 @@ menu:
 - Franciszek Jełowicki *koordynator*
 - Tomasz Herman
 - Piotr Krasowski
-- Szymon Tur
-- Piotr Nieciecki
-- Borys Kurdek
+- Larysa Zaremba
+- Zofia Grabowska
