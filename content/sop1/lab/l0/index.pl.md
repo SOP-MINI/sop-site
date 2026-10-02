@@ -8,14 +8,10 @@ weight: 10
 
 {{< hint info >}}
 
-Pierwsze zajęcia wymagają od ciebie pewnego przygotowania, jednak głównie 
-mają służyć wyjaśnieniu wszelkich wątpliwości co do zasad prowadzenia zajęć i konfiguracji środowiska na dalsze laboratoria.
-Przeczytaj proszę informacje podane w działach [GIT]({{< ref "/info/git">}}), [program]({{< ref "/sop1/syllabus" >}}),
-[regulamin]({{< ref "/sop1/zasady" >}}) i [harmonogram]({{< ref "/sop1/harmonogram" >}}).
-Zerknij też na materiały [pomocnicze]({{< ref "/sop1/materialy" >}}).
+Pierwsze zajęcia wymagają pewnego przygotowania, jednak głównie mają służyć wyjaśnieniu wszelkich wątpliwości co do zasad prowadzenia zajęć i konfiguracji środowiska na dalsze laboratoria.
+Przede wszystkim należy zapoznać się z informacjami o używaniu sytemu [GIT podczas laboratorium]({{< ref "/info/git-on-lab">}}).
 
-W dziale z [materiałami]({{< ref "/sop1/materialy" >}}) znajdziesz tutoriale do samodzielnego wykonania
-w ramach przygotowania do kolejnych zajęć.
+Dostępne są [dodatkowe materiały]({{< ref "/sop1/materialy" >}}) do wszystkich laboratoriów.
 Można też się skonsultować droga mailową lub osobiście w czasie dyżurów prowadzących laboratoria.
 
 W ramach zerowych laboratoriów zrobimy proste ćwiczenie symulujące pracę na punktowanych laboratoriach.
@@ -35,11 +31,7 @@ jak również pozwala nam znacznie łatwiej znaleźć odpowiedni fragment kodu),
 - podpowiadać nazwy funkcji (przydatne przy wpisywaniu dłuższych nazw),
 - dawać możliwość uruchomienia pisanego programu z debuggerem.
 
-Przykładowym edytorem, który dobrze się sprawdzi, jest Visual Studio Code (nie mylić z Visual Studio) oraz QT Creator, które są
-częstym wyborem ze względu na niski próg wejścia. Innymi częstymi wyborami są Emacs oraz Vim (oraz niedostępny domyślnie
-w laboratorium Neovim), które jednak cechują się wyższym progiem wejścia. Wszystkie wymienione edytory wymagają
-dodatkowej konfiguracji, którą warto przeprowadzić przed pierwszym punktowanym laboratorium. Oczywiście warto, żeby
-konfiguracja edytora w domu była podobna do tej laboratorium.
+Jeśli nie ma się jeszcze ulubionego edytora można zasugerować się stroną o [konfiuracji IDE]({{< ref "info/IDE-configuration" >}}).
 
 Nie zalecamy korzystania z większych środowisk, takich jak na przykład ~~CLion~~, osobom które dobrze ich nie znają. 
 W przeciwnym wypadku ich dodatkowe funkcje mogą bardziej przeszkadzać niż pomagać.
@@ -49,12 +41,6 @@ Wynika to z tego, że przechowują one kod wyłącznie w przeglądarce,
 co w przypadku problemów ze stabilnością komputera może skutkować utratą kodu i
 koniecznością zaczęcia od nowa.
 
-{{< hint info >}}
-Jeżeli Państwo będą korzystać z Visual Studio Code, to może pojawić się problem, w którym edytor podświetla część nazw
-jako nieznanych mimo tego, że program się kompiluje (zwykle są to nazwy związane z sygnałami, na przykład `sigset_t`
-oraz `SIG_BLOCK`). Rozwiązaniem tego jest znalezienie w `C/C++: Edit Configurations (UI)` ustawienia `C standard` i zmiana go
-z opcji zaczynającej się od `c` na odpowiadającą opcję zaczynającą się od `gnu`, na przykład `gnu17` zamiast `c17`.
-{{< /hint >}}
 
 ## Zadania przygotowujące do laboratorium
 

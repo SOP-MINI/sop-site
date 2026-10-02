@@ -23,4 +23,5 @@ menu:
 - Franciszek Jełowicki *lab coordinator*
 - Tomasz Herman
 - Piotr Krasowski
-- Szymon Tur
+- Larysa Zaremba
+- Zofia Grabowska

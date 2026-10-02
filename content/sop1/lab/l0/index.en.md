@@ -8,9 +8,11 @@ weight: 10
 
 {{< hint info >}}
 
-This laboratory does not require any preparation, its aim is to explain all the rules and answer all the question about graded labs and the classes schedule. Please carefully read everything about [GIT]({{< ref "/info/git">}}), [syllabus]({{< ref "/sop1/syllabus" >}}), [grading]({{< ref "/sop1/zasady" >}}) and [schedule]({{< ref "/sop1/harmonogram" >}}). Also have a look at the [reference]({{< ref "/sop1/materialy" >}}).
+This laboratory does not require many preparations, its aim is to explain all the rules and answer all the question about graded labs and the classes schedule.
+It's important to familiarize yourself with [Instruction of using GIT during the laboratory]({{< ref "/info/git-on-lab">}}).
 
-On [reference]({{< ref "/sop1/materialy" >}}) page you can find self preparation tutorials, you should do them at home before the graded labs. The aim of graded lab is to test how well you studied the topic at home. You can ask questions about the course topics via email at any time.
+On [reference]({{< ref "/sop1/materialy" >}}) page you can find more external resources.
+You can ask questions about the course topics via email at any time or come during office hours.
 
 During the zeroth laboratory you will have to do the simple task to simulate real tasks from further laboratories.
 You will receive half-finished code with some bugs. You will have to find those errors and finish its functionalities.
@@ -25,16 +27,9 @@ Unlike the previous classes, we do not require any particular IDE. However, a go
 - Autocomplete function names (helpful while entering longer names).
 - Give you ability to run debugger attached to your code.
 
-A good choice would be Visual Studio Code (not to be confused with Visual Studio) or QT Creator, which is commonly chosen due to its beginner-friendliness. Another common choices are Emacs and Vim (as well as Neovim which is sadly not available in the lab by default), but those have a higher barrier to entry. All mentioned editors require additional configuration, which you should do before the first graded labs. Of course it would be a good idea to have a similar setup at home and during labs.
+If you do not have a favourite editor yet, you can consult [IDE configuration]({{< ref "info/IDE-configuration" >}}) page.
 
 We suggest you shouldn't use larger IDEs, such as ~~CLion~~ if you do not know them well; otherwise their functionalities will hurt you more than help. Also do not use in-browser editors such as ~~<https://www.onlinegdb.com>~~; otherwise in case of PC instability you might lose your code (as it is only stored in browser) and need to begin from scratch.
-
-{{< hint info >}}
-If you want to use Visual Studio Code, you may encounter an issue in which the editor highlights some identifiers as unknown,
-even though the program actually builds correctly (usually these are names related to signals, such as `sigset_t` and `SIG_BLOCK`).
-In order to fix this, find in `C/C++: Edit Configurations (UI)` the `C standard` and change it from an option starting with `c`
-to a corresponding option starting with `gnu`, for instance `gnu17` instead of `c17`.
-{{< /hint >}}
 
 ## Tasks preparing to laboratory
 

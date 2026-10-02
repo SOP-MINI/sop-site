@@ -11,33 +11,26 @@ Your code has to be tracked by GIT during the laboratory.
 Every stage has to be synchronized with server.
 **If some code will not be sent to the server, you will not take points for it.** 
 
+### Facoulty's GIT server
 
-### ssh configuration
+During the laboratory repositories will be published on <https://sgit.mini.pw.edu.pl>.
+[Here](https://sgit.mini.pw.edu.pl/git-tutorial) you can find info about accessing it and git configuration.
+Authorisation using SSH keys is more efficient since it allows doing operations on remote repository without typing password every time, so we recommend it to everyone.
 
-Authorisation using SSH keys is more efficient since it allows doing operations on remote repository without typing password every time.
-To configure SSH keys follow <tu link do tutorialu na sgicie>
 
-#### Managing multiple ssh keys
+### Working with the repository during the lab
 
-It is possible that in the `~/.ssh` directory there are arleady some keys (e.g. for another course). In such case the best solution is to tell `ssh` which one use for which host. Change the name of downloaded keys, e.g. to `id_ed25519_ops` and `id_ed25519_ops.pub` and place in `~/.ssh` directory (remember about correct permission, `chmod 600`). Now, create a new file `~/.ssh/config` with content:
+For the laboratory a custom git repo with the starting files will be published.
+So the first step each time is to clone remote repo to the PC:
 
-```
-IdentityFile ~/.ssh/id_ed25519
-Host vl01
-  IdentityFile ~/.ssh/id_ed25519_ops
-```
-
-Configuration file like this tells `ssh` to first look at default key `id_ed25519` (like before) but when we are connecting to host `vl01` (this is server we use during laboratories) to use key `id_ed25519_ops`. You can use this method to add more keys to other servers.
-
-### Working with the repository
-
-First step on laboratory is copy remote repository to your local workstation with command 
 ```shell
-$ git clone ssh://gitolite@vl01/w1en/name_surname
+$ git clone ssh://git@192.168.137.60/OPS2_26L/w1_<surname_name> w1
 ```
 
-Command creates directory with name of repository (`name_surname`) and copies files to it.
+This command creates directory with name `w1` and copies files to it.
+The last param is the name of the directory - if you omit it, it will default to repo name (in this case `w1_surname_name`).
 Inside this directory you write your code.
+You don't need to type this address by hand - you can copy it from the server - the repository should be always present at the beginning of the list of all your repositories.
 
 The task consists of stages.
 When you finish one stage, you should commit your change to repository.
@@ -53,8 +46,10 @@ Code can be graded if and only if it will be sent to this server.
 
 The solution will be accepted by the server if and only if:
 - Only solution files (`.c`) were modified - if you change any other files, e.g., makefile, commit will be rejected
-- Solution files are correctly formatted. In the repository, there is a configuration file `.clang-format` for `clang-format` program, which is installed in the system. It allows to format source files - use `clang-format -i <filename.c>`. Many IDEs allow automatic formatting on save
+- Solution files are correctly formatted. In the repository, there is a configuration file `.clang-format` for `clang-format` program, which is installed in the system. It allows to format source files - use `clang-format -i <filename.c>`. Many IDEs allow automatic formatting on save (see [IDE configuration]({{< ref "info/IDE-configuration" >}}).).
 - Solution is not too long - 600 lines by default, it should be more than sufficient for lab task
 - Solution can be compiled without any warnings using makefile from the repository
 
-If one of the rules is not met the server will reject the solution with a reject message. In that case, you need to fix your code, create a new commit, and push it. The server allows one push every minute.
+If one of the rules is not met the server will reject the solution with a reject message. 
+In that case, you need to read it carefully, fix your code, create a new commit, and push it.
+The server allows one push every minute.
