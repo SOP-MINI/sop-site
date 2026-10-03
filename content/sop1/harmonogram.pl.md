@@ -39,7 +39,7 @@ Grupy **11, 12, 21, 22, 31**
 |  1.12.2026 | [W3 Wątki i muteksy]({{< ref "lab/l3" >}})    |
 | 15.12.2026 | [L3 Wątki i muteksy]({{< ref "lab/l3" >}})    |
 | 12.01.2027 | L4                                            |
-| 26.02.2027 | Poprawa                                       |
+| 26.01.2027 | Poprawa                                       |
 
 Grupa *32*
 
@@ -52,6 +52,6 @@ Grupa *32*
 |  8.12.2026 | [W3 Wątki i muteksy]({{< ref "lab/l3" >}})    |
 | 22.12.2026 | [L3 Wątki i muteksy]({{< ref "lab/l3" >}})    |
 | 19.01.2027 | L4                                            |
-| 26.02.2027 | Poprawa                                       |
+| 26.01.2027 | Poprawa                                       |
 
 

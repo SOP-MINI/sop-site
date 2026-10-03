@@ -37,5 +37,5 @@ Tuesdays, 2:15-4:30pm
 |  8.12.2026 | [W3 Threads and mutexes]({{< ref "lab/l3" >}})   |
 | 22.12.2026 | [L3 Threads and mutexes]({{< ref "lab/l3" >}})   |
 | 19.01.2027 | [L4 Synchronization]({{< ref "lab/l4" >}})       |
-| 26.02.2027 | Retake                                           |
+| 26.01.2027 | Retake                                           |
 
