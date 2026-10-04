@@ -25,11 +25,14 @@ A computer is a primary tool of a programmer. The ability to properly set up you
 
 "Operating Systems" is a particularly demanding subject - but incredibly important, constituting the basics of other topics. Studying assumes that students, besides the time spent during class, also learn on their own at home.
 
-It is impossible to give a concrete number of hours - everyone learns at their own pace, depending on the predispositions and previous experience. In order to prepare for graded laboratories, for a student with a significant programming experience and no issues in digesting the lecture, it may be sufficient to read the tutorial and solve one of the example problems (~2-3 hours of work). On the other hand, a person having issues with the basics (points 1-2) has to spend significantly more time for preparation and solve more problems. During the class, we often observe how students are only just familiarising themselves with the tutorial - the result is then predictable.
+It is impossible to give a concrete number of hours - everyone learns at their own pace, depending on the predispositions and previous experience. In order to prepare for graded laboratories, for a student with a significant programming experience and no issues in digesting the lecture, it may be sufficient to read the tutorial and solve one of the example task (~2-3 hours of work). On the other hand, a person having issues with the basics (points 1-2) has to spend significantly more time for preparation and solve more tasks. During the class, we often observe how students are only just familiarising themselves with the tutorial - the result is then predictable.
+
+During one of the past course editions, one student took it upon himself to track the time he spent preparing for the lab and posted his results [on the website](https://web.archive.org/web/20261004113534/https://spages.mini.pw.edu.pl/~szycm/).
+Since this student passed the course, these figures can be considered a useful reference.
 
 ### 4. Learning improperly and overusing AI
 
-Apart from the amount of time spent for learning, how one uses this time is equally important. In general, the proper way of preparing for the laboratories is **independent** solving of as many problems as possible. Reading the lecture and the tutorial is important, but only as a prerequisite to later problem solving - to know where to come back, when we have a problem.
+Apart from the amount of time spent for learning, how one uses this time is equally important. In general, the proper way of preparing for the laboratories is **independent** solving of as many tasks as possible. Reading the lecture and the tutorial is important, but only as a prerequisite to later problem solving - to know where to come back, when we have a problem.
 
 In particular, it is incorrect to think that it is sufficient to go over our colleagues' solutions or ones that were generated with AI. This way we do not build proficiency, but a mere false sense of understanding the subject matter. It is especially AI generated code that teaches bad practices, those tools are unfortunately still imperfect.
 

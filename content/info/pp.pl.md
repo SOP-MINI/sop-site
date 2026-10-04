@@ -46,6 +46,9 @@ Do przygotowania na punktowane laboratorium studentowi, który ma już duże do�
 Z kolei osoba wciąż mająca problemy z podstawami (punkty 1-2) musi spędzić znacząco więcej czasu na przygotowania i rozwiązać więcej zadań.
 Na zajęciach widzimy często, jak studenci dopiero zapoznają się z tutorialem - wynik jest wtedy przewidywalny.
 
+Podczas jednej z edycji przedmiotu pewien student z własnej inicjatywy mierzył czas spędzony na przygotowanie do laboratorium, a swoje wyniki zamieszczał [na stronie](https://web.archive.org/web/20261004113534/https://spages.mini.pw.edu.pl/~szycm/).
+Student ten zdał przedmiot, można więc potraktować te wartości jako pewne odniesienie.
+
 ### 4. Uczenie się w niewłaściwy sposób i nadużywanie AI
 
 Poza samym czasem poświęconym na naukę ważny jest też sposób jego wykorzystania.
