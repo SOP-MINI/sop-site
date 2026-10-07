@@ -4,25 +4,24 @@ title: "Schedule"
 
 ## Lecture
 
-Wednesdays, 4:15 - 6:00 PM, room 103
+Wednesdays, 16:15 - 18:00, room 329
 
 | Date       | Topic                                                                 |
 |------------|-----------------------------------------------------------------------|
-| 8.10.2025  | [Introduction. Computer and operating systems.]({{< ref "wyk/w1" >}}) |
-| 15.10.2025 | [File system interface.]({{< ref "wyk/w2" >}})                        |
-| 22.10.2025 | [File system interface.]({{< ref "wyk/w2" >}})                        |
-| 29.10.2025 | [Processes]({{< ref "wyk/w4" >}})                                     |
-| 5.11.2025  | [Processes]({{< ref "wyk/w4" >}})                                     |
-| 12.11.2025 | [POSIX signals]({{< ref "wyk/w5" >}})                                 |
-| 19.11.2025 | [Event I/O]({{< ref "wyk/events" >}})                                 |
-| 26.11.2025 | [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})               |
-| 3.12.2025  | [Synchronization]({{< ref "wyk/w7" >}})                               |
-| 10.12.2025 | [Synchronization]({{< ref "wyk/w7" >}})                               |
-| 17.12.2025 | _Office hours_                                                        |
-| 7.01.2026  | [Scheduling]({{< ref "wyk/scheduling" >}})                            |
-| 14.01.2026 | [Pipes and FIFOs]({{< ref "wyk/pipe" >}})                             |
-| 21.01.2026 | [Message queues]({{ ref "wyk/mqueue" >}})                             |
-| 28.01.2026 | _Office hours_                                                        |
+| 7.10.2026  | [Introduction. Computer and operating systems.]({{< ref "wyk/w1" >}}) |
+| 14.10.2026 | [File system interface.]({{< ref "wyk/w2" >}})                        |
+| 21.10.2026 | [File system interface.]({{< ref "wyk/w2" >}})                        |
+| 28.10.2026 | [Processes]({{< ref "wyk/w4" >}})                                     |
+| 4.11.2026  | [Processes]({{< ref "wyk/w4" >}})                                     |
+| 13.11.2026 | [POSIX signals]({{< ref "wyk/w5" >}})                                 |
+| 18.11.2026 | [Event I/O]({{< ref "wyk/events" >}})                                 |
+| 25.11.2026 | [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})               |
+| 2.12.2026  | [Synchronization]({{< ref "wyk/w7" >}})                               |
+| 9.12.2026  | [Synchronization]({{< ref "wyk/w7" >}})                               |
+| 16.12.2026 | _Office hours_                                                        |
+| 13.01.2027 | [Scheduling]({{< ref "wyk/scheduling" >}})                            |
+| 20.01.2027 | [Pipes and FIFOs]({{< ref "wyk/pipe" >}})                             |
+| 27.01.2027 | _Office hours_                                                        |
 
 ## Laboratories
 
