@@ -98,17 +98,35 @@ Now, every time you save a file (Ctrl+S), it will be automatically formatted acc
 
 Your IDE is now ready for the laboratories. It is still worth spending a few minutes reviewing and adjusting various options in the settings (`Edit->Preferences`), especially in the Environment section, where you can configure the appearance and keyboard shortcuts. By default, QtCreator has a very convenient search engine under the shortcut `ctrl+k` that allows you to find various object classes (files, functions, global variables, etc.) in the project. Other options and instructions can be found in the help and documentation.
 
-## Visual Studio Code Configuration
+## Configuring Visual Studio Code
 
-Before creating a project, you should first install the extensions needed for working with C/C++. To do this, launch Visual Studio Code and open the Extensions tab (keyboard shortcut: `Ctrl + Shift + X`).
+**Note!** VS Code comes in two main versions:
+- **Visual Studio Code** -- the official version distributed by Microsoft (most likely the version you use on your own computer).
+- **Code OSS** -- the open-source version developed by Microsoft and the community (this is the version we use in the lab).
 
-![](/img/vsc1.png) 
+Code OSS does not list all the extensions available in Microsoft's official version in its built-in extension search. Installing some of them therefore requires an extra step. In this tutorial, this applies to the **C/C++** extension, which makes working with C and C++ easier.
 
-Search for the **C/C++** extension (published by Microsoft; it should be the first result after searching), then click *Install*. The installation is automatic and restarting the editor is not required.
+If you use the official Microsoft version of VS Code, you can install the **C/C++** extension directly in the editor. Open Visual Studio Code and go to the Extensions tab (keyboard shortcut: `Ctrl + Shift + X`).
 
-![](/img/vsc2.png) 
+![](/img/vsc1.png)
 
-Do the same for the **Makefile Tools** extension (also published by Microsoft).
+Search for the **C/C++** extension published by Microsoft (it should be among the first results), then click *Install*. Installation is automatic and usually does not require restarting the editor.
+
+![](/img/vsc2.png)
+
+With Code OSS, which we use in the lab, an extra step is needed. The **C/C++** extension is not available in Code OSS's default extension registry (Open VSX), so we need to download the installation file manually. Go to the [extension's official GitHub releases page](https://github.com/microsoft/vscode-cpptools/releases). Choose a release (preferably the latest stable version), expand the `Assets` section, and download the `.vsix` file for Linux on x86-64, such as `cpptools-linux-x64.vsix`.
+
+![](/img/vsc1_OSS.png)
+
+Next, install the downloaded extension in the editor. Open the Extensions tab (`Ctrl + Shift + X`), click the three dots (`...`) next to the *Extensions* heading in the upper-left corner, and select `Install from VSIX...`. Select the downloaded `.vsix` file, confirm the installation, and restart the editor if necessary.
+
+![](/img/vsc2_OSS.png)
+
+This installs an extension that makes working with C easier.  
+
+The rest of the tutorial is the same for both versions of the editor.  
+
+The next extension to install is **Makefile Tools**. It is also developed by Microsoft, but unlike C/C++, it is available in Code OSS's default extension registry. In both versions of the editor, install it as usual: open the Extensions tab (`Ctrl + Shift + X`), search for **Makefile Tools**, and click *Install*.
 
 ![](/img/vsc3.png) 
 
@@ -126,7 +144,7 @@ From this point on, the editor should analyze and highlight the code correctly.
 
 **Note!** It is necessary to ensure that no AI-assisted tools are active in the environment. In newer versions of VS Code, GitHub Copilot features are available built in, but using them requires activation and signing in. To be safe, they should be disabled. Installing additional extensions with AI agents is not allowed.
 
-An easy way to disable AI-related features is to press `Ctrl + ,`, type `disable ai features` in the settings search bar, and then enable the `Chat: Disable AI Features` option, which sets `chat.disableAIFeatures` to `true`.
+An easy way to disable AI-related features is to press `Ctrl + ,` (Control plus comma), type `disable ai features` in the settings search bar, and then enable the `Chat: Disable AI Features` option, which sets `chat.disableAIFeatures` to `true`.
 
 ![](/img/vsc14.png)
 
