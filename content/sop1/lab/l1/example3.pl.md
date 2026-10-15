@@ -22,8 +22,7 @@ daną operację (w tym wypadku tworzenie), np:
 Zarządzanie środowiskiem polega na dodawaniu i usuwaniu
 pakietów. Instalacja polega na:
 
-- Dodaniu do pliku `requirements` nazwy pakietu i jego wersji rozdzielonych spacją. The package can have any name
-    and must have any version at this point.
+- Dodaniu do pliku `requirements` nazwy pakietu i jego wersji rozdzielonych spacją. Pakiet może mieć dowolną nazwę i na tym etapie musi mieć dowolną wersję.
 - Dodaniu pliku nazwanego jak pakiet wypełnionego losowymi znakami
 z uprawnieniami tylko do odczytu dla wszystkich.
 
