@@ -286,6 +286,7 @@ Co student musi wiedzieć:
 - man 3p rand
 - man 3p unlink
 - man 3p umask
+- man 3p getopt
 
 Dokumentacja glibc dotycząca umask <a href="http://www.gnu.org/software/libc/manual/html_node/Setting-Permissions.html">link</a>
 
