@@ -27,38 +27,38 @@ praktykach programistycznych.
 Etapy:
 
 1. Na tym etapie program przyjmuje jeden argument -- ścieżkę do pliku
-    będącego metadanymi książki z biblioteki. Są one zapisane przy użyciu
-    prostego formatu -- w każdej linii występuje para `klucz:wartość`.
-    Możesz założyć, że w linii nie występują nadmiarowe znaki `:` (jednak
-    inne niepoprawne sytuacje należy obsłużyć). Odczytaj zawartość pliku, a
-    następnie wypisz zawartość pól `author`, `title` oraz `genre` (w tej
-    kolejności). W przypadku braku któregoś z pól wypisz dla niego
-    `missing!`. Dla przykładowego pliku o zawartości:
-    
-        uthor:Plutarch
-        latin_title:De fluviorum et montium nominibus et de iis, quae in illis inveniuntur
-        title:Περὶ ποταμῶν καὶ ὀρῶν ἐπωνυμίας
-        genre:geography
-        incipit:When Chrysippe, through the anger of Aphrodite
-        had fallen into a yearning 
-        for Hydaspes
-    
-    należy wypisać:
-    
-        author: missing!
-        title: Περὶ ποταμῶν καὶ ὀρῶν ἐπωνυμίας
-        genre: geography
-    
-    (w pierwsze linii mamy literówkę, więc program nie znajduje pola
-    `author`).
-    
-    *Podpowiedź*: Biblioteka standardowa zawiera sporo funkcji przydatnych
-    do takiego parsowania jak `getline`, `strchr`, `strcmp` czy też
-    `strdup`.
-    
-    *Podpowiedź 2*: Ta funkcjonalność jeszcze nam się przyda, chociaż nie od
-    razu -- najlepiej umieść ją w osobnej funkcji.
-    
+   będącego metadanymi książki z biblioteki. Są one zapisane przy użyciu
+   prostego formatu -- w każdej linii występuje para `klucz:wartość`.
+   Możesz założyć, że w linii nie występują nadmiarowe znaki `:` (jednak
+   inne niepoprawne sytuacje należy obsłużyć). Odczytaj zawartość pliku, a
+   następnie wypisz zawartość pól `author`, `title` oraz `genre` (w tej
+   kolejności). W przypadku braku któregoś z pól wypisz dla niego
+   `missing!`. Dla przykładowego pliku o zawartości:
+   
+       uthor:Plutarch
+       latin_title:De fluviorum et montium nominibus et de iis, quae in illis inveniuntur
+       title:Περὶ ποταμῶν καὶ ὀρῶν ἐπωνυμίας
+       genre:geography
+       incipit:When Chrysippe, through the anger of Aphrodite
+       had fallen into a yearning 
+       for Hydaspes
+   
+   należy wypisać:
+   
+       author: missing!
+       title: Περὶ ποταμῶν καὶ ὀρῶν ἐπωνυμίας
+       genre: geography
+   
+   (w pierwsze linii mamy literówkę, więc program nie znajduje pola
+   `author`).
+   
+   *Podpowiedź*: Biblioteka standardowa zawiera sporo funkcji przydatnych
+   do takiego parsowania jak `getline`, `strchr`, `strcmp` czy też
+   `strdup`.
+   
+   *Podpowiedź 2*: Ta funkcjonalność jeszcze nam się przyda, chociaż nie od
+   razu -- najlepiej umieść ją w osobnej funkcji.
+   
 2. Baza danych stworzona przez Kallimacha odzwierciedla w strukturze
     katalogów fizyczną strukturę Wielkiej Biblioteki. Poszczególne
     zagnieżdżone foldery symbolizują odpowiednie skrzydła budynku, pokoje,
