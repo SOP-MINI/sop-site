@@ -100,17 +100,35 @@ Program jest w tym momencie gotowy na laboratoria. Wciąż warto spędzić kilka
 
 ## Konfiguracja Visual Studio Code
 
-Przed utworzeniem projektu należy najpierw zainstalować rozszerzenia potrzebne do pracy z C/C++. W tym celu uruchamiamy Visual Studio Code, a następnie przechodzimy w zakładkę rozszerzenia (skrót klawiszowy: `Ctrl + Shift + X`).
+**Uwaga!** VS Code występuje w dwóch głównych wersjach:
+- **Visual Studio Code** -- oficjalna wersja wydawana przez Microsoft (najprawdopodobniej jest to wersja, z której korzystacie na własnych komputerach).
+- **Code OSS** -- wersja open source rozwijana przez Microsoft i społeczność (tej wersji używamy na laboratoriach).
 
-![](/img/vsc1.png) 
+Code OSS nie udostępnia w swojej wyszukiwarce wszystkich rozszerzeń dostępnych w oficjalnej wersji Microsoftu. Instalacja niektórych z nich wymaga więc dodatkowego kroku. W tym tutorialu dotyczy to rozszerzenia **C/C++**, które ułatwia pracę z językami C i C++.
 
-Wyszukujemy rozszerzenia **C/C++** (wydane przez Microsoft, powinno być to pierwsze rozszerzenie po wyszukiwaniu) po czym klikamy *install*. Instalacja jest automatyczna i nie jest wymagany restart edytora.
+Jeżeli korzystamy z oficjalnej wersji VS Code od Microsoftu, instalujemy rozszerzenie **C/C++** bezpośrednio w edytorze. Uruchamiamy Visual Studio Code, a następnie przechodzimy do zakładki rozszerzeń (skrót klawiszowy: `Ctrl + Shift + X`).
 
-![](/img/vsc2.png) 
+![](/img/vsc1.png)
 
-Podobnie postępujemy ze wtyczką **Makefile tools** (również dystrybuowane przez Microsoft).
+Wyszukujemy rozszerzenie **C/C++** wydane przez Microsoft (powinno być jednym z pierwszych wyników wyszukiwania), a następnie klikamy *Install*. Instalacja przebiega automatycznie i zwykle nie wymaga ponownego uruchomienia edytora.
 
-![](/img/vsc3.png) 
+![](/img/vsc2.png)
+
+W przypadku Code OSS, z którego korzystamy na zajęciach laboratoryjnych, potrzebny będzie dodatkowy krok. Rozszerzenie **C/C++** nie jest dostępne w domyślnym katalogu rozszerzeń Code OSS (Open VSX), dlatego plik instalacyjny musimy pobrać ręcznie. Wchodzimy na [oficjalne repozytorium GitHub rozszerzenia](https://github.com/microsoft/vscode-cpptools/releases), bezpośrednio do sekcji z wydanymi wersjami. Wybieramy wersję rozszerzenia (najlepiej najnowszą stabilną), rozwijamy sekcję `Assets` i pobieramy plik `.vsix` dla systemu Linux na architekturze x86-64, np. `cpptools-linux-x64.vsix`.
+
+![](/img/vsc1_OSS.png)
+
+Następnie instalujemy pobrane rozszerzenie w edytorze. Otwieramy zakładkę rozszerzeń (`Ctrl + Shift + X`), klikamy trzy kropki (`...`) obok nagłówka *Extensions* w lewym górnym rogu i wybieramy opcję `Install from VSIX...`. Wskazujemy pobrany plik `.vsix`, zatwierdzamy instalację i w razie potrzeby uruchamiamy edytor ponownie.
+
+![](/img/vsc2_OSS.png)
+
+W ten sposób instalujemy rozszerzenie ułatwiające pracę z językiem C.  
+
+Kolejna część tutoriala jest już taka sama dla obu wersji edytora.  
+
+Następnym rozszerzeniem do zainstalowania będzie **Makefile Tools**. Jest ono również rozwijane przez Microsoft, ale w przeciwieństwie do C/C++ jest dostępne w domyślnym katalogu rozszerzeń Code OSS. W obu wersjach edytora instalujemy je standardowo: otwieramy zakładkę rozszerzeń (`Ctrl + Shift + X`), wyszukujemy **Makefile Tools** i klikamy *Install*.
+
+![](/img/vsc3.png)
 
 Są to wszystkie rozszerzenia potrzebne do wygodnej pracy z kodem w języku C.   
 
@@ -118,14 +136,14 @@ W Visual Studio Code klikamy w lewym górnym rogu `File -> Open Folder` i wybier
 
 W takiej konfiguracji wywołanie polecenia `make` kompiluje program wypisujący `Hello world` na standardowe wyjście.  
 
-**Uwaga!** Bardzo ważnym krokiem jest zmiana domyślnego standardu C, którego używa edytor! W przeciwnym razie edytor podświetla część nazw jako nieznane, mimo że program poprawnie się kompiluje! By to rozwiązać należy zmienić domyślny standard `c17` na `gnu17`. By to zrobić klikamy skrót klawiszowy `Ctrl + Shift + P`, wpisujemy `C/C++: Edit Configurations (UI)` oraz naciśnijmy enter. Powinna pojawić się nam strona z ustawieniami kompilatora. Przewijamy stronę w dół, gdzie w zakładce `C standard` zmieniamy z `c17` na `gnu17`. Powinno wyglądać to mniej więcej tak:
+**Uwaga!** Bardzo ważnym krokiem jest zmiana domyślnego standardu C, którego używa edytor! W przeciwnym razie edytor podświetla część nazw jako nieznane, mimo że program poprawnie się kompiluje! By to rozwiązać należy zmienić domyślny standard `c17` na `gnu17`. By to zrobić klikamy skrót klawiszowy `Ctrl + ,` (Control plus przecinek), wpisujemy `C standard` w wyszukiwarkę opcji i zmieniamy z `c17` na `gnu17`. Powinno wyglądać to mniej więcej tak:
 
 ![](/img/vsc5.png) 
 
 Od tego momentu edytor powinien poprawnie analizować i podświetlać kod.  
 
 **Uwaga!** Koniecznym jest by w środowisku nie było żadnych pomocniczych narzędzi AI (w VS Code domyślnie jest zainstalowany GitHub Copilot, niemniej jednak trzeba się zalogować + narzędzie to domyślnie nie podpowiada w trakcie manualnego pisania kodu). Oczywiście instalacja dodatkowych rozszerzeń z agentami AI jest dość odradzana.  
-Łatwym sposobem na wyłączenie jakichkolwiek pomocy związanych z AI jest: wciśnięcie `Ctrl +` , oraz wpisanie `disable ai features` oraz zaznaczenie `chat.disableAIFeatures`.
+Łatwym sposobem na wyłączenie jakichkolwiek pomocy związanych z AI jest: wciśnięcie `Ctrl + ,`, oraz wpisanie `disable ai features` oraz zaznaczenie `chat.disableAIFeatures`.
 
 ![](/img/vsc14.png) 
 
@@ -144,7 +162,7 @@ Wciskamy `Ctrl + ,` po czym wpisujemy w wyszukiwarkę `configuration provider`. 
 
 ![](/img/vsc8.png)
 
-Następnie (w otworzonym projekcie) wciskamy skrót `Ctrl + Shift + P` oraz uruchamiamy polecenie `Makefile: Configure`. Dokona to automatycznej konfiguracji opcji Makefile do VS Code. Następnie ponownie wciskamy skrót `Ctrl + Shift + P` oraz uruchamiamy komendę `Makefile: Set the target to be built by make` oraz wybieramy `all`.
+Następnie (w otworzonym projekcie) wciskamy skrót `Ctrl + Shift + P` oraz uruchamiamy polecenie `Makefile: Configure`. Dokona to automatycznej konfiguracji opcji Makefile do VS Code.
 
 Następnie skonfigurujemy opcjonalną, ale bardzo przydatną funkcję automatycznego formatowania kodu przy zapisie plików C. W trakcie laboratoriów, w naszym projekcie będziemy mieli dostęp do pliku konfiguracyjnego `.clang-format`.
 
