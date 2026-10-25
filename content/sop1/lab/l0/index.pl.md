@@ -86,22 +86,22 @@ Uwaga! Proszę szukać informacji głównie na stronach posix (3p), a nie na str
 (2 i 3), różnice mogą być bardzo duże, obowiązuje znajomość standardu przed znajomością implementacji
 
 Gdzie znaleźć dokumentację samego polecenia man?
-{{< details "Odpowiedź" >}}
+{{< answer  >}}
 ```shell
 man man
 ``` 
-{{< /details >}}
+{{< /answer >}}
 
 Jeśli ćwiczysz na własnym systemie Linux, upewnij się, że masz zainstalowane strony z dokumentacją posix, jeśli nie to z
 pomocą "Wujka Google" sprawdź jak doinstalować te strony i zrób to.
 
 Czemu wpisanie man printf nie pomoże nam w zrozumieniu funkcji printf?
-{{< details "Odpowiedź" >}}
+{{< answer  >}}
 Ponieważ otwiera się pierwsza sekcja pomocy, a ta dotyczy poleceń powłoki, ponieważ istnieje polecenie printf to
 dostajemy informacje na jego temat.
 Należy podać numer sekcji: `man 3 printf` aby obejrzeć pomoc Linuksową lub lepiej `man 3p printf` aby obejrzeć opis
 standardu.
-{{< /details >}}
+{{< /answer >}}
 
 <em>rozwiązanie <b>prog1.c</b>:</em>
 {{< includecode "prog1.c">}}
@@ -118,11 +118,11 @@ Zamiast podawać zero jako wartość zwracaną w razie pełnego powodzenia progr
 stałych: `EXIT_SUCCESS` i `EXIT_FAILURE`, znajdziecie je w man `stdlib.h`
 
 Skąd wiadomo jakie pliki nagłówkowe trzeba włączyć?
-{{< details "Odpowiedź" >}} stdio.h z man 3 printf, stdlib.h dla stałych {{< /details >}}
+{{< answer  >}} stdio.h z man 3 printf, stdlib.h dla stałych {{< /answer >}}
 
 Skompiluj program poleceniem "make prog1", używasz w ten sposób domyślnego szablonu kompilacji programu GNU make. 
 Uruchom program wynikowy. Czemu taki sposób kompilacji będzie dla nas nieprzydatny?
-{{< details "Odpowiedź" >}} Brak flagi -Wall, nie wiemy jakie warningi "czają" się w naszym kodzie.  {{< /details >}}
+{{< answer  >}} Brak flagi -Wall, nie wiemy jakie warningi "czają" się w naszym kodzie.  {{< /answer >}}
 
 <em>rozwiązanie <b>Makefile</b></em>
 ```makefile
@@ -139,30 +139,30 @@ Struktura pliku Makefile jest opisana w tutorialu podanym na początku ćwiczeni
 Nazwa każdego celu w makefile (poza .PHONY) musi być powiązana z plikiem wynikowym kompilacji (lub linkowania), częstym błędem studentów jest zapominanie o konsekwentnej zmianie wszystkich nazw w pliku Makefile podczas kopiowania powyższego pliku do innych przykładów!
 
 Jak za pomocą programu make i podanego Makefile usunąć stary plik wykonywalny?
-{{< details "Odpowiedź" >}}
+{{< answer  >}}
 ```shell
 make clean
 ```
-{{< /details >}}
+{{< /answer >}}
 
 Jak za pomocą programu make i podanego Makefile przeprowadzić kompilacje?
-{{< details "Odpowiedź" >}}
+{{< answer  >}}
 `make` lub `make prog1`
-{{< /details >}}
+{{< /answer >}}
 
 Jak przekierować wyjcie tego programu do pliku?
-{{< details "Odpowiedź" >}} 
+{{< answer  >}} 
 ```shell
 ./prog1 > plik.txt
 ```
-{{< /details >}}
+{{< /answer >}}
 
 Jak teraz wyświetlić ten plik?
-{{< details "Odpowiedź" >}} 
+{{< answer  >}} 
 ```shell
 cat plik.txt
 ```
-{{< /details >}}
+{{< /answer >}}
 
 Zrób kopię programu prog1.c, niech się nazywa prog1b.c. Przerób plik Makefile tak, aby kompilował ten nowy plik do binarki o nazwie prog1b, zwróć uwagę, aby przy faktycznej kompilacji (a nie tylko w Makefile) była obecna flaga -Wall. Jeśli uda Ci się to za pierwszym razem to spróbuj sprowokować błąd celowo zmieniając niektóre prog1b z powrotem na prog1 w różnych konfiguracjach.
 
@@ -202,22 +202,22 @@ Przerób Makefile z poprzedniego przykłady tak, aby można było skompilować t
 Uruchom i przetestuj program.
 
 Czemu w kodzie pojawia się 21 jako rozmiar maksymalny w formatowaniu scanf (%21s)?
-{{< details "Odpowiedź" >}}
+{{< answer  >}}
 Czytając maksymalnie 20 znaków, nie wiemy, czy użytkownik podał dokładnie 20, czy może więcej.
 Czytając maksymalnie 21, wiemy o przekroczeniu limitu. 
-{{< /details >}}
+{{< /answer >}}
 
 Czemu deklarujemy 22 jako rozmiar tablicy na ciąg znaków, skoro czytamy najwyżej 21 znaków?
-{{< details "Odpowiedź" >}}
+{{< answer  >}}
 W C ciągi znaków kończą się znakiem zera, scanf dopisze to zero za ostatnim znakiem, 
 zatem każdy ciąg zawsze musi mieć ten dodatkowy znak doliczony do rozmiaru.
-{{< /details >}}
+{{< /answer >}}
 
 Jak można zmienić sposób wywołania tego programu tak, aby komunikat o ewentualnym błędzie wykonania nie pojawił się na
 ekranie?
-{{< details "Odpowiedź" >}}
+{{< answer  >}}
 Można przekierować stderr do /dev/null, np. tak: `./prog2 2>/dev/null`
-{{< /details >}}
+{{< /answer >}}
 
 Gdy podajemy zbyt długie imię, pojawia się komunikat "Name too long: Success", czemu success? Zmienna errno nie jest
 ustawiana, bo to błąd w naszym kodzie, a nie w wywołaniu funkcji bibliotecznej - makro jest napisane przyszłościowo pod
@@ -290,28 +290,28 @@ clean:
 ```
 
 Skompiluj za pomocą polecenia make i uruchom program, jak dla powyższego Makefile skompilować tylko jeden cel?
-{{< details "Odpowiedź" >}}
+{{< answer  >}}
 ```shell
 make prog3
 ```
-{{< /details >}}
+{{< /answer >}}
  
 Sprawdź, jak się zachowa dla ciągów 20 i 21 znakowych. Czemu akurat tak?
-{{< details "Odpowiedź" >}}
+{{< answer  >}}
 Dla ciągu 21 znakowego w tablicy nie zmieści się znak nowej linii. 
 fgets nie przepełnia buforu, zatem obcina wszystko, co przekracza podany limit - w tym przypadku znak nowej linii. 
-{{< /details >}}
+{{< /answer >}}
  
 Czemu w wywołaniu printf nie dodaliśmy znaku nowej linii na końcu, a mimo to powitania wyświetlają się w oddzielnych liniach?
-{{< details "Odpowiedź" >}} 
+{{< answer  >}} 
 fgets pobiera też \n o ile zmieści się w buforze.
 Wypisując taki ciąg nie musimy już dodawać swojego `\n`.
-{{< /details >}}
+{{< /answer >}}
 
 Czemu rozmiar bufora jest MAX_LINE+2?
-{{< details "Odpowiedź" >}}
+{{< answer  >}}
 Musi się zmieścić znak nowej linii i kończące łańcuch znakowy zero
-{{< /details >}}
+{{< /answer >}}
 
 Zwróć uwagę, że `fgets` pracuje na dowolnym strumieniu, nie tylko na `stdin`.
 
@@ -328,12 +328,12 @@ Tom
 Utwórz plik tekstowy z powyższą zawartością.
 
 Jak skłonić nasz program, aby pobrał dane z pliku, a nie z klawiatury (na dwa sposoby)?
-{{< details "Odpowiedź 1" >}} 
+{{< answer "Odpowiedź 1" >}} 
 przekierować plik na stdin: `./prog3 < dane.txt`
-{{< /details >}}
-{{< details "Odpowiedź 2" >}}
+{{< /answer >}}
+{{< answer "Odpowiedź 2" >}}
 wykorzystać potok : `cat dane.txt | ./prog3`
-{{< /details >}}
+{{< /answer >}}
 
 ## Zadanie 4 - parametry wywołania programu 1
 
@@ -365,12 +365,12 @@ Argument o numerze zero to zawsze nazwa programu!
 Skompiluj i uruchom program, przetestuj dla różnych parametrów.
 
 Jak za pomocą programu xargs przekształcić zawartość pliku dane.txt na argumenty wywołania naszego programu?
-{{< details "Odpowiedź 1" >}} 
+{{< answer "Odpowiedź 1" >}} 
 każdy wyraz to oddzielny argument: `cat dane.txt | xargs ./prog4`
-{{< /details >}}
-{{< details "Odpowiedź 2" >}} 
+{{< /answer >}}
+{{< answer "Odpowiedź 2" >}} 
 każda linia to argument: `cat dane.txt |tr "\n" "\0"| xargs -0 ./prog4`
-{{< /details >}}
+{{< /answer >}}
 
 Używając powyższego dla większych plików, trzeba pamiętać, że długość linii poleceń jest limitowana (różnie w różnych
 systemach). `xargs` może podzielić dane na więcej wywołań, gdy sobie tego zażyczymy.
@@ -404,14 +404,14 @@ Dobrą praktyką jest wypisywanie tzw. usage przy braku wymaganych argumentów
 Skompiluj ten program, używając uniwersalnego Makefile z poprzedniego zadania.
 
 Jak działa program dla wartości powtórzeń niepoprawnie podanych, czemu tak?
-{{< details "Odpowiedź" >}}
+{{< answer  >}}
 Nic nie wypisze, ponieważ atoi pod Linuksem zwraca zero, jeśli nie można zamienić tekstu na liczbę.
-{{< /details >}}
+{{< /answer >}}
 
 Czemu argc ma być 3, mamy przecież 2 argumenty? 
-{{< details "Odpowiedź" >}}
+{{< answer  >}}
 `argc` to jest licznik elementów w tablicy argv, mieszczą się tam dwa argumenty i nazwa programu, w sumie 3 elementy
-{{< /details >}}
+{{< /answer >}}
 
 Zwróć uwagę na obrócony zapis porównania (0==j), jaki z takiego pisania może być zysk? Jeśli pomyłkowo zapiszę (0=j) to
 się nie skompiluje i szybko dowiem się o błędzie. Gdybym napisał (j=0) to się skompiluje, a o miejscu wystąpienia błędu
@@ -444,15 +444,15 @@ Mogę też dodać zmienną trwale do środowiska powłoki `export TVAR1='qwert'`
 ta zmienna wciąż tam będzie.
 
 Czy jeśli uruchomię drugą powłokę z menu środowiska i w niej uruchomię program to zmienna TVAR1 nadal będzie widoczna?
-{{< details "Odpowiedź" >}}
+{{< answer  >}}
 Nie, te dwie powłoki dziedziczą zmienne od procesu uruchamiającego programy w środowisku,
 zatem druga powłoka nie może dziedziczyć nic "w bok" od pierwszej.
-{{< /details >}}
+{{< /answer >}}
 
 Czy jeśli uruchomię drugą powłokę z pierwszej i w niej uruchomię program to zmienna TVAR1 nadal będzie widoczna?
-{{< details "Odpowiedź" >}}
+{{< answer  >}}
 Tak, druga powłoka dziedziczy zmienne od swojego rodzica, czyli od pierwszej powłoki. 
-{{< /details >}}
+{{< /answer >}}
 
 ## Zadanie 7 - zmienne środowiskowe 2
 
@@ -492,11 +492,11 @@ Gdy brak shella funkcja system nie działa. Dostajemy błąd 127.
 Wykonaj program z różnymi ustawieniami TIMES.
 
 Jak po wykonaniu programu sprawdzić, czy zmienna RESULT jest ustawiona?
-{{< details "Odpowiedź" >}}  
+{{< answer  >}}  
 `env|grep RESULT` nie będzie ustawiona, bo zmienne nie są propagowane wzwyż drzewa procesów. 
 Zmienna była ustawiona tylko w programie i w powłoce w nim na chwilę wywołanej (f. system),
 ale po zakończeniu tych procesów się nie zachowała. 
-{{< /details >}}
+{{< /answer >}}
 
 ## Zadanie 8 - obsługa błędów
 
@@ -531,16 +531,16 @@ Zachęcam do zapoznania się z błędami poznanych już przez ciebie funkcji sys
 Zastanów się, czy każde zakończenie się funkcji błędem musi oznaczać zakończenie programu.
 
 Co się stanie, gdy wywołamy program tylko z jednym argumentem? 
-{{< details "Odpowiedź" >}}  
+{{< answer  >}}  
 Program powinien od razu się zakończyć wywołując funkcje `usage`.
 Nie możemy ustawić zmiennej środowiskowej, kiedy nie znamy jej wartości.
-{{< /details >}}
+{{< /answer >}}
 
 Dlaczego dodane przez nas zmienne środowiskowe są wypisywane ostatnią pętlą w programie?
-{{< details "Odpowiedź" >}}  
+{{< answer  >}}  
 Manipulacja zmiennymi środowiskowymi to tak naprawdę zmiana `char **environ`.
 Można wyczytać w dokumentacji `setenv`, że przy wykonaniu modyfikuje powyższą zmienną.
-{{< /details >}}
+{{< /answer >}}
 
 ## Zadanie do sprawdzenia środowiska. 
 

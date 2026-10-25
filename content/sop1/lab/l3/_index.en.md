@@ -131,34 +131,34 @@ Please keep in mind that nearly every call to system function (and most calls to
 with the test on errors and if necessary by the proper reaction on the error.
 
 ERR macro does not send "kill" signal as in multi-process program, why?
-{{< details "Answer"  >}} Call to exit terminates all the threads in current process, there is no need to "kill" other processes. {{< /details  >}}
+{{< answer   >}} Call to exit terminates all the threads in current process, there is no need to "kill" other processes. {{< /answer  >}}
 
 How is input data passed to the new threads?
-{{< details "Answer"  >}} Exclusively by the pointer to structure targs_t that is passed as thread function arguments. There is no need (nor the excuse) to use global variables! {{< /details  >}}
+{{< answer   >}} Exclusively by the pointer to structure targs_t that is passed as thread function arguments. There is no need (nor the excuse) to use global variables! {{< /answer  >}}
 
 Is the thread input data shared between the threads?
-{{< details "Answer"  >}} Not in this program. In this case there is no need to synchronize the access to this data. Each thread gets a pointer to the private copy of the structure. {{< /details  >}}
+{{< answer   >}} Not in this program. In this case there is no need to synchronize the access to this data. Each thread gets a pointer to the private copy of the structure. {{< /answer  >}}
 
 How the random seed for `rand_r()` is prepared for each thread?
-{{< details "Answer"  >}} It is randomized in the main thread and passed as a part of input data in targs_t. {{< /details  >}}
+{{< answer   >}} It is randomized in the main thread and passed as a part of input data in targs_t. {{< /answer  >}}
 
 In this multi thread program we see srand/rand calls, is this correct? It contradicts what was said a few lines above.
-{{< details "Answer"  >}} Only one thread is using srand/rand and those functions are called before working threads come to life. The problem with srand/rand and threads originates from one global variable used in the library to hold the current seed. In this code only on thread access this seed thus it is correct. {{< /details  >}}
+{{< answer   >}} Only one thread is using srand/rand and those functions are called before working threads come to life. The problem with srand/rand and threads originates from one global variable used in the library to hold the current seed. In this code only on thread access this seed thus it is correct. {{< /answer  >}}
 
 Can we share one input data structure for all the threads instead of having a copy for every thread?
-{{< details "Answer"  >}} Not in this program due to random seed, it must be different for all the threads. {{< /details  >}}
+{{< answer   >}} Not in this program due to random seed, it must be different for all the threads. {{< /answer  >}}
 
 Can we make the array with the thread input data automatic variable (not allocated)? 
-{{< details "Answer"  >}} Only if we add some limit on the number of working threads (up to 1000) otherwise this array may use all the stack of the main thread. {{< /details  >}}
+{{< answer   >}} Only if we add some limit on the number of working threads (up to 1000) otherwise this array may use all the stack of the main thread. {{< /answer  >}}
 
 Why do we need to release the memory returned from the working thread?
-{{< details "Answer"  >}} This memory was allocated in the thread and has to be released somewhere in the same process, The heap is shared by all the threads if you do not release it you will leak the memory. It will not be released automatically on the thread termination. {{< /details  >}}
+{{< answer   >}} This memory was allocated in the thread and has to be released somewhere in the same process, The heap is shared by all the threads if you do not release it you will leak the memory. It will not be released automatically on the thread termination. {{< /answer  >}}
 
 Why can't we return the data as the address of local (to the thread) automatic variable? 
-{{< details "Answer"  >}} The moment thread terminates is the moment of its stack memory release. If you have a pointer to this released stack you should not use it as this memory can be overwritten immediately. What worse, in most cases this memory will stil be the same and faulty program will work in 90% of cases. If you make this kind of mistake it is later very hard to find out why sometimes your code fails. Please be careful and try to avoid this flaw. {{< /details  >}}
+{{< answer   >}} The moment thread terminates is the moment of its stack memory release. If you have a pointer to this released stack you should not use it as this memory can be overwritten immediately. What worse, in most cases this memory will stil be the same and faulty program will work in 90% of cases. If you make this kind of mistake it is later very hard to find out why sometimes your code fails. Please be careful and try to avoid this flaw. {{< /answer  >}}
 
 Can we avoid memory allocation in the working thread?
-{{< details "Answer"  >}} Yes, if we add extra variable to the input structure of the thread. The result can then be stored in this variable.  {{< /details  >}}
+{{< answer   >}} Yes, if we add extra variable to the input structure of the thread. The result can then be stored in this variable.  {{< /answer  >}}
 
 ## Detachable threads & Synchronization
 
@@ -262,19 +262,19 @@ coding but you need to know exactly how many mutexes you need at coding time. Th
 coding (initiation and removal) but the amount of mutexes also is dynamic.
 
 Is data passed to threads in `thrower_args_t` structure shared between them?
-{{< details "Answer"  >}} Some of it, counters and bins are shared and thus protected with mutexes. {{< /details  >}}
+{{< answer   >}} Some of it, counters and bins are shared and thus protected with mutexes. {{< /answer  >}}
 
 Why do we use a pointer to the `shared_state_t` structure?
-{{< details "Answer"  >}}  We share the data, without the pointer we would have independent copies of those variables in each thread. {{< /details  >}}
+{{< answer   >}}  We share the data, without the pointer we would have independent copies of those variables in each thread. {{< /answer  >}}
 
 This program uses a lot of mutexes, can we reduce the number of them?
-{{< details "Answer"  >}} Yes, in extreme case it can be reduced to only one mutex but at the cost of concurrency. In more reasonable approach you can have 2 mutexes for the counters and one for all the bins, although the concurrency is lower in this case the running time of a program can be a bit shorter as operations on mutexes are quite time consuming for the OS. {{< /details  >}}
+{{< answer   >}} Yes, in extreme case it can be reduced to only one mutex but at the cost of concurrency. In more reasonable approach you can have 2 mutexes for the counters and one for all the bins, although the concurrency is lower in this case the running time of a program can be a bit shorter as operations on mutexes are quite time consuming for the OS. {{< /answer  >}}
 
 To check if the working threads terminated, the main threads periodically  checks if the numer of thrown beans is equal to the number of beans in total. Is this optimal solution?
-{{< details "Answer"  >}} No, it is so called "soft busy waiting" but without synchronization tool like conditional variable it can not be solved better. {{< /details  >}}
+{{< answer   >}} No, it is so called "soft busy waiting" but without synchronization tool like conditional variable it can not be solved better. {{< /answer  >}}
 
 Do all the threads created in this program really work?
-{{< details "Answer"  >}} No, especially when there is a lot of threads. It is possible that some of threads "starve". The work code for the thread is very fast, thread creation is rather slow, it is possible that last threads created will have no beans left to throw. To check it please add per thread thrown beans counters and print them on stdout at the thread termination. The problem can be avoided if we add synchronization on threads start - make them start at the same time but this again requires the methods that will be introduced later. (barier or conditional variable) {{< /details  >}}
+{{< answer   >}} No, especially when there is a lot of threads. It is possible that some of threads "starve". The work code for the thread is very fast, thread creation is rather slow, it is possible that last threads created will have no beans left to throw. To check it please add per thread thrown beans counters and print them on stdout at the thread termination. The problem can be avoided if we add synchronization on threads start - make them start at the same time but this again requires the methods that will be introduced later. (barier or conditional variable) {{< /answer  >}}
 
 ## Threads and Signals
 
@@ -337,25 +337,25 @@ Thread input structure argsSignalHandler_t holds the shared threads data (an arr
 mutexes and not shared (signal mask and tid of thread designated to handle the signals).
 
 How many threads run in this program?
-{{< details "Answer"  >}} Two, main thread created by system (every process has one starting thread) and the thread created by the code.  {{< /details  >}}
+{{< answer   >}} Two, main thread created by system (every process has one starting thread) and the thread created by the code.  {{< /answer  >}}
 
-Name differences and similarities between sigwait i sigsuspend: {{< details "Answer"  >}}
+Name differences and similarities between sigwait i sigsuspend: {{< answer   >}}
 - sigwait does not require signal handling routine as sigsuspend
 - both functions require blocking of the anticipated signal/signals
 - sigwait can not be interrupted by signal handling function (it is POSIX requirement), sigsuspend can
 - sigwait does not change the mask of blocked signals, even if signal handler is set it will not be triggered (in this example we do not have handlers), it will be executed on sigsuspend call
-{{< /details  >}}
+{{< /answer  >}}
 
 After successful call to   sigwait  only one type of pending signal is removed from the pending signals vector thus the problem we experienced with sigsuspend in L2 example can  be corrected when using sigwait instead of sigsuspend. Please correct the program in L2 as an exercise.
 
 Does the method of waiting for the end of working thread have the same flow as the method in previous example?
-{{< details "Answer"  >}} No, periodical printout of the table is a part of the task, busy waiting is when looping is coded only for waiting for the condition to become true. Despite that in this example we join the thread. {{< /details  >}}
+{{< answer   >}} No, periodical printout of the table is a part of the task, busy waiting is when looping is coded only for waiting for the condition to become true. Despite that in this example we join the thread. {{< /answer  >}}
 
 Can we use sigprocmask instead of pthread_sigmask in this program?
-{{< details "Answer"  >}} Yes, the signal blocking is set prior to thread creation, still in single thread phase of the program. {{< /details  >}}
+{{< answer   >}} Yes, the signal blocking is set prior to thread creation, still in single thread phase of the program. {{< /answer  >}}
 
 Why system calls to functions operating on mutex (acquire, release)  are not tested for errors?
-{{< details "Answer"  >}} Basic mutex type (the type used in this program, default one) is not checking nor reporting errors. Adding those checks would not be such a bad idea as they are not harming the code and if you decide to later change the mutex type to error checking it will not require many changes in the code. {{< /details  >}}
+{{< answer   >}} Basic mutex type (the type used in this program, default one) is not checking nor reporting errors. Adding those checks would not be such a bad idea as they are not harming the code and if you decide to later change the mutex type to error checking it will not require many changes in the code. {{< /answer  >}}
 
 
 ## Thread cancelation
@@ -483,28 +483,28 @@ same braces {}).
 
 
 How many mutexes this program uses and what they protect?
-{{< details "Answer"  >}} Four exactly, one for each year/counter. {{< /details  >}}
+{{< answer   >}} Four exactly, one for each year/counter. {{< /answer  >}}
 
 Must current year of a student be a part of argsModify_t structure?
-{{< details "Answer"  >}} No it could have been automatic in thread variable, then structure argsModify_t would be no longer needed and you would pass pointer to  yearCounters instead. {{< /details  >}}
+{{< answer   >}} No it could have been automatic in thread variable, then structure argsModify_t would be no longer needed and you would pass pointer to  yearCounters instead. {{< /answer  >}}
 
 What does it mean that the thread cancellation state is set to PTHREAD_CANCEL_DEFERRED ?
-{{< details "Answer"  >}} Cancellation will only happen during certain function calls (so called cancellation points), it will not disturb the rest of the code in the thread. In other words the thread can finish a part of its work before it is canceled. {{< /details  >}}
+{{< answer   >}} Cancellation will only happen during certain function calls (so called cancellation points), it will not disturb the rest of the code in the thread. In other words the thread can finish a part of its work before it is canceled. {{< /answer  >}}
 
 What functions used in the thread code are cancellation points?
-{{< details "Answer"  >}}  Only nanosleep (called from msleep) is a cancellation point in this code. {{< /details  >}}
+{{< answer   >}}  Only nanosleep (called from msleep) is a cancellation point in this code. {{< /answer  >}}
 
 How do we learn what functions are cancellation points?
-{{< details "Answer"  >}} $man 7 pthreads {{< /details  >}}
+{{< answer   >}} $man 7 pthreads {{< /answer  >}}
 
 What one in this call " pthread_cleanup_pop(1);" means ?
-{{< details "Answer"  >}} It means that the handler is not only removed from the handlers stack but also executed. {{< /details  >}}
+{{< answer   >}} It means that the handler is not only removed from the handlers stack but also executed. {{< /answer  >}}
 
 When the year counter is decreased?
-{{< details "Answer"  >}} In two cases, during cancellation (rare case), during the removal of cleanup handler from the stack of handlers. {{< /details  >}}
+{{< answer   >}} In two cases, during cancellation (rare case), during the removal of cleanup handler from the stack of handlers. {{< /answer  >}}
 
 Algorithm selecting a thread for cancellation has an apparent flow, can you name it and tell what threat it creates?
-{{< details "Answer"  >}} This random selection can last very long if only a few "live" threads are left on a large list of threads. Try to run the program with 10 as the parameter to check it. {{< /details  >}}
+{{< answer   >}} This random selection can last very long if only a few "live" threads are left on a large list of threads. Try to run the program with 10 as the parameter to check it. {{< /answer  >}}
 
 Improve random selection as an exercise.
 

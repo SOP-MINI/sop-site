@@ -9,9 +9,11 @@ weight: 30
 
 ## Operacje niskopoziomowe na plikach
 
-Do realizacji odczytu i zapisu plików można użyć też funkcji niskopoziomowych, t.j. takich, których nie definiuje biblioteka standardowa C, a które udostępnia sam system operacyjny. Można przy ich pomocy np. wysyłać pakiety przez sieć, czym zajmiemy się w przyszłym semestrze.
+Do realizacji odczytu i zapisu plików można użyć też funkcji niskopoziomowych, t.j. takich, których nie definiuje biblioteka standardowa C, a które udostępnia sam system operacyjny.
+Są one ,,niskopoziomowe'', czyli prostsze - mają przez to dodatkowe zastosowania, przede wszystkim umożliwiają dostęp do różnego rodzaju plików nieregularnych.
 
-Zamiast wskaźników na struktury `FILE` funkcje niskopoziomowe pracują na deskryptorach (ang. *file descriptor* - fd) - wartościach całkowitoliczbowych identyfikujących zasoby w obrębie procesu. W tym przypadku będą to pliki, ale w ogólności mogą odnosić się do różnego typu zasobów systemowych. Aby użyć poniższych funkcji konieczne jest dołączenie nagłówków `<fcntl.h>` i `<unistd.h>`.
+Zamiast wskaźników na struktury `FILE` funkcje niskopoziomowe pracują na deskryptorach (ang. *file descriptor* - fd) - wartościach całkowitoliczbowych identyfikujących zasoby w obrębie procesu.
+Aby użyć poniższych funkcji konieczne jest dołączenie nagłówków `<fcntl.h>` i `<unistd.h>`.
 
 ```
 int open(const char *path, int oflag, ...);
@@ -69,7 +71,7 @@ Jako parametr `whence` możemy podać `SEEK_SET` (ustawienie kursora na daną po
 Jako, że `lseek` zwraca pozycję kursora po wykonaniu operacji, wywołanie go z parametrami `0` i `SEEK_CUR` pozwala uzyskać aktualną pozycję w pliku.
 
 Przeglądając manuale mogłeś zauważyć istnienie wielu odpowiedników już poznanych funkcji ale z końcówką `-at` -np. `fstatat`, `openat`, `symlinkat`.
-Zwykle te funkcją biorą dodatkowy parametr - deskryptor pliku, względem którego będą wyznaczane ścieżki względne.
+Zwykle te funkcje biorą dodatkowy parametr - deskryptor pliku, względem którego będą wyznaczane ścieżki względne.
 Są więc często miłym ułatwieniem dla programisty, pozwalając pominąć konstruowanie długich ścieżek względnych albo zmienianie katalogu roboczego.
 
 
@@ -135,6 +137,33 @@ ssize_t readv(int fildes, const struct iovec *iov, int iovcnt);
 
 W pozostałych aspektach funkcje te zachowują się jak ich niewektorowe odpowiedniki `write` i `read`.
 
+## Mmap
+
+Jeszcze jeden, bardzo wygodny sposób na dostęp do pliku to ,,zmapowanie'' go do pamięci.
+Służy do tego funkcja `mmap`.
+Jest ona szeroko używana również do wielu innych rzeczy, które omówimy w przyszłości.
+Na chwilę obecną skupimy się jedynie na mapowaniu plików.
+Wygląda to zwykle w następujący sposób:
+
+{{< includecode "l2-2.c" >}}
+
+Najważniejszą funkcją jest tutaj oczywiście sam `mmap`:
+
+```
+char *buff = mmap(NULL, length, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+```
+
+W ten sposób prosimy system operacyjny o ,,zmapowanie'' pliku o deskryptorze `fd` do pamięci o rozmiarze `length` tak, żebyśmy mogli go zarówno czytać jak i modyfikować (`PROT_READ | PROT_WRITE`).
+Wynikiem jest wskaźnik na zmapowaną pamięć lub wartość `MAP_FAILED` gdy wystąpi błąd.
+O pozostałych parametrach i zastosowaniach tej funkcji możesz poczytać w manualu (`man 3p mmap`, `man 2 mmap` dla linuxowych rozszerzeń), jednak nie będziemy ich wymagać.
+Na razie interesuje nas tylko, że, jak widać w powyższym kodzie, `mmap` pozwala nam bardzo wygodnie modyfikować pliki, tak samo jak zwykłe tablice.
+Dwie funkcje pomocnicze to `msync` i `munmap`.
+`msync` wymusza synchronizację zmian na dysk - system operacyjny nie robi tego zawsze od razu, ponieważ zapisy na dysk są wolne.
+`munmap` to likwidacja mapowania, czyli sprzątanie.
+
+Ważną uwagą jest, że deskryptor musi mieć odpowiednie uprawnienia.
+Gdybyśmy do `mmap` podali `PROT_READ | PROT_WRITE` oraz deskryptor który otworzyliśmy np. z flagą `O_RDONLY` funkcja zwróciłaby błąd.
+
 
 ## Operacje blokujące, nieblokujące i fcntl
 
@@ -145,7 +174,7 @@ Przykładem takiego zachowania jest terminal i funkcje takiej jak `scanf` czy `g
 Gdy je wywołamy wykonanie programu jest zatrzymywane tak długo, aż nie podamy jakiś danych na terminal.
 Gdybyśmy jednak przełączyli `stdin` w tryb nieblokujący takie funkcje kończyłyby się od razu - rozważ poniższy przykład:
 
-{{< includecode "l2-2.c" >}}
+{{< includecode "l2-3.c" >}}
 
 Skompiluj i przetestuj powyższy program.
 W pierwszej, blokującej części, zarówno `scanf` jak i `read` w nieskończoność czeka aż wpiszemy dane (i enter - domyślnie terminal nie wysyła danych dopóki nie zatwierdzi się ich enterem).
@@ -226,23 +255,30 @@ Więcej informacji nt. działania podsystemu urządzeń wejściowych w linuxie m
 Nagłówek `linux/input-event-codes.h` definiuje wartości ze struktury `input_event` - np. klawisz F odpowiada wartości 33.
 Nie musisz się uczyć tych rzeczy na pamięć, nie będą one wymagane na laboratorium - podajemy ja jako ciekawostkę i interesujący przykład.
 
-{{< includecode "l2-3.c" >}}
+{{< includecode "l2-4.c" >}}
 
 Po uruchomieniu za każdym razem jak naciśniesz klawisz na klawiaturze, poruszysz myszką etc. powyższy program będzie wypisywał przychodzące wydarzenia wejściowe.
-W przypadku gdy program nie zadziała z powodu niewystarczających uprawnień sprawdź, czy możesz czytać pliki w `/dev/input` - może być konieczne przynależenie do grupy `input`.
-W ostateczności można odpalić program z `sudo`.
+
+Gdyby program nie działał z powodu niewystarczających uprawnień sprawdź, jakie uprawnienia mają pliki w `/dev/input`.
+W zależności od konfiguracji systemu może być konieczne np. przynależenie do grupy `input`.
+W takim przypadku możesz dodać swojego użytkownika do grupy `input` (`usermod -aG input <username>`) albo rozszerzyć uprawnienia (`chmod a+r /dev/input/*`).
+W każdym razie będzie to wymagało uprawnień administratora (`sudo` lub `su`).
+W ostateczności można odpalić program z takimi uprawnieniami poprzez `sudo`.
+
+Jeśli mimo wszystko nie możesz uruchomić programu (np. pracujesz na komputerze wydziałowym i nie masz uprawnień administratora) spokojnie czytaj dalej.
+Przeanalizuj działanie programu i spróbuj zmodyfikować go, żeby działał z opisanymi niżej deskryptorami, które nie powinny już wymagać specjalnych ustawień.
 
 Kiedy program się kończy?
-{{< details "Answer" >}}
+{{< answer  >}}
 Program kończy się po tym, jak `poll` zwróci 30 razy.
 Nie jest to równoważne z otrzymaniem 30 eventów.
 Za jednym razem możemy odczytać zdarzenie z kilku urządzeń, a każde urządzenie może mieć zakolejkowane kilka zdarzeń.
-{{< /details >}}
+{{< /answer >}}
 
 
 Czemu otworzyliśmy pliki w trybie nieblokującym?
 Czy program działałby z deskryptorami w trybie blokującym?
-{{< details "Answer" >}}
+{{< answer  >}}
 Należy uważać z używaniem blokującego IO i multipleksingu.
 Zauważmy, że `poll` informuje nas tylko, że jakieś dane są dostępne, jednak nie wiemy jak dużo.
 Przy nieblokującym deskryptorze możemy po prostu czytać do skutku - co w istocie robimy.
@@ -252,21 +288,60 @@ Należy jednak z tym uważać.
 W tym wypadku mamy gwarancję, że dane mają rozmiar struktury `input_event`.
 Gdybyśmy jednak tego nie wiedzieli musielibyśmy czytać po jednym bajcie.
 Jak widać dużo lepiej jest tutaj używać nieblokującego IO, blokujące nie ma żadnych zalet a stwarza ryzyko zablokowania programu.
-{{< /details >}}
+{{< /answer >}}
 
 Czy możemy użyć `poll`-a do czytania ze zwykłych plików?
-{{< details "Answer" >}}
+{{< answer  >}}
 Możemy ale nie ma to za dużo sensu.
 Zwykłe pliki są zawsze gotowe do odczytu, `poll` zawsze od razu to zwróci.
-{{< /details >}}
+{{< /answer >}}
 
 Powstaje pytanie, do jakich (sensownych) rodzajów plików możemy jeszcze użyć `poll`-a.
 Z poznanych dotąd (na SOPach oraz ,,Podstawach systemu UNIX'') są to przede wszystkim urządzenia znakowe - należą do nich terminale (`/dev/tty`, ale również po prostu standardowe wejście i wyjście naszych programów), pokazane wyżej urządzenia `/dev/input/*` oraz wiele innych plików w `/dev`.
 Ponadto łącza (pipe/FIFO), gniazda sieciowe i wiele innych deskryptorów zwracanych przez różne funkcje systemowe (`timerfd`, `signalfd`, `inotify`...).
 
+### Łącza nazwane w skrócie
+
+Łącza nazwane czyli tzw. FIFO (`man 7 fifo`) to specjalny rodzaj pliku poprzez który programy mogą wymieniać między sobą dane.
+Zostaną one przerobione szczegółowo na SOP2 przy okazji omawiania IPC (_inter-process communication_).
+Pokażemy jednak tutaj podstawy, ponieważ FIFO to dobry i prosty przykład pliku na którym możemy użyć `poll`-a.
+
+Łącze nazwane najprościej stworzyć z linii poleceń poprzez komendę `mkfifo <nazwa>` (`man 1 mkfifo`).
+Polecenie to utworzy plik FIFO o podanej nazwie.
+Programy mogą zapisywać oraz odczytywać z niego dane, jednak nie zostają one tam zachowane - odczytanie danych z FIFO jednocześnie je kasuje.
+Najprościej przetestować działanie łączy z linii komend.
+W jednym terminalu tworzymy FIFO i zaczynamy z niego czytać:
+
+```
+mkfifo my_fifo
+cat my_fifo
+```
+
+`cat` nie wykona się dopóki w FIFO nie pojawią sie jakieś dane.
+W drugim terminalu piszemy:
+
+```
+echo "message" > my_fifo
+```
+
+po wykonaniu tego poleceń `cat` z pierwszego terminala powinien zwrócić nasza wiadomość.
+Możemy teraz usunąć nasze łącze zwykłym poleceniem `rm`.
+
+W programie w języku C możemy stworzyć FIFO poleceniem `mkfifo` (`man 3p mkfifo`):
+
+```
+int mkfifo(const char *path, mode_t mode);
+```
+
+`path` to oczywiście ścieżka a `mode` uprawnienia - tak samo jak przy funkcji `mkdir`.
+
+Na tak stworzonym FIFO operacje wykonujemy już tak samo jak na zwykłym pliku - otwieramy je przez `open`, czytamy i piszemy przez `read` i `write` a na końcu zamykamy `close` i możemy usunąć przez `unlink`.
+Dodatkowo oczywiście możemy otworzyć je w trybie blokującym i nieblokującym oraz użyć `poll`-a do multipleksowania.
+
+
 ### Timerfd (dodatkowy materiał)
 
-Prostym i bardzo przydatnym system na którym możemy testować funkcję `poll` jest `timerfd`.
+Prostym i bardzo przydatnym systemem na którym możemy testować funkcję `poll` jest `timerfd`.
 Należy on do linuxowych rozszerzeń (nie jest częścią standardu POSIX) dlatego nie będziemy go wymagać na laboratorium.
 Jest to jednak przydatny i ciekawy mechanizm, dlatego warto przeczytać resztę tego podrozdziału.
 
@@ -299,7 +374,7 @@ Wiele przydatnych funkcji używa struktury `timespec`, dlatego warto się z nią
 Parametr `old_value` jest opcjonalny, możemy ustawic go na `NULL` - więcej informacji przeczytaj o nim w manualu.
 
 
-{{< includecode "l2-4.c" >}}
+{{< includecode "l2-5.c" >}}
 
 Działanie powyższego programu jest chyba jasne.
 Żeby potwierdzić, że timer działa dobrze możesz uruchomić program przez polecenie `time`, np. `time ./l2-4`.
@@ -309,32 +384,12 @@ Jako ćwiczenie spróbuj zmodyfikować poprzedni program z `poll`-em w taki spos
 
 ### Epoll (dodatkowy materiał)
 
-## Mmap
+Funkcja `poll` jest prosta w użyciu i rozwiązuje większość naszych problemów.
+Jednak można zadać pytanie - co jeżeli deskryptorów jest naprawdę dużo?
+W takiej sytuacji używając `poll`-a wciąż musimy iterować się przez nie wszystkie, co ogranicza wydajność.
+Jeżeli nasz program działa na linuxie rozwiazaniem może być `epoll` - który został opisany w [osobnym dodatkowym materiale]({{< ref "/sop1/lab/l2/epoll" >}}).
+Zachęcam do zapoznania się, chociaż nie będzie to wymagane na laboratorium.
 
-Jeszcze jeden, bardzo wygodny sposób na dostęp do pliku to ,,zmapowanie'' go do pamięci.
-Służy do tego funkcja `mmap`.
-Jest ona szeroko używana również do wielu innych rzeczy, które omówimy w przyszłości.
-Na chwilę obecną skupimy się jedynie na mapowaniu plików.
-Wygląda to zwykle w następujący sposób:
-
-{{< includecode "l2-5.c" >}}
-
-Najważniejszą funkcją jest tutaj oczywiście sam `mmap`:
-
-```
-char *buff = mmap(NULL, length, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-```
-
-W ten sposób prosimy system operacyjny o ,,zmapowanie'' pliku o deskryptorze `fd` do pamięci o rozmiarze `length` tak, żebyśmy mogli go zarówno czytać jak i modyfikować (`PROT_READ | PROT_WRITE`).
-Wynikiem jest wskaźnik na zmapowaną pamięć lub wartość `MAP_FAILED` gdy wystąpi błąd.
-O pozostałych parametrach i zastosowaniach tej funkcji możesz poczytać w manualu (`man 3p mmap`, `man 2 mmap` dla linuxowych rozszerzeń), jednak nie będziemy ich wymagać.
-Na razie interesuje nas tylko, że, jak widać w powyższym kodzie, `mmap` pozwala nam bardzo wygodnie modyfikować pliki, tak samo jak zwykłe tablice.
-Dwie funkcje pomocnicze to `msync` i `munmap`.
-`msync` wymusza synchronizację zmian na dysk - system operacyjny nie robi tego zawsze od razu, ponieważ zapisy na dysk są wolne.
-`munmap` to likwidacja mapowania, czyli sprzątanie.
-
-Ważną uwagą jest, że deskryptor musi mieć odpowiednie uprawnienia.
-Gdybyśmy do `mmap` podali `PROT_READ | PROT_WRITE` oraz deskryptor który otworzyliśmy np. z flagą `O_RDONLY` funkcja zwróciłaby błąd.
 
 ## Kody źródłowe z treści tutoriala
 {{% codeattachments %}}

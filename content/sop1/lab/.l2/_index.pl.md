@@ -78,30 +78,30 @@ listy PID'ów.
 podejmujemy jak najmniej działań, zresztą co mielibyśmy zrobić wywołać rekurencyjnie `ERR`?
 
 - Pytanie czemu po uruchomieniu wraca linia poleceń?
-{{< details "Odpowiedź" >}} Proces rodzic nie czeka na zakończenie procesów potomnych, brak wywołania `wait` lub `waitpid`, naprawimy to w 2 etapie {{< /details >}}
+{{< answer  >}} Proces rodzic nie czeka na zakończenie procesów potomnych, brak wywołania `wait` lub `waitpid`, naprawimy to w 2 etapie {{< /answer >}}
 
 - Jak sprawdzić kto jest rodzicem procesów prog13a? Dlaczego właśnie ten proces?
-{{< details "Odpowiedź" >}} Zaraz po uruchomieniu wykonać np.: `$ps -f`, rodzicem procesów będzie proces o PID 1 czyli init/systemd. Dzieje się tak dlatego, że proces rodzic kończy się bez czekania na procesy potomne a te nie mogą "wisieć" poza drzewem procesów. Nie przechodzą pod powłokę ale właśnie pod proces po PID=1 {{< /details >}}
+{{< answer  >}} Zaraz po uruchomieniu wykonać np.: `$ps -f`, rodzicem procesów będzie proces o PID 1 czyli init/systemd. Dzieje się tak dlatego, że proces rodzic kończy się bez czekania na procesy potomne a te nie mogą "wisieć" poza drzewem procesów. Nie przechodzą pod powłokę ale właśnie pod proces po PID=1 {{< /answer >}}
 
 - Zwróć uwagę na miejsce i sposób ustalenia ziarna liczb losowych. Czy jeśli przesuniemy srand z procesu dziecka do rodzica to zmieni to działanie programu? Jak?
-{{< details "Odpowiedź" >}}  Procesy potomne będą losowały te same liczby ponieważ zaczynają z tym samym ziarnem, tak być nie może. {{< /details >}}
+{{< answer  >}}  Procesy potomne będą losowały te same liczby ponieważ zaczynają z tym samym ziarnem, tak być nie może. {{< /answer >}}
 
 - Czy można jako argument `srand`  podać `time()` zamiast `getpid()`?
-{{< details "Odpowiedź" >}}  Nie można, wywołania time() odbędą się w tej samej sekundzie wiec ziarna będą takie same, efekt taki sam jak poprzednio. {{< /details >}}
+{{< answer  >}}  Nie można, wywołania time() odbędą się w tej samej sekundzie wiec ziarna będą takie same, efekt taki sam jak poprzednio. {{< /answer >}}
 
 - Zwróć uwagę na losowanie liczby z przedziału `[A,B]`. Niby oczywiste, ale warto opracować sobie prosty wzór.
 
 - Jak zachowa się program bez `exit`  wywołanym zaraz po `child_work` w procesie potomnym?
-{{< details "Odpowiedź" >}} Procesy potomne po zakończeniu wykonania kodu funkcji child_work przechodzą dalej w kodzie czyli wracają do pętli forkującej i tworzą własne procesy potomne, które to też mogą utworzyć swoje potomne itd. Niezły bałagan, do tego procesy dzieci nie czekają na swoje dzieci.  {{< /details >}}
+{{< answer  >}} Procesy potomne po zakończeniu wykonania kodu funkcji child_work przechodzą dalej w kodzie czyli wracają do pętli forkującej i tworzą własne procesy potomne, które to też mogą utworzyć swoje potomne itd. Niezły bałagan, do tego procesy dzieci nie czekają na swoje dzieci.  {{< /answer >}}
 
 - Ile procesów (w sumie) zostanie utworzonych jeśli jako parametr uruchomienia podamy 3 przy założeniu, że nie ma `exit` wspomnianego w poprzednim pytaniu?
-{{< details "Odpowiedź" >}}  1 rodzic 3 potomne 1 poziomu,  3 drugiego i  1 trzeciego poziomu, w sumie 8 procesów, narysuj sobie drzewko, opisz gałęzie wartością n w momencie wykonania forka. {{< /details >}}
+{{< answer  >}}  1 rodzic 3 potomne 1 poziomu,  3 drugiego i  1 trzeciego poziomu, w sumie 8 procesów, narysuj sobie drzewko, opisz gałęzie wartością n w momencie wykonania forka. {{< /answer >}}
 
 - Co zwraca `sleep`?  Czy powinniśmy jakoś na to reagować? 
-{{< details "Odpowiedź" >}} zwraca czas "niedospany" w przypadku przerwania funkcją obsługi sygnału w tym programie proces dziecka nie dostaje sygnałów i ich nie obsługuje więc nie musimy się tym martwić. W innych programach często będziemy restartować sleep z nowym czasem spania tak aby w sumie przespać tyle ile było założone. {{< /details >}}
+{{< answer  >}} zwraca czas "niedospany" w przypadku przerwania funkcją obsługi sygnału w tym programie proces dziecka nie dostaje sygnałów i ich nie obsługuje więc nie musimy się tym martwić. W innych programach często będziemy restartować sleep z nowym czasem spania tak aby w sumie przespać tyle ile było założone. {{< /answer >}}
 
 - W kolejnym etapie dodamy czekanie i zliczanie procesów potomnych. Pytanie skąd mamy wiedzieć ile procesów potomnych w danej chwili istnieje?
-{{< details "Odpowiedź" >}} Można próbować zliczać sygnały SIGCHLD ale to zawodny sposób bo mogą się "sklejać" czyli mniej ich dostaniemy niż potomków się naprawdę zakończyło. Jedyną pewną metodą jest zliczanie udanych wywołań wait i waitpid. {{< /details >}}
+{{< answer  >}} Można próbować zliczać sygnały SIGCHLD ale to zawodny sposób bo mogą się "sklejać" czyli mniej ich dostaniemy niż potomków się naprawdę zakończyło. Jedyną pewną metodą jest zliczanie udanych wywołań wait i waitpid. {{< /answer >}}
 
 ### Czekanie na procesy potomne
 Po zakończeniu wykonywania wszystkich swoich instrukcji proces potomny przechodzi w stan **zombie** (jego identyfikator dalej widnieje w tablicy procesów) i pozostaje w nim do momentu, aż proces rodzic odbierze informację o jego stanie (`Status Information` z `man 3p wait`). Dopiero wtedy zasoby procesu potomnego są **całkowicie zwalniane** z systemu. 
@@ -162,19 +162,19 @@ Nowe strony z manuala:
 - Koniecznie trzeba rozróżnić kiedy waitpid informuje nas o chwilowym braku zakończonych potomków (wartość zwracana zero) od permanentnego braku potomków (błąd `ECHILD`). Ten ostatni przypadek nie jest w zasadzie błędem, tę sytuację trzeba normalnie obsłużyć. 
 
 - Czemu wołamy `waitpid` w pętli?
-{{< details "Odpowiedź" >}} Nie wiemy z góry ile procesów zombie czeka, może być 0 , 1 , 2 aż do n {{< /details >}}
+{{< answer  >}} Nie wiemy z góry ile procesów zombie czeka, może być 0 , 1 , 2 aż do n {{< /answer >}}
 
 - Czemu wołamy waitpid z flagą `WNOHANG`?
-{{< details "Odpowiedź" >}} Nie chcemy czekać nie wiadomo ile na jeszcze żyjące procesy, działamy w pętli, która co 3 sekundy ma wypisać dane {{< /details >}}
+{{< answer  >}} Nie chcemy czekać nie wiadomo ile na jeszcze żyjące procesy, działamy w pętli, która co 3 sekundy ma wypisać dane {{< /answer >}}
 
 - Czemu wołamy `waitpid` z pidem zero?
-{{< details "Odpowiedź" >}} Czekamy na dowolny proces potomny, nie musimy znać jego PID, zero oznacza dowolny z potomków. {{< /details >}}
+{{< answer  >}} Czekamy na dowolny proces potomny, nie musimy znać jego PID, zero oznacza dowolny z potomków. {{< /answer >}}
 
 - Czy w tym programie występują sygnały? 
-{{< details "Odpowiedź" >}} `SIGCHLD`, nie ma f. obsługi ale to nie szkodzi, w pewnym sensie jest obsługiwany przez waitpid {{< /details >}}
+{{< answer  >}} `SIGCHLD`, nie ma f. obsługi ale to nie szkodzi, w pewnym sensie jest obsługiwany przez waitpid {{< /answer >}}
 
 - Czy tym razem nie powinniśmy sprawdzać co zwraca sleep skoro są sygnały?
-{{< details "Odpowiedź" >}} Nie bo nie ma funkcji obsługi sygnału. {{< /details >}}
+{{< answer  >}} Nie bo nie ma funkcji obsługi sygnału. {{< /answer >}}
 
 ## Sygnały
 
@@ -286,10 +286,10 @@ cała logika pozostała w głównym kodzie jest najlepsza.
 Funkcja `memset` bywa konieczna a zazwyczaj jest użyteczna przy inicjowaniu nie w pełni znanych nam struktur. W tym przypadku POSIX wyraźnie mówi, że struktura `sigaction` może zawierać więcej pól niż jest to wymagane przez standard. W takim przypadku te dodatkowe pola, których wartości nie ustawilibyśmy (tutaj zzerujemy za pomocą `memset`) mogą skutkować różnym działaniem na różnych systemach, a nawet różnym zachowaniem po między wywołaniami programu.
 
 Czy podczas obsługi sygnału `SIGCHLD` można się spodziewać więcej niż jednego zakończonego procesu dziecka?
-{{< details "Odpowiedź" >}}  Tak, sygnały mogą się skleić, dziecko może się zakończyć akurat w trakcie obsługi `SIGCHLD`. Stąd pętla w funkcji obsługi tego. {{< /details >}}
+{{< answer  >}}  Tak, sygnały mogą się skleić, dziecko może się zakończyć akurat w trakcie obsługi `SIGCHLD`. Stąd pętla w funkcji obsługi tego. {{< /answer >}}
 
 Czy podczas obsługi sygnału `SIGCHLD` można się spodziewać braku zakończonego procesu dziecka? Zerknij na zakończenie main.
-{{< details "Odpowiedź" >}}  Tak, `wait` na końcu main może "podkradać" te czekające zombie tj. wywoła się poprawnie `wait` zanim wykona się funkcja obsługi.  {{< /details >}}
+{{< answer  >}}  Tak, `wait` na końcu main może "podkradać" te czekające zombie tj. wywoła się poprawnie `wait` zanim wykona się funkcja obsługi.  {{< /answer >}}
 
 Pamiętaj o możliwym **KONFLIKCIE** `sleep` i `alarm` - wg. POSIX `sleep` może używać w implementacji `SIGALRM` a nie ma jak
 zagnieżdżać sygnałów, nigdy zatem w kodzie oczekującym na alarm nie używamy `sleep`, można za to użyć `nanosleep` tak jak w kodzie powyżej.
@@ -301,28 +301,28 @@ odpowiedz na pytania poniżej. Pamiętaj aby zawsze dobrze przemyśleć kolejno�
 jest związanych sporo błędów w pracach studentów!
 
 Zwróć uwagę na `sleep`, czemu jest w pętli? Czy czas spania jest/mógłby być dokładny?
-{{< details "Odpowiedź" >}}  sleep jest przerywane przez obsługę sygnału, zatem restart jest konieczny. Ponieważ sleep zwraca pozostały czas spania w sekundach to z uwagi na zaokrąglenia nie można po restarcie uzyskać dokładnego czasu spania.   {{< /details >}}
+{{< answer  >}}  sleep jest przerywane przez obsługę sygnału, zatem restart jest konieczny. Ponieważ sleep zwraca pozostały czas spania w sekundach to z uwagi na zaokrąglenia nie można po restarcie uzyskać dokładnego czasu spania.   {{< /answer >}}
 
 Jaka jest domyślna dyspozycja znakomitej większości sygnałów (w tym `SIGUSR1` i `SIGUSR2`)?
-{{< details "Odpowiedź" >}} Zabicie procesu do którego wysyłamy, w tym programie brak reakcji (funkcji obsługi), blokowania lub ignorowania sygnałów SIGUSR1 i SIGUSR2 skutkowałoby przedwczesnym zabiciem procesów. {{< /details >}}
+{{< answer  >}} Zabicie procesu do którego wysyłamy, w tym programie brak reakcji (funkcji obsługi), blokowania lub ignorowania sygnałów SIGUSR1 i SIGUSR2 skutkowałoby przedwczesnym zabiciem procesów. {{< /answer >}}
 
 Jaka jest konsekwencja wysyłana przez proces rodzic sygnałów `SIGUSR1`/`2` do całej grupy procesów?
-{{< details "Odpowiedź" >}} Proces rodzic musi jakoś reagować na te sygnały mimo, że nie są one mu potrzebne do pracy, zatem je ignoruje. {{< /details >}}
+{{< answer  >}} Proces rodzic musi jakoś reagować na te sygnały mimo, że nie są one mu potrzebne do pracy, zatem je ignoruje. {{< /answer >}}
 
 Co by się stało, gdyby nie było włączone ignorowanie `SIGUSR1` i `SIGUSR2` w procesie rodzicu?
-{{< details "Odpowiedź" >}} Proces rodzic zabiłby się pierwszym wysyłanym sygnałem. {{< /details >}} 
+{{< answer  >}} Proces rodzic zabiłby się pierwszym wysyłanym sygnałem. {{< /answer >}} 
 
 Czy można przesunąć ustawienie ignorowania sygnałów za funkcję `create_children`? Procesy potomne przecież nie potrzebują tego ignorowania, mają od razu po starcie ustawianą funkcję obsługi? 
-{{< details "Odpowiedź" >}} Nie można, mogłoby się zdarzyć (choć rzadko), że procesy potomne zostałyby tylko utworzone (a nie zaczęte) a przydział CPU po tym utworzeniu przeszedłby do procesu rodzica. który zdążyłby wysłać sygnał SIGUSR1 do dzieci. Kolejny przydział CPU do procesu dziecka/dzieci spowodowałby najpierw obsługę sygnału a to oznaczałoby zabicie! {{< /details >}}
+{{< answer  >}} Nie można, mogłoby się zdarzyć (choć rzadko), że procesy potomne zostałyby tylko utworzone (a nie zaczęte) a przydział CPU po tym utworzeniu przeszedłby do procesu rodzica. który zdążyłby wysłać sygnał SIGUSR1 do dzieci. Kolejny przydział CPU do procesu dziecka/dzieci spowodowałby najpierw obsługę sygnału a to oznaczałoby zabicie! {{< /answer >}}
 
 Czy można jakoś zmienić ten program tak aby wykluczyć ignorowanie sygnałów `SIGUSR1` i `SIGUSR2`?
-{{< details "Odpowiedź" >}} Ten akurat program może mieć identyczną reakcję na te sygnały w rodzicu i potomkach, można zatem ustawić obsługę od razu w procesie rodzicielskim przed fork. {{< /details >}}
+{{< answer  >}} Ten akurat program może mieć identyczną reakcję na te sygnały w rodzicu i potomkach, można zatem ustawić obsługę od razu w procesie rodzicielskim przed fork. {{< /answer >}}
 
 A co się stanie jeśli za fork  przeniesiemy obsługę `SIGCHLD`? 
-{{< details "Odpowiedź" >}} Jeśli jeden z procesów potomnych "umrze" zanim włączymy tą obsługę to będzie on "zombie" aż do momentu gdy kolejny z podprocesów się zakończy. Nie jest to bardzo duży błąd ale warto i na takie zwracać uwagę. {{< /details >}}
+{{< answer  >}} Jeśli jeden z procesów potomnych "umrze" zanim włączymy tą obsługę to będzie on "zombie" aż do momentu gdy kolejny z podprocesów się zakończy. Nie jest to bardzo duży błąd ale warto i na takie zwracać uwagę. {{< /answer >}}
 
 Pytanie, czy wait na końcu main jest potrzebny? Przecież i tak funkcja `parent_work()` powinna działać co najmniej tyle czasu co najdłuższy z podprocesów?
-{{< details "Odpowiedź" >}} Wyliczenie czasu w pętli rodzica nie wystarczy, w obciążonym systemie możliwe są dowolnie długie opóźnienia, bez `wait` powstaje zatem tzw. race condition - kto się pierwszy zakończy rodzic czy potomne procesy. {{< /details >}}
+{{< answer  >}} Wyliczenie czasu w pętli rodzica nie wystarczy, w obciążonym systemie możliwe są dowolnie długie opóźnienia, bez `wait` powstaje zatem tzw. race condition - kto się pierwszy zakończy rodzic czy potomne procesy. {{< /answer >}}
 
 ## Czekanie na sygnał
 
@@ -433,16 +433,16 @@ przykładzie) można nieco rozluźnić zasady tego co wolno przekazywać przez z
 czasu ich działania.
 
 - Który licznik jest niepoprawny, ten w procesie dziecka czy rodzica?
-{{< details "Odpowiedź" >}} To musi być ten który jest mniejszy, nie mamy w tym kodzie możliwości zliczania nieistniejących sygnałów, możemy tylko gubić te wysłane. Gubić może oczywiście tylko odbiorca. Problem jest w procesie rodzica. {{< /details >}}
+{{< answer  >}} To musi być ten który jest mniejszy, nie mamy w tym kodzie możliwości zliczania nieistniejących sygnałów, możemy tylko gubić te wysłane. Gubić może oczywiście tylko odbiorca. Problem jest w procesie rodzica. {{< /answer >}}
 
 - Pytanie czemu liczniki się różnią ? 
-{{< details "Odpowiedź" >}} 1. sklejanie sygnałów ale to ma mały wpływ, 2.  fakt, że sigsuspend NIE GWARANTUJE WYKONANIA MAKSYMALNIE JEDNEJ OBSŁUGI SYGNAŁU! To częsty błąd w rozumowaniu! Zaraz po wywołaniu obsługi SIGUSR2 jeszcze w obrębie jednego wykonania sigsuspend następuje obsługa SIGUSR1, zmienna globalna jest nadpisywana i proces rodzic nie ma szansy zliczyć SIGUSR2!!! {{< /details >}}
+{{< answer  >}} 1. sklejanie sygnałów ale to ma mały wpływ, 2.  fakt, że sigsuspend NIE GWARANTUJE WYKONANIA MAKSYMALNIE JEDNEJ OBSŁUGI SYGNAŁU! To częsty błąd w rozumowaniu! Zaraz po wywołaniu obsługi SIGUSR2 jeszcze w obrębie jednego wykonania sigsuspend następuje obsługa SIGUSR1, zmienna globalna jest nadpisywana i proces rodzic nie ma szansy zliczyć SIGUSR2!!! {{< /answer >}}
 
 - Jak uruchomić ten program aby zminimalizować szansę na sklejanie się `SIGUSR2` i jednocześnie obserwować  różnice w licznikach?
-{{< details "Odpowiedź" >}} Uruchomić dla małych czasów i dużych ilości SIGUSR1 między SIGUSR2, teraz jest prawie zerowa szansa na sklejenie SIGUSR2, za to duża na wykonanie wiele razy funkcji obsługi sygnału w obrębie jednego sigsuspend {{< /details >}}
+{{< answer  >}} Uruchomić dla małych czasów i dużych ilości SIGUSR1 między SIGUSR2, teraz jest prawie zerowa szansa na sklejenie SIGUSR2, za to duża na wykonanie wiele razy funkcji obsługi sygnału w obrębie jednego sigsuspend {{< /answer >}}
 
 - Popraw powyższy program tak aby wyeliminować problem wielu wywołań obsługi sygnału w obrębie jednego `sigsuspend` 
-{{< details "Odpowiedź" >}} Można to zrobić np. dodając drugą zmienną globalną tylko do obsługi SIGUSR2, zwiększanie zmiennej count też można przenieść do funkcji obsługi sygnału w ten sposób uniknie się potencjalnego problemu z obsługą dwóch SIGUSR2  w obrębie jednego sigsuspend. Trzeba jeszcze przebudować kod związany z wypisywaniem zmienionego licznika count w rodzicu i gotowe. {{< /details >}}
+{{< answer  >}} Można to zrobić np. dodając drugą zmienną globalną tylko do obsługi SIGUSR2, zwiększanie zmiennej count też można przenieść do funkcji obsługi sygnału w ten sposób uniknie się potencjalnego problemu z obsługą dwóch SIGUSR2  w obrębie jednego sigsuspend. Trzeba jeszcze przebudować kod związany z wypisywaniem zmienionego licznika count w rodzicu i gotowe. {{< /answer >}}
 
 ## Operacje niskopoziomowe na plikach, a sygnały
 
@@ -481,36 +481,36 @@ Po wywołaniu programu z parametrami `1 20 40 out.txt` powinieneś obserwować n
  - Możliwe wystąpienie błędu `fprintf: Interrupted system call` - przerwanie funkcją obsługi sygnału funkcji `fprintf` **ZANIM** ta coś wyświetli
  - Analogiczne komunikaty dla `open` i `close` - może to być trudno zaobserwować w tym programie ale jest to możliwe wg. POSIX
  - Widać, że zliczamy w rodzicu mniej sygnałów niż wysyła potomek, ponieważ sumowanie odbywa się bezpośrednio w nieblokowanej obsłudze sygnału to łatwo się domyślić, że w grę wchodzi sklejanie się sygnałów, pytanie czemu w tym programie to sklejanie jest aż tak silne?
-{{< details "Odpowiedź" >}}  w tej architekturze (GNU/Linux) planista procesora blokuje uruchomienie obsługi sygnału podczas większych operacji IO, w tym czasie sygnały się sklejają. {{< /details >}}
+{{< answer  >}}  w tej architekturze (GNU/Linux) planista procesora blokuje uruchomienie obsługi sygnału podczas większych operacji IO, w tym czasie sygnały się sklejają. {{< /answer >}}
 
 ### Uwagi i pytania
 
 W jakim celu proces rodzic na zakończenie wysyła do całej grupy `SIGUSR1`?
-{{< details "Odpowiedź" >}} Aby zakończyć proces potomny. {{< /details >}}
+{{< answer  >}} Aby zakończyć proces potomny. {{< /answer >}}
 
 Jak proces potomny może się zakończyć po nadejściu `SIGUSR1` skoro dziedziczy obsługę tego sygnału?
-{{< details "Odpowiedź" >}} Zaraz po starcie potomka przywracana jest domyślna reakcja na ten sygnał, która właśnie zapewnia zabicie procesu. {{< /details >}}
+{{< answer  >}} Zaraz po starcie potomka przywracana jest domyślna reakcja na ten sygnał, która właśnie zapewnia zabicie procesu. {{< /answer >}}
 
 Czemu proces rodzic nie zabija się sam tym sygnałem?
-{{< details "Odpowiedź" >}} Ma włączoną obsługę tego sygnału zanim wyśle sygnał do grupy. {{< /details >}}
+{{< answer  >}} Ma włączoną obsługę tego sygnału zanim wyśle sygnał do grupy. {{< /answer >}}
 
 Czy taka strategia może się  nie powieść?
-{{< details "Odpowiedź" >}} Tak, jeśli proces rodzic upora się ze swoim zadaniem zanim proces potomny zmieni dyspozycję odnośnie `SIGUSR1` na domyślną. {{< /details >}}
+{{< answer  >}} Tak, jeśli proces rodzic upora się ze swoim zadaniem zanim proces potomny zmieni dyspozycję odnośnie `SIGUSR1` na domyślną. {{< /answer >}}
 
 Czy można to jakoś poprawić? Tzn. proces rodzic zawsze zabije potomka ale jednocześnie sam nie narazi się na przedwczesną śmierć?
-{{< details "Odpowiedź" >}} Wyślij do potomka `SIGUSR2`. {{< /details >}} 
+{{< answer  >}} Wyślij do potomka `SIGUSR2`. {{< /answer >}} 
 
 Czy taka strategia zakończenia potomka zawsze jest poprawna i  łatwa do przeprowadzenia?
-{{< details "Odpowiedź" >}} Tylko jeśli proces zabijany nie posiada zasobów, jeśli by takowe posiadał to musisz dodać obsługę sygnału kończącego co nie musi być  łatwe. {{< /details >}}
+{{< answer  >}} Tylko jeśli proces zabijany nie posiada zasobów, jeśli by takowe posiadał to musisz dodać obsługę sygnału kończącego co nie musi być  łatwe. {{< /answer >}}
 
 Czemu po wywołaniu alokacji pamięci sprawdzamy przydzielony wskaźnik czy aby nie jest NULL? 
-{{< details "Odpowiedź" >}} System może nie móc nam przydzielić więcej pamięci, musimy być na to przygotowani. Brak tego sprawdzania jest bardzo częstym błędem w pracach studentów. {{< /details >}}
+{{< answer  >}} System może nie móc nam przydzielić więcej pamięci, musimy być na to przygotowani. Brak tego sprawdzania jest bardzo częstym błędem w pracach studentów. {{< /answer >}}
 
 Czy nie dałoby się tego bufora uczynić zmienną automatyczną i uniknąć kodu związanego z alokacją i zwalnianiem?
-{{< details "Odpowiedź" >}} Nie ma w znanych mi architekturach tak dużych stosów aby można było  na nich umieszczać tak duże zmienne (40MB dla przykładowych parametrów), zazwyczaj stos ma wymiar do kilku megabajtów, gdyby  nasz bufor był mały (kilka KB) to moglibyśmy tak zrobić. {{< /details >}}  
+{{< answer  >}} Nie ma w znanych mi architekturach tak dużych stosów aby można było  na nich umieszczać tak duże zmienne (40MB dla przykładowych parametrów), zazwyczaj stos ma wymiar do kilku megabajtów, gdyby  nasz bufor był mały (kilka KB) to moglibyśmy tak zrobić. {{< /answer >}}  
 
 Czemu uprawnienia do nowego pliku są  pełne (0777)? 
-{{< details "Odpowiedź" >}} umask zredukuje uprawnienia, jeśli nie chcemy mieć konkretnych ustawień to jest to dobra strategia {{< /details >}}
+{{< answer  >}} umask zredukuje uprawnienia, jeśli nie chcemy mieć konkretnych ustawień to jest to dobra strategia {{< /answer >}}
 
 ### Rozwiązanie problemów
 
@@ -526,10 +526,10 @@ Uruchamiamy jak poprzednio - błędy znikają.
 ### Uwagi i pytania
 
 Jakie inne przerwania w programie może spowodować funkcja obsługi sygnału?
-{{< details "Odpowiedź" >}} Może przerwać operacje IO lub spanie, nie jest to raportowane przez EINTR, w obu przypadkach reakcja na takie zdarzenie nie jest prosta.  {{< /details >}}
+{{< answer  >}} Może przerwać operacje IO lub spanie, nie jest to raportowane przez EINTR, w obu przypadkach reakcja na takie zdarzenie nie jest prosta.  {{< /answer >}}
 
 Skąd wiemy, które funkcje mogą być przerwane zanim coś osiągną (EINTR)?
-{{< details "Odpowiedź" >}} Strony man pages, dział o zwracanych błędach. Łatwo zgadnąć, że to te funkcje, które mogą/muszą czekać zanim coś zrobią. {{< /details >}}
+{{< answer  >}} Strony man pages, dział o zwracanych błędach. Łatwo zgadnąć, że to te funkcje, które mogą/muszą czekać zanim coś zrobią. {{< /answer >}}
 
 Jako ważne ćwiczenie przeanalizuj jak działa `bulk_read` i `bulk_write`. Musisz rozumieć czemu uwzględniają tak dużo przypadków, jakie to przypadki, kiedy operacja IO może być przerwana, jak rozpoznać EOF.
 W przeciwieństwie do laboratorium L1, na L2 i kolejnych trzeba używać tych funkcji (lub analogicznych) gdy używasz `read` lub `write` (ponieważ w programie mamy już sygnały).
@@ -551,7 +551,7 @@ programie używającym naszej biblioteki.
  - Czasem zależy nam na tym, aby właśnie być informowanym o przerwaniu, jaskrawym przykładem jest funkcja sigsuspend, która z tą flagą traci sens!
 
 Po wywołaniu `fprintf` nie sprawdzamy błędów innych niż `EINTR`, czemu?
-{{< details "Odpowiedź" >}}Jeśli nie możemy pisać na stderr (zapewne ekran) to i tak nie zaraportujemy błędu. {{< /details >}}
+{{< answer  >}}Jeśli nie możemy pisać na stderr (zapewne ekran) to i tak nie zaraportujemy błędu. {{< /answer >}}
 
 Zwróć uwagę, że naprawdę duże (f)printf'y mogą być przerwane także w trakcie wypisywania! Trudno będzie coś mądrego z
 tym zrobić, zwłaszcza jeśli do tego wypisywania używamy skomplikowanych formatów. Co prawda funkcja zwróci ile znaków

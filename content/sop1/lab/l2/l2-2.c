@@ -5,64 +5,44 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 #define ERR(source) (perror(source), fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), exit(EXIT_FAILURE))
 
-void set_nonblocking(int fd)
+void create_file()
 {
-    int flags = fcntl(fd, F_GETFL);
-    if (flags == -1)
-        ERR("fcntl");
-    flags |= O_NONBLOCK;
-    if (fcntl(fd, F_SETFL, flags) == -1)
-        ERR("fcntl");
+    int fd = open("a.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (fd == -1)
+        ERR("open");
+    char *data = "abcdefghijklmnopqrstuvwxyz\n";
+    if (write(fd, data, strlen(data)) < 0)
+        ERR("write");
+    close(fd);
 }
 
 int main(void)
 {
-    char buf[128];
-    ssize_t n;
+    create_file();
 
-    puts("Testing blocking scanf - type something and press enter:");
-    scanf("%100s", buf);
-    printf("You typed: %s\n", buf);
+    int fd = open("a.txt", O_RDWR);
+    if (fd == -1)
+        ERR("open");
 
-    puts("Testing blocking read - type something and press enter:");
-    n = read(STDIN_FILENO, buf, sizeof(buf) - 1);
-    if (n < 0)
-        ERR("read");
-    buf[n] = 0;
-    printf("Got %lu bytes: \"%s\"\n", n, buf);
-    if (buf[n - 1] == '\n')
-        puts("(your last character was \\n)");
+    struct stat sb;
+    if (fstat(fd, &sb) == -1)
+        ERR("fstat");
+    size_t length = sb.st_size;
+    char *buff = mmap(NULL, length, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    if (buff == MAP_FAILED)
+        ERR("mmap");
 
-    set_nonblocking(STDIN_FILENO);
-    printf("Nonblocking read for ~10s, type something and press enter\n");
+    printf("a.txt[3] = %c (ASCII: %d)\n", buff[3], buff[3]);
+    buff[3] = 'Z';
+    msync(buff, length, MS_SYNC);
 
-    for (int i = 0; i < 10; i++)
-    {
-        printf("Try %d/10...\n", i + 1);
-        n = read(STDIN_FILENO, buf, sizeof(buf) - 1);
-        if (n > 0)
-        {
-            buf[n] = '\0';
-            printf("Got %zd bytes: %s", n, buf);
-        }
-        else if (n == 0)
-        {
-            printf("EOF\n");
-            break;
-        }
-        else if (errno == EAGAIN || errno == EWOULDBLOCK)
-        {
-            printf("No data yet (EAGAIN)...\n");
-        }
-        else
-        {
-            ERR("read");
-        }
-        sleep(1);
-    }
+    munmap(buff, length);
+    close(fd);
     return 0;
 }
