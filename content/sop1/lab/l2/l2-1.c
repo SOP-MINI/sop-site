@@ -36,13 +36,13 @@ int main(const int argc, const char *const *const argv)
     {
         const ssize_t read_size = read(fd_1, file_buf, FILE_BUF_LEN);
         if (read_size == -1)
-            ERR("bulk_read");
+            ERR("read");
 
         if (read_size == 0)
             break;
 
         if (write(fd_2, file_buf, read_size) == -1)
-            ERR("bulk_write");
+            ERR("write");
     }
 
     if (close(fd_2) == -1)

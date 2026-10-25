@@ -63,16 +63,10 @@ What the student needs to know:
 - `man 3p write`
 - `man 3p mknod` (only constants describing permissions for `open`)
 
-**Code for file** `prog14.c`
-{{< includecode "prog14.c" >}}
+**Code for file** `l2-1.c`
+{{< includecode "l2-1.c" >}}
 
 ### Notes and Questions
-
-- Why does the program above use the `bulk_read` and `bulk_write` functions?
-Wouldn’t it be enough to just use `read` and `write`?  
-{{< answer >}}  
-According to the specification, `read` and `write` can return before the full amount of data requested by the user is read/written. You’ll learn more about this behavior in the next lab tutorial. In theory, this doesn’t matter for this task (since we’re not using signals), but it’s a good habit to develop now.
-{{</ answer >}}
 
 - Could this program be implemented using the standard C library functions instead of low-level I/O (e.g., `fopen`, `fprintf`, etc.)?  
 {{< answer >}}  

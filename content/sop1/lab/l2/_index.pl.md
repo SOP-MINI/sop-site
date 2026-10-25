@@ -11,7 +11,7 @@ weight: 30
 
 Do realizacji odczytu i zapisu plików można użyć też funkcji niskopoziomowych, t.j. takich, których nie definiuje biblioteka standardowa C, a które udostępnia sam system operacyjny. Można przy ich pomocy np. wysyłać pakiety przez sieć, czym zajmiemy się w przyszłym semestrze.
 
-Zamiast wskaźników na struktury `FILE` funkcje niskopoziomowe pracują na deskryptorach (ang. *file descriptor* - fd - wartościach całkowitoliczbowych identyfikujących zasoby w obrębie procesu. W tym przypadku będą to pliki, ale w ogólności mogą odnosić się do różnego typu zasobów systemowych. Aby użyć poniższych funkcji konieczne jest dołączenie nagłówków `<fcntl.h>` i `<unistd.h>`.
+Zamiast wskaźników na struktury `FILE` funkcje niskopoziomowe pracują na deskryptorach (ang. *file descriptor* - fd) - wartościach całkowitoliczbowych identyfikujących zasoby w obrębie procesu. W tym przypadku będą to pliki, ale w ogólności mogą odnosić się do różnego typu zasobów systemowych. Aby użyć poniższych funkcji konieczne jest dołączenie nagłówków `<fcntl.h>` i `<unistd.h>`.
 
 ```
 int open(const char *path, int oflag, ...);
@@ -68,7 +68,7 @@ off_t lseek(int fildes, off_t offset, int whence);
 Jako parametr `whence` możemy podać `SEEK_SET` (ustawienie kursora na daną pozycję), `SEEK_CUR` (przesunięcie kursora względem aktualnej pozycji) albo `SEEK_END` (przesunięcie kursora za koniec pliku).
 Jako, że `lseek` zwraca pozycję kursora po wykonaniu operacji, wywołanie go z parametrami `0` i `SEEK_CUR` pozwala uzyskać aktualną pozycję w pliku.
 
-Przeglądając manuale mogłeś zauważyć istnienie wielu odpowiedników już poznanych funkcji ale z końcówką `-at` -np. `fstatat`, `openat`, `symlink`.
+Przeglądając manuale mogłeś zauważyć istnienie wielu odpowiedników już poznanych funkcji ale z końcówką `-at` -np. `fstatat`, `openat`, `symlinkat`.
 Zwykle te funkcją biorą dodatkowy parametr - deskryptor pliku, względem którego będą wyznaczane ścieżki względne.
 Są więc często miłym ułatwieniem dla programisty, pozwalając pominąć konstruowanie długich ścieżek względnych albo zmienianie katalogu roboczego.
 
@@ -93,14 +93,6 @@ Co student musi wiedzieć:
 {{< includecode "l2-1.c" >}}
 
 ### Uwagi i pytania
-
-- Dlaczego w powyższym programie używane są funkcje `bulk_read` i `bulk_write`?
-Czy nie wystarczyłoby po prostu użyć `read` i `write`
-{{< answer >}}
-Zgodnie ze specyfikacją funkcje `read` i `write` mogą zwrócić zanim ilość danych której zażądał użytkownik zostanie odczytana/zapisana.
-Więcej o tym zachowaniu dowiesz się w tutorialu do kolejnego laboratorium.
-Teoretycznie w tym zadaniu nie ma to znaczenia (ponieważ nie używamy sygnałów), ale dobrze się do tego przyzwyczaić już teraz.
-{{< /answer >}}
 
 - Czy powyższy program mógłby być zaimplementowany funkcjami bibliotecznymi z C zamiast niskopoziomowym IO? (`fopen`, `fprintf`, ...)
 {{< answer >}}
@@ -170,26 +162,24 @@ int fcntl(int fildes, int cmd, ...);
 ```
 
 Zarówno `cmd` jak i opcjonalny trzeci argument może przyjmować bardzo dużo parametrów.
-Dla na istotne są teraz komendy `F_GETFD` and `F_SETFD`.
+Dla nas istotne są teraz komendy `F_GETFD` and `F_SETFD`.
 Podanie `F_GETFD` sprawia, że funkcja zwraca aktualnie ustawione flagi jako maskę bitową zapisaną w zmiennej typu int.
 Z kolei użycie `F_SETFD` wymaga podania maski definiującej flagi, jakie chcemy ustawić.
 Dlatego zwykle proces ustawiania flag deskryptora wygląda jak w funkcji `set_nonblocking()` w powyższym kodzie.
 Najpierw pobieramy aktualne flagi, ustawiamy te pola, które nas interesują, a następnie zapisujemy.
 Próba ustawienia flag poprzez wywołanie np. `fcntl(fd, F_SETFL, O_NONBLOCK)` jest błędem, ponieważ w ten sposób przy okazji resetujemy wszystko poza flagą `O_NONBLOCK`.
 
-Czasami potrzebujemy żeby nasz plik, zachowywał się w różny sposób zależnie od kontekstu - np. chcemy raz czytać blokująca a raz nieblokująco.
+Czasami potrzebujemy żeby nasz plik, zachowywał się w różny sposób zależnie od kontekstu - np. chcemy raz czytać blokująco a raz nieblokująco.
 W takiej sytuacji zmiana flag co chwilę byłaby nieoptymalna.
 Zamiast tego możemy użyć funkcji `dup()` żeby zduplikować deskryptor.
 Oba deskryptory wskazują wtedy na ten sam plik, ale mogą mieć ustawione inne flagi.
 
 
-## Poll
-
-### Problem multipleksowania IO
+## Multipleksowanie IO
 
 Jak można zauważyć w przykładzie wyżej nieblokujące IO jest niewygodne w użyciu, jeżeli czekamy na pojawienie się danych.
 Musimy wtedy periodycznie sprawdzać czy dane są już dostępne - jest to tak zwany *busy waiting* albo *busy polling*.
-Jeżeli, czekając na dane, napiszemy pętle, która w kółko będzie sprawdzać czy dane są potrzebne zajmiemy w pełni cały rdzeń procesora - proszę sobie wyobrazić, że każdy otwarty terminal działałby w taki sposób - komputer zupełnie nie nadawałby się do użytku.
+Jeżeli, czekając na dane, napiszemy pętle, która w kółko będzie sprawdzać czy dane są dostępne zajmiemy w pełni cały rdzeń procesora - proszę sobie wyobrazić, że każdy otwarty terminal działałby w taki sposób - komputer zupełnie nie nadawałby się do użytku.
 Z drugiej strony możemy wprowadzić przerwy w sprawdzaniu - tak jak w przykładzie powyżej funkcją `sleep`.
 Obciążenie systemu spada, ale w zamian za to rośnie opóźnienie w działaniu programu.
 Warto dodać, że na laboratorium używanie busy waitingu jest niedopuszczalne, chyba że zadanie wprost na to pozwala.
@@ -204,15 +194,120 @@ Aby rozwiązać powyższe problemy i umożliwić responsywną obsługę wielu de
 Mamy kilka funkcji zapewniające ten mechanizm - `select`, `poll` (POSIX), `epoll` (linux).
 Poniżej opiszemy działanie funkcji `poll`.
 W materiałach dodatkowych możesz znaleźć opis działania funkcji `epoll`.
-Należy ona do rozszerzeń wprowadzonych przez linuxa (nie jest częścią standardu POSIX) i jest bardzo zoptymalizowana pod wydajność na tym systemie - nie będziemy jej jednak wymagać na laboratorium.
+Należy ona do rozszerzeń wprowadzonych przez linuxa (nie jest częścią standardu POSIX) i jest bardzo zoptymalizowana na tym systemie - nie będziemy jej jednak wymagać na laboratorium.
 
 ### Poll
 
+Zacznijmy od przyjrzenia się sygnaturze funkcji `poll` (`man 3p poll`):
 
-TODO: opisać pokrótce jak działa `poll`, dodać info o tym jak w linuxie działa input (<https://www.kernel.org/doc/html/latest/input/input.html> dla ciekawskich można napisać coś więcej), może dodać opis `timerfd` żeby było coś jeszcze prostego na czym można działać z tym pollem.
+```
+int poll(struct pollfd fds[], nfds_t nfds, int timeout);
+```
+
+`fds` to tablica struktur z desktryptorami, na które będziemy czekać - zaraz przyjrzymy się jej dokładniej.
+`nfds` to oczywiście rozmiar tej tablicy.
+`poll` zakończy się gdy któryś z deskryptorów będzie gotowy do wykonania operacji albo osiągnięty zostanie `timeout` w milisekundach - możemy też podać tam wartość `-1` żeby czekać w nieskończoność.
+
+Struktura `pollfd` jest opisana w `man 0p poll.h`.
+Musi definiować przynajmniej następujące pola:
+
+- `int fd` - deskryptor na który będziemy czekać
+- `short events` - bitmaska w której zapisujemy wydarzenia (_events_) na które chcemy czekać. Dla na istotne jest przede wszystkim `POLLIN` czyli oczekiwanie aż deskryptor będzie miał gotowe do odczytu dane, oraz `POLLOUT` - gdy deskryptor będzie gotowy do zapisu.
+- `short revents` - od _return events_ - w tej bitmasce `poll` ustawi flagi wskazujące, co było przyczyną jego zakończenia - może to być przede wszystkim to, co ustawiliśmy w `events` (`POLLIN` lub `POLLOUT`), ale także wartości takie jak `POLLERR`, `POLLHUP` lub `POLLNVAL` oznaczające, że wystąpił błąd lub problem z deskryptorem - szczegóły sprawdź w manualu.
+
+Użycie funkcji `poll` polega więc na stworzeniu tablicy `fds` i wpisanie tam deskryptorów oraz wydarzeń na które będziemy czekać.
+Na przykład chcąc czekać aż jakieś użytkownik wpisze jakieś dane na standardowe wejście ustawimy `.fd` na `1` lub `STDIN_FILENO` a `.events` na `POLLIN`.
+`revents` będzie ustawiany przez samego `poll`-a, dla bezpieczeństwa najlepiej go wyzerować.
+
+
+W poniższym przykładzie próbujemy odczytać informacje z plików `/dev/input/event*` - w systemie linux odpowiadają one za przekazywanie danych z klawiatur, myszy i podobnych urządzeń wejściowych.
+Aktywacja urządzenia wejściowego, np. naciśnięcie klawisza na klawiaturze, powoduje ,,dopisanie'' do tych plików nowej struktury `input_event` zdefiniowanej w nagłówku `linux/input.h`.
+Więcej informacji nt. działania podsystemu urządzeń wejściowych w linuxie można znaleźć pod adresem <https://www.kernel.org/doc/html/latest/input/input.html>.
+Nagłówek `linux/input-event-codes.h` definiuje wartości ze struktury `input_event` - np. klawisz F odpowiada wartości 33.
+Nie musisz się uczyć tych rzeczy na pamięć, nie będą one wymagane na laboratorium - podajemy ja jako ciekawostkę i interesujący przykład.
 
 {{< includecode "l2-3.c" >}}
 
+Po uruchomieniu za każdym razem jak naciśniesz klawisz na klawiaturze, poruszysz myszką etc. powyższy program będzie wypisywał przychodzące wydarzenia wejściowe.
+W przypadku gdy program nie zadziała z powodu niewystarczających uprawnień sprawdź, czy możesz czytać pliki w `/dev/input` - może być konieczne przynależenie do grupy `input`.
+W ostateczności można odpalić program z `sudo`.
+
+Kiedy program się kończy?
+{{< details "Answer" >}}
+Program kończy się po tym, jak `poll` zwróci 30 razy.
+Nie jest to równoważne z otrzymaniem 30 eventów.
+Za jednym razem możemy odczytać zdarzenie z kilku urządzeń, a każde urządzenie może mieć zakolejkowane kilka zdarzeń.
+{{< /details >}}
+
+
+Czemu otworzyliśmy pliki w trybie nieblokującym?
+Czy program działałby z deskryptorami w trybie blokującym?
+{{< details "Answer" >}}
+Należy uważać z używaniem blokującego IO i multipleksingu.
+Zauważmy, że `poll` informuje nas tylko, że jakieś dane są dostępne, jednak nie wiemy jak dużo.
+Przy nieblokującym deskryptorze możemy po prostu czytać do skutku - co w istocie robimy.
+Gdyby deskryptory były w trybie blokującym program nigdy nie wyszedłby z pętli w linii 98.
+Moglibyśmy skasować tę pętlę i czytać tylko jedną wiadomość na raz - gdyby było ich kilka, to po prostu `poll` nam od razu to zwróci i odczytamy kolejne.
+Należy jednak z tym uważać.
+W tym wypadku mamy gwarancję, że dane mają rozmiar struktury `input_event`.
+Gdybyśmy jednak tego nie wiedzieli musielibyśmy czytać po jednym bajcie.
+Jak widać dużo lepiej jest tutaj używać nieblokującego IO, blokujące nie ma żadnych zalet a stwarza ryzyko zablokowania programu.
+{{< /details >}}
+
+Czy możemy użyć `poll`-a do czytania ze zwykłych plików?
+{{< details "Answer" >}}
+Możemy ale nie ma to za dużo sensu.
+Zwykłe pliki są zawsze gotowe do odczytu, `poll` zawsze od razu to zwróci.
+{{< /details >}}
+
+Powstaje pytanie, do jakich (sensownych) rodzajów plików możemy jeszcze użyć `poll`-a.
+Z poznanych dotąd (na SOPach oraz ,,Podstawach systemu UNIX'') są to przede wszystkim urządzenia znakowe - należą do nich terminale (`/dev/tty`, ale również po prostu standardowe wejście i wyjście naszych programów), pokazane wyżej urządzenia `/dev/input/*` oraz wiele innych plików w `/dev`.
+Ponadto łącza (pipe/FIFO), gniazda sieciowe i wiele innych deskryptorów zwracanych przez różne funkcje systemowe (`timerfd`, `signalfd`, `inotify`...).
+
+### Timerfd (dodatkowy materiał)
+
+Prostym i bardzo przydatnym system na którym możemy testować funkcję `poll` jest `timerfd`.
+Należy on do linuxowych rozszerzeń (nie jest częścią standardu POSIX) dlatego nie będziemy go wymagać na laboratorium.
+Jest to jednak przydatny i ciekawy mechanizm, dlatego warto przeczytać resztę tego podrozdziału.
+
+`timerfd` pozwala nam tworzyć zegary które następnie odczytujemy przez deskryptor.
+Pełen opis znajduje się w `man 2 timerfd`.
+
+Aby stworzyć nowy timer używamy funkcji 
+
+```
+int timerfd_create(int clockid, int flags);
+```
+
+`clockid` to rodzaj zegara systemowego, którego użyjemy - najprościej wybrać `CLOCK_REALTIME`, ale są też inne opcje, których opis znajdziesz w manualu.
+Z flag jakie można ustawić interesujące jest dla nas przede wszystkim `TFD_NONBLOCK`.
+
+Gdy już nasz timer jest stworzony należy go ustawić poleceniem:
+
+```
+int timerfd_settime(int fd, int flags, const struct itimerspec *new_value,
+                         struct itimerspec *_Nullable old_value);
+```
+
+Podajemy tu oczywiście nasz deskryptor uzyskany z `timerfd_create`.
+Przez `new_value` przekazujemy na jaki czas chcemy ustawić zegar.
+Struktura ma ta dwa pola (`man 3type itimerspec`).
+Ustawiając `it_value` wybieramy czas do pierwszego powiadomienia zegara.
+Ustawiając `it_interval` możemy dodatkowo ustawić powiadomienia okresowe.
+Oba pola są typu `timespec` (`man 3type timespec`) to znaczy że specyfikują sekundy i nanosekundy.
+Wiele przydatnych funkcji używa struktury `timespec`, dlatego warto się z nią zapoznać.
+Parametr `old_value` jest opcjonalny, możemy ustawic go na `NULL` - więcej informacji przeczytaj o nim w manualu.
+
+
+{{< includecode "l2-4.c" >}}
+
+Działanie powyższego programu jest chyba jasne.
+Żeby potwierdzić, że timer działa dobrze możesz uruchomić program przez polecenie `time`, np. `time ./l2-4`.
+
+Zauważ, że w tym wypadku nie ustawiliśmy naszego timera w trybie nieblokującym - celem tutaj był jak najprostszy przykład demonstrujący działanie tej funkcjonalności, więc używamy pojedynczego `read`.
+Jako ćwiczenie spróbuj zmodyfikować poprzedni program z `poll`-em w taki sposób, żeby program kończył się po określonym czasie (albo może po określonym czasie nieaktywności? spróbuj paru rzeczy!).
+
+### Epoll (dodatkowy materiał)
 
 ## Mmap
 
@@ -222,7 +317,7 @@ Jest ona szeroko używana również do wielu innych rzeczy, które omówimy w pr
 Na chwilę obecną skupimy się jedynie na mapowaniu plików.
 Wygląda to zwykle w następujący sposób:
 
-{{< includecode "l2-4.c" >}}
+{{< includecode "l2-5.c" >}}
 
 Najważniejszą funkcją jest tutaj oczywiście sam `mmap`:
 
