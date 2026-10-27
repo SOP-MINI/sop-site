@@ -21,7 +21,7 @@ Na komputerach laboratoryjnych jest zainstalowane kilka programów, które (po o
 - Vim
 - Visual Studio Code
 
-Poniżej przedstawiamy konfigurację dla dwóch przykładowych IDE, jednak warto podkreślić, że są to tylko przykłady podyktowane prywatnymi preferencjami autora. Wszystkie wymienione programy (po odpowiedniej konfiguracji) powinny sprawdzić się równie dobrze, więc jeżeli już ma się ulubione narzędzie można przy nim zostać (chociaż warto dać szansę QtCreatorowi, bardzo przyjemne IDE ~ _osobista wstawka autora_).
+Poniżej przedstawiamy konfigurację dla wybranych IDE, jednak warto podkreślić, że są to tylko przykłady. Wszystkie wymienione programy (po odpowiedniej konfiguracji) powinny sprawdzić się równie dobrze, więc jeżeli już ma się ulubione narzędzie można przy nim zostać (chociaż warto dać szansę QtCreatorowi, bardzo przyjemne IDE ~ _osobista wstawka autora_).
 
 ## Pierwszy krok - tworzenie przykładowego projektu
 
@@ -193,3 +193,60 @@ Jako ostatnią kwestię zajmijmy się podpowiedziami i autouzupełnianiem. Więk
 ![](/img/vsc13.png)
 
 Po wykonaniu opisanych kroków Visual Studio Code powinien być gotowy do użycia podczas laboratoriów. Warto jednak poświęcić chwilę na poznanie kilku dodatkowych funkcji edytora, ponieważ VS Code jest środowiskiem bardzo elastycznym i w dużym stopniu konfigurowalnym. Szczególnie przydatna może być paleta poleceń dostępna pod skrótem `Ctrl + Shift + P`, z której można uruchamiać większość funkcji programu bez szukania ich w menu. Dobrze jest także zapoznać się z panelem rozszerzeń, ustawieniami formatowania kodu oraz możliwością otwierania zintegrowanego terminala skrótem `Ctrl + ,`. Więcej opcji i przykładów konfiguracji można znaleźć w [dokumentacji Visual Studio Code](https://code.visualstudio.com/docs).
+
+## Konfiguracja CLion
+
+### Wyłączenie wtyczek AI
+Korzystanie z narzędzi wspomagających opartych na AI podczas laboratoriów jest surowo zabronione. Zalecanym sposobem na wyłączenie funkcji AI w CLionie jest wyłączenie odpowiednich wbudowanych wtyczek:
+
+1. Otwórz **Settings** (`Ctrl + Alt + S`).
+2. Przejdź do zakładki **Plugins** i wybierz kartę **Installed**.
+3. Znajdź i wyłącz (odznacz) następujące wtyczki:
+   - **Full Line Code Completion**
+   - **Machine Learning in Search Everywhere**
+4. Kliknij **Apply**.
+
+### Strony podręcznika man po najechaniu kursorem
+Aby wyświetlać strony man dla funkcji systemowych/bibliotecznych bezpośrednio po najechaniu na nie kursorem:
+
+1. Będąc w **Settings -> Plugins**, przejdź do karty **Marketplace**.
+2. Zainstaluj wtyczkę **C/C++ Language Support via Classic Engine**.
+3. Wróć do karty **Installed**, znajdź wtyczkę **CLion C and C++** i ją wyłącz (odznacz).
+4. Kliknij **Apply** / **OK** i zrestartuj IDE.
+
+### Formatowanie przy zapisie (.clang-format)
+CLion natywnie wykrywa i obsługuje plik `.clang-format` znajdujący się w katalogu głównym projektu. Aby automatycznie formatować kod przy użyciu skrótu zapisu:
+
+1. Otwórz **Settings** (`Ctrl + Alt + S`).
+2. Przejdź do **Tools -> Actions on Save**.
+3. Zaznacz opcję **Reformat code**.
+
+Użycie skrótu `Ctrl + S` spowoduje teraz automatyczne sformatowanie pliku zgodnie z regułami zawartymi w `.clang-format`.
+
+### Otwieranie projektu
+1. Wybierz **File -> Open...** i wskaż katalog projektu zawierający plik `Makefile`.
+2. W oknie dialogowym **Load Project**, które się pojawi, po prostu kliknij **OK**, aby CLion przetworzył plik Makefile oraz jego cele.
+3. Jeśli przypadkowo anulujesz to okno lub projekt się nie załaduje, wybierz z górnego menu **Tools -> Makefile -> Clean and Reload Makefile Project**.
+
+### Uruchamianie i debugowanie
+CLion wykrywa cele z pliku `Makefile`, jednak ze względu na to, że nazwy plików wykonywalnych są często definiowane za pomocą zmiennych (np. `NAME=sop-prog`), CLion nie potrafi automatycznie wywnioskować nazwy programu wyjściowego. Należy wskazać plik wykonywalny ręcznie:
+
+1. Kliknij menu wyboru konfiguracji na górnym pasku narzędzi i wybierz **Edit Configurations...** (lub otwórz **Run -> Edit Configurations...**).
+2. Wybierz konfigurację swojego celu (np. `all`).
+3. W polu **Executable** wpisz ręcznie ścieżkę do skompilowanego pliku wykonywalnego (np. `./sop-prog`).
+4. Aby przekazać argumenty linii poleceń, wpisz je w polu **Program arguments**.
+5. Aby zdefiniować lub zmodyfikować zmienne środowiskowe, wpisz je w polu **Environment variables** (lub kliknij ikonę po prawej stronie, by dodać pary klucz-wartość).
+6. Kliknij **Apply** / **OK**.
+
+Po skonfigurowaniu możesz uruchamiać (`Shift + F10`) lub debugować (`Shift + F9`) kod. Możesz także kompilować program poleceniem `make` i uruchamiać go bezpośrednio we wbudowanym terminalu (`Alt + F12`).
+
+> #### Debugowanie z AddressSanitizerem
+> Podczas uruchamiania debuggera dla programu skompilowanego z flagą `-fsanitize=address`, LeakSanitizer zakończy działanie błędem:
+> ```
+> LeakSanitizer has encountered a fatal error.
+> HINT: LeakSanitizer does not work under ptrace (strace, gdb, etc)
+> ```
+> Ponieważ GDB podłącza się za pomocą mechanizmu `ptrace`, LeakSanitizer nie może działać jednocześnie. Aby rozwiązać ten problem, za każdym razem gdy potrzebujesz debugować swój kod, dodaj do pola **Environment variables** w konfiguracji uruchomieniowej:
+> ```
+> ASAN_OPTIONS=detect_leaks=0
+> ```

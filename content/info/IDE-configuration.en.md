@@ -21,7 +21,7 @@ Several programs are installed on the lab computers that (when properly configur
 - Vim
 - Visual Studio Code
 
-Below there are two IDE configuration tutorials, but it is worth noting that this is only an example dictated by the author's personal preferences. All of the programs listed above (with proper configuration) should work equally well, so if you already have a favorite tool, you can stick with it (although it is worth giving QtCreator a try, a very nice IDE ~ _author's personal note_).
+Below are configuration tutorials for selected IDEs, but it is worth noting that these are only examples. All of the programs listed above (with proper configuration) should work equally well, so if you already have a favorite tool, you can stick with it (although it is worth giving QtCreator a try, a very nice IDE ~ _author's personal note_).
 
 ## First step - creating a sample project
 
@@ -194,3 +194,60 @@ As the final step, let us take care of hints and autocompletion. Most hint and a
 ![](/img/vsc13.png)  
 
 After completing the steps described above, Visual Studio Code should be ready for use during the labs. However, it is worth spending a moment getting familiar with a few additional editor features, because VS Code is a very flexible and highly customizable environment. The command palette, available under `Ctrl + Shift + P`, is especially useful because it allows you to run most editor functions without looking for them in the menu. It is also worth exploring the extensions panel, code formatting settings, and the integrated terminal, which can be opened with `Ctrl + ,`. More options and configuration examples can be found in the [Visual Studio Code documentation](https://code.visualstudio.com/docs).
+
+## Configuring CLion
+
+### Disable AI Plugins
+Using AI assistance during laboratories is strictly prohibited. The recommended way to disable AI capabilities in CLion is to disable the relevant bundled plugins:
+
+1. Open **Settings** (`Ctrl + Alt + S`).
+2. Navigate to **Plugins** and select the **Installed** tab.
+3. Find and disable (uncheck) the following plugins:
+   - **Full Line Code Completion**
+   - **Machine Learning in Search Everywhere**
+4. Click **Apply**.
+
+### Man Pages on Hover
+To view Linux man pages directly when hovering over system/library functions:
+
+1. While still in **Settings -> Plugins**, go to the **Marketplace** tab.
+2. Install **C/C++ Language Support via Classic Engine**.
+3. Switch back to the **Installed** tab, find **CLion C and C++**, and disable (uncheck) it.
+4. Click **Apply** / **OK** and restart the IDE.
+
+### Formatting on Save (.clang-format)
+CLion natively detects and uses the `.clang-format` file located in the root of the project. To format code on save shortcut automatically:
+
+1. Open **Settings** (`Ctrl + Alt + S`).
+2. Go to **Tools -> Actions on Save**.
+3. Check the **Reformat code** checkbox.
+
+Using `Ctrl + S` shortcut will now automatically format the file according to the `.clang-format` rules.
+
+### Opening the Project
+1. Go to **File -> Open...** and select the project directory containing your `Makefile`.
+2. In the **Load Project** dialog that appears, simply click **OK** so CLion can process the Makefile and its targets.
+3. If you accidentally cancel the prompt or the project does not load, go to **Tools -> Makefile -> Clean and Reload Makefile Project** from the top menu.
+
+### Running and Debugging
+CLion detects build targets from the `Makefile`, but because binary names are often defined using variables (such as `NAME=sop-prog`), CLion cannot automatically infer the executable output. You must specify the executable manually:
+
+1. Click the configuration dropdown in the top toolbar and select **Edit Configurations...** (or open **Run -> Edit Configurations...**).
+2. Select your target configuration (e.g., `all`).
+3. In the **Executable** field, enter manually the compiled binary path (e.g., `./sop-prog`).
+4. To pass command-line arguments, enter them in the **Program arguments** field.
+5. To define or override environment variables, enter them in the **Environment variables** field (or click the icon on the right to add key-value pairs).
+6. Click **Apply** / **OK**.
+
+Once configured, you can run (`Shift + F10`) or debug (`Shift + F9`) the code. You can also run `make` and execute programs directly using the built-in terminal (`Alt + F12`).
+
+> #### Debugging with AddressSanitizer
+> When launching the debugger on a binary compiled with `-fsanitize=address`, LeakSanitizer will crash with:
+> ```
+> LeakSanitizer has encountered a fatal error.
+> HINT: LeakSanitizer does not work under ptrace (strace, gdb, etc)
+> ```
+> Because GDB attaches via `ptrace`, LeakSanitizer cannot run simultaneously. To resolve this, add the following to the **Environment variables** field in your configuration whenever you need to debug your code:
+> ```
+> ASAN_OPTIONS=detect_leaks=0
+> ```
