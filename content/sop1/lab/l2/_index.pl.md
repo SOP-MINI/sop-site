@@ -390,6 +390,12 @@ W takiej sytuacji używając `poll`-a wciąż musimy iterować się przez nie ws
 Jeżeli nasz program działa na linuxie rozwiazaniem może być `epoll` - który został opisany w [osobnym dodatkowym materiale]({{< ref "/sop1/lab/l2/epoll" >}}).
 Zachęcam do zapoznania się, chociaż nie będzie to wymagane na laboratorium.
 
+## Przykładowe zadania
+
+Wykonaj przykładowe zadania. Podczas laboratorium będziesz miał więcej czasu oraz dostępny startowy kod, jeśli jednak wykonasz poniższe zadania w przewidzianym czasie, to znaczy że jesteś dobrze przygotowany do zajęć.
+
+- [Zadanie 1]({{< ref "/sop1/lab/l2/example1" >}}) ~130 minut
+
 
 ## Kody źródłowe z treści tutoriala
 {{% codeattachments %}}
