@@ -1,6 +1,5 @@
 ---
-title: "L2 - Niskopoziomowy operacje na plikach i poll"
-date: 2022-02-05T18:39:22+01:00
+title: "L2 - Niskopoziomowe operacje na plikach i poll"
 weight: 30
 ---
 
@@ -191,18 +190,12 @@ int fcntl(int fildes, int cmd, ...);
 ```
 
 Zarówno `cmd` jak i opcjonalny trzeci argument może przyjmować bardzo dużo parametrów.
-Dla nas istotne są teraz komendy `F_GETFD` and `F_SETFD`.
-Podanie `F_GETFD` sprawia, że funkcja zwraca aktualnie ustawione flagi jako maskę bitową zapisaną w zmiennej typu int.
-Z kolei użycie `F_SETFD` wymaga podania maski definiującej flagi, jakie chcemy ustawić.
+Dla nas istotne są teraz komendy `F_GETFL` and `F_SETFL`.
+Podanie `F_GETFL` sprawia, że funkcja zwraca aktualnie ustawione flagi jako maskę bitową zapisaną w zmiennej typu int.
+Z kolei użycie `F_SETFL` wymaga podania maski definiującej flagi, jakie chcemy ustawić.
 Dlatego zwykle proces ustawiania flag deskryptora wygląda jak w funkcji `set_nonblocking()` w powyższym kodzie.
 Najpierw pobieramy aktualne flagi, ustawiamy te pola, które nas interesują, a następnie zapisujemy.
 Próba ustawienia flag poprzez wywołanie np. `fcntl(fd, F_SETFL, O_NONBLOCK)` jest błędem, ponieważ w ten sposób przy okazji resetujemy wszystko poza flagą `O_NONBLOCK`.
-
-Czasami potrzebujemy żeby nasz plik, zachowywał się w różny sposób zależnie od kontekstu - np. chcemy raz czytać blokująco a raz nieblokująco.
-W takiej sytuacji zmiana flag co chwilę byłaby nieoptymalna.
-Zamiast tego możemy użyć funkcji `dup()` żeby zduplikować deskryptor.
-Oba deskryptory wskazują wtedy na ten sam plik, ale mogą mieć ustawione inne flagi.
-
 
 ## Multipleksowanie IO
 
@@ -245,7 +238,7 @@ Musi definiować przynajmniej następujące pola:
 - `short revents` - od _return events_ - w tej bitmasce `poll` ustawi flagi wskazujące, co było przyczyną jego zakończenia - może to być przede wszystkim to, co ustawiliśmy w `events` (`POLLIN` lub `POLLOUT`), ale także wartości takie jak `POLLERR`, `POLLHUP` lub `POLLNVAL` oznaczające, że wystąpił błąd lub problem z deskryptorem - szczegóły sprawdź w manualu.
 
 Użycie funkcji `poll` polega więc na stworzeniu tablicy `fds` i wpisanie tam deskryptorów oraz wydarzeń na które będziemy czekać.
-Na przykład chcąc czekać aż jakieś użytkownik wpisze jakieś dane na standardowe wejście ustawimy `.fd` na `1` lub `STDIN_FILENO` a `.events` na `POLLIN`.
+Na przykład chcąc czekać aż jakieś użytkownik wpisze jakieś dane na standardowe wejście ustawimy `.fd` na `0` lub `STDIN_FILENO` a `.events` na `POLLIN`.
 `revents` będzie ustawiany przez samego `poll`-a, dla bezpieczeństwa najlepiej go wyzerować.
 
 
@@ -263,6 +256,7 @@ Gdyby program nie działał z powodu niewystarczających uprawnień sprawdź, ja
 W zależności od konfiguracji systemu może być konieczne np. przynależenie do grupy `input`.
 W takim przypadku możesz dodać swojego użytkownika do grupy `input` (`usermod -aG input <username>`) albo rozszerzyć uprawnienia (`chmod a+r /dev/input/*`).
 W każdym razie będzie to wymagało uprawnień administratora (`sudo` lub `su`).
+Dostęp do `/dev/input` pozwala podejrzeć całe wejście (w tym też np. wpisywane hasła), tak więc uważaj, żeby nie nadać zbyt szerokich uprawnień.
 W ostateczności można odpalić program z takimi uprawnieniami poprzez `sudo`.
 
 Jeśli mimo wszystko nie możesz uruchomić programu (np. pracujesz na komputerze wydziałowym i nie masz uprawnień administratora) spokojnie czytaj dalej.
@@ -377,7 +371,7 @@ Parametr `old_value` jest opcjonalny, możemy ustawic go na `NULL` - więcej inf
 {{< includecode "l2-5.c" >}}
 
 Działanie powyższego programu jest chyba jasne.
-Żeby potwierdzić, że timer działa dobrze możesz uruchomić program przez polecenie `time`, np. `time ./l2-4`.
+Żeby potwierdzić, że timer działa dobrze możesz uruchomić program przez polecenie `time`, np. `time ./l2-5`.
 
 Zauważ, że w tym wypadku nie ustawiliśmy naszego timera w trybie nieblokującym - celem tutaj był jak najprostszy przykład demonstrujący działanie tej funkcjonalności, więc używamy pojedynczego `read`.
 Jako ćwiczenie spróbuj zmodyfikować poprzedni program z `poll`-em w taki sposób, żeby program kończył się po określonym czasie (albo może po określonym czasie nieaktywności? spróbuj paru rzeczy!).

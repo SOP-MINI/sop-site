@@ -404,7 +404,8 @@ Każde jest równoważne i nie ma między nimi różnicy - po prostu niektóre p
 Do tworzenie dowiązań twardych służy funkcja `link` (`man 3p link`).
 
 Dowiązania twarde są bardzo użyteczne ale równocześnie niebezpieczne.
-Takie dowiązanie może np. mieć inne uprawnienia albo znajdować się w publicznym katalogu dając niepowołanym osobom dostęp do pliku.
+Takie dowiązanie może np. znajdować się w publicznym katalogu dając niepowołanym osobom dostęp do pliku.
+Ponadto wszystkie dowiązania muszą znajdować się w tym samym systemie plików.
 Ogólnie rzecz biorąc na laboratorium nie będziemy ich używać.
 
 Dowiązania symboliczne są tak naprawdę specjalnym rodzajem pliku, zawierającym ścieżkę do innego pliku.
