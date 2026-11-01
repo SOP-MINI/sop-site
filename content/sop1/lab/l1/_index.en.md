@@ -367,7 +367,8 @@ A hard link is a reference to an inode; from the API's point of view, it is simp
 All hard-link names are equivalent. Some files have only one name in the filesystem, while others have several.
 The `link` function creates hard links (`man 3p link`).
 
-Hard links are useful but can also be dangerous. For example, a hard link may be placed in a public directory and give unauthorized users access to a file.
+Hard links are useful but can also be dangerous.
+For example, a hard link may be placed in a public directory and give unauthorized users access to a file.
 In general, we will not use them in the lab.
 
 A symbolic link is a special kind of file containing a path to another file.
