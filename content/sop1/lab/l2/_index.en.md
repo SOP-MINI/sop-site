@@ -403,6 +403,13 @@ But what if there are a great many descriptors? When using `poll`, we still have
 On Linux, a possible solution is `epoll`, described in [separate additional material]({{< ref "/sop1/lab/l2/epoll" >}}).
 You are encouraged to read it, although it will not be required in the lab.
 
+## Example tasks
+
+Do the example tasks. During the laboratory you will have more time and the starting code. However, if you finish the following tasks in the recommended time, you will know you're well prepared for the laboratory.
+
+- [Task 1]({{< ref "/sop1/lab/l2/example1" >}}) ~130 minutes
+
+
 ## Source codes presented in this tutorial
 
 {{% codeattachments %}}
