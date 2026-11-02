@@ -197,6 +197,8 @@ Dlatego zwykle proces ustawiania flag deskryptora wygląda jak w funkcji `set_no
 Najpierw pobieramy aktualne flagi, ustawiamy te pola, które nas interesują, a następnie zapisujemy.
 Próba ustawienia flag poprzez wywołanie np. `fcntl(fd, F_SETFL, O_NONBLOCK)` jest błędem, ponieważ w ten sposób przy okazji resetujemy wszystko poza flagą `O_NONBLOCK`.
 
+Czasem potrzebujemy, aby plik zachował się inaczej zależnie od kontekstu - na przykład czytać w trybie blokującym w jednym miejscu i nieblokującym w innym. Wielokrotna zmiana flag byłaby powolna. Zwróć uwagę, że dup() nie rozwiązuje tego problemu: oba deskryptory dzielą stan (np. położenie kursora) i flagi takie jak O_NONBLOCK. Aby używać pliku z innymi flagami, otwórz go jeszcze raz.
+
 ## Multipleksowanie IO
 
 Jak można zauważyć w przykładzie wyżej nieblokujące IO jest niewygodne w użyciu, jeżeli czekamy na pojawienie się danych.
