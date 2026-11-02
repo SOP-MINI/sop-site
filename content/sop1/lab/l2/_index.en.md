@@ -3,14 +3,14 @@ title: "L2 - Low-Level File Operations and poll"
 weight: 30
 ---
 
-# Tutorial 1 - Filesystem
+# Tutorial 2 - Filesystem
 
 ## Low-Level File Operations
 
-You can also use low-level functions to read and write files-functions provided directly by the operating system rather than by the C standard library.
+You can also use low-level functions to read and write files - functions provided directly by the operating system rather than by the C standard library.
 With these functions, you can, for instance, send packets over a network, which we’ll cover in the next semester.
 
-Instead of using `FILE` pointers, low-level functions work with *file descriptors* (`fd`)-integer values that identify resources within a process.
+Instead of using `FILE` pointers, low-level functions work with *file descriptors* (`fd`) - integer values that identify resources within a process.
 In this case, these will be files, but in general, they can refer to various system resources.
 To use the functions below, include the headers `<fcntl.h>` and `<unistd.h>`.
 
@@ -208,9 +208,9 @@ For file status flags, the commands we need are `F_GETFL` and `F_SETFL`.
 `F_GETFL` returns the current flags as a bit mask in an `int`.
 `F_SETFL` takes a mask specifying the flags we want to set.
 That is why the usual process looks like the `set_nonblocking()` function in the code above: first get the current flags, set the bits we need, and then write them back.
-Calling `fcntl(fd, F_SETFL, O_NONBLOCK)` instead would clear other settable file status flags.
+Calling `fcntl(fd, F_SETFL, O_NONBLOCK)` instead would be an error, clearing other settable file status flags.
 
-Sometimes we need a file to behave differently depending on the context—for example, reading in blocking mode in one place and nonblocking mode in another.
+Sometimes we need a file to behave differently depending on the context — for example, reading in blocking mode in one place and nonblocking mode in another.
 Changing flags repeatedly would be inefficient.
 Note that `dup()` does not solve this: both descriptors share the same open file description and its file status flags, including `O_NONBLOCK`.
 To use different file status flags, open the file separately where supported.
