@@ -45,3 +45,6 @@ markup:
 
 minify:
   minifyOutput: true
+
+ignoreFiles:
+  - "(?i)sop1/wyk/w4/code/cs/linux-.*"

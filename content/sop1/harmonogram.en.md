@@ -12,7 +12,7 @@ Wednesdays, 16:15 - 18:00, room 329
 | 14.10.2026 | [File system interface.]({{< ref "wyk/w2" >}})                        |
 | 21.10.2026 | [File system interface.]({{< ref "wyk/w2" >}})                        |
 | 28.10.2026 | [Processes]({{< ref "wyk/w4" >}})                                     |
-| 4.11.2026  | [Processes]({{< ref "wyk/w4" >}})                                     |
+| 4.11.2026  | [Context Switching]({{< ref "wyk/w4/code/cs" >}})                     |
 | 13.11.2026 | [POSIX signals]({{< ref "wyk/w5" >}})                                 |
 | 18.11.2026 | [Event I/O]({{< ref "wyk/events" >}})                                 |
 | 25.11.2026 | [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})               |
@@ -27,14 +27,14 @@ Wednesdays, 16:15 - 18:00, room 329
 
 Tuesdays, 2:15-4:30pm
 
-| Date       | Topic                                            |
-|------------|--------------------------------------------------|
-| 13.10.2026 | [W1 Introduction]({{< ref "lab/l0" >}})          |
-| 27.10.2026 | [L1 Filesystem and IO]({{< ref "lab/l1" >}})     |
-| 10.11.2026 | W2                                               |
-| 24.11.2026 | L2                                               |
-|  8.12.2026 | [W3 Threads and mutexes]({{< ref "lab/l3" >}})   |
-| 22.12.2026 | [L3 Threads and mutexes]({{< ref "lab/l3" >}})   |
-| 19.01.2027 | [L4 Synchronization]({{< ref "lab/l4" >}})       |
-| 26.01.2027 | Retake                                           |
+| Date       | Topic                                          |
+|------------|------------------------------------------------|
+| 13.10.2026 | [W1 Introduction]({{< ref "lab/l0" >}})        |
+| 27.10.2026 | [L1 Filesystem and IO]({{< ref "lab/l1" >}})   |
+| 10.11.2026 | W2                                             |
+| 24.11.2026 | L2                                             |
+| 8.12.2026  | [W3 Threads and mutexes]({{< ref "lab/l3" >}}) |
+| 22.12.2026 | [L3 Threads and mutexes]({{< ref "lab/l3" >}}) |
+| 19.01.2027 | [L4 Synchronization]({{< ref "lab/l4" >}})     |
+| 26.01.2027 | Retake                                         |
 
