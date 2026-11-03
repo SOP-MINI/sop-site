@@ -25,7 +25,7 @@ Files and descriptors must be handled only with low-level functions. *Busy waiti
 
 1.  If the recipe file does not exist, the program creates it with the `write` function as 32 empty lines (each line is 63 spaces + `\n`). If it exists, the program opens it and checks with `lseek` whether it is exactly 2048 bytes long – if the size is different, it prints "This book is not a recipe!" on `stderr` and exits.
 
-    Then the program opens the `tower1` pipe for reading. If such a file does not exist or is not a named pipe, the program prints "There is no granny in tower X" on `stderr`, where `X` is the given path, and exits. Finally, it reads data from the pipe until `EOF` and prints it unchanged on `stdout`.
+    Then the program opens the `tower1` pipe for reading. If such a file does not exist or is not a named pipe, the program prints "There is no granny in X" on `stderr`, where `X` is the given path, and exits. Finally, it reads data from the pipe until `EOF` and prints it unchanged on `stdout`.
 
     *Hint:* a named pipe is opened with the `open` function just like a regular file – see the [tutorial]({{< ref "/sop1/lab/l2" >}}#named-pipes-in-brief). You can check the file type with the `stat` or `fstat` function and the `S_ISFIFO` macro (`man 7 inode`). Open the recipe file with the `O_RDWR` flag from the start – `mmap` in stage 4 will need it.
 
