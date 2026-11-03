@@ -3,7 +3,7 @@ title: "L2 - Niskopoziomowe operacje na plikach i poll"
 weight: 30
 ---
 
-# Tutorial 1 - System plików
+# Tutorial 2 - System plików
 
 
 ## Operacje niskopoziomowe na plikach
@@ -66,7 +66,7 @@ Funkcja `lseek` (`man 3p lseek`) pozwala na bezpośrednie poruszanie kursorem
 off_t lseek(int fildes, off_t offset, int whence);
 ```
 
-Jako parametr `whence` możemy podać `SEEK_SET` (ustawienie kursora na daną pozycję), `SEEK_CUR` (przesunięcie kursora względem aktualnej pozycji) albo `SEEK_END` (przesunięcie kursora za koniec pliku).
+Jako parametr `whence` możemy podać `SEEK_SET` (ustawienie kursora na daną pozycję), `SEEK_CUR` (przesunięcie kursora względem aktualnej pozycji) albo `SEEK_END` (przesunięcie kursora od końca pliku).
 Jako, że `lseek` zwraca pozycję kursora po wykonaniu operacji, wywołanie go z parametrami `0` i `SEEK_CUR` pozwala uzyskać aktualną pozycję w pliku.
 
 Przeglądając manuale mogłeś zauważyć istnienie wielu odpowiedników już poznanych funkcji ale z końcówką `-at` -np. `fstatat`, `openat`, `symlinkat`.
@@ -196,6 +196,7 @@ Z kolei użycie `F_SETFL` wymaga podania maski definiującej flagi, jakie chcemy
 Dlatego zwykle proces ustawiania flag deskryptora wygląda jak w funkcji `set_nonblocking()` w powyższym kodzie.
 Najpierw pobieramy aktualne flagi, ustawiamy te pola, które nas interesują, a następnie zapisujemy.
 Próba ustawienia flag poprzez wywołanie np. `fcntl(fd, F_SETFL, O_NONBLOCK)` jest błędem, ponieważ w ten sposób przy okazji resetujemy wszystko poza flagą `O_NONBLOCK`.
+
 
 ## Multipleksowanie IO
 
