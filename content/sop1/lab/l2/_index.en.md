@@ -210,10 +210,6 @@ For file status flags, the commands we need are `F_GETFL` and `F_SETFL`.
 That is why the usual process looks like the `set_nonblocking()` function in the code above: first get the current flags, set the bits we need, and then write them back.
 Calling `fcntl(fd, F_SETFL, O_NONBLOCK)` instead would be an error, clearing other settable file status flags.
 
-Sometimes we need a file to behave differently depending on the context — for example, reading in blocking mode in one place and nonblocking mode in another.
-Changing flags repeatedly would be inefficient.
-Note that `dup()` does not solve this: both descriptors share the same open file description and its file status flags, including `O_NONBLOCK`.
-To use different file status flags, open the file separately where supported.
 
 ## I/O Multiplexing
 
