@@ -5,7 +5,7 @@ if [ $# -ne 2 ]; then
     exit 1
 fi
 
-# princess Joanna spilled coffee and crumbled cookies over the granny's notes - raspberries became raw~berries
+# princess Joanna spilled tea and crumbled cookies over the granny's notes - raspberries became raw~berries
 steps=(
     "Preheat the oven to 180 degrees"
     "Line three cake tins with baking paper"
