@@ -136,6 +136,26 @@ ssize_t readv(int fildes, const struct iovec *iov, int iovcnt);
 
 W pozostałych aspektach funkcje te zachowują się jak ich niewektorowe odpowiedniki `write` i `read`.
 
+### Zadanie
+
+Plik [database]({{< resource "database" >}}) zawiera spis książek z biblioteki w formacie binarnym.
+Składa się on z rekordów o długości 68 bajtów: 4 bajty rozmiaru pliku książki (`unsigned int`) oraz 64 bajty tytułu, uzupełnionego zerami, jeśli jest krótszy.
+Liczbę rekordów można wyznaczyć na podstawie rozmiaru pliku.
+
+Napisz program, który przyjmuje jako argumenty ścieżkę do bazy oraz ścieżkę do pliku wyjściowego.
+Program powinien wczytać bazę jednym wywołaniem `readv` do tablicy struktur z polami `unsigned int size` oraz `char title[65]` (dodatkowy bajt pozwala zawsze zakończyć tytuł zerem) i wypisać każdą książkę na ekran w formacie `Size: <rozmiar>, Title: <tytuł>`.
+Następnie powinien zwiększyć rozmiar każdej książki o 1 i zapisać zmodyfikowaną bazę do pliku wyjściowego jednym wywołaniem `writev`, korzystając z tych samych buforów.
+
+### Rozwiązanie zadania
+
+Co student musi wiedzieć:
+- man 3p writev
+- man 3p readv
+- man 0p sys_uio.h
+
+<em>kod do pliku <b>l2-v.c</b></em>
+{{< includecode "l2-v.c" >}}
+
 ## Mmap
 
 Jeszcze jeden, bardzo wygodny sposób na dostęp do pliku to ,,zmapowanie'' go do pamięci.

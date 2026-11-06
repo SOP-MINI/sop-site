@@ -141,12 +141,25 @@ ssize_t readv(int fildes, const struct iovec *iov, int iovcnt);
 
 In other aspects, these functions work analogously to their non-vector counterparts `write` and `read`.
 
-### Useful pages
+### Task
 
-- man 3p writev
-- man 3p readv
-- man 0p sys_uio.h
+The file [database]({{< resource "database" >}}) contains a catalog of library books in binary format.
+It consists of 68-byte records: 4 bytes of the book file's size (`unsigned int`) and 64 bytes of title, padded with zeros if shorter.
+The number of records can be computed from the file size.
 
+Write a program that takes the database path and an output file path as arguments.
+The program should read the database with a single `readv` call into an array of structures with fields `unsigned int size` and `char title[65]` (the extra byte lets us always terminate the title with a zero) and print each book in the format `Size: <size>, Title: <title>`.
+Then it should increase the size of each book by 1 and write the modified database to the output file with a single `writev` call, using the same buffers.
+
+### Task Solution
+
+What the student needs to know:
+- `man 3p writev`
+- `man 3p readv`
+- `man 0p sys_uio.h`
+
+**Code for file** `l2-v.c`
+{{< includecode "l2-v.c" >}}
 
 ## Mmap
 
