@@ -13,15 +13,16 @@ title: "Harmonogram"
 | 21.10.2026 | [System plików i jego interfejs.]({{< ref "wyk/w2" >}})          |
 | 28.10.2026 | [Procesy]({{< ref "wyk/w4" >}})                                  |
 | 4.11.2026  | [Przełączanie Kontekstu]({{< ref "wyk/w4/code/cs" >}})           |
-| 13.11.2026 | [Sygnały POSIX]({{< ref "wyk/w5" >}})                            |
-| 18.11.2026 | [Zdarzenia]({{< ref "wyk/events" >}})                            |
-| 25.11.2026 | [Wątki. P-wątki i muteksy.]({{< ref "wyk/w6" >}})                |
+| 9.11.2026  | [Sygnały POSIX]({{< ref "wyk/w5" >}})                            |
+| 13.11.2026 | [Zdarzenia]({{< ref "wyk/events" >}})                            |
+| 18.11.2026 | [Wątki. P-wątki i muteksy.]({{< ref "wyk/w6" >}})                |
+| 25.11.2026 | [Synchronizacja]({{< ref "wyk/w7" >}})                           |
 | 2.12.2026  | [Synchronizacja]({{< ref "wyk/w7" >}})                           |
-| 9.12.2026  | [Synchronizacja]({{< ref "wyk/w7" >}})                           |
-| 16.12.2026 | _Konsultacje_                                                    |
-| 13.01.2027 | [Scheduling]({{< ref "wyk/scheduling" >}})                       |
-| 20.01.2027 | _AlkOS_ - Wykład gościnny                                        |
-| 27.01.2027 | [Łącza]({{< ref "wyk/pipe" >}})                                  |
+| 9.12.2026  | _Konsultacje_                                                    |
+| 16.12.2026 | [Scheduling]({{< ref "wyk/scheduling" >}})                       |
+| 13.01.2027 | [Łącza]({{< ref "wyk/pipe" >}})                                  |
+| 20.01.2027 | _Konsultacje_                                                    |
+| 27.01.2027 | _Wykład Odrobiony 9.11.2026_                                     |
 
 ## Zajęcia laboratoryjne
 

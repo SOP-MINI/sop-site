@@ -13,15 +13,16 @@ Wednesdays, 16:15 - 18:00, room 329
 | 21.10.2026 | [File system interface.]({{< ref "wyk/w2" >}})                        |
 | 28.10.2026 | [Processes]({{< ref "wyk/w4" >}})                                     |
 | 4.11.2026  | [Context Switching]({{< ref "wyk/w4/code/cs" >}})                     |
-| 13.11.2026 | [POSIX signals]({{< ref "wyk/w5" >}})                                 |
-| 18.11.2026 | [Event I/O]({{< ref "wyk/events" >}})                                 |
-| 25.11.2026 | [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}})               |
+| 9.11.2026  | [POSIX signals]({{< ref "wyk/w5" >}})                                 |
+| 13.11.2026 | [Event I/O]({{< ref "wyk/events" >}})                                 |
+| 18.11.2026 | [Threads. P-threads and mutexes.]({{< ref "wyk/w6" >}}                |
+| 25.11.2026 | [Synchronization]({{< ref "wyk/w7" >}})                               |
 | 2.12.2026  | [Synchronization]({{< ref "wyk/w7" >}})                               |
-| 9.12.2026  | [Synchronization]({{< ref "wyk/w7" >}})                               |
-| 16.12.2026 | _Office hours_                                                        |
-| 13.01.2027 | [Scheduling]({{< ref "wyk/scheduling" >}})                            |
-| 20.01.2027 | [Pipes and FIFOs]({{< ref "wyk/pipe" >}})                             |
-| 27.01.2027 | _Office hours_                                                        |
+| 9.12.2026  | _Office hours_                                                        |
+| 16.12.2026 | [Scheduling]({{< ref "wyk/scheduling" >}})                            |
+| 13.01.2027 | [Pipes and FIFOs]({{< ref "wyk/pipe" >}})                             |
+| 20.01.2027 | _Office hours_                                                        |
+| 27.01.2027 | _Lecture moved to 9.11.2026_                                          |
 
 ## Laboratories
 
