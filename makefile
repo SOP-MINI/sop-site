@@ -16,9 +16,11 @@ install: hugo
 	rsync -ac --delete public/ sop@ssh.mini.pw.edu.pl:public_html/
 
 codes:
+	$(MAKE) -C content/sop1/wyk all
 	$(MAKE) -C content/sop2/wyk all
 
 clean-codes:
+	$(MAKE) -C content/sop1/wyk clean
 	$(MAKE) -C content/sop2/wyk clean
 
 clean: clean-hugo clean-codes

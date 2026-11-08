@@ -2,6 +2,7 @@
 title: "Introduction"
 date: 2022-02-05T22:35:24+01:00
 weight: 10
+bookCollapseSection: true
 ---
 
 # Operating and computer systems
@@ -25,5 +26,5 @@ weight: 10
 
 1. Textbook (8th-10th ed.): chapter. 1 (Introduction), 2 (System structures).
 2. [Lecture presentation](https://link.excalidraw.com/p/readonly/GTNWL6Or9X0hCmggdAyX) ([PDF]({{< resource OPS1_Introduction.pdf >}}))
-3. [Lecture code samples](https://gitlab.com/SaQQ/sop1/-/tree/master/01_hello_world?ref_type=heads)
+3. [Lecture code samples](code)
 4. Old slides: [Intro.pdf]({{< resource Intro_2.pdf >}})

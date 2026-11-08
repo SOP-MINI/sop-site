@@ -2,6 +2,7 @@
 title: "Wstęp"
 date: 2022-02-05T18:00:18+01:00
 weight: 10
+bookCollapseSection: true
 ---
 
 # Systemy operacyjne i komputerowe
@@ -25,5 +26,5 @@ weight: 10
 
 1. Podręcznik: rozdz. 1 (Wstęp), 2 (Struktury systemów komputerowych), 3 (Struktury systemów operacyjnych).
 2. [Prezentacja wykładowa](https://link.excalidraw.com/p/readonly/GTNWL6Or9X0hCmggdAyX) ([PDF]({{< resource OPS1_Introduction.pdf >}}))
-3. [Programy wykładowe](https://gitlab.com/SaQQ/sop1/-/tree/master/01_hello_world?ref_type=heads)
+3. [Programy wykładowe](code)
 4. Stare slajdy: [Wstęp.pdf]({{< resource "Wstęp_2.pdf" >}})

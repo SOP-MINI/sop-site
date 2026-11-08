@@ -1,0 +1,14 @@
+*/code/*
+
+!*/code/*.c
+!*/code/*.cpp
+!*/code/*.h
+!*/code/*.S
+!*/code/*.asm
+!*/code/Makefile
+!*/code/*.md
+!*/code/*.txt
+!*/code/*.sh
+!*/code/*.py
+!*/code/*.yml
+!*/code/Dockerfile
