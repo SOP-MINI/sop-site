@@ -2,6 +2,7 @@
 title: "Processes"
 date: 2022-02-05T22:35:27+01:00
 weight: 40
+bookCollapseSection: true
 ---
 
 # Processes
@@ -25,6 +26,6 @@ weight: 40
 
 1. Textbook (8th-10th ed.): chapter 3 (Process Concept, 3.1-3.4).
 2. [Lecture presentation](https://link.excalidraw.com/p/readonly/EdnsxZsbiJBVHZv7NMS1) ([PDF]({{< resource OPS1_Processes.pdf >}}))
-3. [Lecture code samples](https://gitlab.com/SaQQ/sop1/-/tree/master/02_processes?ref_type=heads)
+3. [Lecture code samples](code)
 4. Section 26 of the GNU C library documentation: [Processes](http://www.gnu.org/software/libc/manual/html_node/Processes.html#Processes)
 5. Old Slides: [Processes.pdf]({{< resource "Processes_0.pdf" >}}), [POSIX\_processes.pdf]({{< resource "POSIX-processes_5.pdf" >}})

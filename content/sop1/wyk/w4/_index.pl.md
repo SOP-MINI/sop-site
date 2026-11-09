@@ -2,6 +2,7 @@
 title: "Procesy"
 date: 2022-02-05T18:02:21+01:00
 weight: 40
+bookCollapseSection: true
 ---
 
 # Procesy
@@ -27,6 +28,6 @@ weight: 40
 
 1. Podręcznik: rozdz. 4 (Procesy).
 2. [Prezentacja wykładowa](https://link.excalidraw.com/p/readonly/EdnsxZsbiJBVHZv7NMS1) ([PDF]({{< resource OPS1_Processes.pdf >}}))
-3. [Programy wykładowe](https://gitlab.com/SaQQ/sop1/-/tree/master/02_processes?ref_type=heads)
+3. [Programy wykładowe](code)
 4. Rozdział 26 dokumentacji "GNU C library": [Processes](http://www.gnu.org/software/libc/manual/html_node/Processes.html#Processes)
 5. Stare Slajdy: [Procesy.pdf]({{< resource "Procesy_0.pdf" >}}), [Procesy\_POSIX.pdf]({{< resource "Procesy_POSIX_5.pdf" >}})
