@@ -47,4 +47,4 @@ minify:
   minifyOutput: true
 
 ignoreFiles:
-  - "(?i)sop1/wyk/w4/code/cs/linux-.*"
+  - "(?i)sop1/wyk/processes/code/cs/linux-.*"

@@ -1,4 +1,0 @@
-linux-*.tar.xz
-linux-*/
-rootfs/
-initramfs.cpio.gz

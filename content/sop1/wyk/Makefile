@@ -1,4 +1,4 @@
-CODEDIRS := w1/code w2/code w4/code w5/code events/code w6/code w7/code scheduling/code pipe/code mqueue/code
+CODEDIRS := intro/code filesystem/code processes/code signals/code events/code threads/code synchro/code scheduling/code pipe/code mqueue/code
 
 .PHONY: all clean $(CODEDIRS)
 

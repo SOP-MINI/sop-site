@@ -6,23 +6,23 @@ title: "Harmonogram"
 
 Środy, godz. 18:15 - 20:00, s. 329
 
-| Data       | Tytuł                                                            |
-|------------|------------------------------------------------------------------|
-| 7.10.2026  | [Wstęp. Systemy komputerowe i operacyjne.]({{< ref "wyk/w1" >}}) |
-| 14.10.2026 | [System plików i jego interfejs.]({{< ref "wyk/w2" >}})          |
-| 21.10.2026 | [System plików i jego interfejs.]({{< ref "wyk/w2" >}})          |
-| 28.10.2026 | [Procesy]({{< ref "wyk/w4" >}})                                  |
-| 4.11.2026  | [Przełączanie Kontekstu]({{< ref "wyk/w4/code/cs" >}})           |
-| 9.11.2026  | [Sygnały POSIX]({{< ref "wyk/w5" >}})                            |
-| 13.11.2026 | [Zdarzenia]({{< ref "wyk/events" >}})                            |
-| 18.11.2026 | [Wątki. P-wątki i muteksy.]({{< ref "wyk/w6" >}})                |
-| 25.11.2026 | [Synchronizacja]({{< ref "wyk/w7" >}})                           |
-| 2.12.2026  | [Synchronizacja]({{< ref "wyk/w7" >}})                           |
-| 9.12.2026  | _Konsultacje_                                                    |
-| 16.12.2026 | [Scheduling]({{< ref "wyk/scheduling" >}})                       |
-| 13.01.2027 | [Łącza]({{< ref "wyk/pipe" >}})                                  |
-| 20.01.2027 | _Konsultacje_                                                    |
-| 27.01.2027 | _Wykład Odrobiony 9.11.2026_                                     |
+| Data       | Tytuł                                                               |
+|------------|---------------------------------------------------------------------|
+| 7.10.2026  | [Wstęp. Systemy komputerowe i operacyjne.]({{< ref "wyk/intro" >}}) |
+| 14.10.2026 | [System plików i jego interfejs.]({{< ref "wyk/filesystem" >}})     |
+| 21.10.2026 | [System plików i jego interfejs.]({{< ref "wyk/filesystem" >}})     |
+| 28.10.2026 | [Procesy]({{< ref "wyk/processes" >}})                              |
+| 4.11.2026  | [Przełączanie Kontekstu]({{< ref "wyk/processes/code/cs" >}})       |
+| 9.11.2026  | [Sygnały POSIX]({{< ref "wyk/signals" >}})                          |
+| 13.11.2026 | [Zdarzenia]({{< ref "wyk/events" >}})                               |
+| 18.11.2026 | [Wątki. P-wątki i muteksy.]({{< ref "wyk/threads" >}})              |
+| 25.11.2026 | [Synchronizacja]({{< ref "wyk/synchro" >}})                         |
+| 2.12.2026  | [Synchronizacja]({{< ref "wyk/synchro" >}})                         |
+| 9.12.2026  | _Konsultacje_                                                       |
+| 16.12.2026 | [Scheduling]({{< ref "wyk/scheduling" >}})                          |
+| 13.01.2027 | [Łącza]({{< ref "wyk/pipe" >}})                                     |
+| 20.01.2027 | _Konsultacje_                                                       |
+| 27.01.2027 | _Wykład Odrobiony 9.11.2026_                                        |
 
 ## Zajęcia laboratoryjne
 

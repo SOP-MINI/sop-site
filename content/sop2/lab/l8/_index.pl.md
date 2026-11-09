@@ -158,7 +158,7 @@ W takiej sytuacji, żeby uzyskać odpowiednią wydajność na nowoczesnym sprzę
 Typową i naturalną architekturą jest jeden wątek odbierający wiadomości oraz przekazujący zadania do wątków roboczych, które je wykonują i wysyłają rezultaty do klientów.
 Z drugiej strony atomowość operacji na datagramach pozwala też na wiele wątków jednocześnie czekać na wiadomość na jednym gnieździe. Oczywiście często w takiej sytuacji jest z nim związany jakiś dodatkowy stan, dlatego i tak może być konieczna synchronizacja np. za pomocą mutexu.
 
-W celu napisania wydajnych wielowątkowych programów na laboratorium warto powtórzyć sobie L4 (synchronizacja), w szczególności mutexy, semafory i zmienne warunkowe. Ponadto typowe struktury danych używane do tego typu zadań jak pula wątków czy bufor cykliczny. Jeśli słabo pamiętasz te zagadnienia przejrzyj tutoriale do [L3](../../../sop1/lab/l3/) i [L4](../../../sop1/lab/l4) oraz [slajdy i programy wykładowe z synchronizacji](../../../sop1/wyk/w7).
+W celu napisania wydajnych wielowątkowych programów na laboratorium warto powtórzyć sobie L4 (synchronizacja), w szczególności mutexy, semafory i zmienne warunkowe. Ponadto typowe struktury danych używane do tego typu zadań jak pula wątków czy bufor cykliczny. Jeśli słabo pamiętasz te zagadnienia przejrzyj tutoriale do [L3](../../../sop1/lab/l3/) i [L4](../../../sop1/lab/l4) oraz [slajdy i programy wykładowe z synchronizacji](../../../sop1/wyk/synchro).
 
 
 ## Przykładowe zadania

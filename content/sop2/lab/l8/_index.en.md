@@ -150,7 +150,7 @@ Of course, in such a situation there is often some additional state associated w
 
 To write efficient multithreaded programs during the lab, it is worth rereading lab 4 tutorial (synchronization), in particular mutexes, semaphores, and condition variables.
 Review also the typical data structures used for this kind of task, such as a thread pool or a circular buffer.
-If you do not remember these topics well, look through the tutorials for [Lab 3](../../../sop1/lab/l3/) and [Lab 4](../../../sop1/lab/l4), as well as the [slides and lecture programs on synchronization](../../../sop1/wyk/w7).
+If you do not remember these topics well, look through the tutorials for [Lab 3](../../../sop1/lab/l3/) and [Lab 4](../../../sop1/lab/l4), as well as the [slides and lecture programs on synchronization](../../../sop1/wyk/synchro).
 
 ## Example Tasks
 
