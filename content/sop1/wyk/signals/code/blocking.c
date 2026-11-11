@@ -5,7 +5,11 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-void handler(int sig) { printf("\n\n[%d] Signal %d!\n\n", getpid(), sig); }
+void handler(int sig) {
+  char msg[] = "\n\nSignal ?!\n\n";
+  msg[9] = '0' + sig;
+  write(STDOUT_FILENO, msg, sizeof(msg) - 1);
+}
 
 int main(int argc, const char **argv) {
   printf("[%d] Hello, world!\n", getpid());

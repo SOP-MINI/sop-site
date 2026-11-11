@@ -19,8 +19,11 @@ struct long_struct flag;
 //volatile sig_atomic_t flag;
 
 void handler(int sig) {
-  printf("[%d] Received signal %d! - a = %lld, b = %lld\n", getpid(), sig,
-         flag.a, flag.b);
+  (void)sig;
+  char msg[] = "Received signal! - a = ?, b = ?\n";
+  msg[23] = '0' + flag.a;
+  msg[30] = '0' + flag.b;
+  write(STDOUT_FILENO, msg, sizeof(msg) - 1);
 }
 
 int main(int argc, const char **argv) {

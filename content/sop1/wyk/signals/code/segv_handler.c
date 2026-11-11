@@ -6,7 +6,9 @@
 #include <unistd.h>
 
 void handler(int sig) {
-  printf("\n=== PID %d RECEIVED SIG %d ===\n\n", getpid(), sig);
+  (void)sig;
+  const char msg[] = "\n=== RECEIVED SIGSEGV ===\n\n";
+  write(STDOUT_FILENO, msg, sizeof(msg) - 1);
 }
 
 int main(int argc, const char **argv) {

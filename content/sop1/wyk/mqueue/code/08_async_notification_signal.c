@@ -22,7 +22,11 @@
 volatile sig_atomic_t should_exit = 0;
 
 void handler(int sig, siginfo_t *s, void *context) {
-    printf("Received signal %d\n", sig);
+    (void)sig;
+    (void)s;
+    (void)context;
+    const char msg[] = "Received SIGUSR1\n";
+    write(STDOUT_FILENO, msg, sizeof(msg) - 1);
 }
 
 void sigint_handler(int sig) {

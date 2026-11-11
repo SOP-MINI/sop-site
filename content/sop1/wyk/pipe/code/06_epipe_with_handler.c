@@ -12,7 +12,9 @@
 #include <string.h>
 
 void signal_handler(int signo) {
-    printf("Received signal %d\n", signo);
+    (void)signo;
+    const char msg[] = "Received SIGPIPE\n";
+    write(STDOUT_FILENO, msg, sizeof(msg) - 1);
 }
 
 int main() {

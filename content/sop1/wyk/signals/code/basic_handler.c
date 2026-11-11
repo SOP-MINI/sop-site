@@ -6,7 +6,9 @@
 #include <sys/stat.h>
 
 void handler(int sig) {
-  printf("\n\n[%d] Signal %d!\n\n", getpid(), sig);
+  (void)sig;
+  const char msg[] = "\n\nSignal received!\n\n";
+  write(STDOUT_FILENO, msg, sizeof(msg) - 1);
 }
 
 int main(int argc, const char** argv)
@@ -24,6 +26,7 @@ int main(int argc, const char** argv)
   }
 
   // fork(); // TODO: uncomment
+  printf("[%d] Hello, world!\n", getpid());
 
   while (1)
   {

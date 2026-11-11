@@ -9,23 +9,33 @@
 #include <unistd.h>
 
 void sigchld_handler(int sig) {
-  printf("[%d] Signal %d!\n", getpid(), sig);
+  (void)sig;
+  int saved_errno = errno;
+  const char msg[] = "SIGCHLD!\n";
+  write(STDOUT_FILENO, msg, sizeof(msg) - 1);
 
   pid_t pid;
   for (;;) {
     pid = waitpid(0, NULL, WNOHANG);
     if (0 == pid)
-      return;
+      break;
     if (0 >= pid) {
       if (ECHILD == errno)
-        return;
-      perror("waitpid:");
+        break;
+      const char err_msg[] = "waitpid error\n";
+      write(STDERR_FILENO, err_msg, sizeof(err_msg) - 1);
+      _exit(1);
     }
   }
+  errno = saved_errno;
 }
 
 void sigint_handler(int sig) {
-  printf("[%d] Signal %d!\n", getpid(), sig);
+  (void)sig;
+  int saved_errno = errno;
+  const char msg[] = "SIGINT!\n";
+  write(STDOUT_FILENO, msg, sizeof(msg) - 1);
+  errno = saved_errno;
 }
 
 int main(int argc, const char **argv) {
