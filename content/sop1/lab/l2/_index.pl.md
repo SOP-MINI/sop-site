@@ -58,7 +58,7 @@ ssize_t write(int fildes, const void *buf, size_t nbyte);
 Zwrócona wartość oznacza ilość zapisanych bajtów.
 
 Powyższe funkcje odczytują (albo zapisują) dane po kolei.
-Czasami jednak interesuje potrzebujemy dostępu do danych np. gdzieś w środku pliku.
+Czasami jednak potrzebujemy dostępu do danych np. gdzieś w środku pliku.
 Moglibyśmy oczywiście przeczytać dostatecznie dużo bajtów, byłoby to jednak bardzo nieoptymalne.
 Funkcja `lseek` (`man 3p lseek`) pozwala na bezpośrednie poruszanie kursorem
 
