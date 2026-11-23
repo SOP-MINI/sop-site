@@ -130,11 +130,7 @@ to finish. More complex scenarios are possible
 Please keep in mind that nearly every call to system function (and most calls to library functions) should be followed
 with the test on errors and if necessary by the proper reaction on the error.
 
-ERR macro does not send "kill" signal as in multi-process program, why?
-{{< answer   >}} Call to exit terminates all the threads in current process, there is no need to "kill" other processes. {{< /answer  >}}
-
-
-Instead of `ERR` macro we use a new `HANDLE_RR`, why?
+Instead of `ERR` macro we use a new `HANDLE_ERR`, why?
 {{< answer  >}}
 Functions that operate on threads (those named like `pthread_*` and some others) do not set `errno`.
 Instead, they return an error code.

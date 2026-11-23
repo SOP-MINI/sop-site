@@ -348,7 +348,7 @@ W programie wielowątkowym do ustawienia maski sygnałów należy użyć funkcji
 
 Wątki dziedziczą maskę sygnałów po wątku, który je utworzył.
 
-Aby całkowicie zablokować sygnał, należy go zablokować we wszystkich wątkach programu. W przeciwnym razie wątek, który nie blokuje ani nie obsługuje danego sygnału odbierze go, i wykona domyślą akcję - czyli najczęściej zakończy cały program.
+Aby całkowicie zablokować sygnał, należy go zablokować we wszystkich wątkach programu. W przeciwnym razie wątek, który nie blokuje ani nie obsługuje danego sygnału odbierze go, i wykona domyślną akcję - czyli najczęściej zakończy cały program.
 
 Funkcja `pthread_sigmask` określa, w jaki sposób zdefiniowana przez nas maska sygnałów ma wpłynąć na aktualną maskę sygnałów wątku.
 Przyjrzyjmy się jej definicji:
