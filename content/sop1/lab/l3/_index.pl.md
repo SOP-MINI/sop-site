@@ -300,10 +300,7 @@ Argument `pid` określa, do którego procesu lub grupy procesów kierowany jest 
  - `pid < -1` - sygnał wysyłany jest do procesów o identyfikatorze **grupy** równym co do modułu `pid`
 
 Argument `sig` specyfikuje jaki sygnał powinien być wysłany. Może on przyjmować następujące wartości:
- - jedno z makr zdefiniowanych w pliku nagłówkowym `<signal.h>` jak np. `SIGTERM`, `SIGKILL` czy `SIGUSR1`. Pełną listę można znaleźć w manualu
-  ```bash
-  man 7 signal
-  ```
+ - numer sygnału - najlepiej przekazać jako jedno z makr zdefiniowanych w pliku nagłówkowym `<signal.h>` jak np. `SIGTERM`, `SIGKILL` czy `SIGUSR1`.
  - wartość zero - w takim przypadku żaden sygnał nie zostanie wysłany, a jedynie zajdzie sprawdzenie potencjalnych błędów wykonania funkcji.
 
 Funkcja zwraca `0` w przypadku poprawnego wykonania. W przeciwnym wypadku zwracana jest wartość `-1` i ustawiana jest odpowiednia wartość zmiennej `errno`.
