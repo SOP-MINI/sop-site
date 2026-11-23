@@ -1,9 +1,20 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #define ERR(source) (perror(source), fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), exit(EXIT_FAILURE))
+#define HANDLE_ERR(func)                                                             \
+    ({                                                                               \
+        int __result = func;                                                         \
+        if (__result)                                                                \
+        {                                                                            \
+            fprintf(stderr, #func);                                                  \
+            fprintf(stderr, ": %s %s:%d\n", strerror(__result), __FILE__, __LINE__); \
+            exit(EXIT_FAILURE);                                                      \
+        }                                                                            \
+    })
 
 typedef struct targs
 {
@@ -34,8 +45,7 @@ void create_threads(int thread_count, int samples_count, targs_t** estimations)
         targs[i].seed = rand();
         targs[i].samples_count = samples_count;
 
-        if (pthread_create(&(targs[i].tid), NULL, pi_estimation, &targs[i]) != 0)
-            ERR("pthread_create");
+        HANDLE_ERR(pthread_create(&(targs[i].tid), NULL, pi_estimation, &targs[i]));
     }
 }
 
@@ -57,8 +67,7 @@ int main(int argc, char** argv)
     int cumulative_result = 0;
     for (int i = 0; i < thread_count; i++)
     {
-        if (pthread_join(estimations[i].tid, (void**)&subresult) != 0)
-            ERR("pthread_join");
+        HANDLE_ERR(pthread_join(estimations[i].tid, (void**)&subresult));
 
         if (NULL != subresult)
         {

@@ -13,6 +13,16 @@
 #define DEFAULT_ARRAYSIZE 10
 #define DELETED_ITEM -1
 #define ERR(source) (perror(source), fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), exit(EXIT_FAILURE))
+#define HANDLE_ERR(func)                                                             \
+    ({                                                                               \
+        int __result = func;                                                         \
+        if (__result)                                                                \
+        {                                                                            \
+            fprintf(stderr, #func);                                                  \
+            fprintf(stderr, ": %s %s:%d\n", strerror(__result), __FILE__, __LINE__); \
+            exit(EXIT_FAILURE);                                                      \
+        }                                                                            \
+    })
 
 typedef struct argsSignalHandler
 {
@@ -46,8 +56,8 @@ int main(int argc, char **argv)
     sigemptyset(&newMask);
     sigaddset(&newMask, SIGINT);
     sigaddset(&newMask, SIGQUIT);
-    if (pthread_sigmask(SIG_BLOCK, &newMask, &oldMask))
-        ERR("SIG_BLOCK error");
+    HANDLE_ERR(pthread_sigmask(SIG_BLOCK, &newMask, &oldMask));
+
     argsSignalHandler_t args;
     args.pArrayCount = &arrayCount;
     args.array = array;
@@ -55,8 +65,8 @@ int main(int argc, char **argv)
     args.pMask = &newMask;
     args.pQuitFlag = &quitFlag;
     args.pmxQuitFlag = &mxQuitFlag;
-    if (pthread_create(&args.tid, NULL, signal_handling, &args))
-        ERR("Couldn't create signal handling thread!");
+    HANDLE_ERR(pthread_create(&args.tid, NULL, signal_handling, &args));
+
     while (true)
     {
         pthread_mutex_lock(&mxQuitFlag);
@@ -74,11 +84,9 @@ int main(int argc, char **argv)
             sleep(1);
         }
     }
-    if (pthread_join(args.tid, NULL))
-        ERR("Can't join with 'signal handling' thread");
+    HANDLE_ERR(pthread_join(args.tid, NULL));
     free(array);
-    if (pthread_sigmask(SIG_UNBLOCK, &newMask, &oldMask))
-        ERR("SIG_BLOCK error");
+    HANDLE_ERR(pthread_sigmask(SIG_UNBLOCK, &newMask, &oldMask));
     exit(EXIT_SUCCESS);
 }
 
@@ -127,8 +135,8 @@ void *signal_handling(void *voidArgs)
     srand(time(NULL));
     for (;;)
     {
-        if (sigwait(args->pMask, &signo))
-            ERR("sigwait failed.");
+        HANDLE_ERR(sigwait(args->pMask, &signo));
+
         switch (signo)
         {
             case SIGINT:

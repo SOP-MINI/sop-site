@@ -1,12 +1,23 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <unistd.h>
 
 #define BIN_COUNT 11
 #define NEXT_DOUBLE(seedptr) ((double)rand_r(seedptr) / (double)RAND_MAX)
 #define ERR(source) (perror(source), fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), exit(EXIT_FAILURE))
+#define HANDLE_ERR(func)                                                             \
+    ({                                                                               \
+        int __result = func;                                                         \
+        if (__result)                                                                \
+        {                                                                            \
+            fprintf(stderr, #func);                                                  \
+            fprintf(stderr, ": %s %s:%d\n", strerror(__result), __FILE__, __LINE__); \
+            exit(EXIT_FAILURE);                                                      \
+        }                                                                            \
+    })
 
 typedef struct shared_state
 {
@@ -59,8 +70,7 @@ int main(int argc, char** argv)
 
     for (int i = 0; i < BIN_COUNT; i++)
     {
-        if (pthread_mutex_init(&shared.bins_mtx[i], NULL))
-            ERR("pthread_mutex_init");
+        HANDLE_ERR(pthread_mutex_init(&shared.bins_mtx[i], NULL));
     }
 
     thrower_args_t* args;
@@ -103,18 +113,15 @@ void make_throwers(thrower_args_t** args_ptr, int throwers_count, shared_state_t
 
     pthread_attr_t attr;
 
-    if (pthread_attr_init(&attr))
-        ERR("pthread_attr_init");
-    if (pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED))
-        ERR("pthread_attr_setdetachstate");
+    HANDLE_ERR(pthread_attr_init(&attr));
+    HANDLE_ERR(pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED));
 
     srand(time(NULL));
     for (int i = 0; i < throwers_count; i++)
     {
         args[i].seed = rand();
         args[i].shared = shared;
-        if (pthread_create(&args[i].tid, &attr, throwing_func, &args[i]))
-            ERR("pthread_create");
+        HANDLE_ERR(pthread_create(&args[i].tid, &attr, throwing_func, &args[i]));
     }
 
     pthread_attr_destroy(&attr);

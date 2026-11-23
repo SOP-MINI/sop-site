@@ -130,8 +130,13 @@ to finish. More complex scenarios are possible
 Please keep in mind that nearly every call to system function (and most calls to library functions) should be followed
 with the test on errors and if necessary by the proper reaction on the error.
 
-ERR macro does not send "kill" signal as in multi-process program, why?
-{{< answer   >}} Call to exit terminates all the threads in current process, there is no need to "kill" other processes. {{< /answer  >}}
+Instead of `ERR` macro we use a new `HANDLE_ERR`, why?
+{{< answer  >}}
+Functions that operate on threads (those named like `pthread_*` and some others) do not set `errno`.
+Instead, they return an error code.
+Using `ERR` would result in error messages like `success: file:line` because `errno` would be set to 0.
+It is important to keep this in mind and implement proper error handling for these functions.
+{{< /answer >}}
 
 How is input data passed to the new threads?
 {{< answer   >}} Exclusively by the pointer to structure targs_t that is passed as thread function arguments. There is no need (nor the excuse) to use global variables! {{< /answer  >}}
@@ -271,51 +276,98 @@ This program uses a lot of mutexes, can we reduce the number of them?
 {{< answer   >}} Yes, in extreme case it can be reduced to only one mutex but at the cost of concurrency. In more reasonable approach you can have 2 mutexes for the counters and one for all the bins, although the concurrency is lower in this case the running time of a program can be a bit shorter as operations on mutexes are quite time consuming for the OS. {{< /answer  >}}
 
 To check if the working threads terminated, the main threads periodically  checks if the numer of thrown beans is equal to the number of beans in total. Is this optimal solution?
-{{< answer   >}} No, it is so called "soft busy waiting" but without synchronization tool like conditional variable it can not be solved better. {{< /answer  >}}
+{{< answer   >}} No, it is so called "soft busy waiting" but without synchronization tool like a conditional variable (which we will discuss later) it cannot be solved better. {{< /answer  >}}
 
 Do all the threads created in this program really work?
-{{< answer   >}} No, especially when there is a lot of threads. It is possible that some of threads "starve". The work code for the thread is very fast, thread creation is rather slow, it is possible that last threads created will have no beans left to throw. To check it please add per thread thrown beans counters and print them on stdout at the thread termination. The problem can be avoided if we add synchronization on threads start - make them start at the same time but this again requires the methods that will be introduced later. (barier or conditional variable) {{< /answer  >}}
+{{< answer   >}} No, especially when there is a lot of threads. It is possible that some of threads "starve". The work code for the thread is very fast, thread creation is rather slow, it is possible that last threads created will have no beans left to throw. To check it please add per thread thrown beans counters and print them on stdout at the thread termination. The problem can be avoided if we add synchronization on threads start - make them start at the same time but this again requires methods that will be introduced later (a barrier or conditional variable). {{< /answer  >}}
 
-## Threads and Signals
+## Signals and Threads
 
-### Handling signals
+Signals are an asynchronous event mechanism in Unix-like operating systems. They allow processes to be notified of system events, exceptions, or requests to control execution.
 
-When a multithreaded process receives a signal, any one of the threads that haven't blocked the signal may receive it.
+Each signal has a default action for the process. You can find a list of signals and their default actions in the manual:
+```bash
+man 7 signal
+```
 
-Another important thing to note is that asynchronous signal handlers (i.e those set by `sigaction`) are not thread-local! Setting a handler in one thread overwrites the handler for the whole process.
+In a multithreaded program, each thread can have its own set of blocked signals.
+When a multithreaded program receives a signal, any thread that has not blocked it may receive it.
 
-Thankfully, you don't necessarily have to deal with that and many other limitations of signal handlers in a multithreaded program.
+### Sending signals
 
-A very common pattern for handling signals in multithreaded applications is to start a separate thread specifically for handling signals, while blocking them in the rest of your threads.
+The `kill` function sends a signal to a process or group of processes (`man 3p kill`):
+```
+int kill(pid_t pid, int sig);
+```
+The `pid` argument specifies the target process or process group:
+- `pid > 0` — the signal is sent to the process whose PID is `pid`.
+- `pid = 0` — the signal is sent to processes in the sender's process group, including the sender.
+- `pid = -1` — the signal is sent to all processes the sender has permission to signal, subject to implementation-defined exclusions; whether the sender itself receives it depends on the implementation.
+- `pid < -1` — the signal is sent to processes whose process group ID is the absolute value of `pid`.
 
-This is convenient, as it removes the need for global variables while allowing you to handle signals in a synchronous way, (you just use `sigwait`) albeit at the expense of dedicating a thread to it.
+The `sig` argument specifies the signal to send. It can be:
+- a signal number, preferably one of the macros defined in `<signal.h>`, such as `SIGTERM`, `SIGKILL`, or `SIGUSR1`;
+- zero, in which case no signal is sent and the function only checks for possible errors.
 
-### Sending a signal
+The function returns `0` on success. On failure it returns `-1` and sets `errno` accordingly.
 
-Inside your process you may send a signal to a specific thread, using `pthread_kill`
+POSIX also provides `pthread_kill` to send a signal to a specific thread (`man 3p pthread_kill`):
 ```
 int pthread_kill(pthread_t thread, int sig);
 ```
+Only the selected thread receives the signal. If it is blocked there, the signal remains pending until it is unblocked.
 
-When you send a signal to a specific thread, only that thread will receive that signal. If the thread is blocking that signal, it will recieve it as soon as it unblocks it.
+### Handling signals
 
-More information:
-```
-man 3p pthread_kill
-```
+Historically, signals predate threads. As a result, there are two approaches to handling them: the older one, based on signal handlers, and the newer one, designed for use with threads.
+
+With the older approach, a signal handler is called when a signal arrives, interrupting the program's execution. In single-threaded programs this was effectively the usual way to handle signals, but it has drawbacks. A signal can arrive at any time and interrupt system calls (such as `read` or `write`) or other functions. Some interrupted calls may fail with `errno` set to `EINTR`; others may be automatically restarted, so programs must handle these cases appropriately. This can make programs more complicated.
+
+The older approach uses functions such as `sigaction` (`man 3p sigaction`) and `sigprocmask` (`man 3p sigprocmask`). However, some of these functions are not suitable for multithreaded programs. For example, the manual says that `sigprocmask` is for single-threaded programs, and its behavior in a multithreaded program is unspecified. Because of this and the other problems mentioned above (including the need for global variables), we will not use signal handlers in the lab.
+
+Instead, we will discuss a newer approach that delegates signal handling to a dedicated thread. The general pattern is:
+1. Block the signals in all threads.
+2. Create a thread that waits for signals in a loop (it is the only thread that can receive them).
+3. When it receives a signal, that thread notifies the other threads, for example through a shared variable or other mechanisms that we will learn about later.
 
 ### Setting a signal mask
 
-In a multithreaded program you may not use `sigprocmask` to set the signal mask. Instead, you have to call `pthread_sigmask`, which sets the thread-local signal mask.
+In a multithreaded program, use `pthread_sigmask` to set the signal mask. It sets the mask for the calling thread (`man 3p pthread_sigmask`).
 
-Similar to how processes inherit the mask of the parent, threads inherit the signal mask of the thread that created them.
+Threads inherit the signal mask from the thread that created them.
 
-In order to fully block a signal, it must be blocked in every thread of the program, otherwise one thread may receive it and bring down the whole program if the signal isn't handled.
+To block a signal throughout the program, block it in every thread. Otherwise, an unblocked thread may receive it; if no process-wide handler is installed, the default action may terminate the program.
 
-More information:
+The `pthread_sigmask` function specifies how a mask affects the calling thread's current signal mask. Its declaration is:
 ```
-man 3p pthread_sigmask
+int pthread_sigmask(int how, const sigset_t *restrict set,
+           sigset_t *restrict oset);
 ```
+The arguments are:
+- `how` specifies how to change the current mask:
+  - `SIG_BLOCK` — the resulting mask is the union of the current mask and `set` (add these signals to the mask).
+  - `SIG_SETMASK` — the resulting mask is `set`.
+  - `SIG_UNBLOCK` — the resulting mask is the current mask with the signals in `set` removed.
+- `set` points to the mask used to update the current mask.
+- `oset` points to an object where the previous signal mask is stored.
+
+For example:
+```C
+sigset_t mask, oldmask;
+sigemptyset(&mask);
+sigaddset(&mask, SIGUSR1);
+pthread_sigmask(SIG_BLOCK, &mask, &oldmask);
+```
+This adds `SIGUSR1` to the blocked signals of the calling thread.
+
+### Waiting for a signal
+
+Use `sigwait` to wait for a signal (`man 3p sigwait`):
+```
+int sigwait(const sigset_t *restrict set, int *restrict sig);
+```
+The first argument is the set of signals to wait for. These signals should be blocked in the calling thread.
+The output argument `sig` receives the number of the signal accepted by `sigwait`.
 
 ### Excercise
 Goal: 
@@ -339,23 +391,11 @@ mutexes and not shared (signal mask and tid of thread designated to handle the s
 How many threads run in this program?
 {{< answer   >}} Two, main thread created by system (every process has one starting thread) and the thread created by the code.  {{< /answer  >}}
 
-Name differences and similarities between sigwait i sigsuspend: {{< answer   >}}
-- sigwait does not require signal handling routine as sigsuspend
-- both functions require blocking of the anticipated signal/signals
-- sigwait can not be interrupted by signal handling function (it is POSIX requirement), sigsuspend can
-- sigwait does not change the mask of blocked signals, even if signal handler is set it will not be triggered (in this example we do not have handlers), it will be executed on sigsuspend call
-{{< /answer  >}}
+Is waiting for the thread as inefficient in this program as in the previous one?
+{{< answer   >}} No, checking every second is part of the task. If it were not, we could avoid busy waiting by synchronizing with `pthread_join`. {{< /answer   >}}
 
-After successful call to   sigwait  only one type of pending signal is removed from the pending signals vector thus the problem we experienced with sigsuspend in L2 example can  be corrected when using sigwait instead of sigsuspend. Please correct the program in L2 as an exercise.
-
-Does the method of waiting for the end of working thread have the same flow as the method in previous example?
-{{< answer   >}} No, periodical printout of the table is a part of the task, busy waiting is when looping is coded only for waiting for the condition to become true. Despite that in this example we join the thread. {{< /answer  >}}
-
-Can we use sigprocmask instead of pthread_sigmask in this program?
-{{< answer   >}} Yes, the signal blocking is set prior to thread creation, still in single thread phase of the program. {{< /answer  >}}
-
-Why system calls to functions operating on mutex (acquire, release)  are not tested for errors?
-{{< answer   >}} Basic mutex type (the type used in this program, default one) is not checking nor reporting errors. Adding those checks would not be such a bad idea as they are not harming the code and if you decide to later change the mutex type to error checking it will not require many changes in the code. {{< /answer  >}}
+Why do we not check errors from calls that acquire and release mutexes?
+{{< answer   >}} The basic mutex type used in this program does not check or report errors. {{< /answer   >}}
 
 
 ## Thread cancelation
