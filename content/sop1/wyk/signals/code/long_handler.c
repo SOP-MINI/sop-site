@@ -7,13 +7,26 @@
 #include <unistd.h>
 
 void handler(int sig) {
-  char fingerprint = rand() % ('z' - 'a') + 'a';
-  printf("[%c] Entering signal %d handler\n", fingerprint, sig);
-  for(int i = 0; i < 5; ++i) {
-    printf("[%c] In signal %d handler\n", fingerprint, sig);
+  static volatile sig_atomic_t id = 0;
+  char fingerprint = 'a' + (id++ % ('z' - 'a' + 1));
+
+  char enter_msg[] = "[?] Entering signal ? handler\n";
+  enter_msg[1] = fingerprint;
+  enter_msg[20] = '0' + sig;
+  write(STDOUT_FILENO, enter_msg, sizeof(enter_msg) - 1);
+
+  char in_msg[] = "[?] In signal ? handler\n";
+  in_msg[1] = fingerprint;
+  in_msg[14] = '0' + sig;
+  for (int i = 0; i < 5; ++i) {
+    write(STDOUT_FILENO, in_msg, sizeof(in_msg) - 1);
     sleep(1);
   }
-  printf("[%c] Exiting signal %d handler\n", fingerprint, sig);
+
+  char exit_msg[] = "[?] Exiting signal ? handler\n";
+  exit_msg[1] = fingerprint;
+  exit_msg[19] = '0' + sig;
+  write(STDOUT_FILENO, exit_msg, sizeof(exit_msg) - 1);
 }
 
 int main(int argc, const char** argv)

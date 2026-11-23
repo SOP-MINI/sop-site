@@ -6,7 +6,13 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-void handler(int sig) { printf("\n\n[%d] Signal %d!\n\n", getpid(), sig); }
+void handler(int sig) {
+  (void)sig;
+  int saved_errno = errno;
+  const char msg[] = "\n\nSignal received!\n\n";
+  write(STDOUT_FILENO, msg, sizeof(msg) - 1);
+  errno = saved_errno;
+}
 
 int main(int argc, const char **argv) {
   struct sigaction sa;

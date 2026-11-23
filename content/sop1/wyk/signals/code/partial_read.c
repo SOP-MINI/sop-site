@@ -25,7 +25,11 @@ ssize_t bulk_read(int fd, char *buf, size_t count) {
 }
 
 void handler(int sig) {
-  printf("\n=== PID %d RECEIVED SIG %d ===\n\n", getpid(), sig);
+  (void)sig;
+  int saved_errno = errno;
+  const char msg[] = "\n=== RECEIVED SIGNAL ===\n\n";
+  write(STDOUT_FILENO, msg, sizeof(msg) - 1);
+  errno = saved_errno;
 }
 
 void install_handler() {

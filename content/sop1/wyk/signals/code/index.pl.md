@@ -89,6 +89,8 @@ Signals can be:
 
 ## User-defined handlers
 
+Note: Signal handlers execute asynchronously and may only call async-signal-safe functions (see `man 7 signal-safety`), such as `write()` instead of `printf()` or `perror()`. If a handler calls functions that may modify `errno` (e.g. `waitpid()`, `read()`, `write()`), it should save `errno` on entry and restore it before returning.
+
 ```shell
 make basic_handler
 ./basic_handler

@@ -6,17 +6,23 @@
 #include <sys/wait.h>
 
 void sigusr1_handler(int i) {
-    printf("SIGUSR1 handler in %d\n", getpid());
+    (void)i;
+    const char msg[] = "SIGUSR1 handler\n";
+    write(STDOUT_FILENO, msg, sizeof(msg) - 1);
 }
 
 void sigusr2_handler(int i) {
-    printf("SIGUSR2 handler in %d\n", getpid());
+    (void)i;
+    const char msg[] = "SIGUSR2 handler\n";
+    write(STDOUT_FILENO, msg, sizeof(msg) - 1);
 }
 
 volatile sig_atomic_t done = 0;
 
 void sigint_handler(int i) {
-    printf("SIGINT handler in %d\n", getpid());
+    (void)i;
+    const char msg[] = "SIGINT handler\n";
+    write(STDOUT_FILENO, msg, sizeof(msg) - 1);
     done = 1;
 }
 

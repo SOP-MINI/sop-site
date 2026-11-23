@@ -6,13 +6,16 @@
 #include <unistd.h>
 
 void sigint_handler(int signo) {
-  printf("[%lu] Thread received SIGINT\n", pthread_self());
+  (void)signo;
+  const char msg[] = "Thread received SIGINT\n";
+  write(STDOUT_FILENO, msg, sizeof(msg) - 1);
 }
 
 void do_stuff() {
   for (int i = 0; i < 3; ++i) {
     printf("[%lu] Thread waiting for signal\n", pthread_self());
     pause();
+    printf("[%lu] Thread woken up by signal\n", pthread_self());
   }
 }
 
