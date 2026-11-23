@@ -266,24 +266,47 @@ Ten program używa  dużo muteksów, czy może być ich mniej?
 {{< answer  >}}  Tak, w skrajnym wypadku wystarczyłby 1 ale kosztem równoległości, możliwe są też rozwiązania pośrednie np. po jednym na liczniki i jeden wspólny na kosze. To ostatnie rozwiązanie, pomimo zmniejszenia równoległości, może okazać się szybsze bo liczne operacje na muteksach są dodatkowych obciążeniem dla systemu. {{< /answer >}}
 
 Metoda czekania na zakończenie się  wątków liczących polega na okresowym sprawdzaniu czy licznik kul zrzuconych jest równy sumie kul w programie, czy jest to optymalne rozwiązanie?
-{{< answer  >}}  Nie jest. To jest tzw. soft busy waiting, ale bez użycia zmiennych warunkowych nie możemy tego zrobić lepiej. {{< /answer >}}
+{{< answer  >}}  Nie jest. To jest tzw. soft busy waiting, ale bez użycia zmiennych warunkowych (które omówimy później) nie możemy tego zrobić lepiej. {{< /answer >}}
 
 Czy wszystkie wątki w tym programie na prawdę pracują?
-{{< answer  >}}   Nie, zwłaszcza gdy będzie ich dużo. Możliwe jest tzw. zagłodzenie wątku, czyli nie danie mu szansy na pracę. W tym programie działania wątku są na prawdę szybkie a tworzenie nowych wątków dość czasochłonne, może się tak stać, że wątki utworzone jako ostatnie nie będą miały co robić bo te wcześniejsze przerzucą wszystkie kulki wcześniej. Jako sprawdzenie dodaj do wątków liczniki ile kulek przerzucił dany wątek i wypisz je na koniec na ekran. Można zapobiec temu zjawisku synchronizując moment rozpoczęcia pracy przez wątki, ale tu znowu nie wystarczy muteks, najlepiej taką synchronizację zrobić na barierze lub zmiennej warunkowej, a te mechanizmy poznacie w przyszłym semestrze. {{< /answer >}}
+{{< answer  >}}   Nie, zwłaszcza gdy będzie ich dużo. Możliwe jest tzw. zagłodzenie wątku, czyli nie danie mu szansy na pracę. W tym programie działania wątku są na prawdę szybkie a tworzenie nowych wątków dość czasochłonne, może się tak stać, że wątki utworzone jako ostatnie nie będą miały co robić bo te wcześniejsze przerzucą wszystkie kulki wcześniej. Jako sprawdzenie dodaj do wątków liczniki ile kulek przerzucił dany wątek i wypisz je na koniec na ekran. Można zapobiec temu zjawisku synchronizując moment rozpoczęcia pracy przez wątki, ale tu znowu nie wystarczy muteks, najlepiej taką synchronizację zrobić na barierze lub zmiennej warunkowej, a te mechanizmy poznacie później. {{< /answer >}}
 
 
-## Wątki i sygnały
+## Sygnały i wątki
 
+Sygnały (ang. signals) są asynchronicznym mechanizmem obsługi zdarzeń w systemach operacyjnych z rodziny Unix.
+Umożliwiając powiadamianie procesów o wystąpieniu określonych zdarzeń systemowych, wyjątków lub żądań sterowania wykonaniem.
+
+Każdy sygnał posiada swój domyślny sposób obsługi przez proces.
+Liste sygnałów i ich domyślny sposób obsługi możesz sprawdzić w manualu
+```bash
+man 7 signal
+```
+
+W programie wielowątkowym każdy wątek może mieć swój własny zestaw blokowanych i obsługiwanych sygnałów.
 Gdy wielowątkowy program odbiera sygnał, może go odebrać dowolny z wątków, który nie zablokował tego sygnału.
 
-Należy jednak pamiętać, że asynchroniczne funkcje obsługi sygnałów (tj. ustawione za pomocą `sigaction`) nie są lokalne dla wątku! Ustawienie procedury obsługi w jednym wątku powoduje nadpisanie procedury obsługi dla całego procesu.
 
-W praktyce jednak, w programach wielowątkowych używamy innego podejścia, dzięki któremu nie musimy się przejmować powyższymi ograniczeniami.
-Polega ono na uruchomieniu oddzielnego wątku przeznaczonego specjalnie do obsługi sygnałów, przy jednoczesnym blokowaniu ich w pozostałych wątkach.
+### Wysyłanie sygnałów
 
-Jest to wygodne, ponieważ eliminuje potrzebę stosowania zmiennych globalnych, pozwalając jednocześnie na obsługę sygnałów w sposób synchroniczny (wystarczy użyć `sigwait`).
+Do wysyłania sygnałów służy funkcja `kill` (`man 3p kill`).
+```
+int kill(pid_t pid, int sig);
+```
+Argument `pid` określa, do którego procesu lub grupy procesów kierowany jest sygnał:
+ - `pid > 0` - sygnał jest wysyłany do procesu o PID równym `pid`
+ - `pid = 0` - sygnał wysyłany jest do procesów należących do grupy procesów nadawcy (nadawca również otrzymuje sygnał)
+ - `pid = -1` - sygnał wysyłany do wszystkich procesów, do których nadawca ma uprawnienia (w tym do samego siebie)
+ - `pid < -1` - sygnał wysyłany jest do procesów o identyfikatorze **grupy** równym co do modułu `pid`
 
-### Wysyłanie sygnału
+Argument `sig` specyfikuje jaki sygnał powinien być wysłany. Może on przyjmować następujące wartości:
+ - jedno z makr zdefiniowanych w pliku nagłówkowym `<signal.h>` jak np. `SIGTERM`, `SIGKILL` czy `SIGUSR1`. Pełną liste można znaleźć w manualu
+  ```bash
+  man 7 signal
+  ```
+ - wartość zero - w takim przypadku żaden sygnał nie zostanie wysłany, a jedynie zajdzie sprawdzenie potencjalnych błędów wykonania funkcji.
+
+Funkcja zwraca `0` w przypadku poprawnego wykonania. W przeciwnym wypadu zwracana jest wartość `-1` i ustawiana jest odpowiednia wartość zmiennej `errno`.
 
 POSIX udostępnia możliwość wysłania sygnału do konkretnego wątku poprzez funkcję `pthread_kill` (`man 3p pthread_kill`):
 
@@ -293,13 +316,78 @@ int pthread_kill(pthread_t thread, int sig);
 
 Używając jej tylko wybrany wątek otrzymuje dany sygnał. Jeśli go blokuje, otrzyma go od razu po zdjęciu blokady.
 
+
+### Obsługa sygnałów
+
+Historycznie rzecz biorąc, sygnały są starszym mechanizmem niż wątki.
+W związku z tym istnieją dwa zestawy funkcji do ich obsługi - z czasów przed wprowadzaniem wątków i po ich wprowadzeniu.
+
+Starszy sposób polegał na ustawianiu tzw. _signal handlers_ - funkcji obsługi sygnału.
+W momencie przyjścia sygnału dla którego zdefiniowaliśmy funkcję obsługi wykonanie programu było przerywane na czas jej wykonania.
+W programach jednowątkowych był to w praktyce jedyny sposób, posiadał on jednak wady.
+Ponieważ sygnał mógł przyjść w dowolnym momencie, mógł przerwać wywołanie syscalli (jak `read` albo `write`) oraz innych funkcji systemowych.
+Powodowało to, że trzeba było zawsze sprawdzać, czy dane wywołanie funkcji nie została przerwane sygnałem (errno `EINTR`) i odpowiednio je restartować.
+W efekcie bardzo komplikowało to programy.
+
+Aby obsługiwać sygnały starszym sposobem używamy funkcji takich jak `sigaction` (`man 3p sigaction`) czy `sigprocmask` (`man 3p pthread_sigmask`).
+Jednak wiele z tych funkcji nie działa w programach wielowątkowych - np. o `sigprocmask` możemy przeczytać w manualu, że działa tylko w programach jednowątkowych, a jego zachowanie w programach wielowątkowych jest niezdefiniowane.
+Ze względu na to oraz wspomniane wyżej problemy (a było ich jeszcze więcej, np. konieczność używania zmiennych globalnych) nie będziemy stosować podejścia opartego o signal handlers na laboratorium.
+
+Zamiast tego omówimy nowsze podejście.
+Polega ono na wydelegowaniu jednego wątku tylko do obsługi sygnału.
+Ogólnie rzecz biorąc schemat wygląda następująco:
+1. Blokujemy odbieranie sygnałów we wszystkich wątkach.
+2. Tworzymy wątek, który w pętli blokująco czeka na sygnał (on jako jedyny może je odbierać).
+3. Po otrzymaniu sygnału wspomniany wątek sygnalizuje to innym wątkom np. poprzez współdzieloną zmienną (lub inne mechanizmy, które poznamy w przyszłości).
+
+
 ### Ustawianie maski
 
-W programie wielowątkowym nie można używać funkcji `sigprocmask` do ustawiania maski sygnałów. Zamiast tego należy wywołać funkcję `pthread_sigmask`, która ustawia maskę sygnałów lokalną dla danego wątku (`man 3p pthread_sigmask`).
+W programie wielowątkowym do ustawienia maski sygnałów należy użyć funkcji `pthread_sigmask`, która ustawia maskę sygnałów lokalną dla danego wątku (`man 3p pthread_sigmask`).
 
-Podobnie jak procesy dziedziczą maskę po procesie nadrzędnym, tak wątki dziedziczą maskę sygnałów po wątku, który je utworzył.
+Wątki dziedziczą maskę sygnałów po wątku, który je utworzył.
 
 Aby całkowicie zablokować sygnał, należy go zablokować we wszystkich wątkach programu. W przeciwnym razie wątek, który nie blokuje ani nie obsługuje danego sygnału odbierze go, i wykona domyślą akcję - czyli najczęściej zakończy cały program.
+
+Funkcji `pthread_sigmask`, określa, w jaki sposób zdefiniowana przez nas maska sygnałów ma wpłynąć na aktualaną maskę sygnałów procesu.
+Przyjrzyjmy się jej definicji:
+```
+int pthread_sigmask(int how, const sigset_t *restrict set,
+           sigset_t *restrict oset);
+```
+
+Jak możemy zauważyć funkcja ta przyjmuje kolejno argumenty:
+- `how` typu `int` określa w jaki sposób nowa maska ma wpłynąć na aktualną maskę. Dostępne opcje:
+  - `SIG_BLOCK` - wynikowa maska sygnałów jest sumą zbiorów maski wskazanej przez `set` i aktualnej maski sygnałów (określamy jakie sygnały chcemy __dodać__ do maski).
+  - `SIG_SETMASK` - wynikowa maska sygnałów jest maską sygnałów wskazywaną przez `set`.
+  - `SIG_UNBLOCK` - wynikowa maska sygnałów jest przecięciem aktualnej maski i dopełnieniem zbioru maski wskazanej przez `set` (Określamy jakie sygnały chcemy __usunąć__ z maski).
+
+- `set` typu `const sigset_t` to wskaźnik na maskę, na podstawie której chcemy modyfikować poprzednią maskę.
+- `oset` typu `sigset_t *` jest wskaźnikiem na obiekt do którego chcemy zapisać maskę sygnałów sprzed edycji.
+
+
+Na przykład:
+
+```C
+sigset_t mask, oldmask;
+sigemptyset(&mask);
+sigaddset(&mask, SIGUSR1);
+pthread_sigmask(SIG_BLOCK, &mask, &oldmask);
+```
+
+spowoduje dodanie `SIGUSR1` do listy blokowanych sygnałów w aktualnym wątku.
+
+### Czekanie na sygnał
+
+Do czekania na sygnał możemy użyć funkcji `sigwait` (`man 3p sigwait`):
+
+```
+int sigwait(const sigset_t *restrict set, int *restrict sig);
+```
+
+W pierwszym parametrze umieszczamy zestaw sygnałów na które chcemy czekać.
+Powinny być one zablokowane w danym wątku.
+Drugi parametr `sig` jest wyjściowy - zostanie tam umieszony numer sygnału który przerwał wywołanie `sigwait`.
 
 ### Zadanie
 
@@ -331,24 +419,11 @@ wielowątkowych.
 Ile wątków jest w tym programie?
 {{< answer  >}} Dwa, wątek główny utworzony przez system (każdy proces ma ten jeden wątek) oraz watek utworzony przez nas w kodzie.  {{< /answer >}}
 
-Wypunktuj różnicę i podobieństwa pomiędzy sigwait i sigsuspend: 
-{{< answer  >}}
-- sigwait nie wymaga funkcji obsługi sygnału tak jak sigsuspend
-- obie metody wymagają blokowania sygnałów oczekiwanych
-- sigwait nie jest przerywany przez funkcję obsługi sygnałów -  nie może to wynika z POSIX
-- sigwait nie zmienia maski blokowanych sygnałów więc nie ma mowy o uruchomieniu obsługi sygnału blokowanego (jeśli by takowa była, w przykładzie nie ma) jak przy sigsuspend
-{{< /answer >}}
-
-Po wywołaniu sigwait tylko jeden typ sygnału jest zdejmowany z wektora sygnałów oczekujących wiec problem jaki mieliśmy z obsługa wielu sygnałów w trakcie pojedynczego sigsuspend w przykładzie z L2  nie wystąpiłby jeśli zamienić użycie sigsuspend na sigwait (ćwiczenie do zrobienia)
-
-Czy metoda czekania na potomka jest w tym programie równie słaba jak w poprzednim?
+Czy metoda czekania na wątek jest w tym programie równie słaba jak w poprzednim?
 {{< answer  >}}   Nie,  tutaj sprawdzanie co sekundę jest częścią zadania, gdyby jednak nie było to i tak unikniemy busy waitingu bo możemy się synchronizować na pthread_join. {{< /answer >}}
 
-Czy w tym programie można użyć sigprocmask zamiast pthread_sigmask?
-{{< answer  >}} Tak, wywołanie blokujące sygnały pojawia się zanim powstaną dodatkowe wątki. {{< /answer >}}
-
 Czemu nie sprawdzamy błędów wywołań funkcji systemowych związanych pozyskaniem i zwolnieniem muteksów
-{{< answer  >}} Podstawowy typ muteksu (a taki używamy w programie) nie sprawdza i nie raportuje błędów. Dodanie sprawdzania nie byłoby wcale złe, łatwiej można potem zmienić muteks na typ raportujący błędy.  {{< /answer >}}
+{{< answer  >}} Podstawowy typ muteksu (a taki używamy w tym programie) nie sprawdza i nie raportuje błędów. {{< /answer >}}
 
 ## Anulowanie wątków
 
