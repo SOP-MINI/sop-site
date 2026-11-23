@@ -278,7 +278,7 @@ Sygnały (ang. signals) są asynchronicznym mechanizmem obsługi zdarzeń w syst
 Umożliwiając powiadamianie procesów o wystąpieniu określonych zdarzeń systemowych, wyjątków lub żądań sterowania wykonaniem.
 
 Każdy sygnał posiada swój domyślny sposób obsługi przez proces.
-Liste sygnałów i ich domyślny sposób obsługi możesz sprawdzić w manualu
+Listę sygnałów i ich domyślny sposób obsługi możesz sprawdzić w manualu
 ```bash
 man 7 signal
 ```
@@ -300,13 +300,13 @@ Argument `pid` określa, do którego procesu lub grupy procesów kierowany jest 
  - `pid < -1` - sygnał wysyłany jest do procesów o identyfikatorze **grupy** równym co do modułu `pid`
 
 Argument `sig` specyfikuje jaki sygnał powinien być wysłany. Może on przyjmować następujące wartości:
- - jedno z makr zdefiniowanych w pliku nagłówkowym `<signal.h>` jak np. `SIGTERM`, `SIGKILL` czy `SIGUSR1`. Pełną liste można znaleźć w manualu
+ - jedno z makr zdefiniowanych w pliku nagłówkowym `<signal.h>` jak np. `SIGTERM`, `SIGKILL` czy `SIGUSR1`. Pełną listę można znaleźć w manualu
   ```bash
   man 7 signal
   ```
  - wartość zero - w takim przypadku żaden sygnał nie zostanie wysłany, a jedynie zajdzie sprawdzenie potencjalnych błędów wykonania funkcji.
 
-Funkcja zwraca `0` w przypadku poprawnego wykonania. W przeciwnym wypadu zwracana jest wartość `-1` i ustawiana jest odpowiednia wartość zmiennej `errno`.
+Funkcja zwraca `0` w przypadku poprawnego wykonania. W przeciwnym wypadku zwracana jest wartość `-1` i ustawiana jest odpowiednia wartość zmiennej `errno`.
 
 POSIX udostępnia możliwość wysłania sygnału do konkretnego wątku poprzez funkcję `pthread_kill` (`man 3p pthread_kill`):
 
@@ -326,7 +326,7 @@ Starszy sposób polegał na ustawianiu tzw. _signal handlers_ - funkcji obsługi
 W momencie przyjścia sygnału dla którego zdefiniowaliśmy funkcję obsługi wykonanie programu było przerywane na czas jej wykonania.
 W programach jednowątkowych był to w praktyce jedyny sposób, posiadał on jednak wady.
 Ponieważ sygnał mógł przyjść w dowolnym momencie, mógł przerwać wywołanie syscalli (jak `read` albo `write`) oraz innych funkcji systemowych.
-Powodowało to, że trzeba było zawsze sprawdzać, czy dane wywołanie funkcji nie została przerwane sygnałem (errno `EINTR`) i odpowiednio je restartować.
+Powodowało to, że trzeba było zawsze sprawdzać, czy dane wywołanie funkcji nie zostało przerwane sygnałem (errno `EINTR`) i odpowiednio je restartować.
 W efekcie bardzo komplikowało to programy.
 
 Aby obsługiwać sygnały starszym sposobem używamy funkcji takich jak `sigaction` (`man 3p sigaction`) czy `sigprocmask` (`man 3p pthread_sigmask`).
@@ -349,7 +349,7 @@ Wątki dziedziczą maskę sygnałów po wątku, który je utworzył.
 
 Aby całkowicie zablokować sygnał, należy go zablokować we wszystkich wątkach programu. W przeciwnym razie wątek, który nie blokuje ani nie obsługuje danego sygnału odbierze go, i wykona domyślą akcję - czyli najczęściej zakończy cały program.
 
-Funkcji `pthread_sigmask`, określa, w jaki sposób zdefiniowana przez nas maska sygnałów ma wpłynąć na aktualaną maskę sygnałów procesu.
+Funkcja `pthread_sigmask` określa, w jaki sposób zdefiniowana przez nas maska sygnałów ma wpłynąć na aktualną maskę sygnałów procesu.
 Przyjrzyjmy się jej definicji:
 ```
 int pthread_sigmask(int how, const sigset_t *restrict set,
@@ -362,7 +362,7 @@ Jak możemy zauważyć funkcja ta przyjmuje kolejno argumenty:
   - `SIG_SETMASK` - wynikowa maska sygnałów jest maską sygnałów wskazywaną przez `set`.
   - `SIG_UNBLOCK` - wynikowa maska sygnałów jest przecięciem aktualnej maski i dopełnieniem zbioru maski wskazanej przez `set` (Określamy jakie sygnały chcemy __usunąć__ z maski).
 
-- `set` typu `const sigset_t` to wskaźnik na maskę, na podstawie której chcemy modyfikować poprzednią maskę.
+- `set` typu `const sigset_t *` to wskaźnik na maskę, na podstawie której chcemy modyfikować poprzednią maskę.
 - `oset` typu `sigset_t *` jest wskaźnikiem na obiekt do którego chcemy zapisać maskę sygnałów sprzed edycji.
 
 
@@ -387,7 +387,7 @@ int sigwait(const sigset_t *restrict set, int *restrict sig);
 
 W pierwszym parametrze umieszczamy zestaw sygnałów na które chcemy czekać.
 Powinny być one zablokowane w danym wątku.
-Drugi parametr `sig` jest wyjściowy - zostanie tam umieszony numer sygnału który przerwał wywołanie `sigwait`.
+Drugi parametr `sig` jest wyjściowy - zostanie tam umieszczony numer sygnału który przerwał wywołanie `sigwait`.
 
 ### Zadanie
 
