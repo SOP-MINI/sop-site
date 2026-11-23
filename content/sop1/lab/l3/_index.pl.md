@@ -127,8 +127,12 @@ możliwe są dużo bardziej skomplikowane scenariusze.
 Pamiętaj, że niemal każde wywołanie funkcji systemowej (i wielu funkcji bibliotecznych) wymaga sprawdzenia czy nie
 wystąpił błąd i odpowiedniej reakcji jeśli wystąpił.
 
-Makro ERR nie wysyła sygnału jak w programie wieloprocesowym, czemu?
-{{< answer  >}} Funkcja exit zamyka cały proces tzn. wszystkie wątki w jego obrębie. {{< /answer >}}
+Zamiast makra `ERR` używamy nowego `HANDLE_ERR` czemu?
+{{< answer  >}}
+Funkcje operujące na wątkach (z nazwami `pthread_*` i nie tylko) nie ustawiają `errno`.
+Zamiast tego zwracają kod błędu - użycie `ERR` spowodowałoby komunikaty o błędach w rodzaju `success: plik:linia` bo `errno` byłoby równe 0.
+Trzeba o tym pamiętać i dobierać dobrą obsługę błędów do funkcji.
+{{< /answer >}}
 
 Jak dane są przekazywane do nowo tworzonych wątków?
 {{< answer  >}} Wyłącznie przez strukturę `targs_t` do której wskaźnik jest argumentem funkcji wątku, nie ma żadnego powodu aby użyć zmiennych globalnych. {{< /answer >}}

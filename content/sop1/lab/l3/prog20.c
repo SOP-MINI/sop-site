@@ -13,6 +13,16 @@
 #define DEFAULT_STUDENT_COUNT 100
 #define ELAPSED(start, end) ((end).tv_sec - (start).tv_sec) + (((end).tv_nsec - (start).tv_nsec) * 1.0e-9)
 #define ERR(source) (perror(source), fprintf(stderr, "%s:%d\n", __FILE__, __LINE__), exit(EXIT_FAILURE))
+#define HANDLE_ERR(func)                                                             \
+    ({                                                                               \
+        int __result = func;                                                         \
+        if (__result)                                                                \
+        {                                                                            \
+            fprintf(stderr, #func);                                                  \
+            fprintf(stderr, ": %s %s:%d\n", strerror(__result), __FILE__, __LINE__); \
+            exit(EXIT_FAILURE);                                                      \
+        }                                                                            \
+    })
 
 typedef unsigned int UINT;
 typedef struct timespec timespec_t;
@@ -57,8 +67,8 @@ int main(int argc, char **argv)
     for (int i = 0; i < studentsCount; i++)
         studentsList.removed[i] = false;
     for (int i = 0; i < studentsCount; i++)
-        if (pthread_create(&studentsList.thStudents[i], NULL, student_life, &counters))
-            ERR("Failed to create student thread!");
+        HANDLE_ERR(pthread_create(&studentsList.thStudents[i], NULL, student_life, &counters));
+
     srand(time(NULL));
     timespec_t start, current;
     if (clock_gettime(CLOCK_REALTIME, &start))
@@ -70,9 +80,9 @@ int main(int argc, char **argv)
             ERR("Failed to retrieve time!");
         kick_student(&studentsList);
     } while (ELAPSED(start, current) < 4.0);
+
     for (int i = 0; i < studentsCount; i++)
-        if (pthread_join(studentsList.thStudents[i], NULL))
-            ERR("Failed to join with a student thread!");
+        HANDLE_ERR(pthread_join(studentsList.thStudents[i], NULL));
     printf(" First year: %d\n", counters.values[0]);
     printf("Second year: %d\n", counters.values[1]);
     printf(" Third year: %d\n", counters.values[2]);

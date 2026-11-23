@@ -133,6 +133,15 @@ with the test on errors and if necessary by the proper reaction on the error.
 ERR macro does not send "kill" signal as in multi-process program, why?
 {{< answer   >}} Call to exit terminates all the threads in current process, there is no need to "kill" other processes. {{< /answer  >}}
 
+
+Instead of `ERR` macro we use a new `HANDLE_RR`, why?
+{{< answer  >}}
+Functions that operate on threads (those named like `pthread_*` and some others) do not set `errno`.
+Instead, they return an error code.
+Using `ERR` would result in error messages like `success: file:line` because `errno` would be set to 0.
+It is important to keep this in mind and implement proper error handling for these functions.
+{{< /answer >}}
+
 How is input data passed to the new threads?
 {{< answer   >}} Exclusively by the pointer to structure targs_t that is passed as thread function arguments. There is no need (nor the excuse) to use global variables! {{< /answer  >}}
 
